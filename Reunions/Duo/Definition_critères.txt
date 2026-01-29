@@ -1,0 +1,24 @@
+verifier ce qui existe sur la classification et les statitstiques des blessés d'incendis (bd, ontologies, liens) 
+anticiper la validation du modele.
+validaiton des modeles agents avec des ontologies
+envoyer mail aux pompier et a  laurent
+etudier comment on peut etendre nles differents modeles pour faire le lien vers de la validation
+
+- relier patrimoine
+    - structurelle et materielle
+    - movible et amovible
+    - heritage naturelles (foret, jardin, agriculture, espace a especes protegees)
+    - attractivité public
+
+- couvrir catastrophe naturelles ++ incendis (meteo, epicentre, surface d'expansion, duree, intensité, damages, heure de depart, exposition)
+- couvrir human behavior (bias, comm, entrainements, perception du risque + sensibilisation, perception du danger)
+- couvrir populations  zone habitation/touristiques zone passage/statiques [distinguer evacués d'intervenants] (classifier)
+- couvrir les axes (routier, chemins, naturels, atypiques) + evenements bloquants (barrage policier, eboulements, etc)
+- couvrir topologie (axes naturels, accessibilité/praticabilité) + evenements bloquants
+
+- temps d'evacuation (site, zone, axes) (granularité)
+- temps d'evacuation cible
+- dommages aux victimes (psy, phy, gravité, classes)
+- interventions + moyens
+
+identifier les output de la simulation a integrer a l'ontologie.
