@@ -1,0 +1,7 @@
+https://ariadne-infrastructure.eu/resources/ariadneplus-deliverables/
+https://training.ariadne-infrastructure.eu/
+https://cidoc-crm.org/get-last-official-release
+https://shs.hal.science/halshs-00752996/
+https://www.archesproject.org/documentation/
+https://github.com/archesproject/arches-her/blob/dev/1.1.x/docker/aher_project/Dockerfile
+https://www.univ-grenoble-alpes.fr/universite/ambition-et-strategie/france-2030/excellences-sous-toutes-ses-formes/gates-1494015.kjsp
