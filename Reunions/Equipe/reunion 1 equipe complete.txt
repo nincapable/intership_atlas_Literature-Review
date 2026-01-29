@@ -1,21 +1,44 @@
-reunion 1 equipe complete : 
+Compte Rendu : Réunion de Coordination – Projet Atlas (Soc-SIM-K)
 
-ontology on crisis management:
-bushfire, flood, ... ontocambridge dev : could be share
+Objet : État de l'art et développement de l'ontologie pour la gestion des risques liés au patrimoine culturel.
+1. Références et Partage de Ressources
 
-make biblio on crm explain diffs make comparison.
-missings to apply to cultural heritage
-already missing huma beavior
+    Ontologies de référence : Exploration des travaux sur la gestion de crise, notamment le projet d'ontologie de Cambridge (gestion des feux de forêt, inondations, etc.). Un partage de ressources est envisageable.
 
-effect of climate change on cultural heritage (foret fire, bastille)
-attention au natural héritage a inclure dans le cultural heritage.
+    Gestion de version : Le travail sera centralisé sur un dépôt Git (partage des accès à finaliser).
 
-faire la comparaison de l'ontologie arches-her, arch (faire la proto onto), and crm sur les fireforest and patrimoine
-format : regarder des etats de l'art, avec l'etude de chaques cas puis summary (criteria based)
-narrative description
-summary section.
+2. État de l'Art et Analyse Comparative (Biblio)
 
+L'objectif est de produire un état de l'art rigoureux sur le CIDOC-CRM et ses extensions, en mettant l'accent sur les points suivants :
 
-share git ()
+    Analyse critique : Expliquer les différences structurelles et identifier les lacunes actuelles dans l'application au patrimoine culturel.
 
+    Points de manque identifiés :
 
+        Prise en compte limitée des comportements humains en situation de crise.
+
+        Nécessité d'intégrer le patrimoine naturel (forêts, paysages) au sein de la définition globale du patrimoine culturel.
+
+3. Analyse de Cas : Changement Climatique et Risques
+
+    Focus : Effets du changement climatique sur le patrimoine (ex: feux de forêt menaçant des sites comme la Bastille).
+
+    Comparaison d'ontologies : Réalisation d'une étude comparative sur trois modèles face aux risques de feux de forêt :
+
+        Arches-HER (Heurist Heritage Resources).
+
+        ARCH (développement d'une proto-ontologie basée sur les livrables D4.2/D4.3).
+
+        CIDOC-CRM.
+
+        Ontologie Cambridge sur les feux de foret.
+
+4. Livrables et Méthodologie
+
+La restitution de l'état de l'art suivra une structure académique :
+
+    Description narrative : Analyse détaillée de chaque cas d'étude et de chaque modèle.
+
+    Section de synthèse (Criteria-based) : Tableau comparatif basé sur des critères précis (interopérabilité, granularité des risques, facteurs humains).
+
+    Résumé décisionnel : Synthèse globale des forces et faiblesses.
