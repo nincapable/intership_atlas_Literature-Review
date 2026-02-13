@@ -23,11 +23,8 @@ HARIS is a heritage-oriented geographic information system based on a **Service-
 
 - 2.1.1. Architecture and database
 - Relationshipal GBS (RDBMS):
-
 Spatial and alphanumeric data are stored in a relational database (including geometry, attributes, metadata, time series), ensuring integrity, complex queries and interoperability with GIS tools.
-
 - SOA and interoperability:
-
 Web services expose data in the form of standard services (WMS/WFS, REST API), facilitating the reuse of components in other platforms (DSS, municipal portals, field applications).
 
 - 2.1.2. Heritage Data Diagram
@@ -79,7 +76,6 @@ THIS is the twin system of HARIS dedicated to the description and quantification
 - 2.2.1. Multi-source collection and integration
 
 THIS aggregates data from:
-
 - historical archives (chronics of extreme events, floods, droughts, fires, earthquakes);
 - real-time data: urban sensor networks (rain meters, water level sensors, climate stations, air/quality stations), structural sensors, crowd-sensing networks (citizen signals via applications, geolocation photos)
 - climate projections: SPC scenarios, bioclimatic data sets, sectoral projections (extreme heat, precipitation, drought)
@@ -122,11 +118,8 @@ These simulations are based on the RCP emission trajectories (IPCC) and cover se
 
 - 3.1.1. Emission scenarios
 - RCP 4.5:
-
 Intermediate stabilization scenario, with mitigation measures limiting the increase in greenhouse gas concentrations.
-
 - RCP 8.5:
-
 Very pessimistic scenario, reflecting a high and prolonged emission trend, often chosen in ARCH to explore the resilience limit of historical sites.
 
 - 3.1.2. Simulated phenomena
@@ -252,47 +245,29 @@ RMI / RPVT
 RAD Governance indicators, preparedness, response, recovery, asset-climate integration
 
 ARCH brings together these modules (HARIS, THIS, DSS and decision support tools) to build an integrated and comprehensive **digital ecosystem**,
-allowing a fine and multidimensional description of the sites
-a precise characterization of climatic hazards and
-the execution of scenario simulations
-and the development of adaptation trajectories
-scientifically robust and operational.
+allowing for a fine and multidimensional description of historical sites, precise characterization of the climatic and natural hazards present as futures, execution of simulations of different prospective scenarios, and development of scientifically robust and operational adaptation trajectories.
 
 Funded by Horizon 2020 to the tune of EUR **5.98 million**
-over 48 months (2019-2023), the project deploys its pilot solutions on 8
-emblematic European historic sites – Istanbul (principal pilot),
-Rome, Valencia, Hamburg, etc. – and makes available all its ** open source software components** (code, model databases, API, technical documentation) under
-Free licenses, thus facilitating reuse and extension by other institutions or communities.
+over 48 months (2019-2023), the project deploys its pilot solutions to 8 emblematic European historic sites – Istanbul (lead pilot), Rome, Valencia, Hamburg, etc. – and makes available all its open source software components (code, model databases, API, technical documentation) under free licenses, thus facilitating reuse and extension by other institutions or communities.
 
 The ** conceptual and operational similarities** with the **ATLAS** project (presumed to target heritage or urban resilience in a comparable context) are striking:
 
-- **Common concerns**: vulnerability of historical tissues to climate change
-(heat islands, droughts, floods), protective role of
-green heritage areas, need for decision-making tools
-integrated built, vegetation and hazards.
+- **Common concerns**: vulnerability of historical tissues to climate change (heat islands, droughts, floods), protective role of heritage green spaces, need for decision support tools integrating built, vegetation and hazards.
 - **Transferable technological solutions**:
 - Interoperable SOA architecture, easily integrated with existing systems such as those of ATLAS.
-- Rich and standardized HARIS data models (CONSTRUCTION/OBJECT/MEASURE),
-directly reusable to document similar sites.
-- Pipeline THIS → DSS for multi-scenario simulation (RCP 4.5/8.5,
-urbanisation "Gris/Black/Green", earthquakes/floods), applicable to
-problems of ATLAS.
+- Rich and standardized HARIS data models (CONSTRUCTION/OBJECT/MEASURE), directly reusable to document similar sites.
+- Pipeline THIS → DSS for multi-scenario simulation (RCP 4.5/8.5, urbanisation "Gris/Black/Green", earthquakes/floods), applicable to the problems of ATLAS.
 - 3D visualization tools and GIS dashboards, already validated with 8 UNESCO site managers.
 
 ---
 
 ## Identification of ARCH Project Limits
 
-Despite its significant progress, the ARCH project has some shortcomings.
-of which limited its completeness for the full management of
-risks on heritage sites. These gaps concern both the
-richness of descriptive data and simulation capabilities
-dynamic.
+Despite its significant progress, the ARCH project has significant gaps that limit its completeness for comprehensive risk management at heritage sites. These gaps concern both the richness of descriptive data and dynamic simulation capabilities.
 
 ### Enrichment of descriptive data
 
-The fine representation of sites via HARIS (tables CONSTRUCTION, OBJECT,
-MEASURE) remains perfectable on several critical dimensions:
+The fine representation of sites via HARIS (tables CONSTRUCTION, OBJECT, MEASURE) remains perfectable on several critical dimensions:
 
 - **Detailed technical characteristics**: enrichment of attributes for buildings, artifacts, circulation axes (dynamic load capacities, alternative configurations).
 - **Social and demographic data**: lack of fine classification of populations (permanent residents, tourists, seasonality, specific vulnerabilities – PMR, children, seniors).
@@ -304,18 +279,11 @@ MEASURE) remains perfectable on several critical dimensions:
 
 ARCH excels in climate, seismic and hydrological scenarios, but has two major absences:
 
-1. **Simulation of fire propagation**: although THIS provides excellent preliminary indicators (SPEI,
-CDD, plant fuel load, ignition conditions) and HARIS
-details flammable materials (wood, dry vegetation), project
-stops at the "before" and "after" phases, without modeling the dynamics
-spread of flames (preferential paths, advanced speeds,
-hot spots, built-vegetation interaction).
+1. **Simulation of fire propagation**: Although THIS provides excellent preliminary indicators (SPEI, CDD, plant fuel load, ignition conditions) and HARIS details flammable materials (wood, dry vegetation), the project stops at the "before" and "after" phases, without modeling the flame propagation dynamics (preferential pathways, advance speeds, hot spots, built-vegetation interaction).
 
-Team **Soc-SIM-K** precisely fills this void with its
-3D fire models suitable for dense, exploitable heritage sites
-directly on existing HARIS bases.
+The **Soc-SIM-K** team precisely fills this void with its 3D fire models adapted to dense heritage sites, which can be exploited directly on existing HARIS bases.
 
-2. **Human behaviour in crisis**: DSS simulations focus on material damage, ignoring human flows (panic, congestion, evacuations, refuge areas). However **Soc-SIM-K** develops realistic behavioral agents (pedestrians, rescue vehicles, disoriented tourists), perfectly compatible with the geometries and capacities of the HARIS traffic axes.
+2. Human behaviour under crisis: DSS simulations focus on material damage, ignoring human flows (panic, congestion, evacuations, refuge areas). Soc-SIM-K develops realistic behavioral agents (pedestrians, rescue vehicles, disoriented tourists), perfectly compatible with the geometries and capacities of the HARIS traffic axes.
 
 ---
 
@@ -353,14 +321,12 @@ For transposition purposes, a heritage data scheme applied to historic gardens c
 
 - 2.1.3. Access and analysis tools
 
-A decision scoreboard allows local actors to visualize the spread of hazards or the evolution of resilience indicators. Multi-criteria analysis modules
-support development choices. These tools are designed for appropriation by non-expert audiences, a key point for mediation in heritage sites.
+A decision scoreboard allows local actors to visualize the spread of hazards or the evolution of resilience indicators. Multi-criteria analysis modules support development choices. These tools are designed for appropriation by non-expert audiences, a key point for mediation in heritage sites.
 
 
 ##2.2. Threats and Hazard Information System
 
-In C2Impress, the functional equivalent of ARCH's THIS (Threats and Hazard Information System) is the SoS4MHRIN (System-of-Systems for Multi-Hazard Risk Intelligence Network).
-This infrastructure centralizes and analyses data on multiple hazards (floods, fires, heat waves, compound droughts) in real time, using the Earth System Dynamic Intelligence (ESDI) for fine and dynamic predictions of multi-hazard hazards.
+In C2Impress, the functional equivalent of ARCH's THIS (Threats and Hazard Information System) is the SoS4MHRIN (System-of-Systems for Multi-Hazard Risk Intelligence Network). This infrastructure centralizes and analyses data on multiple hazards (floods, fires, heat waves, compound droughts) in real time, using the Earth System Dynamic Intelligence (ESDI) for fine and dynamic predictions of multi-hazard hazards.
 
 - 2.2.1. Multi-source collection and integration
 
@@ -372,8 +338,7 @@ SoS4MHRIN orchestrates a continuous and heterogeneous collection of data from mu
 mobile applications (signals of local anomalies).
 - Socio-economic data: Demographic layers (population density, social vulnerability), integrated to contextualize human exposures.
 
-Multi-source integration is based on dynamic flows that merge these data in near real time. Data fusion approaches (bayesian statistics and automatic learning) generate composite risk maps updated every 15-60 minutes depending on the hazard. For heritage gardens, this ability allows to follow
-fine changes in water and thermal conditions affecting soils and vegetation, e.g. intersecting satellite rainfall with local root moisture measurements.
+Multi-source integration is based on dynamic flows that merge these data in near real time. Data fusion approaches (bayesian statistics and automatic learning) generate composite risk maps updated every 15-60 minutes depending on the hazard. For heritage gardens, this capacity allows to follow the fine evolution of water and thermal conditions affecting soils and vegetation, for example by crossing satellite rainfall with local measurements of root moisture.
 
 - 2.2.2. Threat indicators
 
@@ -398,22 +363,13 @@ This SoS4MHRIN approach offers proactive vigilance, which is essential to preser
 ##3. Simulations and scenarios
 
 C2Impress integrates advanced simulations within its **SoS4MHRIN** platform, mainly via the**Earth System Dynamic Intelligence (ESDI)** and **operational dynamic models**.
-These tools allow to predict with high resolution
-spatial-temporal (from event to climate scale) risks
-of single or multiple hazards under various climatic scenarios,
-from a "hazard-centric" approach to an assessment focused on the
-places and populations. Simulations are empirically validated
-in four pilot sites (Egaleo in Greece, Ordu in Turkey, and two
-other in Southern Europe), covering urban and coastal contexts
-vulnerable.
+These tools predict with high spatial-temporal resolution (from event to climate scale) the risks of unique or multiple hazards under various climate scenarios, moving from a "hazard-centric" approach to a site- and population-centred assessment. The simulations are validated empirically at four pilot sites (Egaleo in Greece, Ordu in Turkey, and two others in Southern Europe), covering vulnerable urban and coastal contexts.
 
 ### 3.1. Simulated phenomena
 
-The simulations of C2Impress target the ** extreme composite weather**, as well as non-standard high impact events. They model the **major hydrometeorological hazards**: river and rain floods, forest fires, heat waves, landslides induced by heavy rains, and droughts
-extended.
+The simulations of C2Impress target the ** extreme composite weather**, as well as non-standard high impact events. They model the main **meteorological hazards**: river and rain floods, forest fires, heat waves, landslides induced by heavy rains, and prolonged droughts.
 
-Innovation is the capture of ** hazards** interactions (cascade effects or combined stress), such as drought that increases the risk of fire followed by post-fire flooding. **system simulation models** and **agent-based models (ABM)** assess multidimensional impacts (exposure, vulnerability)
-physical/social, adaptive resilience), with reduced uncertainty due to fine predictions.
+Innovation is the capture of ** hazards** interactions (cascade effects or combined stress), such as drought that increases the risk of fire followed by post-fire flooding. **system simulation models** and **agent-based models (ABM)** assess multidimensional impacts (exposure, physical/social vulnerability, adaptive resilience), with reduced uncertainty through fine predictions.
 
 For historic heritage areas and gardens, these simulations are highly adaptable: they allow the study of the **water dynamics of soils** (infiltration/flooding), **plant stress** (loss of biomass under heat/dryness), or **impacts on biodiversity** (species sensitive to extreme compounds), by tagring gardens as "natural buffers" in models.
 
@@ -440,23 +396,14 @@ Modelling of storm and river floods, with real-time warnings and extent predicti
 
 Forest fires are simulated by integrating drought, winds and biomass, with early warning and dynamic propagation (e.g. via indices like FWI). For heritage gardens, these models guide plant planning (non-flammable species, green barriers), assessing how dry soils under SPC 8.5 increase vulnerability to burning.
 
-
-These simulations, anchored in a co-creation with local actors,
-provide dashboards for contingency plans adapted to
-historical sites.
+These simulations, anchored in co-creation with local actors, provide dashboards for contingency plans adapted to historical sites.
 
 ---
 
 ##4. Natural areas, gardens and soils as heritage assets
 
 Yes,
-several elements can enrich this section by exploiting more
-explicitly the conceptual framework of C2Impress, which deals with spaces
-natural as **"Natural Heritage Buffers"** or **"Green Resilience Layers"** in its ontologies and multi-alean models. These assets are integrated not as liabilities but as **dynamic components**
-affecting exposure and overall site vulnerability. Here
-a detailed version, with factual additions on modelling, cases
-and direct links to your theme
-Heritage gardens.
+Several elements can enrich this section by more explicitly exploiting the conceptual framework of C2Impress, which treats natural spaces as "Natural Heritage Buffers" or "Green Resilience Layers" in its ontologies and multi-alean models. These assets are integrated not as liabilities, but as dynamic components influencing exposure and overall site vulnerability. Here is a detailed version, with factual additions on modeling, pilot usage cases and direct links to your garden-heritage theme.
 
 ### 4.1. Semantic and physical representation
 
@@ -496,8 +443,7 @@ This architecture integrates dynamic simulations, unified semantic ontology and 
 - **Multi-risk intelligence platform**: SoS4MHRIN centralizes satellite data (Copernicus/Sentinel), IoT in situ and citizen crowdsourcing, with real-time merger for high resolution risk cards.
 - **Modelization and simulations**: Agent-Based Models (ABM) for LULC and microclimate scenarios; physical models for compound hazards (floods + fires) under RCP4.5/8.5.
 - **Ontology and data**: RDF/OWL diagram modeling cultural property and "Natural Buffers", stored in interoperable geospatial bases (FAIR).
-- **Decision tools**: Interactive dashboards, multi-criteria microservices and alerts
-probabilists.
+- **Decision tools**: Interactive dashboards, multi-criteria microservices and probabilistic alerts.
 - **Citizen engagement**: Mobile applications and co-creation via Living Labs for integration local perceptions.
 
 ---
@@ -506,22 +452,17 @@ probabilists.
 
 ## Forces identified
 
-- **A holistic approach "place and people-centered"**: The transition from the hazard-centered to a multidimensional assessment (exposure, socio-cultural vulnerability, adaptive resilience),
-reducing predictive uncertainty.
+- **A holistic approach "place and people-centered"**: The shift from the hazard-centered to a multidimensional assessment (exposure, socio-cultural vulnerability, adaptive resilience), reducing predictive uncertainty.
 - **Interoperability and scalability**: Multi-source dynamic fluxes and fine simulations, yransposable to heritage gardens as ecological buffers.
 - ** Inclusive co-creation**: Science-citizen-authority involvement for accessible tools, fostering local ownership in historical sites and decision-making support.
 
 ## Identify Project Limitations
 
-- **Detailed technical specifications**: Insufficient enrichment of attributes for buildings, artifacts, traffic axes (dynamic load capacities, configurations)
-alternatives); sub-granularized heritage assets (limited vegetation/historical soils, lack of palynology or landscape archaeology for gardens).
+- **Detailed technical specifications**: Insufficient enrichment of attributes for buildings, artifacts, circulation axes (dynamic load capacities, alternative configurations); sub-granularized heritage assets (limited vegetation/historical soils, lack of palynology or landscape archaeology for gardens).
 - **Socio-demographic data**: No fine classification of populations (permanent residents, tourists, seasonality, specific vulnerabilities – PMR, children, seniors).
 - **Operational capacities of rescue**: No modelling of response infrastructures (emergency posts, water points, vehicle access, theoretical response times).
 - **A review of past claims**: limited data on victims (space location of human impacts, types of injuries, aggravating factors).
-- **Heritage Ecology**: Protection of underdeveloped historical plant species (lists)
-protected species, regulatory status, safeguard strategies
-in the face of climatic stress).
+- **Heritage ecology**: Protection of underdeveloped historical plant species (listed protected species, regulatory status, climate stress conservation strategies).
 **Human behaviour under crisis**: Although human behaviour is taken into account, population flows are addressed with a liquid approach, regardless of bias, information levels and the impact of relief.
 
 ---
-
