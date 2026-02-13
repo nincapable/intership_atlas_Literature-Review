@@ -3,23 +3,34 @@ name: Auto Translation
 on:
   push:
     paths:
-      - 'Global/Doc/**' # Ne se lance que si ce dossier change
+      - 'Global/Doc/**'
+
+# CRUCIAL : Donne la permission d'écrire dans le repo
+permissions:
+  contents: write
 
 jobs:
   translate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
-      - name: Install Argos Translate
+      # CACHE : On stocke les modèles Argos pour ne plus les retélécharger
+      - name: Cache Argos Models
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.local/share/argos-translate
+            ~/.cache/argos-translate
+          key: ${{ runner.os }}-argos-${{ hashFiles('**/translate.py') }}
+
+      - name: Install Dependencies
         run: pip install argostranslate
 
       - name: Run translation
@@ -28,7 +39,12 @@ jobs:
       - name: Commit and push changes
         run: |
           git config --local user.email "poirothugo38@gmail.com"
-          git config --local user.name "nincapable"
+          git config --local user.name "GitHub Action"
           git add Global/Doc/*
-          git commit -m "Auto-translate documents [skip ci]" || echo "No changes to commit"
-          git push
+          # On vérifie s'il y a des changements avant de commit
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-translate documents [skip ci]"
+            git push
+          fi

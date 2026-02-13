@@ -3,63 +3,49 @@ import argostranslate.package
 import argostranslate.translate
 
 def setup_translator(from_code, to_code):
-    print(f"--- Configuration du traducteur : {from_code} -> {to_code} ---")
     argostranslate.package.update_package_index()
     available_packages = argostranslate.package.get_available_packages()
     
-    # On cherche le paquet correspondant
-    package_to_install = next(
-        (pkg for pkg in available_packages if pkg.from_code == from_code and pkg.to_code == to_code), 
-        None
-    )
+    # Vérifie si déjà installé
+    installed_packages = argostranslate.package.get_installed_packages()
+    is_installed = any(pkg.from_code == from_code and pkg.to_code == to_code for pkg in installed_packages)
     
-    if package_to_install:
+    if not is_installed:
+        print(f"Installation du modèle {from_code} -> {to_code}...")
+        package_to_install = next(
+            filter(lambda x: x.from_code == from_code and x.to_code == to_code, available_packages)
+        )
         argostranslate.package.install_from_path(package_to_install.download())
-        print("Modèle installé avec succès.")
     else:
-        raise Exception(f"Modèle de traduction {from_code}->{to_code} introuvable.")
+        print(f"Le modèle {from_code} -> {to_code} est déjà en cache.")
 
 def translate_docs(source_dir, source_lang="fr", target_lang="en"):
-    # Initialisation
     setup_translator(source_lang, target_lang)
     
-    # Extensions supportées
     extensions = (".txt", ".md")
     suffix = f"_{target_lang}"
 
     for filename in os.listdir(source_dir):
-        # On ne traite que les fichiers sources (ex: doc.md) 
-        # et on ignore les fichiers déjà traduits (ex: doc_en.md)
-        if filename.endswith(extensions) and suffix not in filename:
+        # Ignore les fichiers déjà traduits et les dossiers
+        if filename.endswith(extensions) and not filename.endswith(f"{suffix}{os.path.splitext(filename)[1]}"):
             file_path = os.path.join(source_dir, filename)
             
-            # Construction du nom de sortie : doc.md -> doc_en.md
             name_part, ext_part = os.path.splitext(filename)
             output_filename = f"{name_part}{suffix}{ext_part}"
             output_path = os.path.join(source_dir, output_filename)
 
-            print(f"Traduction de : {filename} ...")
+            # Optionnel : Ne pas retraduire si le fichier traduit existe déjà (gain de temps)
+            if os.path.exists(output_path):
+                continue
+
+            print(f"Traduction de : {filename}...")
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
             
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                
-                # Traduction via Argos
-                translated_text = argostranslate.translate.translate(content, source_lang, target_lang)
-                
-                with open(output_path, 'w', encoding='utf-8') as f:
-                    f.write(translated_text)
-                
-                print(f"✓ Terminé : {output_filename}")
+            translated_text = argostranslate.translate.translate(content, source_lang, target_lang)
             
-            except Exception as e:
-                print(f"X Erreur sur {filename} : {e}")
+            with open(output_path, 'w', encoding='utf-8') as f:
+                f.write(translated_text)
 
 if __name__ == "__main__":
-    # Chemin vers votre dossier spécifique
-    DOC_PATH = "Global/Doc"
-    
-    if os.path.exists(DOC_PATH):
-        translate_docs(DOC_PATH, source_lang="fr", target_lang="en")
-    else:
-        print(f"Erreur : Le répertoire {DOC_PATH} est introuvable.")   
+    translate_docs("Global/Doc")
