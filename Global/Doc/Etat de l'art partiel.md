@@ -524,3 +524,4 @@ face aux stress climatiques).
 - **Comportements humains sous crise** : Bien que le comportement humain soit pris en compte, les flux de population sont abordés avec une approche liquide, sans considération pour les biais, les niveaux d’informations et l’impact des secours.
 
 ---
+
