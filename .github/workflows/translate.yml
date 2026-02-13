@@ -1,0 +1,34 @@
+name: Auto Translation
+
+on:
+  push:
+    paths:
+      - 'Global/Doc/**' # Ne se lance que si ce dossier change
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Argos Translate
+        run: pip install argostranslate
+
+      - name: Run translation
+        run: python translate.py
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "poirothugo38@gmail.com"
+          git config --local user.name "nincapable"
+          git add Global/Doc/*
+          git commit -m "Auto-translate documents [skip ci]" || echo "No changes to commit"
+          git push
