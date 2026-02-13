@@ -1,3 +1,9 @@
+# Mapping des noms de fichiers pour la traduction
+  # Schema : 
+  # "Nom_du_fichier_en_francais":
+  #   <extension de la langue cible>: "Nom_du_fichier_dans_langue_cible"
+  #   <extension de la langue cible 2>: "Nom_du_fichier_dans_langue_cible 2"
+
 "Etat_de_l_Art_Partiel":
   en: "Partial State of the Art"
   es: "Estado del arte parcial"
