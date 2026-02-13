@@ -23,11 +23,8 @@ HArIS est un système d’information géographique orienté patrimoine, fondé 
 
 - 2.1.1. Architecture et base de données
     - SGBD relationnel (RDBMS) :
-        
         Les données spatiales et alphanumériques sont stockées dans une base relationnelle (incluant géométrie, attributs, métadonnées, séries temporelles), assurant intégrité, requêtes complexes et interopérabilité avec les outils GIS.
-        
     - SOA et interopérabilité :
-        
         Les services web exposent les données sous forme de services standards (WMS/WFS, API REST), facilitant la réutilisation des composants dans d’autres plateformes (DSS, portails municipaux, applications de terrain).
         
 - 2.1.2. Schéma de données patrimoniales
@@ -79,7 +76,6 @@ THIS est le système « jumeau » de HArIS dédié à la description et à la qu
 - 2.2.1. Collecte et intégration multi‑sources
     
     THIS agrège des données issues de :
-    
     - archives historiques (chroniques d’événements extrêmes, crues, sécheresses, incendies, séismes) ;
     - données en temps réel : réseaux de capteurs urbains (pluviomètres, capteurs de niveau d’eau, stations climatiques, stations air/qualité), capteurs structurels, réseaux de « crowd‑sensing » (signalements citoyens via applications, photos géolocalisées)
     - projections climatiques : scénarios RCP, jeux de données bioclimatiques, projections sectorielles (chaleur extrême, précipitations, sécheresse)
@@ -122,11 +118,8 @@ Ces simulations reposent sur les trajectoires d’émissions RCP (IPCC) et couvr
 
 - 3.1.1. Scénarios d’émissions
     - RCP 4.5 :
-        
         Scénario intermédiaire de stabilisation, avec des mesures d’atténuation limitant la hausse des concentrations de gaz à effet de serre.
-        
     - RCP 8.5 :
-        
         Scénario très pessimiste, correspondant à une tendance d’émissions élevées et prolongées, souvent choisi dans ARCH pour explorer la limite de résilience des sites historiques.
         
 - 3.1.2. Phénomènes simulés
@@ -252,47 +245,29 @@ Le tableau ci‑dessous résume les principaux composants technologiques du proj
 | RAD | Outil d’auto‑évaluation de la maturité de résilience | Suivi de la progression d’une zone historique dans son cycle de gestion des risques | Indicateurs de gouvernance, préparation, réponse, récupération, intégration patrimoine–climat |
 
 ARCH réunit ces différents modules (HArIS, THIS, DSS et outils d’aide à la décision) pour constituer un **écosystème numérique intégré et complet**,
- permettant une description fine et multidimensionnelle des sites 
-historiques, une caractérisation précise des aléas climatiques et 
-naturels présents comme futurs, l’exécution de simulations de scénarios 
-prospectifs variés, et l’élaboration de trajectoires d’adaptation 
-scientifiquement robustes et opérationnelles.
+ permettant une description fine et multidimensionnelle des sites historiques, une caractérisation précise des aléas climatiques et naturels présents comme futurs, l’exécution de simulations de scénarios prospectifs variés, et l’élaboration de trajectoires d’adaptation scientifiquement robustes et opérationnelles.
 
 Financé par le programme Horizon 2020 à hauteur de **5,98 millions d’euros**
- sur 48 mois (2019-2023), le projet déploie ses solutions pilotes sur 8 
-sites historiques européens emblématiques – Istanbul (pilote principal),
- Rome, Valence, Hambourg, etc. – et met à disposition l’ensemble de ses **composants logiciels en open source** (code, bases de données modélaires, API, documentation technique) sous 
-licences libres, facilitant ainsi réutilisation et extension par d’autres institutions ou collectivités.
+ sur 48 mois (2019-2023), le projet déploie ses solutions pilotes sur 8 sites historiques européens emblématiques – Istanbul (pilote principal), Rome, Valence, Hambourg, etc. – et met à disposition l’ensemble de ses composants logiciels en open source (code, bases de données modélaires, API, documentation technique) sous licences libres, facilitant ainsi réutilisation et extension par d’autres institutions ou collectivités.
 
 Les **similitudes conceptuelles et opérationnelles** avec le projet **ATLAS** (présumé cibler la résilience patrimoniale ou urbaine dans un contexte comparable) sont frappantes :
 
-- **Préoccupations communes** : vulnérabilité des tissus historiques aux changements climatiques
-(îlots de chaleur, sécheresses, inondations), rôle protecteur des
-espaces verts patrimoniaux, besoin d’outils d’aide à la décision
-intégrant bâti, végétation et aléas.
+- **Préoccupations communes** : vulnérabilité des tissus historiques aux changements climatiques (îlots de chaleur, sécheresses, inondations), rôle protecteur des espaces verts patrimoniaux, besoin d’outils d’aide à la décision intégrant bâti, végétation et aléas.
 - **Solutions technologiques transférables** :
     - Architecture SOA interopérable, facilement intégrable à des systèmes existants comme ceux d’ATLAS.
-    - Modèles de données HArIS riches et normalisés (CONSTRUCTION/OBJECT/MEASURE),
-    directement réutilisables pour documenter des sites similaires.
-    - Pipeline THIS → DSS pour la simulation multi-scénarios (RCP 4.5/8.5,
-    urbanisation "Gris/Noir/Vert", séismes/inondations), applicable aux
-    problématiques d’ATLAS.
+    - Modèles de données HArIS riches et normalisés (CONSTRUCTION/OBJECT/MEASURE), directement réutilisables pour documenter des sites similaires.
+    - Pipeline THIS → DSS pour la simulation multi-scénarios (RCP 4.5/8.5, urbanisation "Gris/Noir/Vert", séismes/inondations), applicable aux problématiques d’ATLAS.
     - Outils de visualisation 3D et tableaux de bord SIG, déjà validés auprès de 8 gestionnaires de sites UNESCO.
 
 ---
 
 ## Limites identifiées du projet ARCH
 
-Malgré ses avancées significatives, le projet ARCH présente des lacunes 
-notables qui limitent son exhaustivité pour une gestion intégrale des 
-risques sur sites patrimoniaux. Ces manques concernent à la fois la 
-richesse des données descriptives et les capacités de simulation 
-dynamique.
+Malgré ses avancées significatives, le projet ARCH présente des lacunes notables qui limitent son exhaustivité pour une gestion intégrale des risques sur sites patrimoniaux. Ces manques concernent à la fois la richesse des données descriptives et les capacités de simulation dynamique.
 
 ### Enrichissement des données descriptives
 
-La représentation fine des sites via HArIS (tables CONSTRUCTION, OBJECT, 
-MEASURE) reste perfectible sur plusieurs dimensions critiques :
+La représentation fine des sites via HArIS (tables CONSTRUCTION, OBJECT, MEASURE) reste perfectible sur plusieurs dimensions critiques :
 
 - **Caractéristiques techniques détaillées** : enrichissement des attributs pour bâtiments, artefacts, axes de circulation (capacités de charge dynamiques, configurations alternatives).
 - **Données socio-démographiques** : absence de classification fine des populations (résidents permanents, touristes, saisonnalité, vulnérabilités spécifiques – PMR, enfants, seniors).
@@ -304,18 +279,11 @@ MEASURE) reste perfectible sur plusieurs dimensions critiques :
 
 ARCH excelle dans les scénarios climatiques, sismiques et hydrologiques, mais présente deux absences majeures :
 
-1. **Simulation de la propagation des incendies** : bien que THIS fournisse des indicateurs préalables excellents (SPEI,
-CDD, charge de combustible végétale, conditions d’allumage) et HArIS
-détaille les matériaux inflammables (bois, végétation sèche), le projet
-s’arrête aux phases « avant » et « après », sans modéliser la dynamique
-de propagation des flammes (chemins préférentiels, vitesses d’avancée,
-points chauds, interaction bâti-végétation).
+1. **Simulation de la propagation des incendies** : bien que THIS fournisse des indicateurs préalables excellents (SPEI,CDD, charge de combustible végétale, conditions d’allumage) et HArIS détaille les matériaux inflammables (bois, végétation sèche), le projet s’arrête aux phases « avant » et « après », sans modéliser la dynamique de propagation des flammes (chemins préférentiels, vitesses d’avancée, points chauds, interaction bâti-végétation).
     
-    L’équipe **Soc-SIM-K** comble précisément ce vide avec ses 
-    modèles de feu 3D adaptés aux sites patrimoniaux denses, exploitables 
-    directement sur les bases HArIS existantes.
+    L’équipe **Soc-SIM-K** comble précisément ce vide avec ses modèles de feu 3D adaptés aux sites patrimoniaux denses, exploitables directement sur les bases HArIS existantes.
     
-2. **Comportements humains sous crise** : les simulations DSS se concentrent sur les dommages matériels,ignorant les flux humains (panique, engorgements, évacuations, zones derefuge). Or **Soc-SIM-K** développe des agents comportementaux réalistes (piétons, véhicules secours, touristes désorientés), parfaitement compatibles avec les géométries et capacités des axes de circulation HArIS.
+2. Comportements humains sous crise : les simulations DSS se concentrent sur les dommages matériels,ignorant les flux humains (panique, engorgements, évacuations, zones de refuge). Or Soc-SIM-K développe des agents comportementaux réalistes (piétons, véhicules secours, touristes désorientés), parfaitement compatibles avec les géométries et capacités des axes de circulation HArIS.
 
 ---
 
@@ -353,14 +321,12 @@ Les *Living Labs* déployés servent à tester des méthodologies reproductibles
     
 - 2.1.3. Outils d’accès et d’analyse
     
-    Un tableau de bord décisionnel permet aux acteurs locaux de visualiser la propagation d’un aléa ou l’évolution d’indicateurs de résilience. Des modules d’analyse multicritère 
-    soutiennent les choix d’aménagement. Ces outils sont conçus pour une appropriation par des publics non experts, un point clé pour la médiation dans les sites patrimoniaux.
+    Un tableau de bord décisionnel permet aux acteurs locaux de visualiser la propagation d’un aléa ou l’évolution d’indicateurs de résilience. Des modules d’analyse multicritère soutiennent les choix d’aménagement. Ces outils sont conçus pour une appropriation par des publics non experts, un point clé pour la médiation dans les sites patrimoniaux.
     
 
 ### 2.2. Threats and Hazard Information System
 
-Dans C2Impress, l'équivalent fonctionnel du THIS (Threats and Hazard Information System) d'ARCH est la plateforme SoS4MHRIN (System-of-Systems for Multi-Hazard Risk Intelligence Network).
- Cette infrastructure centralise et analyse en temps réel les données sur les aléas multiples (inondations, incendies, vagues de chaleur, sécheresses composées), en s'appuyant sur l'ESDI (Earth System Dynamic Intelligence) pour des prédictions fines et dynamiques des risques multi-aléas.
+Dans C2Impress, l'équivalent fonctionnel du THIS (Threats and Hazard Information System) d'ARCH est la plateforme SoS4MHRIN (System-of-Systems for Multi-Hazard Risk Intelligence Network). Cette infrastructure centralise et analyse en temps réel les données sur les aléas multiples (inondations, incendies, vagues de chaleur, sécheresses composées), en s'appuyant sur l'ESDI (Earth System Dynamic Intelligence) pour des prédictions fines et dynamiques des risques multi-aléas.
 
 - 2.2.1. Collecte et intégration multi-sources
     
@@ -372,8 +338,7 @@ Dans C2Impress, l'équivalent fonctionnel du THIS (Threats and Hazard Informatio
     applications mobiles (signalements d'anomalies locales).
     - Données socio-économiques : Couches démographiques (densité population, vulnérabilité sociale), intégrées pour contextualiser les expositions humaines.
     
-    L'intégration multi-sources repose sur des flux dynamiques qui fusionnent ces données en temps quasi-réel. Les approches de data fusion (statistiques bayésiennes et apprentissage automatique) génèrent des cartes de risque composites mises à jour toutes les 15-60 minutes selon l'aléa. Pour les jardins patrimoniaux, cette capacité permet de suivre 
-    l'évolution fine des conditions hydriques et thermiques affectant les sols et la végétation, en croisant par exemple pluviométrie satellitaire avec mesures locales d'humidité racinaire.
+    L'intégration multi-sources repose sur des flux dynamiques qui fusionnent ces données en temps quasi-réel. Les approches de data fusion (statistiques bayésiennes et apprentissage automatique) génèrent des cartes de risque composites mises à jour toutes les 15-60 minutes selon l'aléa. Pour les jardins patrimoniaux, cette capacité permet de suivre l'évolution fine des conditions hydriques et thermiques affectant les sols et la végétation, en croisant par exemple pluviométrie satellitaire avec mesures locales d'humidité racinaire.
     
 - 2.2.2. Indicateurs de menaces
     
@@ -398,22 +363,13 @@ Cette approche SoS4MHRIN offre ainsi une vigilance proactive, essentielle pour p
 ## 3. Simulations et scénarios
 
 C2Impress intègre des simulations avancées au sein de sa plateforme **SoS4MHRIN**, principalement via l'**Earth System Dynamic Intelligence (ESDI)** et des **modèles dynamiques opérationnels**.
- Ces outils permettent de prédire avec une haute résolution 
-spatio-temporelle (de l'échelle événementielle à climatique) les risques
- d'aléas uniques ou multiples sous scénarios climatiques variés, en 
-passant d'une approche "hazard-centric" à une évaluation centrée sur les
- lieux et les populations. Les simulations sont validées empiriquement 
-dans quatre sites pilotes (Egaleo en Grèce, Ordu en Turquie, et deux 
-autres en Europe du Sud), couvrant des contextes urbains et côtiers 
-vulnérables.
+ Ces outils permettent de prédire avec une haute résolution spatio-temporelle (de l'échelle événementielle à climatique) les risques d'aléas uniques ou multiples sous scénarios climatiques variés, en passant d'une approche "hazard-centric" à une évaluation centrée sur les lieux et les populations. Les simulations sont validées empiriquement dans quatre sites pilotes (Egaleo en Grèce, Ordu en Turquie, et deux autres en Europe du Sud), couvrant des contextes urbains et côtiers vulnérables.
 
 ### 3.1. Phénomènes simulés
 
-Les simulations de C2Impress ciblent les **extrêmes météorologiques composés**, ainsi que des événements non standards à fort impact. Elles modélisent les **dangers hydrométéorologiques principaux** : inondations fluviales et pluviales, feux de forêt, vagues de chaleur, glissements de terrain induits par pluies intenses, et sécheresses 
-prolongées.
+Les simulations de C2Impress ciblent les **extrêmes météorologiques composés**, ainsi que des événements non standards à fort impact. Elles modélisent les **dangers hydrométéorologiques principaux** : inondations fluviales et pluviales, feux de forêt, vagues de chaleur, glissements de terrain induits par pluies intenses, et sécheresses prolongées.
 
-L'innovation réside dans la capture des **interactions entre aléas** (effets en cascade ou stress combinés), comme une sécheresse amplifiant les risques d'incendie suivie d'inondations post-feu. Des **modèles de simulation par système de systèmes** et **agent-based models (ABM)** évaluent les impacts multidimensionnels (exposition, vulnérabilité 
-physique/sociale, résilience adaptative), avec une incertitude réduite grâce à des prédictions fines.
+L'innovation réside dans la capture des **interactions entre aléas** (effets en cascade ou stress combinés), comme une sécheresse amplifiant les risques d'incendie suivie d'inondations post-feu. Des **modèles de simulation par système de systèmes** et **agent-based models (ABM)** évaluent les impacts multidimensionnels (exposition, vulnérabilité physique/sociale, résilience adaptative), avec une incertitude réduite grâce à des prédictions fines.
 
 Pour les espaces patrimoniaux et jardins historiques, ces simulations sont hautement adaptables : elles permettent d'étudier la **dynamique hydrique des sols** (infiltration/ruissellement sous inondations), le **stress végétal** (perte de biomasse sous chaleur/sécheresse), ou les **impacts sur la biodiversité** (espèces sensibles aux composés extrêmes), en taguant les jardins comme "natural buffers" dans les modèles.
 
@@ -440,23 +396,14 @@ Les projections d'**utilisation des sols (LULC)** dérivent de séries comme COR
     
     Les feux de forêt sont simulés en intégrant sécheresse, vents et biomasse, avec alertes précoces et propagation dynamique (ex. via indices comme FWI). Pour les jardins patrimoniaux, ces modèles guident la planification végétale (espèces non inflammables, barrières vertes), évaluant comment les sols secs sous RCP 8.5 augmentent la vulnérabilité à l'embrasement.
     
-
-Ces simulations, ancrées dans une co-création avec acteurs locaux, 
-fournissent des tableaux de bord pour des plans d'urgence adaptés aux 
-sites historiques.
+Ces simulations, ancrées dans une co-création avec acteurs locaux, fournissent des tableaux de bord pour des plans d'urgence adaptés aux sites historiques.
 
 ---
 
 ## 4. Espaces naturels, jardins et sols comme actifs patrimoniaux
 
 Oui,
- plusieurs éléments peuvent enrichir cette section en exploitant plus 
-explicitement le cadre conceptuel de C2Impress, qui traite les espaces 
-naturels comme des **"Natural Heritage Buffers"** ou **"Green Resilience Layers"** dans ses ontologies et modèles multi-aléas. Ces actifs sont intégrés non comme passifs, mais comme **composants dynamiques**
- influençant l'exposition et la vulnérabilité globale des sites. Voici 
-une version détaillée, avec ajouts factuels sur la modélisation, les cas
- d'usage pilotes et les liens directs à votre thématique 
-jardins-patrimoine.
+ plusieurs éléments peuvent enrichir cette section en exploitant plus explicitement le cadre conceptuel de C2Impress, qui traite les espaces naturels comme des "Natural Heritage Buffers" ou "Green Resilience Layers" dans ses ontologies et modèles multi-aléas. Ces actifs sont intégrés non comme passifs, mais comme composants dynamiques influençant l'exposition et la vulnérabilité globale des sites. Voici une version détaillée, avec ajouts factuels sur la modélisation, les cas d'usage pilotes et les liens directs à votre thématique jardins-patrimoine.
 
 ### 4.1. Représentation sémantique et physique
 
@@ -496,8 +443,7 @@ Cette architecture intègre des simulations dynamiques, une ontologie sémantiqu
 - **Plateforme d'intelligence multi-risques** : SoS4MHRIN centralise données satellitaires (Copernicus/Sentinel), IoT in situ et crowdsourcing citoyen, avec fusion en temps réel pour cartes de risque haute résolution.
 - **Modélisation et simulations** : Agent-Based Models (ABM) pour scénarios LULC et micro-climats ; modèles physiques pour aléas composés (inondations + feux) sous RCP4.5/8.5.
 - **Ontologie et données** : Schéma RDF/OWL modélisant biens culturels et "Natural Buffers", stocké en bases géospatiales interopérables (FAIR).
-- **Outils décisionnels** : Tableaux de bord interactifs, microservices multicritères et alertes
-probabilistes.
+- **Outils décisionnels** : Tableaux de bord interactifs, microservices multicritères et alertes probabilistes.
 - **Engagement citoyen** : Applications mobiles et co-création via Living Labs pour intégration perceptions locales.
 
 ---
@@ -506,21 +452,17 @@ probabilistes.
 
 ## Forces identifiées
 
-- **Approche holistique "place and people-centred"** : Passage du hazard-centré à une évaluation multidimensionnelle (exposition, vulnérabilité socio-culturelle, résilience adaptative),
-réduisant l'incertitude prédictive.
+- **Approche holistique "place and people-centred"** : Passage du hazard-centré à une évaluation multidimensionnelle (exposition, vulnérabilité socio-culturelle, résilience adaptative), réduisant l'incertitude prédictive.
 - **Interopérabilité et scalabilité** : Flux dynamiques multi-sources et simulations fines, yransposables aux jardins patrimoniaux comme tampons écologiques.
 - **Co-création inclusive** : Implication science-autorités-citoyens pour outils accessibles, favorisant l'appropriation locale dans sites historiques et l’aide à la décision.
 
 ## Limites identifiées du projet
 
-- **Caractéristiques techniques détaillées** : Enrichissement insuffisant des attributs pour bâtiments, artefacts,axes de circulation (capacités de charge dynamiques, configurations
-alternatives) ; actifs patrimoniaux bâtis et naturels sous-granularisés (inventaires végétation/sols historiques limités, absence de palynologie ou archéologie paysagère pour jardins).
+- **Caractéristiques techniques détaillées** : Enrichissement insuffisant des attributs pour bâtiments, artefacts,axes de circulation (capacités de charge dynamiques, configurations alternatives) ; actifs patrimoniaux bâtis et naturels sous-granularisés (inventaires végétation/sols historiques limités, absence de palynologie ou archéologie paysagère pour jardins).
 - **Données socio-démographiques** : Absence de classification fine des populations (résidents permanents, touristes, saisonnalité, vulnérabilités spécifiques – PMR, enfants, seniors).
 - **Capacités opérationnelles des secours** : Pas de modélisation des infrastructures d'intervention (postes de secours, points d'eau, accès véhicules, temps de réponse théoriques).
 - **Bilan des sinistres passés** : Données limitées sur les victimes (localisation spatiale des impacts humains, typologies de blessures, facteurs aggravants).
-- **Écologie patrimoniale** : Protection des espèces végétales historiques sous-développée (listes
-d'essences protégées, statuts réglementaires, stratégies de sauvegarde
-face aux stress climatiques).
+- **Écologie patrimoniale** : Protection des espèces végétales historiques sous-développée (listes d'essences protégées, statuts réglementaires, stratégies de sauvegarde face aux stress climatiques).
 - **Comportements humains sous crise** : Bien que le comportement humain soit pris en compte, les flux de population sont abordés avec une approche liquide, sans considération pour les biais, les niveaux d’informations et l’impact des secours.
 
 ---
