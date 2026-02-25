@@ -4,7 +4,7 @@
   #   <extension de la langue cible>: "Nom_du_fichier_dans_langue_cible"
   #   <extension de la langue cible 2>: "Nom_du_fichier_dans_langue_cible 2"
 
-"Etat_de_l_Art_Partiel":
-  en: "Partial State of the Art"
-  es: "Estado del arte parcial"
-  de: "Teilweiser Stand der Technik"
+"Etat_de_art_pour_projet_ATLAS ":
+  en: "State of the art for the ATLAS project"
+  es: "Estado del arte del proyecto ATLAS"
+  de: "Stand der Technik für das ATLAS-Projekt"
