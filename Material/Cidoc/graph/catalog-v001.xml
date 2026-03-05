@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri id="Automatically generated entry, Timestamp=1772201044475" name="http://www.cidoc-crm.org/cidoc-crm/" uri="CIDOC_CRM_v7.1.2.rdf"/>
+        <uri id="Automatically generated entry, Timestamp=1772201044475" name="http://www.cidoc-crm.org/extensions/crmarchaeo/" uri="CRMarchaeo_v2.1.1.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1772201044475" name="duplicate:http://www.cidoc-crm.org/extensions/crmsci/" uri="CRMsci_v2.0.rdf"/>
+        <uri id="Automatically generated entry, Timestamp=1772201044475" name="duplicate:http://www.cidoc-crm.org/extensions/crmsci/" uri="CRMsci_v2.0.owl"/>
+    </group>
+</catalog>

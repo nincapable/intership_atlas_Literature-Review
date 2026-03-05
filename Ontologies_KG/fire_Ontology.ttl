@@ -1,0 +1,156 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+#################################################################
+# Classes principales
+#################################################################
+
+fe:Building a owl:Class ; 
+    rdfs:subClassOf crm:E25_Man_Made_Feature .
+
+fe:Axis a owl:Class ; 
+    rdfs:subClassOf crm:E25_Man_Made_Feature .
+
+fe:Artefact a owl:Class ; 
+    rdfs:subClassOf crm:E22_Man_Made_Object .
+
+fe:MaterialInstance a owl:Class ; 
+    rdfs:subClassOf crm:E57_Material .
+
+#################################################################
+# Propriétés d’objet
+#################################################################
+
+#####
+# Building
+
+# 1. Date de Construction -> E12 Production
+fe:hasConstructionEvent a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E12_Production ;
+    rdfs:subPropertyOf crm:P108i_was_produced_by .
+
+# 2. Date de Destruction -> E6 Destruction
+fe:hasDestructionEvent a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E6_Destruction ;
+    rdfs:subPropertyOf crm:P13i_was_destroyed_by .
+
+# 3. Date de Renovation -> E11 Modification
+fe:hasRenovationEvent a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E11_Modification ;
+    rdfs:subPropertyOf crm:P31i_was_modified_by .
+
+# 4. Style d'architecture → E55 Type
+fe:hasArchitectureStyle a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E55_Type ; 
+    rdfs:subPropertyOf crm:P2_has_type .
+
+# 5. Matériaux principaux → E57 Material (+ proportions E54 Dimension)
+fe:hasIndividualMaterial a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range fe:MaterialInstance ;
+    rdfs:subPropertyOf crm:P45_consists_of ;
+
+# 6. Sous-bassements → E26 Physical Feature OU E55 Type
+fe:hasSubstructure a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E26_Physical_Feature ; 
+    rdfs:subPropertyOf crm:P46i_forms_part_of .
+
+# 7. Capacité personnes → E54 Dimension
+fe:hasPersonCapacity a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E54_Dimension ; 
+    rdfs:subPropertyOf crm:P43_has_dimension .
+
+# 8. Usage courant → E55 Type
+fe:hasCurrentUse a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E55_Type ; 
+    rdfs:subPropertyOf crm:P2_has_type .
+
+# 9. Axes circulation → E25 Man-Made Feature (axes)
+fe:hasCirculationAxis a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range fe:Axis ; 
+    rdfs:subPropertyOf crm:P89_falls_within .
+
+# 10. Zone → E53 Place
+fe:isInZone a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E53_Place ; 
+    rdfs:subPropertyOf crm:P89_falls_within .
+
+# 11. Exposition risques → E3 Condition State
+fe:hasRiskExposure a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E3_Condition_State ;
+    rdfs:subPropertyOf crm:P44_has_condition .
+
+# 12. Artefacts associés → E22 Man-Made Object
+fe:containsArtefact a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range fe:Artefact ; 
+    rdfs:subPropertyOf crm:P53i_is_former_or_current_location_of .
+
+# 13. Dimensions géographiques → E94 Spatial Coordinates
+fe:hasGeoDimensions a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E94_Spatial_Coordinates ; 
+    rdfs:subPropertyOf crm:P168_place_is_defined_by .
+
+# 14. Localisation → E53 Place
+fe:hasLocation a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E53_Place ; 
+    rdfs:subPropertyOf crm:P53_has_former_or_current_location .
+
+#######
+# Axis
+
+#######
+# Artefact
+
+#######
+# MaterialInstance
+
+# UNIQUEMENT les propriétés ADDITIONNELLES (feu/simulateur)
+fe:proportion a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:domain fe:MaterialInstance ; rdfs:range xsd:decimal ;
+    rdfs:comment "Proportion en % (0.0-100.0)"@fr .
+
+fe:fireResistanceClass a owl:DatatypeProperty ;
+    rdfs:domain fe:MaterialInstance ; rdfs:range xsd:string ;
+    rdfs:comment "EI30, EI60, A1, etc."@fr .
+
+fe:firePropagationRate a owl:DatatypeProperty ;
+    rdfs:domain fe:MaterialInstance ; rdfs:range xsd:decimal ;
+    rdfs:comment "0.0-1.0"@fr .
+
+fe:smokeProduction a owl:DatatypeProperty ;
+    rdfs:domain fe:MaterialInstance ; rdfs:range xsd:decimal ;
+    rdfs:comment "0.0-1.0"@fr .
+
+#################################################################
+# Propriétés des attributs
+#################################################################
+#####
+# Building
+
+
+#################################################################
+# Requetes SPARQL Standards
+#################################################################
+
+# Template : "Récupérer dates bâtiment"
+fe:GetBuildingDates a spl:QueryTemplate ;
+    rdfs:label "Dates d'un bâtiment"@fr ;
+    rdfs:comment "Récupère toutes les dates d'un bâtiment donné"@fr ;
+    sp:text """
+    PREFIX fe: <http://example.org/feu#>
+    PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+    
+    SELECT ?constrStart ?constrEnd ?destruction ?renovationStart ?renovationEnd WHERE {
+      fe:{BUILDING} a fe:Building ;
+           fe:hasConstructionEvent/crm:P4_has_time-span/ 
+           [crm:P82a_begin_of_the_begin ?constrStart ;
+            crm:P82b_end_of_the_end ?constrEnd] ;
+           fe:hasDestructionEvent/crm:P4_has_time-span/
+           [crm:P82a_begin_of_the_begin ?destruction] ;
+           fe:hasRenovationEvent/crm:P4_has_time-span/
+           [crm:P82a_begin_of_the_begin ?renovationStart ;
+            crm:P82b_end_of_the_end ?renovationEnd] .
+    }
+    """ .

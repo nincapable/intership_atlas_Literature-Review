@@ -1,0 +1,242 @@
+Table CONSTRUCTION
+BeginLifespanVersion
+EndLifespanVersion
+ConditionOfConstructionRef
+DateOfConstruction
+DateOfDemolition
+DateOfRenovation
+Name
+LegalConditions
+Place
+Address
+CityRef
+Cadastral Sheet
+Parcel
+SubA
+
+Table CONSTRUCTIONTOELEVATION
+ConstructionId
+ElevationId
+
+Table CONSTRUCTIONTOEXTERNALREFERENCE
+ConstructionRef
+ExternalReferenceRef
+
+Table BUILDING
+CurrentUse
+NumberOfBuildingUnits
+NumberOfDwellings
+NumberOfFloorsAboveGround
+ConstructionRef
+
+Table BUILDINGGEOMETRY2D
+BuildingRef
+HorGeomEstimatedAccuracy
+HorGeomReference
+ReferenceGeometry
+VerGeomEstimatedAccuracy
+VerGeomReference
+
+Table BUILDINGNATURE
+BuildingNatureLabel
+BuildingNatureDescription
+
+Table BUILDINGTOBUILDINGNATURE
+BuildingRef
+BuildingNatureRef
+
+Table CURRENTUSE
+CurrentUseValueRef
+Occupants
+Percentage
+
+Table CURRENTUSEVALUE
+CurrentUseValueLabel
+CurrentUseValueDescription
+
+Table STRUCTURE
+ConstructionRef
+Name
+Notes
+B1 Nr Storeys
+B2 Nr Basements
+B3 Average storey height m
+B4 Average storey surface m
+B5 Constructionrenovation period
+B6 Nr storeys above ground
+B7 Position in Aggregate
+B8 Regularity in plan
+B9 Structure
+C01 StructureTypology T1
+C02 T1-Vertical Structures
+C03 T1-Horizontal Structures
+C04 Structure Typology T2
+C05 T2-Vertical Structures
+C06 T2-Horizontal Structures
+C07 Isolated columns
+C08 Mixed structures
+C09 Strengthening
+C010 Roof
+C11 Material M1
+C12 M1-Masonry Typo
+C13 M1-Brick courses
+C14 M1-Listed Masonry
+C15 M1-pinning stones
+C16 M1-Horizontal Joint
+C17 M1-Vertical Joint
+C18 M1-Elements
+C19 M1-Origin
+C110 M1-Processing
+C111 M1-Conservation
+C112 M1-Shape
+C113 M1-Regularity Class
+C114 M1-Dimension
+C115 M1-Dimension Class
+C116 M1-Mortar function
+C117 M1-Mortar Consistency
+C118 M1-Mortar Colour
+C119 M1-Mortar Aggregate Colour
+C120 M1-Mortar Aggregate Type
+C121 M1-Mortar Aggregate Shape
+C122 M1-Joint Regularity
+C123 M1-Joint Dimension
+C124 M1-Mortar Quality Class
+C125 M1-NTC Class
+
+Table CONSTRUCTION MATERIAL
+ConstructionRef
+D01 Prevalent Material
+D02 Plaster
+D03 Sandstone
+D04 Limestone
+D05 Plaster
+D06 Brick
+D07 Other Materials
+D11 M1-Carbonate Content
+D12 M1-Salt Content
+D13 M1-Porosity
+D14 M1-Granulometry
+D16 M1-Dimension MQI
+D17 M1-Strenght MQI
+D18 M1-Mortat MQI
+D19 M1-Masonry MQI
+D110 M1-Masonry Category
+D111 M1-Mechanical Prop Nmmq
+D3 MQI-Average
+
+Table FOUNDATION
+ConstructionRef
+E1 Site Morphology
+E2 Foundations
+
+Table DAMAGE
+ConstructionRef
+F12 Damage Floors
+F13 Damage Stairs
+F14 Damage Roof
+F15 Damage Partition
+F16 Pre-existing Damage
+F11 Damage Vertical Structures
+F21 Damage Coverings
+F22 Damage Tiles Chimneys
+F23 Damage Eaves
+F24 Damage Objects
+F25 Damage Hydraulic
+F26 Damage Electricgas
+F3 Usability Classification
+
+Table SOCIALCULTURALHISTORICALVALUE
+ConstructionRef
+G1 Historical Value
+G2 Cultural, aesthetic and symbolic value
+G3 Social value
+G4 Religious, Spiritual value
+G5 Recreational value
+G6 Other value
+G7 Socio-Cultural Index
+
+Table ELEVATION
+ElevationReferenceRef
+ElevationValue
+
+Table ELEVATIONREFERENCE
+ElevationLabel
+ElevationDescription
+
+Table HEIGHTABOVEGROUND
+BuildingRef
+HeightReference
+LowReference
+HeightStatus
+Value
+
+Table HEIGHTSTATUS
+HeightStatusLabel
+HeightStatusDescription
+
+Table HORIZONTALGEOMETRYREFERENCE
+HorizontalGeometryLabel
+HorizontalGeometryDesc
+
+Table MEASURE
+MeasureType
+MeasurementDate
+ConstructionRef
+Marker3D
+
+Table MEASURETYPE
+MeasureTypeLabel
+MeasureTypeDescription
+
+Table OBJECT
+SheetRef
+StorageAreaRef
+ShelterAreaRef
+CurrentStorageArea
+HistoricStorageArea
+Title
+Quantity
+Description
+Author
+Diameter
+Width
+Depth
+Height
+Category
+DisciplinarySector
+Artefact
+Officer
+Note
+Date
+
+Table STORAGEAREA
+CityRef
+ConstructionRef
+Name
+Longitude
+Latitude
+Shelter
+
+Table EVENT
+ArtefactRef
+Purpose
+Description
+DateStart
+DateEnd
+ExternalResponsible
+InternalResponsible
+
+Table INTERVENTION
+ArtefactRef
+Rating
+Urgency
+EvaluationDate
+DateStart
+DateEnd
+Responsible
+Description
+
+Table ATTACHMENT
+TableName
+IDref
+File
