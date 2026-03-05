@@ -4,6 +4,36 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
+
+#################################################################
+# EUROCLASSES (NOUVEAU - classes contrôlées)
+#################################################################
+
+
+
+#################################################################
+# Composants REI
+
+fe:euroclass_fire_resistance a crm:E55_Type, owl:Class .
+
+fe:R a fe:euroclass_fire_resistance ; crm:P2_has_type "R" .
+fe:E a fe:euroclass_fire_resistance ; crm:P2_has_type "E" .
+fe:I a fe:euroclass_fire_resistance ; crm:P2_has_type "I" .
+fe:W a fe:euroclass_fire_resistance ; crm:P2_has_type "W" .
+
+# Bâtiment → ensemble R/E/I + durée
+fe:hasFireResistanceRating a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain fe:Building ;
+    rdfs:range fe:FireResistanceRating ;
+
+fe:resistanceComponents a owl:ObjectProperty ;
+    rdfs:domain fe:FireResistanceRating ;
+    rdfs:range fe:euroclass_fire_resistance ;
+
+fe:resistanceDuration a owl:DatatypeProperty ;
+    rdfs:domain fe:FireResistanceRating ;
+    rdfs:range xsd:integer ;
+
 #################################################################
 # Classes principales
 #################################################################
@@ -24,7 +54,7 @@ fe:MaterialInstance a owl:Class ;
 # Propriétés d’objet
 #################################################################
 
-#####
+#***************************************************************    
 # Building
 
 # 1. Date de Construction -> E12 Production
@@ -54,7 +84,7 @@ fe:hasIndividualMaterial a owl:ObjectProperty ;
 
 # 6. Sous-bassements → E26 Physical Feature OU E55 Type
 fe:hasSubstructure a owl:ObjectProperty ;
-    rdfs:domain fe:Building ; rdfs:range crm:E26_Physical_Feature ; 
+    rdfs:domain fe:Building ; rdfs:range crm:E25_Man_Made_Feature ; 
     rdfs:subPropertyOf crm:P46i_forms_part_of .
 
 # 7. Capacité personnes → E54 Dimension
@@ -64,8 +94,8 @@ fe:hasPersonCapacity a owl:ObjectProperty ;
 
 # 8. Usage courant → E55 Type
 fe:hasCurrentUse a owl:ObjectProperty ;
-    rdfs:domain fe:Building ; rdfs:range crm:E55_Type ; 
-    rdfs:subPropertyOf crm:P2_has_type .
+    rdfs:domain fe:Building ; rdfs:range crm:E7_Activity ;
+    rdfs:subPropertyOf crm:P9_consists_of ;
 
 # 9. Axes circulation → E25 Man-Made Feature (axes)
 fe:hasCirculationAxis a owl:ObjectProperty ;
@@ -97,13 +127,82 @@ fe:hasLocation a owl:ObjectProperty ;
     rdfs:domain fe:Building ; rdfs:range crm:E53_Place ; 
     rdfs:subPropertyOf crm:P53_has_former_or_current_location .
 
-#######
+#***************************************************************        
 # Axis
 
-#######
+fe:AxisType a owl:Class .
+
+# Instances énumérées (objets simples)
+fe:couloir a fe:AxisType ; rdfs:label "couloir"@fr .
+fe:escalier a fe:AxisType ; rdfs:label "escalier"@fr .
+fe:porte a fe:AxisType ; rdfs:label "porte"@fr .
+fe:rampe a fe:AxisType ; rdfs:label "rampe"@fr .
+fe:ascenseur a fe:AxisType ; rdfs:label "ascenseur"@fr .
+fe:fenetre a fe:AxisType ; rdfs:label "fenêtre"@fr .
+fe:voie_ouverte a fe:AxisType ; rdfs:label "voie ouverte"@fr .
+
+#----------------------------------------------------------------
+# 1. FACTEUR BLOQUANT (obstacles, encombrements)
+fe:hasBlockingFactor a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ; rdfs:range crm:E3_Condition_State ;
+    rdfs:subPropertyOf crm:P44_has_condition .
+
+fe:blockingLevel a owl:DatatypeProperty ;
+    rdfs:domain crm:E3_Condition_State ; rdfs:range xsd:decimal ;
+    rdfs:comment "0.0=libre, 1.0=bloqué total"@fr .
+
+#----------------------------------------------------------------
+# 2. CAPACITÉS
+# Capacité transport (véhicules, brancards...)
+fe:transportCapacity a owl:DatatypeProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal ;
+    rdfs:comment "pers/min (pompiers, brancards)"@fr .
+
+# Capacité piétons (évacuation principale)
+fe:pedestrianCapacity a owl:DatatypeProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal ;
+    rdfs:comment "pers/min (évacuation)"@fr .
+
+#----------------------------------------------------------------
+# 3. DIMENSIONS
+fe:width a owl:DatatypeProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal ;
+    rdfs:comment "Largeur utile (m)"@fr .
+
+fe:length a owl:DatatypeProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal ;
+    rdfs:comment "Longueur (m)"@fr .
+
+fe:slope a owl:DatatypeProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal ;
+    rdfs:comment "Pente % (escaliers, rampes)"@fr .
+
+#----------------------------------------------------------------
+# 4. PRATICABILITÉ (état opérationnel)
+fe:practicability a owl:DatatypeProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:string ;
+    rdfs:comment "ouvert|partiel|ferme|obstacle"@fr .
+
+#----------------------------------------------------------------
+# 5. ACCESSIBILITÉ (PMR)
+fe:accessibility a owl:DatatypeProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:string ;
+    rdfs:comment "PMR|non_PMR|partiel"@fr .
+
+#----------------------------------------------------------------
+# 6. LOCALISATION (dans bâtiment/zone)
+fe:isLocatedInBuilding a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ; rdfs:range fe:Building ;
+    rdfs:subPropertyOf crm:P53i_is_former_or_current_location_of .
+
+fe:isConnectedTo a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ; rdfs:range fe:Axis ;
+    rdfs:comment "Connexion graphe évacuation"@fr .
+
+#***************************************************************    
 # Artefact
 
-#######
+#***************************************************************    
 # MaterialInstance
 
 # UNIQUEMENT les propriétés ADDITIONNELLES (feu/simulateur)
@@ -111,17 +210,32 @@ fe:proportion a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:domain fe:MaterialInstance ; rdfs:range xsd:decimal ;
     rdfs:comment "Proportion en % (0.0-100.0)"@fr .
 
-fe:fireResistanceClass a owl:DatatypeProperty ;
-    rdfs:domain fe:MaterialInstance ; rdfs:range xsd:string ;
-    rdfs:comment "EI30, EI60, A1, etc."@fr .
+#----------------------------------------------------------------
+# Reaction to Fire
+e:EuroclassReactionValues a owl:Class ;
+    owl:oneOf (fe:A1 fe:A2 fe:B fe:C fe:D fe:E fe:F) .
 
-fe:firePropagationRate a owl:DatatypeProperty ;
-    rdfs:domain fe:MaterialInstance ; rdfs:range xsd:decimal ;
-    rdfs:comment "0.0-1.0"@fr .
+fe:reactionToFireClass a owl:ObjectProperty ;
+    rdfs:domain fe:MaterialInstance ;
+    rdfs:range fe:EuroclassReactionValues .
 
-fe:smokeProduction a owl:DatatypeProperty ;
-    rdfs:domain fe:MaterialInstance ; rdfs:range xsd:decimal ;
-    rdfs:comment "0.0-1.0"@fr .
+#----------------------------------------------------------------
+# Smoke Production
+fe:EuroclassSmokeValues a owl:Class ;
+    owl:oneOf (fe:s1 fe:s2 fe:s3) .
+
+fe:smokeProductionClass a owl:ObjectProperty ;
+    rdfs:domain fe:MaterialInstance ;
+    rdfs:range fe:EuroclassSmokeValues .
+
+#----------------------------------------------------------------
+# Flame Spread
+fe:EuroclassFlameValues a owl:Class ;
+    owl:oneOf (fe:d0 fe:d1 fe:d2) .
+
+fe:flameSpreadClass a owl:ObjectProperty ;
+    rdfs:domain fe:MaterialInstance ;
+    rdfs:range fe:EuroclassFlameValues .
 
 #################################################################
 # Propriétés des attributs
