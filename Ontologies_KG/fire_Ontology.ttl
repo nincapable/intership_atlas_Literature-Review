@@ -233,12 +233,12 @@ fe:rescueAccessibilityType a owl:ObjectProperty ;
     rdfs:comment "Granted, Uncertain, PossibleIfNecessary, Denied"@fr .
 
 #----------------------------------------------------------------
-# 7. LOCALISATION (dans bâtiment/zone)
 
-# Position géographique (intérieur/extérieur)
-fe:hasGeoLocation a owl:ObjectProperty ;
-    rdfs:domain fe:Axis ; rdfs:range crm:E94_Spatial_Coordinates ;
-    rdfs:subPropertyOf crm:P168_place_is_defined_by .
+################################################################
+#------------------A REVOIR DE TOUTE URGENCE-------------------#
+################################################################
+
+# 7. LOCALISATION (dans bâtiment/zone)
 
 # Niveau/étage (intérieur)
 fe:isOnLevel a owl:ObjectProperty ;
@@ -246,9 +246,12 @@ fe:isOnLevel a owl:ObjectProperty ;
     rdfs:comment "Niveau: RDC=0, 1er=1, souterrain=-1"@fr .
 
 # Coordonnees
-fe:isLocatedInZone a owl:ObjectProperty ;       #fe:isLocatedInSpatialZone a owl:ObjectProperty ;
-    rdfs:domain fe:Axis ; rdfs:range fe:Zone ;      #rdfs:domain fe:Axis ; rdfs:range crm:E53_Place ;
-    rdfs:comment "Zone d'évacuation"@fr .           #rdfs:subPropertyOf crm:P89_falls_within .
+#Nativement supporté par CRM (
+# E25 -> P53 is_former_or_current_location_of -> E53 place | 
+#                                                          |-> P168 place_is_defined_by -> E94 Space Primitive -> <"LINESTRING Z(x1 y1 z1 x2 y2 z2)"^^geo:wktLiteral> .
+#                                                          |-> P121 OverlapsWith -> (<"POLYGONE Z(x1 y1 z1 x2 y2 z2)"^^geo:wktLiteral> <-E94 <- P168 <-) <E53> <- P53 <-fe:Building
+#                                                          |-> P121 OverlapsWith -> (<"POLYGONE Z(x1 y1 z1 x2 y2 z2)"^^geo:wktLiteral> <-E94 <- P168 <-) < fe:Zone>
+#                                                          |-> P122 BorderWith -> <E53> <- P53 <-fe:Axis
 
 fe:isLocatedInBuilding a owl:ObjectProperty ;
     rdfs:domain fe:Axis ; rdfs:range fe:Building ;
@@ -258,8 +261,26 @@ fe:isConnectedTo a owl:ObjectProperty ;
     rdfs:domain fe:Axis ; rdfs:range fe:Axis ;
     rdfs:comment "Connexion graphe évacuation"@fr .
 
+
+################################################################
+#------------------A REVOIR DE TOUTE URGENCE-------------------#
+################################################################
+
 #***************************************************************    
 # Artefact
+
+fe:techn     a owl:Class ;
+    owl:oneOf ( 
+        fe:Granted
+        fe:Uncertain
+        fe:PossibleIfNecessary
+        fe:Denied
+    ) .
+
+fe:rescueAccessibilityType a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ;
+    rdfs:range fe:RescueAccessibilityLevel ;
+    rdfs:comment "Granted, Uncertain, PossibleIfNecessary, Denied"@fr .
 
 #***************************************************************    
 # MaterialInstance
