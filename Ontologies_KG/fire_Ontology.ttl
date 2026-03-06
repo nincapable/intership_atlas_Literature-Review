@@ -9,9 +9,7 @@
 # EUROCLASSES (NOUVEAU - classes contrôlées)
 #################################################################
 
-
-
-#################################################################
+#***************************************************************    
 # Composants REI
 
 fe:euroclass_fire_resistance a crm:E55_Type, owl:Class .
@@ -143,25 +141,43 @@ fe:voie_ouverte a fe:AxisType ; rdfs:label "voie ouverte"@fr .
 
 #----------------------------------------------------------------
 # 1. FACTEUR BLOQUANT (obstacles, encombrements)
-fe:hasBlockingFactor a owl:ObjectProperty ;
+# État CURRENT de blocage
+fe:hasCurrentBlockingState a owl:ObjectProperty ;
     rdfs:domain fe:Axis ; rdfs:range crm:E3_Condition_State ;
     rdfs:subPropertyOf crm:P44_has_condition .
 
-fe:blockingLevel a owl:DatatypeProperty ;
+fe:currentBlockingLevel a owl:DatatypeProperty ;
     rdfs:domain crm:E3_Condition_State ; rdfs:range xsd:decimal ;
-    rdfs:comment "0.0=libre, 1.0=bloqué total"@fr .
+    rdfs:comment "Blocage ACTUEL 0.0=libre, 1.0=bloqué"@fr .
+
+# Risque FUTUR d'aggravation
+fe:hasPotentialBlockingEvent a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ; rdfs:range crm:E5_Event ;
+    rdfs:subPropertyOf crm:P12_occurred_in_the_presence_of .
+
+# Propriétés du risque futur
+fe:potentialBlockingProbability a owl:DatatypeProperty ;
+    rdfs:domain crm:E5_Event ; rdfs:range xsd:decimal .
+
+fe:potentialBlockingImpact a owl:DatatypeProperty ;
+    rdfs:domain crm:E5_Event ; rdfs:range xsd:decimal .
+    rdfs:comment "Impact sur le blocage 0.0=libre, 1.0=bloqué"@fr .
+
+fe:potentialBlockingTime a owl:DatatypeProperty ;
+    rdfs:domain crm:E5_Event ; rdfs:range xsd:decimal .
+    rdfs:comment "Durée du blocage en heures"@fr .
 
 #----------------------------------------------------------------
 # 2. CAPACITÉS
-# Capacité transport (véhicules, brancards...)
+# Capacité transport
 fe:transportCapacity a owl:DatatypeProperty ;
     rdfs:domain fe:Axis ; rdfs:range xsd:decimal ;
-    rdfs:comment "pers/min (pompiers, brancards)"@fr .
+    rdfs:comment "Capacité transport (pers/min)"@fr .
 
-# Capacité piétons (évacuation principale)
+# Capacité piétons
 fe:pedestrianCapacity a owl:DatatypeProperty ;
     rdfs:domain fe:Axis ; rdfs:range xsd:decimal ;
-    rdfs:comment "pers/min (évacuation)"@fr .
+    rdfs:comment "Capacité piétons (pers/min)"@fr .
 
 #----------------------------------------------------------------
 # 3. DIMENSIONS
@@ -179,18 +195,61 @@ fe:slope a owl:DatatypeProperty ;
 
 #----------------------------------------------------------------
 # 4. PRATICABILITÉ (état opérationnel)
-fe:practicability a owl:DatatypeProperty ;
-    rdfs:domain fe:Axis ; rdfs:range xsd:string ;
-    rdfs:comment "ouvert|partiel|ferme|obstacle"@fr .
+fe:practicabilityType a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ; rdfs:range fe:PracticabilityLevel .
+
+fe:practicabilityLevel a owl:DatatypeProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal ;
+    rdfs:comment "0.0=facile, 1.0=quasi_impossible (falaise, ronces...)"@fr .
 
 #----------------------------------------------------------------
 # 5. ACCESSIBILITÉ (PMR)
-fe:accessibility a owl:DatatypeProperty ;
-    rdfs:domain fe:Axis ; rdfs:range xsd:string ;
-    rdfs:comment "PMR|non_PMR|partiel"@fr .
+fe:AccessibilityLevel a owl:Class ;
+    owl:oneOf ( 
+        fe:WheelchairAccessible 
+        fe:PartiallyArrangedPedestrian 
+        fe:PossibleHelped 
+        fe:InaccessibleDisabledPerson 
+    ) .
+
+fe:accessibilityType a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ;
+    rdfs:range fe:AccessibilityLevel ;
+    rdfs:comment "Niveau PMR: WheelchairAccessible, PossibleHelped..."@fr .
 
 #----------------------------------------------------------------
-# 6. LOCALISATION (dans bâtiment/zone)
+# 6. ACCESSIBILITÉ (PMR)
+fe:RescueAccessibilityLevel a owl:Class ;
+    owl:oneOf ( 
+        fe:Granted
+        fe:Uncertain
+        fe:PossibleIfNecessary
+        fe:Denied
+    ) .
+
+fe:rescueAccessibilityType a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ;
+    rdfs:range fe:RescueAccessibilityLevel ;
+    rdfs:comment "Granted, Uncertain, PossibleIfNecessary, Denied"@fr .
+
+#----------------------------------------------------------------
+# 7. LOCALISATION (dans bâtiment/zone)
+
+# Position géographique (intérieur/extérieur)
+fe:hasGeoLocation a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ; rdfs:range crm:E94_Spatial_Coordinates ;
+    rdfs:subPropertyOf crm:P168_place_is_defined_by .
+
+# Niveau/étage (intérieur)
+fe:isOnLevel a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:integer ;
+    rdfs:comment "Niveau: RDC=0, 1er=1, souterrain=-1"@fr .
+
+# Coordonnees
+fe:isLocatedInZone a owl:ObjectProperty ;       #fe:isLocatedInSpatialZone a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ; rdfs:range fe:Zone ;      #rdfs:domain fe:Axis ; rdfs:range crm:E53_Place ;
+    rdfs:comment "Zone d'évacuation"@fr .           #rdfs:subPropertyOf crm:P89_falls_within .
+
 fe:isLocatedInBuilding a owl:ObjectProperty ;
     rdfs:domain fe:Axis ; rdfs:range fe:Building ;
     rdfs:subPropertyOf crm:P53i_is_former_or_current_location_of .
