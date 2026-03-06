@@ -1,0 +1,15 @@
+Gama plateforme, api entrée -> CSV 
+avoir un mapping de méteo ( carte de chaleur, etc) a connecter au sim fire
+
+mapping des archetypes comportemenetaux (C2IMpress) pour ajustement des parametrees dans le sumulateur evacuation
+renseigner l'ensemble des parametres d'une population artificielle.
+regarder comment on peut stocker formellement les resultat pour recupération et comparaison.
+contacter pascal ledru.
+
+Pour la recupération des données de simulation : 
+- infrastructure datas : 
+
+mathsim plateform to developpe agent based human behaviour.
+insee for pop datas
+policy datas, 
+
