@@ -348,7 +348,7 @@ fe:Artos_Strucutral_SubType a owl:Class;
 #################################################################
 # Requetes SPARQL Standards
 #################################################################
-
+#TODO a refaire pour la doc et integrer au format modulaire
 # Template : "Récupérer dates bâtiment"
 fe:GetBuildingDates a spl:QueryTemplate ;
     rdfs:label "Dates d'un bâtiment"@fr ;
