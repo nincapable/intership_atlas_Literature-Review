@@ -8,7 +8,7 @@
 #################################################################
 # EUROCLASSES (NOUVEAU - classes contrôlées)
 #################################################################
-
+#TODO : Confirmer ce Découpage
 #***************************************************************    
 # Composants REI
 
@@ -26,15 +26,17 @@ fe:hasFireResistanceRating a owl:ObjectProperty, owl:FunctionalProperty ;
 
 fe:resistanceComponents a owl:ObjectProperty ;
     rdfs:domain fe:FireResistanceRating ;
-    rdfs:range fe:euroclass_fire_resistance ;
+    rdfs:range fe:euroclass_fire_resistance.
 
 fe:resistanceDuration a owl:DatatypeProperty ;
     rdfs:domain fe:FireResistanceRating ;
-    rdfs:range xsd:integer ;
+    rdfs:range xsd:integer.
 
 #################################################################
 # Classes principales
 #################################################################
+#FIXME : Finit les classes majeures
+#
 
 fe:Building a owl:Class ; 
     rdfs:subClassOf crm:E25_Man_Made_Feature .
@@ -51,7 +53,7 @@ fe:MaterialInstance a owl:Class ;
 #################################################################
 # Propriétés d’objet
 #################################################################
-
+#TODO : Verifier que cela suffit
 #***************************************************************    
 # Building
 
@@ -83,7 +85,7 @@ fe:hasIndividualMaterial a owl:ObjectProperty ;
 # 6. Sous-bassements → E26 Physical Feature OU E55 Type
 fe:hasSubstructure a owl:ObjectProperty ;
     rdfs:domain fe:Building ; rdfs:range crm:E25_Man_Made_Feature ; 
-    rdfs:subPropertyOf crm:P46i_forms_part_of .
+    rdfs:subPropertyOf crm:P46i_forms_part_of.
 
 # 7. Capacité personnes → E54 Dimension
 fe:hasPersonCapacity a owl:ObjectProperty ;
@@ -98,7 +100,7 @@ fe:hasCurrentUse a owl:ObjectProperty ;
 # 9. Axes circulation → E25 Man-Made Feature (axes)
 fe:hasCirculationAxis a owl:ObjectProperty ;
     rdfs:domain fe:Building ; rdfs:range fe:Axis ; 
-    rdfs:subPropertyOf crm:P89_falls_within .
+    rdfs:subPropertyOf crm:P89_falls_within.
 
 # 10. Zone → E53 Place
 fe:isInZone a owl:ObjectProperty ;
@@ -161,11 +163,11 @@ fe:potentialBlockingProbability a owl:DatatypeProperty ;
 
 fe:potentialBlockingImpact a owl:DatatypeProperty ;
     rdfs:domain crm:E5_Event ; rdfs:range xsd:decimal .
-    rdfs:comment "Impact sur le blocage 0.0=libre, 1.0=bloqué"@fr .
+    rdfs:comment "Impact sur le blocage 0.0=libre, 1.0=bloqué"@fr.
 
 fe:potentialBlockingTime a owl:DatatypeProperty ;
     rdfs:domain crm:E5_Event ; rdfs:range xsd:decimal .
-    rdfs:comment "Durée du blocage en heures"@fr .
+    rdfs:comment "Durée du blocage en heures"@fr.
 
 #----------------------------------------------------------------
 # 2. CAPACITÉS
@@ -237,7 +239,7 @@ fe:rescueAccessibilityType a owl:ObjectProperty ;
 ################################################################
 #------------------A REVOIR DE TOUTE URGENCE-------------------#
 ################################################################
-
+#TODO : Revoir de toute urgence
 # 7. LOCALISATION (dans bâtiment/zone)
 
 # Niveau/étage (intérieur)
@@ -269,53 +271,72 @@ fe:isConnectedTo a owl:ObjectProperty ;
 #***************************************************************    
 # Artefact
 
-fe:techn     a owl:Class ;
+fe:Artos_Type a owl:Class ;
+    rdfs:subClassOf crm:E55Type;
     owl:oneOf ( 
-        fe:Granted
-        fe:Uncertain
-        fe:PossibleIfNecessary
-        fe:Denied
+        fe:Domestique
+        fe:Martiale
+        fe:Culturelle
+        fe:Spirituelle
+        fe:Scientifique
+        fe:Structurelle
     ) .
 
-fe:rescueAccessibilityType a owl:ObjectProperty ;
-    rdfs:domain fe:Axis ;
-    rdfs:range fe:RescueAccessibilityLevel ;
-    rdfs:comment "Granted, Uncertain, PossibleIfNecessary, Denied"@fr .
+fe:Artos_Domestic_SubType a owl:Class;
+    rdfs:rdfs:subClassOf fe:Artos_Type;
+    owl:oneOf (
+        fe:Vaisselle
+        fe:Mobilier
+        fe:Hygiène
+        fe:Outillage
+    ).
+
+fe:Artos_Martial_SubType a owl:Class;
+    rdfs:rdfs:subClassOf fe:Artos_Type;
+    owl:oneOf (
+        fe:Armes
+        fe:Armure
+        fe:Harnachement
+    ).
+
+fe:Artos_Cultural_SubType a owl:Class;
+    rdfs:rdfs:subClassOf fe:Artos_Type;
+    owl:oneOf (
+        fe:Bijouterie
+        fe:Textile
+        fe:Statut
+        fe:Instruments
+    ).
+
+fe:Artos_Spiritual_SubType a owl:Class;
+    rdfs:rdfs:subClassOf fe:Artos_Type;
+    owl:oneOf (
+        fe:Icone
+        fe:Funéraire
+        fe:Ésotérisme
+        fe:Meuble_Lithurgique
+    ).
+
+fe:Artos_Scientific_SubType a owl:Class;
+    rdfs:rdfs:subClassOf fe:Artos_Type;
+    owl:oneOf (
+        fe:Épigraphie
+        fe:Numismatique
+        fe:Métrique
+    ).
+
+fe:Artos_Strucutral_SubType a owl:Class;
+    rdfs:rdfs:subClassOf fe:Artos_Type;
+    owl:oneOf (
+        fe:Décoration
+        fe:Structure
+        fe:Amenagement
+    ).
+
+
 
 #***************************************************************    
-# MaterialInstance
-
-# UNIQUEMENT les propriétés ADDITIONNELLES (feu/simulateur)
-fe:proportion a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:domain fe:MaterialInstance ; rdfs:range xsd:decimal ;
-    rdfs:comment "Proportion en % (0.0-100.0)"@fr .
-
-#----------------------------------------------------------------
-# Reaction to Fire
-e:EuroclassReactionValues a owl:Class ;
-    owl:oneOf (fe:A1 fe:A2 fe:B fe:C fe:D fe:E fe:F) .
-
-fe:reactionToFireClass a owl:ObjectProperty ;
-    rdfs:domain fe:MaterialInstance ;
-    rdfs:range fe:EuroclassReactionValues .
-
-#----------------------------------------------------------------
-# Smoke Production
-fe:EuroclassSmokeValues a owl:Class ;
-    owl:oneOf (fe:s1 fe:s2 fe:s3) .
-
-fe:smokeProductionClass a owl:ObjectProperty ;
-    rdfs:domain fe:MaterialInstance ;
-    rdfs:range fe:EuroclassSmokeValues .
-
-#----------------------------------------------------------------
-# Flame Spread
-fe:EuroclassFlameValues a owl:Class ;
-    owl:oneOf (fe:d0 fe:d1 fe:d2) .
-
-fe:flameSpreadClass a owl:ObjectProperty ;
-    rdfs:domain fe:MaterialInstance ;
-    rdfs:range fe:EuroclassFlameValues .
+# Artefact
 
 #################################################################
 # Propriétés des attributs

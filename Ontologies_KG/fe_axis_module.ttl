@@ -1,0 +1,77 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+fe:Axis a owl:Class ; 
+    rdfs:subClassOf crm:E25_Man_Made_Feature .
+
+fe:hasCirculationAxis a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range fe:Axis ; 
+    rdfs:subPropertyOf crm:P89_falls_within.
+
+fe:AxisType a owl:Class .
+
+fe:couloir a fe:AxisType ; rdfs:label "couloir"@fr .
+fe:escalier a fe:AxisType ; rdfs:label "escalier"@fr .
+fe:porte a fe:AxisType ; rdfs:label "porte"@fr .
+fe:rampe a fe:AxisType ; rdfs:label "rampe"@fr .
+fe:ascenseur a fe:AxisType ; rdfs:label "ascenseur"@fr .
+fe:fenetre a fe:AxisType ; rdfs:label "fenêtre"@fr .
+fe:voie_ouverte a fe:AxisType ; rdfs:label "voie ouverte"@fr .
+
+fe:transportCapacity a owl:DatatypeProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal .
+
+fe:pedestrianCapacity a owl:DatatypeProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal .
+
+fe:width a owl:DatatypeProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal .
+
+fe:length a owl:DatatypeProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal .
+
+fe:slope a owl:DatatypeProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal .
+
+fe:isOnLevel a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:integer .
+
+fe:isLocatedInBuilding a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ; rdfs:range fe:Building ;
+    rdfs:subPropertyOf crm:P53i_is_former_or_current_location_of .
+
+fe:isConnectedTo a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ; rdfs:range fe:Axis .
+
+# FACTEUR BLOQUANT & RISQUES
+fe:hasCurrentBlockingState a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ; rdfs:range crm:E3_Condition_State ;
+    rdfs:subPropertyOf crm:P44_has_condition .
+
+fe:currentBlockingLevel a owl:DatatypeProperty ;
+    rdfs:domain crm:E3_Condition_State ; rdfs:range xsd:decimal .
+
+fe:hasPotentialBlockingEvent a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ; rdfs:range crm:E5_Event ;
+    rdfs:subPropertyOf crm:P12_occurred_in_the_presence_of .
+
+fe:potentialBlockingProbability a owl:DatatypeProperty ; rdfs:domain crm:E5_Event ; rdfs:range xsd:decimal .
+fe:potentialBlockingImpact a owl:DatatypeProperty ; rdfs:domain crm:E5_Event ; rdfs:range xsd:decimal .
+fe:potentialBlockingTime a owl:DatatypeProperty ; rdfs:domain crm:E5_Event ; rdfs:range xsd:decimal .
+
+# PRATICABILITÉ & ACCESSIBILITÉ
+fe:practicabilityType a owl:ObjectProperty ; rdfs:domain fe:Axis ; rdfs:range fe:PracticabilityLevel .
+fe:practicabilityLevel a owl:DatatypeProperty ; rdfs:domain fe:Axis ; rdfs:range xsd:decimal .
+
+fe:AccessibilityLevel a owl:Class ;
+    owl:oneOf ( fe:WheelchairAccessible fe:PartiallyArrangedPedestrian fe:PossibleHelped fe:InaccessibleDisabledPerson ) .
+
+fe:accessibilityType a owl:ObjectProperty ; rdfs:domain fe:Axis ; rdfs:range fe:AccessibilityLevel .
+
+fe:RescueAccessibilityLevel a owl:Class ;
+    owl:oneOf ( fe:Granted fe:Uncertain fe:PossibleIfNecessary fe:Denied ) .
+
+fe:rescueAccessibilityType a owl:ObjectProperty ; rdfs:domain fe:Axis ; rdfs:range fe:RescueAccessibilityLevel .

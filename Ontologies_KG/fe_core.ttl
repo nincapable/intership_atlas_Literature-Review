@@ -1,0 +1,12 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+fe:core a owl:Ontology ;
+    rdfs:label "Fire and Evacuation Ontology - Core Entry Point"@fr ;
+    rdfs:comment "Point d'entrée unique important les modules thématiques."@fr ;
+    # Importation des fichiers locaux ou distants
+    owl:imports <http://example.org/fire_and_evacuation/building_module> ,
+                <http://example.org/fire_and_evacuation/axis_module> ,
+                <http://example.org/fire_and_evacuation/artefact_module> ,
+                <http://example.org/fire_and_evacuation/safety_module> .

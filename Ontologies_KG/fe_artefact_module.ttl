@@ -1,0 +1,98 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# --- CLASSE PRINCIPALE ---
+fe:Artefact a owl:Class ; 
+    rdfs:subClassOf crm:E22_Man_Made_Object .
+
+# --- ALIGNEMENTS CRM POUR LES CONCEPTS NATIFS ---
+
+# 1. Histoire et Acteurs
+# Auteur : fe:Artefact -> P108i_was_produced_by -> E12_Production -> P14_carried_out_by -> E39_Actor
+# Provenance (humaine/Propriétaires) : fe:Artefact -> P51_has_former_or_current_owner -> E39_Actor
+
+# 2. Chronologie
+# Date de Création : fe:Artefact -> P108i_was_produced_by -> E12_Production -> P4_has_time-span -> E52_Time-Span
+# Date de Rénovation : fe:Artefact -> P31i_was_modified_by -> E11_Modification -> P4_has_time-span -> E52_Time-Span
+
+# 3. Géographie et Origine
+# Origine (site de production) : fe:Artefact -> P108i_was_produced_by -> E12_Production -> P7_took_place_at -> E53_Place
+# Localisation actuelle : fe:Artefact -> P55_has_current_location -> E53_Place (ou fe:Building via fe:containsArtefact)
+
+# 4. Dimensions (Poids, Taille)
+# Dimensions : fe:Artefact -> P43_has_dimension -> E54_Dimension 
+#   (Note : E54 permet de spécifier P90_has_value pour le chiffre et P91_has_unit pour l'unité cm, m, kg)
+
+# 5. Valeur (Financière ou d'Assurance)
+# Valeur : fe:Artefact -> P43_has_dimension -> E54_Dimension -> P2_has_type -> E55_Type ("Valeur d'assurance")
+#   (Note : Le CRM traite la valeur comme une dimension monétaire)
+
+# 6. Documentation et Procédures
+# Procédure de secours : fe:Artefact -> P70i_is_documented_in -> E31_Document
+# Description physique : fe:Artefact -> P3_has_note -> E62_String (pour les détails textuels type "Fragile au contact de l'eau")
+
+# 7. Type et Classement
+# Type d'objet : fe:Artefact -> P2_has_type -> fe:Artos_Type (votre hiérarchie E55 personnalisée)
+
+# --- PROPRIÉTÉS SPÉCIFIQUES (NON-CRM) ---
+
+# Mobilité : Concept critique pour l'évacuation non couvert par le CRM
+fe:mobility a owl:ObjectProperty ;
+    rdfs:label "mobilité"@fr ;
+    rdfs:domain fe:Artefact ;
+    rdfs:range crm:E55_Type ;
+    rdfs:comment "Indique si l'objet est Fixe, Mobile ou Semi-mobile."@fr .
+
+# Fragilité : Concept critique pour la manipulation d'urgence
+fe:fragility a owl:ObjectProperty ;
+    rdfs:label "fragilité"@fr ;
+    rdfs:domain fe:Artefact ;
+    rdfs:range crm:E55_Type ;
+    rdfs:comment "Sensibilité aux chocs, à l'eau ou à la chaleur (ex: Thermosensible)."@fr .
+
+# Procédure d'urgence : Lien opérationnel vers le document de sauvegarde
+fe:hasEmergencyProcedureDocument a owl:ObjectProperty ;
+    rdfs:label "a une procédure d'urgence"@fr ;
+    rdfs:domain fe:Artefact ; 
+    rdfs:range crm:E31_Document ;
+    rdfs:subPropertyOf crm:P70i_is_documented_in .
+
+# --- TAXONOMIE MÉTIER (Extension de E55_Type) ---
+
+fe:Artos_Type a owl:Class ;
+    rdfs:subClassOf crm:E55_Type ;
+    owl:oneOf ( fe:Domestique fe:Martiale fe:Culturelle fe:Spirituelle fe:Scientifique fe:Structurelle ) .
+
+fe:Artos_Domestic_SubType a owl:Class ;
+    rdfs:subClassOf fe:Artos_Type ;
+    owl:oneOf ( fe:Vaisselle fe:Mobilier fe:Hygiène fe:Outillage ) .
+
+fe:Artos_Martial_SubType a owl:Class ;
+    rdfs:subClassOf fe:Artos_Type ;
+    owl:oneOf ( fe:Armes fe:Armure fe:Harnachement ) .
+
+fe:Artos_Cultural_SubType a owl:Class ;
+    rdfs:subClassOf fe:Artos_Type ;
+    owl:oneOf ( fe:Bijouterie fe:Textile fe:Statut fe:Instruments ) .
+
+fe:Artos_Spiritual_SubType a owl:Class ;
+    rdfs:subClassOf fe:Artos_Type ;
+    owl:oneOf ( fe:Icone fe:Funéraire fe:Ésotérisme fe:Meuble_Lithurgique ) .
+
+fe:Artos_Scientific_SubType a owl:Class ;
+    rdfs:subClassOf fe:Artos_Type ;
+    owl:oneOf ( fe:Épigraphie fe:Numismatique fe:Métrique ) .
+
+fe:Artos_Strucutral_SubType a owl:Class ;
+    rdfs:subClassOf fe:Artos_Type ;
+    owl:oneOf ( fe:Décoration fe:Structure fe:Amenagement ) .
+
+fe:hasEmergencyProcedureDocument a owl:ObjectProperty ;
+    rdfs:label "a une procédure d'urgence (document)"@fr ;
+    rdfs:domain fe:Artefact ; 
+    rdfs:range crm:E31_Document ;
+    rdfs:subPropertyOf crm:P70i_is_documented_in ;
+    rdfs:comment "Lien vers le document PDF ou la fiche de procédure pour le sauvetage de l'artefact."@fr .

@@ -1,0 +1,64 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+#################################################################
+# 1. MODULE RÉACTION (Comportement du matériau)
+#################################################################
+
+fe:ReactionToFire a owl:Class ;
+    rdfs:label "Propriétés de Réaction au Feu"@fr .
+
+# Propriétés de la "boîte" Reaction
+fe:hasReactionClass a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain fe:ReactionToFire ;
+    rdfs:range fe:ReactionToFireClass .
+
+fe:hasSmokeClass a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain fe:ReactionToFire ;
+    rdfs:range fe:SmokeProductionClass .
+
+fe:hasDropletClass a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain fe:ReactionToFire ;
+    rdfs:range fe:FlamingDropletsClass .
+
+# Énumérations (Les valeurs autorisées)
+fe:ReactionToFireClass a owl:Class ; owl:oneOf ( fe:A1 fe:A2 fe:B fe:C fe:D fe:E fe:F ) .
+fe:SmokeProductionClass a owl:Class ; owl:oneOf ( fe:s1 fe:s2 fe:s3 ) .
+fe:FlamingDropletsClass a owl:Class ; owl:oneOf ( fe:d0 fe:d1 fe:d2 ) .
+
+#################################################################
+# 2. MODULE RÉSISTANCE (Performance de l'élément)
+#################################################################
+
+fe:FireResistanceRating a owl:Class ;
+    rdfs:label "Degré de Résistance au Feu"@fr .
+
+# Propriétés de la "boîte" Resistance
+fe:resistanceComponents a owl:ObjectProperty ;
+    rdfs:domain fe:FireResistanceRating ;
+    rdfs:range fe:FireResistanceComponent .
+
+fe:resistanceDuration a owl:DatatypeProperty ;
+    rdfs:domain fe:FireResistanceRating ;
+    rdfs:range xsd:integer .
+
+# Énumérations REI
+fe:FireResistanceComponent a owl:Class ;
+    owl:oneOf ( fe:R fe:E fe:I fe:W ) .
+
+#################################################################
+# 3. ATTACHE AUX OBJETS (Modularité)
+#################################################################
+
+# Un matériau a une réaction
+fe:hasReaction a owl:ObjectProperty ;
+    rdfs:domain fe:MaterialInstance ;
+    rdfs:range fe:ReactionToFire .
+
+# Un élément (Bâtiment ou Axe) a une résistance
+fe:hasResistance a owl:ObjectProperty ;
+    rdfs:domain [ owl:unionOf (fe:Building fe:Axis) ] ;
+    rdfs:range fe:FireResistanceRating .

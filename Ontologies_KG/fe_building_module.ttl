@@ -1,0 +1,102 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+fe:Building a owl:Class ; 
+    rdfs:subClassOf crm:E25_Man_Made_Feature .
+
+fe:MaterialInstance a owl:Class ; 
+    rdfs:subClassOf crm:E57_Material .
+
+fe:ArchitectureStyle a owl:Class ; rdfs:subClassOf crm:E55_Type .
+
+fe:StyleAntique a owl:Class ; rdfs:subClassOf fe:ArchitectureStyle .
+fe:StyleMedieval a owl:Class ; rdfs:subClassOf fe:ArchitectureStyle .
+fe:StyleClassique a owl:Class ; rdfs:subClassOf fe:ArchitectureStyle .
+fe:StyleModerne a owl:Class ; rdfs:subClassOf fe:ArchitectureStyle .
+fe:StyleVernaculaire a owl:Class ; rdfs:subClassOf fe:ArchitectureStyle .
+
+# Propriétés d’objet Building
+###### Non accessible nativement sans perte d'information ######
+fe:hasConstructionEvent a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E12_Production ;
+    rdfs:subPropertyOf crm:P108i_was_produced_by .
+
+####### Nativement accessible, sans perte d'information ########
+fe:hasDestructionEvent a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E6_Destruction ;
+    rdfs:subPropertyOf crm:P13i_was_destroyed_by .
+
+####### Nativement accessible, sans perte d'information ########
+fe:hasRenovationEvent a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E11_Modification ;
+    rdfs:subPropertyOf crm:P31i_was_modified_by .
+
+###### Non accessible nativement sans perte d'information ######
+fe:hasArchitectureStyle a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range fe:ArchitectureStyle ; 
+    rdfs:subPropertyOf crm:P2_has_type .
+
+###### Non accessible nativement sans perte d'information ######
+fe:hasIndividualMaterial a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range fe:MaterialInstance ;
+    rdfs:subPropertyOf crm:P45_consists_of .
+
+###### Non accessible nativement sans perte d'information ######
+fe:hasSubstructure a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E25_Man_Made_Feature ; 
+    rdfs:subPropertyOf crm:P46i_forms_part_of.
+
+###### Non accessible nativement sans perte d'information ######
+fe:hasPersonCapacity a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E54_Dimension ; 
+    rdfs:subPropertyOf crm:P43_has_dimension .
+
+####### Nativement accessible, sans perte d'information ########
+fe:hasCurrentUse a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E7_Activity ;
+    rdfs:subPropertyOf crm:P9_consists_of .
+
+###### Non accessible nativement sans perte d'information ######
+fe:isInZone a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E53_Place ; 
+    rdfs:subPropertyOf crm:P89_falls_within .
+
+###### Non accessible nativement sans perte d'information ######
+fe:hasRiskExposure a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E3_Condition_State ;
+    rdfs:subPropertyOf crm:P44_has_condition .
+
+####### Nativement accessible, sans perte d'information ########
+fe:hasGeoDimensions a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E94_Spatial_Coordinates ; 
+    rdfs:subPropertyOf crm:P168_place_is_defined_by .
+####### Nativement accessible, sans perte d'information ########
+fe:hasLocation a owl:ObjectProperty ;
+    rdfs:domain fe:Building ; rdfs:range crm:E53_Place ; 
+    rdfs:subPropertyOf crm:P53_has_former_or_current_location .
+
+###### Non accessible nativement sans perte d'information ######
+fe:hasEmergencyEvacuationDocument a owl:ObjectProperty ;
+    rdfs:label "a une procédure d'évacuation (document)"@fr ;
+    rdfs:domain fe:Building ; 
+    rdfs:range crm:E31_Document ;
+    rdfs:subPropertyOf crm:P70i_is_documented_in ;
+    rdfs:comment "Lien vers le plan d'intervention ou la procédure globale du bâtiment."@fr .
+
+###### Non accessible nativement sans perte d'information ######
+fe:hasEmergencyInterventionDocument a owl:ObjectProperty ;
+    rdfs:label "a une procédure d'intervention (document)"@fr ;
+    rdfs:domain fe:Building ; 
+    rdfs:range crm:E31_Document ;
+    rdfs:subPropertyOf crm:P70i_is_documented_in ;
+    rdfs:comment "Lien vers le plan d'intervention ou la procédure globale du bâtiment."@fr .
+
+#---------------------------------------------------------------------------------------------
+# Propriétés d’objet MaterialInstance
+fe:hasReactionToFire a owl:ObjectProperty ;
+    rdfs:label "a pour réaction au feu"@fr ;
+    rdfs:domain fe:MaterialInstance ;
+    rdfs:range fe:ReactionToFire .
