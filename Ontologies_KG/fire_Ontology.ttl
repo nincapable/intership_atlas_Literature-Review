@@ -22,7 +22,7 @@ fe:W a fe:euroclass_fire_resistance ; crm:P2_has_type "W" .
 # Bâtiment → ensemble R/E/I + durée
 fe:hasFireResistanceRating a owl:ObjectProperty, owl:FunctionalProperty ;
     rdfs:domain fe:Building ;
-    rdfs:range fe:FireResistanceRating ;
+    rdfs:range fe:FireResistanceRating .
 
 fe:resistanceComponents a owl:ObjectProperty ;
     rdfs:domain fe:FireResistanceRating ;
@@ -80,7 +80,7 @@ fe:hasArchitectureStyle a owl:ObjectProperty ;
 # 5. Matériaux principaux → E57 Material (+ proportions E54 Dimension)
 fe:hasIndividualMaterial a owl:ObjectProperty ;
     rdfs:domain fe:Building ; rdfs:range fe:MaterialInstance ;
-    rdfs:subPropertyOf crm:P45_consists_of ;
+    rdfs:subPropertyOf crm:P45_consists_of .
 
 # 6. Sous-bassements → E26 Physical Feature OU E55 Type
 fe:hasSubstructure a owl:ObjectProperty ;
@@ -95,12 +95,12 @@ fe:hasPersonCapacity a owl:ObjectProperty ;
 # 8. Usage courant → E55 Type
 fe:hasCurrentUse a owl:ObjectProperty ;
     rdfs:domain fe:Building ; rdfs:range crm:E7_Activity ;
-    rdfs:subPropertyOf crm:P9_consists_of ;
+    rdfs:subPropertyOf crm:P9_consists_of .
 
 # 9. Axes circulation → E25 Man-Made Feature (axes)
 fe:hasCirculationAxis a owl:ObjectProperty ;
-    rdfs:domain fe:Building ; rdfs:range fe:Axis ; 
-    rdfs:subPropertyOf crm:P89_falls_within.
+    rdfs:domain fe:Building ; rdfs:range fe:Axis ;
+    rdfs:subPropertyOf crm:P46_is_composed_of .
 
 # 10. Zone → E53 Place
 fe:isInZone a owl:ObjectProperty ;
@@ -162,11 +162,11 @@ fe:potentialBlockingProbability a owl:DatatypeProperty ;
     rdfs:domain crm:E5_Event ; rdfs:range xsd:decimal .
 
 fe:potentialBlockingImpact a owl:DatatypeProperty ;
-    rdfs:domain crm:E5_Event ; rdfs:range xsd:decimal .
+    rdfs:domain crm:E5_Event ; rdfs:range xsd:decimal ;
     rdfs:comment "Impact sur le blocage 0.0=libre, 1.0=bloqué"@fr.
 
 fe:potentialBlockingTime a owl:DatatypeProperty ;
-    rdfs:domain crm:E5_Event ; rdfs:range xsd:decimal .
+    rdfs:domain crm:E5_Event ; rdfs:range xsd:decimal ;
     rdfs:comment "Durée du blocage en heures"@fr.
 
 #----------------------------------------------------------------
