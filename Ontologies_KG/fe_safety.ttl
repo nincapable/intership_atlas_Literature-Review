@@ -41,13 +41,13 @@ fe:resistanceComponents a owl:ObjectProperty ;
     rdfs:domain fe:FireResistanceRating ;
     rdfs:range fe:FireResistanceComponent .
 
-fe:resistanceDuration a owl:DatatypeProperty ;
-    rdfs:domain fe:FireResistanceRating ;
-    rdfs:range xsd:integer .
-
 # Énumérations REI
 fe:FireResistanceComponent a owl:Class ;
     owl:oneOf ( fe:R fe:E fe:I fe:W ) .
+
+fe:resistanceDuration a owl:DatatypeProperty ;
+    rdfs:domain fe:FireResistanceRating ;
+    rdfs:range xsd:integer .
 
 #################################################################
 # 3. ATTACHE AUX OBJETS (Modularité)
