@@ -1,0 +1,2 @@
+Instanciation
+Requetage en langue nat par graph rag, depuis un graph de connaissances.

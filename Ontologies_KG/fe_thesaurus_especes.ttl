@@ -1,0 +1,95 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+# =================================================================
+# 1. RACINE : TAXON
+# =================================================================
+fe:Taxon a owl:Class ;
+    rdfs:label "Taxon"@fr ;
+    rdfs:comment "Classification taxonomique des espèces vivantes."@fr ;
+    rdfs:subClassOf crm:E55_Type .
+
+# =================================================================
+# 2. RÈGNE ANIMAL (Fauna)
+# =================================================================
+fe:Animal a owl:Class ;
+    rdfs:subClassOf fe:Taxon ;
+    rdfs:label "Animal"@fr .
+
+    # --- Invertébrés ---
+    fe:Invertebrate a owl:Class ;
+        rdfs:subClassOf fe:Animal ;
+        rdfs:label "Invertébré"@fr .
+
+        fe:Insect a owl:Class ; 
+            rdfs:subClassOf fe:Invertebrate ;
+            rdfs:label "Insecte"@fr .
+
+    # --- Vertébrés ---
+    fe:Vertebrate a owl:Class ;
+        rdfs:subClassOf fe:Animal ;
+        rdfs:label "Vertébré"@fr .
+
+        fe:Mammal a owl:Class ; 
+            rdfs:subClassOf fe:Vertebrate ;
+            rdfs:label "Mammifère"@fr .
+
+        fe:Bird a owl:Class ; 
+            rdfs:subClassOf fe:Vertebrate ;
+            rdfs:label "Oiseau"@fr .
+
+        fe:Fish a owl:Class ; 
+            rdfs:subClassOf fe:Vertebrate ;
+            rdfs:label "Poisson"@fr .
+
+        fe:Amphibian a owl:Class ;
+            rdfs:subClassOf fe:Vertebrate ;
+            rdfs:label "Amphibien"@fr .
+
+        fe:Reptile a owl:Class ;
+            rdfs:subClassOf fe:Vertebrate ;
+            rdfs:label "Reptile"@fr .
+
+# =================================================================
+# 3. RÈGNE VÉGÉTAL (Flora)
+# =================================================================
+fe:Plant a owl:Class ;
+    rdfs:subClassOf fe:Taxon ;
+    rdfs:label "Plante / Flore"@fr .
+
+    fe:Bryophyte a owl:Class ;
+        rdfs:subClassOf fe:Plant ;
+        rdfs:label "Bryophyte (Mousses)"@fr .
+
+    fe:VascularPlant a owl:Class ;
+        rdfs:subClassOf fe:Plant ;
+        rdfs:label "Plante Vasculaire"@fr .
+
+        fe:Pteridophyte a owl:Class ;
+            rdfs:subClassOf fe:VascularPlant ;
+            rdfs:label "Ptéridophyte (Fougères)"@fr .
+
+        fe:Spermatophyte a owl:Class ; # Plantes à graines
+            rdfs:subClassOf fe:VascularPlant ;
+            rdfs:label "Spermatophyte"@fr .
+
+            fe:Gymnosperme a owl:Class ; # Conifères etc.
+                rdfs:subClassOf fe:Spermatophyte ;
+                rdfs:label "Gymnosperme"@fr .
+
+            fe:Angiosperme a owl:Class ; # Plantes à fleurs
+                rdfs:subClassOf fe:Spermatophyte ;
+                rdfs:label "Angiosperme"@fr .
+
+# =================================================================
+# 4. RÈGNE FONGIQUE (Fungi)
+# =================================================================
+fe:Fungus a owl:Class ;
+    rdfs:subClassOf fe:Taxon ;
+    rdfs:label "Champignon / Fongique"@fr .
+
+    fe:Lichen a owl:Class ;
+        rdfs:subClassOf fe:Fungus ;
+        rdfs:label "Lichen"@fr .

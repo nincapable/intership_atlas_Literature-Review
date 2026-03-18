@@ -1,0 +1,96 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+# =================================================================
+# 1. LA CLASSE ESPACE NATUREL
+# =================================================================
+
+fe:NaturalSpace a owl:Class ;
+    rdfs:label "Espace Naturel"@fr ;
+    rdfs:comment "Zone non bâtie entourant ou jouxtant un monument (Parc, Forêt, Réserve)."@fr ;
+    rdfs:subClassOf crm:E27_Site .
+
+# --- Propriétés de base ---
+
+fe:NaturalType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+
+fe:Crop a owl:Class ; rdfs:subClassOf fe:NaturalType .
+fe:Forest a owl:Class ; rdfs:subClassOf fe:NaturalType .
+fe:Wetland a owl:Class ; rdfs:subClassOf fe:NaturalType.
+fe:Parc a owl:Class ; rdfs:subClassOf fe:NaturalType .
+fe:Grassland a owl:Class ; rdfs:subClassOf fe:NaturalType .
+fe:Shrubland a owl:Class ; rdfs:subClassOf fe:NaturalType .
+
+fe:hasNaturalType a owl:DatatypeProperty ;
+    rdfs:label "Type d'espace"@fr ;
+    rdfs:comment "Ex: Forêt domaniale, Jardin classé, Zone humide."@fr ;
+    rdfs:domain fe:NaturalSpace ;
+    rdfs:range fe:NaturalType .
+
+# Nativement accessible, sans perte d'information
+#fe:hasSurface a owl:ObjectProperty ;
+#    rdfs:label "a pour surface"@fr ;
+#    rdfs:subPropertyOf crm:P43_has_dimension ;
+#    rdfs:domain fe:NaturalSpace ;
+#    rdfs:range crm:E54_Dimension .
+# crm:P90_has_value (La valeur numérique)
+# crm:P91_has_unit (L'unité : m2, ha, etc.)
+
+# fe:hasActivity a owl:DatatypeProperty ;
+#     rdfs:label "Activité humaine"@fr ;
+#     rdfs:comment "Ex: Randonnée, Chasse, Exploitation forestière."@fr ;
+#     rdfs:domain fe:NaturalSpace ;
+#     rdfs:range xsd:string .
+# Utiliser la propriété native crm:P7_took_place_at (inverse).
+#    L'activité (crm:E7_Activity) pointe vers l'espace naturel (E27).
+#    Cela permet de dater l'activité (P4) et d'en définir le type (P2).
+
+# =================================================================
+# 2. LES ESPÈCES PROTÉGÉES (Biodiversité)
+# =================================================================
+
+fe:Taxon a owl:Class ;
+    rdfs:label "Taxon"@fr ;
+    rdfs:comment "Classification taxonomique des espèces vivantes."@fr ;
+    rdfs:subClassOf fe:E55_Type .
+
+fe:Insect a owl:Class ; rdfs:subClassOf fe:Taxon .
+fe:Fungus a owl:Class ; rdfs:subClassOf fe:Taxon .
+fe:Fish a owl:Class ; rdfs:subClassOf fe:Taxon .
+fe:Bird a owl:Class ; rdfs:subClassOf fe:Taxon .
+fe:Mammal a owl:Class ; rdfs:subClassOf fe:Taxon.
+fe:Plant a owl:Class ; rdfs:subClassOf fe:Taxon .
+
+fe:hostsTaxon a owl:ObjectProperty ;
+    rdfs:label "héberge le taxon"@fr ;
+    rdfs:comment "Lien entre un espace naturel et une espèce présente."@fr ;
+    rdfs:subPropertyOf crm:P2_has_type ; 
+    rdfs:domain fe:NaturalSpace ;
+    rdfs:range fe:Taxon .
+
+fe:ProtectedSpecies a owl:Class ;
+    rdfs:label "Espèce Protégée"@fr ;
+    rdfs:subClassOf crm:fe: . # On utilise E55 car c'est un concept taxonomique
+
+fe:hostsSpecies a owl:ObjectProperty ;
+    rdfs:label "héberge l'espèce"@fr ;
+    rdfs:domain fe:NaturalSpace ;
+    rdfs:range fe:ProtectedSpecies .
+
+# =================================================================
+# 3. EXPOSITION AU RISQUE (Analyse Incendie/Naturel)
+# =================================================================
+
+fe:RiskExposure a owl:Class ;
+    rdfs:label "Exposition au Risque"@fr ;
+    rdfs:subClassOf crm:E55_Type .
+
+fe:hasRiskLevel a owl:ObjectProperty ;
+    rdfs:label "est exposé au risque"@fr ;
+    rdfs:domain fe:NaturalSpace ;
+    rdfs:range fe:RiskExposure .
+
+# Note : On pourra lier cela à une note textuelle CRM P3 pour les détails
