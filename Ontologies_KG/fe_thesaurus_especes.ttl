@@ -93,3 +93,16 @@ fe:Fungus a owl:Class ;
     fe:Lichen a owl:Class ;
         rdfs:subClassOf fe:Fungus ;
         rdfs:label "Lichen"@fr .
+
+# =================================================================
+# 5. STATUT DE CONSERVATION (UICN)
+# =================================================================
+fe:IUCN_EX a fe:IUCNCategory ; rdfs:label "Éteint (EX)"@fr .
+fe:IUCN_EW a fe:IUCNCategory ; rdfs:label "Éteint à l'état sauvage (EW)"@fr .
+fe:IUCN_CR a fe:IUCNCategory ; rdfs:label "En danger critique (CR)"@fr .
+fe:IUCN_EN a fe:IUCNCategory ; rdfs:label "En danger (EN)"@fr .
+fe:IUCN_VU a fe:IUCNCategory ; rdfs:label "Vulnérable (VU)"@fr .
+fe:IUCN_NT a fe:IUCNCategory ; rdfs:label "Quasi menacé (NT)"@fr .
+fe:IUCN_LC a fe:IUCNCategory ; rdfs:label "Préoccupation mineure (LC)"@fr .
+fe:IUCN_DD a fe:IUCNCategory ; rdfs:label "Données insuffisantes (DD)"@fr .
+fe:IUCN_NE a fe:IUCNCategory ; rdfs:label "Non évalué (NE)"@fr .

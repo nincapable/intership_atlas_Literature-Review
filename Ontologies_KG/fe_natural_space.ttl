@@ -71,26 +71,28 @@ fe:hostsTaxon a owl:ObjectProperty ;
     rdfs:domain fe:NaturalSpace ;
     rdfs:range fe:Taxon .
 
-fe:ProtectedSpecies a owl:Class ;
-    rdfs:label "Espèce Protégée"@fr ;
-    rdfs:subClassOf crm:fe: . # On utilise E55 car c'est un concept taxonomique
+# La classe des statuts UICN
+fe:IUCNCategory a owl:Class ;
+    rdfs:label "Catégorie de la Liste Rouge UICN"@fr ;
+    rdfs:subClassOf crm:E55_Type .
 
-fe:hostsSpecies a owl:ObjectProperty ;
-    rdfs:label "héberge l'espèce"@fr ;
-    rdfs:domain fe:NaturalSpace ;
-    rdfs:range fe:ProtectedSpecies .
+# La propriété de liaison
+fe:hasConservationStatus a owl:ObjectProperty ;
+    rdfs:label "a un statut de conservation"@fr ;
+    rdfs:domain fe:Taxon ;
+    rdfs:range fe:IUCNCategory ;
+    rdfs:subPropertyOf crm:P2_has_type .
+
+fe:hasConservationMeasures a owl:objectProperty;
+    rdfs:label "a des mesures de conservation (document)"@fr ;
+    rdfs:domain fe:taxon ; 
+    rdfs:range crm:E31_Document ;
+    rdfs:subPropertyOf crm:P70i_is_documented_in ;
+    rdfs:comment "Lien vers la documentation de sensibilité aux contre-mesures feu"@fr .
 
 # =================================================================
 # 3. EXPOSITION AU RISQUE (Analyse Incendie/Naturel)
 # =================================================================
+fe:hasNaturalExposure rdfs:subPropertyOf fe:hasFireExposure ;
+    rdfs:domain fe:NaturalSpace .
 
-fe:RiskExposure a owl:Class ;
-    rdfs:label "Exposition au Risque"@fr ;
-    rdfs:subClassOf crm:E55_Type .
-
-fe:hasRiskLevel a owl:ObjectProperty ;
-    rdfs:label "est exposé au risque"@fr ;
-    rdfs:domain fe:NaturalSpace ;
-    rdfs:range fe:RiskExposure .
-
-# Note : On pourra lier cela à une note textuelle CRM P3 pour les détails

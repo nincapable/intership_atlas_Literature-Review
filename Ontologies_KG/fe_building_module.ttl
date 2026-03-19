@@ -67,9 +67,13 @@ fe:isInZone a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P89_falls_within .
 
 ###### Non accessible nativement sans perte d'information ######
-fe:hasRiskExposure a owl:ObjectProperty ;
-    rdfs:domain fe:Building ; rdfs:range crm:E3_Condition_State ;
-    rdfs:subPropertyOf crm:P44_has_condition .
+#deplace dans le core.ttl pour être accessible à tous les modules
+# fe:hasRiskExposure a owl:ObjectProperty ;
+#     rdfs:domain fe:Building ; rdfs:range crm:E3_Condition_State ;
+#     rdfs:subPropertyOf crm:P44_has_condition .
+
+fe:hasBuildingExposure rdfs:subPropertyOf fe:hasFireExposure ;
+    rdfs:domain fe:Building .
 
 ####### Nativement accessible, sans perte d'information ########
 # fe:hasGeoDimensions a owl:ObjectProperty ;

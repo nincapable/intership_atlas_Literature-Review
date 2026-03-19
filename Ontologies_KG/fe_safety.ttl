@@ -62,3 +62,59 @@ fe:hasReaction a owl:ObjectProperty ;
 fe:hasResistance a owl:ObjectProperty ;
     rdfs:domain [ owl:unionOf (fe:Building fe:Axis) ] ;
     rdfs:range fe:FireResistanceRating .
+
+#################################################################
+# 4. EXPOSITION AU RISQUE (Analyse Incendie)
+#################################################################
+
+fe:hasFireExposure a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P44_has_condition ;
+    rdfs:range fe:FireExposureClassification .
+    
+fe:FireExposureClassification a owl:Class ;
+    rdfs:label "Exposition aux Risques Incendie"@fr ;
+    rdfs:subClassOf crm:E55_Type .
+
+# --- Les Sous-Catégories Fonctionnelles ---
+fe:hasCombustibilityType a owl:ObjectProperty ;
+    rdfs:domain fe:FireExposureClassification ;
+    rdfs:range fe:CombustibilityType .
+
+#--- Combustibilité General de l'environnement (exposition au risque) ---
+fe:CombustibilityType a owl:Class ;
+    rdfs:label "Type de Combustibilité"@fr ;
+    owl:oneOf ( fe:DelayedIgnition fe:FlashFuel fe:PyrophileHigh ) .
+
+fe:PyrophileHigh a fe:CombustibilityType ;
+    rdfs:label "Haute Inflammabilité"@fr ;
+    rdfs:comment "S'enflamme instantanément au contact d'une source de chaleur. Typique des essences résineuses ou des matériaux volatils."@fr .
+
+fe:FlashFuel a fe:CombustibilityType ;
+    rdfs:label "Combustible Éclair"@fr ;
+    rdfs:comment "Brûle très rapidement avec une forte intensité mais sur une courte durée (herbes sèches, litière fine, tissus légers)."@fr .
+
+fe:DelayedIgnition a fe:CombustibilityType ;
+    rdfs:label "Allumage Retardé"@fr ;
+    rdfs:comment "Nécessite une exposition prolongée à une source de chaleur intense pour s'enflammer (gros bois, structures massives)."@fr .
+
+#--- Propagation dans l'environnement (exposition au risque) ---
+fe:PropagationType a owl:Class ;
+    rdfs:label "Type de Propagation Thermique"@fr ;
+    rdfs:comment "Définit le mode principal de transfert de chaleur permettant l'extension du foyer."@fr ;
+    owl:oneOf ( fe:Convection fe:Conduction fe:Radiation fe:Projection ) .
+
+fe:Conduction a fe:PropagationType ;
+    rdfs:label "Conduction"@fr ;
+    rdfs:comment "Transfert de chaleur direct au sein d'un même matériau ou entre objets en contact physique (ex: poutre traversant un mur, racines souterraines)."@fr .
+
+fe:Convection a fe:PropagationType ;
+    rdfs:label "Convection"@fr ;
+    rdfs:comment "Transfert par déplacement de gaz ou liquides chauds. Cause principale des feux de cimes et de la montée des fumées dans les cages d'escalier."@fr .
+
+fe:Radiation a fe:PropagationType ;
+    rdfs:label "Rayonnement (Radiation)"@fr ;
+    rdfs:comment "Transfert par ondes électromagnétiques infrarouges. Permet au feu de franchir une distance sans contact (ex: embrasement d'une façade opposée ou d'une lisière voisine)."@fr .
+
+fe:Projection a fe:PropagationType ;
+    rdfs:label "Projection (Sauts de feu)"@fr ;
+    rdfs:comment "Transport de particules enflammées (escarbilles, brindilles) par le vent, créant de nouveaux foyers à plusieurs centaines de mètres."@fr .

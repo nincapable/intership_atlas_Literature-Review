@@ -10,3 +10,11 @@ fe:core a owl:Ontology ;
                 <http://example.org/fire_and_evacuation/axis_module> ,
                 <http://example.org/fire_and_evacuation/artefact_module> ,
                 <http://example.org/fire_and_evacuation/safety_module> .
+
+fe:hasRiskExposure a owl:ObjectProperty ;
+    rdfs:label "exposition au risque"@fr ;
+    rdfs:comment "Relie une entité physique (bâtiment, parc, forêt) à un état de risque constaté."@fr ;
+    # Le domaine englobe désormais Bâtiments ET Espaces Naturels
+    rdfs:domain crm:E18_Physical_Thing ; 
+    rdfs:range crm:E3_Condition_State ;
+    rdfs:subPropertyOf crm:P44_has_condition .
