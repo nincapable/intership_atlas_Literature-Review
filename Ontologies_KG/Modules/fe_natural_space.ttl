@@ -57,13 +57,6 @@ fe:Taxon a owl:Class ;
     rdfs:comment "Classification taxonomique des espèces vivantes."@fr ;
     rdfs:subClassOf fe:E55_Type .
 
-fe:Insect a owl:Class ; rdfs:subClassOf fe:Taxon .
-fe:Fungus a owl:Class ; rdfs:subClassOf fe:Taxon .
-fe:Fish a owl:Class ; rdfs:subClassOf fe:Taxon .
-fe:Bird a owl:Class ; rdfs:subClassOf fe:Taxon .
-fe:Mammal a owl:Class ; rdfs:subClassOf fe:Taxon.
-fe:Plant a owl:Class ; rdfs:subClassOf fe:Taxon .
-
 fe:hostsTaxon a owl:ObjectProperty ;
     rdfs:label "héberge le taxon"@fr ;
     rdfs:comment "Lien entre un espace naturel et une espèce présente."@fr ;

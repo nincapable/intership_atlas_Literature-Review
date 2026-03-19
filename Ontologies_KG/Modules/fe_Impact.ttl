@@ -1,0 +1,66 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> . 
+
+fe:ImpactAssessment a owl:Class ;
+    rdfs:subClassOf crm:E13_Attribute_Assignment ;
+    rdfs:label "Bilan d'Impact"@fr .
+
+# Propriété pour lier l'Aléa à son Bilan
+fe:hasImpactAssessment a owl:ObjectProperty ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range fe:ImpactAssessment .
+
+#-------Artificial Impact-------
+
+fe:BuildingDamage a owl:Class ;
+    rdfs:label "Constat de Dégât Bâtiment"@fr .
+
+fe:hasBuildingDamage a owl:ObjectProperty ;
+    rdfs:domain fe:ImpactAssessment ;
+    rdfs:range fe:BuildingDamage .
+
+# Les deux bras de la liaison :
+fe:damagedBuilding a owl:ObjectProperty ;
+    rdfs:domain fe:BuildingDamage ;
+    rdfs:range fe:Building .
+
+fe:buildingDamageLevel a owl:ObjectProperty ;
+    rdfs:domain fe:BuildingDamage ;
+    rdfs:range fe:ImpactSeverityLevel . # (Faible, Moyen, Fort, Détruit)
+
+#-------Natural Impact-------
+
+fe:NaturalDamage a owl:Class ;
+    rdfs:label "Constat de Dégât Naturel"@fr .
+
+fe:hasNaturalDamage a owl:ObjectProperty ;
+    rdfs:domain fe:ImpactAssessment ;
+    rdfs:range fe:NaturalDamage .
+
+# Les deux bras de la liaison :
+fe:damagedNaturalSpace a owl:ObjectProperty ;
+    rdfs:domain fe:NaturalDamage ;
+    rdfs:range fe:NaturalSpace .
+
+fe:naturalDamageLevel a owl:ObjectProperty ;
+    rdfs:domain fe:NaturalDamage ;
+    rdfs:range fe:ImpactSeverityLevel .
+
+#-------Huaman Impact-------
+
+fe:HumanToll a owl:Class ;
+    rdfs:label "Bilan Humain"@fr .
+
+fe:hasHumanToll a owl:ObjectProperty ;
+    rdfs:domain fe:ImpactAssessment ;
+    rdfs:range fe:HumanToll .
+
+fe:victimCount a owl:DatatypeProperty ;
+    rdfs:range xsd:integer .
+
+fe:victimCategory a owl:ObjectProperty ;
+    rdfs:range fe:VictimType .

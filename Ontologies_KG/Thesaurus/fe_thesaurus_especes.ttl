@@ -97,6 +97,11 @@ fe:Fungus a owl:Class ;
 # =================================================================
 # 5. STATUT DE CONSERVATION (UICN)
 # =================================================================
+
+fe:IUCNCategory a owl:Class ;
+    rdfs:label "Catégorie de conservation UICN"@fr ;
+    rdfs:subClassOf crm:E55_Type .
+
 fe:IUCN_EX a fe:IUCNCategory ; rdfs:label "Éteint (EX)"@fr .
 fe:IUCN_EW a fe:IUCNCategory ; rdfs:label "Éteint à l'état sauvage (EW)"@fr .
 fe:IUCN_CR a fe:IUCNCategory ; rdfs:label "En danger critique (CR)"@fr .

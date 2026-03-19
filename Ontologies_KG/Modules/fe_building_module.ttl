@@ -13,11 +13,6 @@ fe:MaterialInstance a owl:Class ;
 ## Architecture Styles ##################################################
 fe:ArchitectureStyle a owl:Class ; rdfs:subClassOf crm:E55_Type .
 
-fe:StyleAntique a owl:Class ; rdfs:subClassOf fe:ArchitectureStyle .
-fe:StyleMedieval a owl:Class ; rdfs:subClassOf fe:ArchitectureStyle .
-fe:StyleClassique a owl:Class ; rdfs:subClassOf fe:ArchitectureStyle .
-fe:StyleModerne a owl:Class ; rdfs:subClassOf fe:ArchitectureStyle .
-fe:StyleVernaculaire a owl:Class ; rdfs:subClassOf fe:ArchitectureStyle .
 ## End architecture styles ##############################################
 
 # Propriétés d’objet Building
