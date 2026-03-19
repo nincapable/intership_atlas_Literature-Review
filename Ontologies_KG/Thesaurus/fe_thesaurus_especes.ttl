@@ -2,112 +2,167 @@
 @prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
 # =================================================================
-# 1. RACINE : TAXON
-# =================================================================
-fe:Taxon a owl:Class ;
-    rdfs:label "Taxon"@fr ;
-    rdfs:comment "Classification taxonomique des espèces vivantes."@fr ;
-    rdfs:subClassOf crm:E55_Type .
-
-# =================================================================
-# 2. RÈGNE ANIMAL (Fauna)
-# =================================================================
-fe:Animal a owl:Class ;
-    rdfs:subClassOf fe:Taxon ;
-    rdfs:label "Animal"@fr .
-
-    # --- Invertébrés ---
-    fe:Invertebrate a owl:Class ;
-        rdfs:subClassOf fe:Animal ;
-        rdfs:label "Invertébré"@fr .
-
-        fe:Insect a owl:Class ; 
-            rdfs:subClassOf fe:Invertebrate ;
-            rdfs:label "Insecte"@fr .
-
-    # --- Vertébrés ---
-    fe:Vertebrate a owl:Class ;
-        rdfs:subClassOf fe:Animal ;
-        rdfs:label "Vertébré"@fr .
-
-        fe:Mammal a owl:Class ; 
-            rdfs:subClassOf fe:Vertebrate ;
-            rdfs:label "Mammifère"@fr .
-
-        fe:Bird a owl:Class ; 
-            rdfs:subClassOf fe:Vertebrate ;
-            rdfs:label "Oiseau"@fr .
-
-        fe:Fish a owl:Class ; 
-            rdfs:subClassOf fe:Vertebrate ;
-            rdfs:label "Poisson"@fr .
-
-        fe:Amphibian a owl:Class ;
-            rdfs:subClassOf fe:Vertebrate ;
-            rdfs:label "Amphibien"@fr .
-
-        fe:Reptile a owl:Class ;
-            rdfs:subClassOf fe:Vertebrate ;
-            rdfs:label "Reptile"@fr .
-
-# =================================================================
-# 3. RÈGNE VÉGÉTAL (Flora)
-# =================================================================
-fe:Plant a owl:Class ;
-    rdfs:subClassOf fe:Taxon ;
-    rdfs:label "Plante / Flore"@fr .
-
-    fe:Bryophyte a owl:Class ;
-        rdfs:subClassOf fe:Plant ;
-        rdfs:label "Bryophyte (Mousses)"@fr .
-
-    fe:VascularPlant a owl:Class ;
-        rdfs:subClassOf fe:Plant ;
-        rdfs:label "Plante Vasculaire"@fr .
-
-        fe:Pteridophyte a owl:Class ;
-            rdfs:subClassOf fe:VascularPlant ;
-            rdfs:label "Ptéridophyte (Fougères)"@fr .
-
-        fe:Spermatophyte a owl:Class ; # Plantes à graines
-            rdfs:subClassOf fe:VascularPlant ;
-            rdfs:label "Spermatophyte"@fr .
-
-            fe:Gymnosperme a owl:Class ; # Conifères etc.
-                rdfs:subClassOf fe:Spermatophyte ;
-                rdfs:label "Gymnosperme"@fr .
-
-            fe:Angiosperme a owl:Class ; # Plantes à fleurs
-                rdfs:subClassOf fe:Spermatophyte ;
-                rdfs:label "Angiosperme"@fr .
-
-# =================================================================
-# 4. RÈGNE FONGIQUE (Fungi)
-# =================================================================
-fe:Fungus a owl:Class ;
-    rdfs:subClassOf fe:Taxon ;
-    rdfs:label "Champignon / Fongique"@fr .
-
-    fe:Lichen a owl:Class ;
-        rdfs:subClassOf fe:Fungus ;
-        rdfs:label "Lichen"@fr .
-
-# =================================================================
-# 5. STATUT DE CONSERVATION (UICN)
+# 1. DÉFINITION DES SCHÉMAS (LES RÉFÉRENTIELS)
 # =================================================================
 
-fe:IUCNCategory a owl:Class ;
-    rdfs:label "Catégorie de conservation UICN"@fr ;
-    rdfs:subClassOf crm:E55_Type .
+fe:TaxonomyScheme a skos:ConceptScheme ;
+    rdfs:label "Thésaurus de la Taxonomie Biologique"@fr .
 
-fe:IUCN_EX a fe:IUCNCategory ; rdfs:label "Éteint (EX)"@fr .
-fe:IUCN_EW a fe:IUCNCategory ; rdfs:label "Éteint à l'état sauvage (EW)"@fr .
-fe:IUCN_CR a fe:IUCNCategory ; rdfs:label "En danger critique (CR)"@fr .
-fe:IUCN_EN a fe:IUCNCategory ; rdfs:label "En danger (EN)"@fr .
-fe:IUCN_VU a fe:IUCNCategory ; rdfs:label "Vulnérable (VU)"@fr .
-fe:IUCN_NT a fe:IUCNCategory ; rdfs:label "Quasi menacé (NT)"@fr .
-fe:IUCN_LC a fe:IUCNCategory ; rdfs:label "Préoccupation mineure (LC)"@fr .
-fe:IUCN_DD a fe:IUCNCategory ; rdfs:label "Données insuffisantes (DD)"@fr .
-fe:IUCN_NE a fe:IUCNCategory ; rdfs:label "Non évalué (NE)"@fr .
+fe:IUCScheme a skos:ConceptScheme ;
+    rdfs:label "Référentiel des Statuts de Conservation UICN"@fr .
+
+# =================================================================
+# 2. CLASSIFICATION TAXONOMIQUE (TAXON)
+# =================================================================
+
+# Racine Animale
+fe:Animal a skos:Concept, fe:Taxon ;
+    skos:prefLabel "Animal"@fr ;
+    skos:inScheme fe:TaxonomyScheme ;
+    skos:topConceptOf fe:TaxonomyScheme ;
+    skos:narrower fe:Invertebrate, fe:Vertebrate .
+
+    fe:Invertebrate a skos:Concept, fe:Taxon ;
+        skos:prefLabel "Invertébré"@fr ;
+        skos:broader fe:Animal ;
+        skos:inScheme fe:TaxonomyScheme ;
+        skos:narrower fe:Insect .
+
+        fe:Insect a skos:Concept, fe:Taxon ;
+            skos:prefLabel "Insecte"@fr ;
+            skos:broader fe:Invertebrate ;
+            skos:inScheme fe:TaxonomyScheme .
+
+    fe:Vertebrate a skos:Concept, fe:Taxon ;
+        skos:prefLabel "Vertébré"@fr ;
+        skos:broader fe:Animal ;
+        skos:inScheme fe:TaxonomyScheme ;
+        skos:narrower fe:Mammal, fe:Bird, fe:Fish, fe:Amphibian, fe:Reptile .
+
+        fe:Mammal a skos:Concept, fe:Taxon ;
+            skos:prefLabel "Mammifère"@fr ;
+            skos:broader fe:Vertebrate ;
+            skos:inScheme fe:TaxonomyScheme .
+
+        fe:Bird a skos:Concept, fe:Taxon ;
+            skos:prefLabel "Oiseau"@fr ;
+            skos:broader fe:Vertebrate ;
+            skos:inScheme fe:TaxonomyScheme .
+
+        fe:Fish a skos:Concept, fe:Taxon ;
+            skos:prefLabel "Poisson"@fr ;
+            skos:broader fe:Vertebrate ;
+            skos:inScheme fe:TaxonomyScheme .
+
+        fe:Amphibian a skos:Concept, fe:Taxon ;
+            skos:prefLabel "Amphibien"@fr ;
+            skos:broader fe:Vertebrate ;
+            skos:inScheme fe:TaxonomyScheme .
+
+        fe:Reptile a skos:Concept, fe:Taxon ;
+            skos:prefLabel "Reptile"@fr ;
+            skos:broader fe:Vertebrate ;
+            skos:inScheme fe:TaxonomyScheme .
+
+# Racine Végétale
+fe:Plant a skos:Concept, fe:Taxon ;
+    skos:prefLabel "Plante / Flore"@fr ;
+    skos:inScheme fe:TaxonomyScheme ;
+    skos:topConceptOf fe:TaxonomyScheme ;
+    skos:narrower fe:Bryophyte, fe:VascularPlant .
+
+    fe:Bryophyte a skos:Concept, fe:Taxon ;
+        skos:prefLabel "Bryophyte (Mousses)"@fr ;
+        skos:broader fe:Plant ;
+        skos:inScheme fe:TaxonomyScheme .
+
+    fe:VascularPlant a skos:Concept, fe:Taxon ;
+        skos:prefLabel "Plante Vasculaire"@fr ;
+        skos:broader fe:Plant ;
+        skos:inScheme fe:TaxonomyScheme ;
+        skos:narrower fe:Pteridophyte, fe:Spermatophyte .
+
+        fe:Pteridophyte a skos:Concept, fe:Taxon ;
+            skos:prefLabel "Ptéridophyte (Fougères)"@fr ;
+            skos:broader fe:VascularPlant ;
+            skos:inScheme fe:TaxonomyScheme .
+
+        fe:Spermatophyte a skos:Concept, fe:Taxon ;
+            skos:prefLabel "Spermatophyte"@fr ;
+            skos:broader fe:VascularPlant ;
+            skos:inScheme fe:TaxonomyScheme ;
+            skos:narrower fe:Gymnosperme, fe:Angiosperme .
+
+            fe:Gymnosperme a skos:Concept, fe:Taxon ;
+                skos:prefLabel "Gymnosperme"@fr ;
+                skos:broader fe:Spermatophyte ;
+                skos:inScheme fe:TaxonomyScheme .
+
+            fe:Angiosperme a skos:Concept, fe:Taxon ;
+                skos:prefLabel "Angiosperme"@fr ;
+                skos:broader fe:Spermatophyte ;
+                skos:inScheme fe:TaxonomyScheme .
+
+# Racine Fongi
+fe:Fungus a skos:Concept, fe:Taxon ;
+    skos:prefLabel "Champignon / Fongique"@fr ;
+    skos:inScheme fe:TaxonomyScheme ;
+    skos:topConceptOf fe:TaxonomyScheme ;
+    skos:narrower fe:Lichen .
+
+    fe:Lichen a skos:Concept, fe:Taxon ;
+        skos:prefLabel "Lichen"@fr ;
+        skos:broader fe:Fungus ;
+        skos:inScheme fe:TaxonomyScheme .
+
+# =================================================================
+# 3. STATUT DE CONSERVATION (UICN)
+# =================================================================
+
+fe:IUCN_EX a skos:Concept, fe:IUCNCategory ;
+    skos:prefLabel "Éteint (EX)"@fr ;
+    skos:inScheme fe:IUCScheme ;
+    skos:topConceptOf fe:IUCScheme .
+
+fe:IUCN_EW a skos:Concept, fe:IUCNCategory ;
+    skos:prefLabel "Éteint à l'état sauvage (EW)"@fr ;
+    skos:inScheme fe:IUCScheme ;
+    skos:topConceptOf fe:IUCScheme .
+
+fe:IUCN_CR a skos:Concept, fe:IUCNCategory ;
+    skos:prefLabel "En danger critique (CR)"@fr ;
+    skos:inScheme fe:IUCScheme ;
+    skos:topConceptOf fe:IUCScheme .
+
+fe:IUCN_EN a skos:Concept, fe:IUCNCategory ;
+    skos:prefLabel "En danger (EN)"@fr ;
+    skos:inScheme fe:IUCScheme ;
+    skos:topConceptOf fe:IUCScheme .
+
+fe:IUCN_VU a skos:Concept, fe:IUCNCategory ;
+    skos:prefLabel "Vulnérable (VU)"@fr ;
+    skos:inScheme fe:IUCScheme ;
+    skos:topConceptOf fe:IUCScheme .
+
+fe:IUCN_NT a skos:Concept, fe:IUCNCategory ;
+    skos:prefLabel "Quasi menacé (NT)"@fr ;
+    skos:inScheme fe:IUCScheme ;
+    skos:topConceptOf fe:IUCScheme .
+
+fe:IUCN_LC a skos:Concept, fe:IUCNCategory ;
+    skos:prefLabel "Préoccupation mineure (LC)"@fr ;
+    skos:inScheme fe:IUCScheme ;
+    skos:topConceptOf fe:IUCScheme .
+
+fe:IUCN_DD a skos:Concept, fe:IUCNCategory ;
+    skos:prefLabel "Données insuffisantes (DD)"@fr ;
+    skos:inScheme fe:IUCScheme ;
+    skos:topConceptOf fe:IUCScheme .
+
+fe:IUCN_NE a skos:Concept, fe:IUCNCategory ;
+    skos:prefLabel "Non évalué (NE)"@fr ;
+    skos:inScheme fe:IUCScheme ;
+    skos:topConceptOf fe:IUCScheme .

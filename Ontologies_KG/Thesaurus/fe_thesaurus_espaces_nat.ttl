@@ -2,75 +2,95 @@
 @prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
 # =================================================================
-# 1. RACINE : TYPES NATURELS
+# 1. DÉFINITION DU RÉFÉRENTIEL
 # =================================================================
-fe:NaturalType a owl:Class ;
-    rdfs:label "Type d'Espace Naturel"@fr ;
-    rdfs:subClassOf crm:E55_Type .
+
+fe:NaturalSpaceThesaurus a skos:ConceptScheme ;
+    rdfs:label "Thésaurus des Espaces Naturels et Risques Incendie"@fr ;
+    skos:hasTopConcept fe:Forest, fe:Shrubland, fe:Grassland, 
+                       fe:Crop, fe:Wetland, fe:Parc .
 
 # =================================================================
 # 2. MILIEUX FORESTIERS (Biomasse haute)
 # =================================================================
-fe:Forest a owl:Class ;
-    rdfs:subClassOf fe:NaturalType ;
-    rdfs:label "Milieu Forestier"@fr ;
+
+fe:Forest a skos:Concept, fe:NaturalType ;
+    skos:prefLabel "Milieu Forestier"@fr ;
+    skos:inScheme fe:NaturalSpaceThesaurus ;
+    skos:topConceptOf fe:NaturalSpaceThesaurus ;
+    skos:narrower fe:ConiferousForest, fe:DeciduousForest ;
     crm:P3_has_note "Risque : Forte charge calorifique, feu de cime possible, accès difficile pour les engins."@fr .
 
-    fe:ConiferousForest a owl:Class ;
-        rdfs:subClassOf fe:Forest ;
-        rdfs:label "Forêt de Résineux"@fr ;
+    fe:ConiferousForest a skos:Concept, fe:NaturalType ;
+        skos:prefLabel "Forêt de Résineux"@fr ;
+        skos:broader fe:Forest ;
+        skos:inScheme fe:NaturalSpaceThesaurus ;
         crm:P3_has_note "Risque : Inflammation très rapide (résine), projection d'escarbilles à longue distance."@fr .
 
-    fe:DeciduousForest a owl:Class ;
-        rdfs:subClassOf fe:Forest ;
-        rdfs:label "Forêt de Feuillus"@fr ;
+    fe:DeciduousForest a skos:Concept, fe:NaturalType ;
+        skos:prefLabel "Forêt de Feuillus"@fr ;
+        skos:broader fe:Forest ;
+        skos:inScheme fe:NaturalSpaceThesaurus ;
         crm:P3_has_note "Risque : Accumulation de litière sèche au sol au printemps/automne."@fr .
 
 # =================================================================
 # 3. MILIEUX OUVERTS & ARBUSTIFS (Propagation rapide)
 # =================================================================
-fe:Shrubland a owl:Class ;
-    rdfs:subClassOf fe:NaturalType ;
-    rdfs:label "Milieu Arbustif (Lande/Maquis)"@fr ;
+
+fe:Shrubland a skos:Concept, fe:NaturalType ;
+    skos:prefLabel "Milieu Arbustif (Lande/Maquis)"@fr ;
+    skos:inScheme fe:NaturalSpaceThesaurus ;
+    skos:topConceptOf fe:NaturalSpaceThesaurus ;
     crm:P3_has_note "Risque : Végétation dense et basse favorisant une propagation horizontale rapide."@fr .
 
-fe:Grassland a owl:Class ;
-    rdfs:subClassOf fe:NaturalType ;
-    rdfs:label "Prairie / Pelouse"@fr ;
+fe:Grassland a skos:Concept, fe:NaturalType ;
+    skos:prefLabel "Prairie / Pelouse"@fr ;
+    skos:inScheme fe:NaturalSpaceThesaurus ;
+    skos:topConceptOf fe:NaturalSpaceThesaurus ;
     crm:P3_has_note "Risque : Feu d'herbe rapide mais de faible puissance, sensible au vent."@fr .
 
 # =================================================================
 # 4. MILIEUX AGRICOLES (Risque saisonnier)
 # =================================================================
-fe:Crop a owl:Class ;
-    rdfs:subClassOf fe:NaturalType ;
-    rdfs:label "Espace Agricole / Culture"@fr ;
+
+fe:Crop a skos:Concept, fe:NaturalType ;
+    skos:prefLabel "Espace Agricole / Culture"@fr ;
+    skos:inScheme fe:NaturalSpaceThesaurus ;
+    skos:topConceptOf fe:NaturalSpaceThesaurus ;
+    skos:narrower fe:Orchard, fe:Vineyard ;
     crm:P3_has_note "Risque : Pic de dangerosité lors des moissons (poussières, pailles sèches)."@fr .
 
-fe:Orchard a owl:Class ;
-    rdfs:subClassOf fe:Crop ;
-    rdfs:label "Verger"@fr ;
-    crm:P3_has_note "Risque : Végétation ligneuse avec des espaces ouverts, feu modéré mais difficile à éteindre."@fr .
+    fe:Orchard a skos:Concept, fe:NaturalType ;
+        skos:prefLabel "Verger"@fr ;
+        skos:broader fe:Crop ;
+        skos:inScheme fe:NaturalSpaceThesaurus ;
+        crm:P3_has_note "Risque : Végétation ligneuse avec des espaces ouverts, feu modéré mais difficile à éteindre."@fr .
 
-fe:Vineyard a owl:Class ;
-    rdfs:subClassOf fe:Crop ;
-    rdfs:label "Vignoble"@fr ;
-    crm:P3_has_note "Risque : Végétation basse et dense, feu rapide mais de faible intensité."@fr .
+    fe:Vineyard a skos:Concept, fe:NaturalType ;
+        skos:prefLabel "Vignoble"@fr ;
+        skos:broader fe:Crop ;
+        skos:inScheme fe:NaturalSpaceThesaurus ;
+        crm:P3_has_note "Risque : Végétation basse et dense, feu rapide mais de faible intensité."@fr .
 
 # =================================================================
 # 5. MILIEUX HUMIDES (Barrière naturelle / Accès)
 # =================================================================
-fe:Wetland a owl:Class ;
-    rdfs:subClassOf fe:NaturalType ;
-    rdfs:label "Zone Humide / Marais"@fr ;
+
+fe:Wetland a skos:Concept, fe:NaturalType ;
+    skos:prefLabel "Zone Humide / Marais"@fr ;
+    skos:inScheme fe:NaturalSpaceThesaurus ;
+    skos:topConceptOf fe:NaturalSpaceThesaurus ;
     crm:P3_has_note "Risque : Portance du sol faible (enlisement des véhicules de secours). Atout : Barrière coupe-feu naturelle."@fr .
 
 # =================================================================
 # 6. ESPACES AMÉNAGÉS (Interface Urbaine)
 # =================================================================
-fe:Parc a owl:Class ;
-    rdfs:subClassOf fe:NaturalType ;
-    rdfs:label "Parc et Jardin Historique"@fr ;
+
+fe:Parc a skos:Concept, fe:NaturalType ;
+    skos:prefLabel "Parc et Jardin Historique"@fr ;
+    skos:inScheme fe:NaturalSpaceThesaurus ;
+    skos:topConceptOf fe:NaturalSpaceThesaurus ;
     crm:P3_has_note "Risque : Proximité immédiate du bâti, présence fréquente de public, arbres remarquables à protéger."@fr .

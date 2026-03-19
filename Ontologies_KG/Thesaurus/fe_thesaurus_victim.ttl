@@ -1,0 +1,46 @@
+fe:TriageCategory a owl:Class ;
+    rdfs:label "Catégorie de Triage"@fr ;
+    owl:oneOf ( fe:Green fe:Yellow fe:Red fe:Black fe:Violet fe:White ) .
+
+fe:Green a fe:TriageCategory ;
+    rdfs:label "Victime Mobile"@fr .
+
+fe:Yellow a fe:TriageCategory ;
+    rdfs:label "Victime en Attente"@fr .
+
+fe:Red a fe:TriageCategory ;
+    rdfs:label "Victime Critique"@fr .
+
+fe:Black a fe:TriageCategory ;
+    rdfs:label "Décédée"@fr .
+
+fe:Violet a fe:TriageCategory ;
+    rdfs:label "Victime Psychologique"@fr .
+
+fe:White a fe:TriageCategory ;
+    rdfs:label "Disparue"@fr .
+
+# --- Définition du Thésaurus des Groupes ---
+
+fe:VictimGroup a owl:Class ;
+    rdfs:label "Groupe d'appartenance"@fr ;
+    owl:oneOf ( fe:Group_Civilian fe:Group_Rescuer fe:Group_Medical fe:Group_LawEnforcement fe:Group_Other ) .
+
+fe:Group_Civilian a fe:VictimGroup ;
+    rdfs:label "Civil / Public"@fr ;
+    rdfs:comment "Personnes présentes sur les lieux n'appartenant pas aux services de secours."@fr .
+
+fe:Group_Rescuer a fe:VictimGroup ;
+    rdfs:label "Sauveteur / Pompier"@fr ;
+    rdfs:comment "Personnel des services d'incendie et de secours."@fr .
+
+fe:Group_Medical a fe:VictimGroup ;
+    rdfs:label "Personnel Médical / SAMU"@fr ;
+    rdfs:comment "Équipes médicales et paramédicales d'urgence."@fr .
+
+fe:Group_LawEnforcement a fe:VictimGroup ;
+    rdfs:label "Forces de l'ordre"@fr ;
+    rdfs:comment "Police, Gendarmerie ou agents de sécurité publique."@fr .
+
+fe:Group_Other a fe:VictimGroup ;
+    rdfs:label "Autre / Indéterminé"@fr .

@@ -2,170 +2,110 @@
 @prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
+# =================================================================
+# 1. DÉFINITION DU SCHÉMA (LE RÉFÉRENTIEL)
+# =================================================================
 
-fe:ArchitectureStyle a owl:Class ;
-    rdfs:label "Style Architectural"@fr ;
-    rdfs:subClassOf crm:E55_Type .
+fe:ArchitectureThesaurus a skos:ConceptScheme ;
+    rdfs:label "Thésaurus des Styles Architecturaux et Risques Incendie"@fr ;
+    skos:hasTopConcept fe:StyleAntique, fe:StyleMedieval, fe:StyleRenaissance, 
+                       fe:StyleClassique, fe:StyleIndustriel, fe:StyleVernaculaire, 
+                       fe:StyleModerne .
 
 # =================================================================
 # 2. FAMILLE ANTIQUE
 # =================================================================
 
-fe:StyleAntique a owl:Class ;
-    rdfs:subClassOf fe:ArchitectureStyle ;
-    rdfs:label "Architecture Antique"@fr ;
-    crm:P3_has_note "Risque transversal : Instabilité des maçonneries sèches et décohésion des mortiers millénaires sous forte chaleur."@fr .
+fe:StyleAntique a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Architecture Antique"@fr ;
+    skos:inScheme fe:ArchitectureThesaurus ;
+    skos:topConceptOf fe:ArchitectureThesaurus ;
+    skos:narrower fe:StyleGalloRomain ;
+    crm:P3_has_note "Risque transversal : Instabilité des maçonneries sèches."@fr .
 
-fe:StyleGalloRomain a owl:Class ;
-    rdfs:subClassOf fe:StyleAntique ;
-    rdfs:label "Gallo-Romain"@fr ;
+fe:StyleGalloRomain a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Gallo-Romain"@fr ;
+    skos:broader fe:StyleAntique ;
+    skos:inScheme fe:ArchitectureThesaurus ;
     owl:sameAs <http://dbpedia.org/resource/Gallo-Roman_culture> ;
-    foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Gallo-romains> ;
-    crm:P3_has_note "Structure : Opus caementicium (béton romain). Risque : Chutes de pierres par dilatation thermique des parements."@fr .
+    crm:P3_has_note "Structure : Opus caementicium. Risque : Chutes de pierres."@fr .
 
 # =================================================================
 # 3. FAMILLE MÉDIÉVALE
 # =================================================================
 
-fe:StyleMedieval a owl:Class ;
-    rdfs:subClassOf fe:ArchitectureStyle ;
-    rdfs:label "Architecture Médiévale"@fr ;
-    crm:P3_has_note "Risque transversal : Charpentes bois monumentales (forêts) non compartimentées et difficiles d'accès."@fr .
+fe:StyleMedieval a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Architecture Médiévale"@fr ;
+    skos:inScheme fe:ArchitectureThesaurus ;
+    skos:topConceptOf fe:ArchitectureThesaurus ;
+    skos:narrower fe:StyleRoman, fe:StyleGothique ;
+    crm:P3_has_note "Risque transversal : Charpentes bois monumentales non compartimentées."@fr .
 
-    fe:StyleRoman a owl:Class ;
-        rdfs:subClassOf fe:StyleMedieval ;
-        rdfs:label "Roman"@fr ;
+    fe:StyleRoman a skos:Concept, fe:ArchitectureStyle ;
+        skos:prefLabel "Roman"@fr ;
+        skos:broader fe:StyleMedieval ;
+        skos:inScheme fe:ArchitectureThesaurus ;
         owl:sameAs <http://dbpedia.org/resource/Romanesque_architecture> ;
-        foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Architecture_romane> ;
-        crm:P3_has_note "Structure : Murs épais, voûtes en berceau. Risque : Désenfumage naturel très lent, confinement des chaleurs extrêmes."@fr .
+        crm:P3_has_note "Risque : Désenfumage naturel très lent."@fr .
 
-    fe:StyleGothique a owl:Class ;
-        rdfs:subClassOf fe:StyleMedieval ;
-        rdfs:label "Gothique"@fr ;
-        owl:sameAs <http://dbpedia.org/resource/Gothic_architecture> ;
-        foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Architecture_gothique> ;
-        crm:P3_has_note "Structure : Croisées d'ogives et arc-boutants. Risque : Effondrement des voûtes par surcharge de débris de charpente brûlés."@fr .
+    fe:StyleGothique a skos:Concept, fe:ArchitectureStyle ;
+        skos:prefLabel "Gothique"@fr ;
+        skos:broader fe:StyleMedieval ;
+        skos:inScheme fe:ArchitectureThesaurus ;
+        skos:narrower fe:GothiqueRayonnant, fe:GothiqueFlamboyant ;
+        owl:sameAs <http://dbpedia.org/resource/Gothic_architecture> .
 
-        fe:GothiqueRayonnant a owl:Class ;
-            rdfs:subClassOf fe:StyleGothique ;
-            rdfs:label "Gothique Rayonnant"@fr ;
-            owl:sameAs <http://dbpedia.org/resource/Rayonnant> ;
-            foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Gothique_rayonnant> ;
-            crm:P3_has_note "Structure : Murs-rideaux de verre. Risque : Rupture de l'équilibre des pressions lors du bris massif des vitraux."@fr .
+        fe:GothiqueRayonnant a skos:Concept, fe:ArchitectureStyle ;
+            skos:prefLabel "Gothique Rayonnant"@fr ;
+            skos:broader fe:StyleGothique ;
+            skos:inScheme fe:ArchitectureThesaurus ;
+            crm:P3_has_note "Risque : Rupture de l'équilibre des pressions (vitraux)."@fr .
 
-        fe:GothiqueFlamboyant a owl:Class ;
-            rdfs:subClassOf fe:StyleGothique ;
-            rdfs:label "Gothique Flamboyant"@fr ;
-            owl:sameAs <http://dbpedia.org/resource/Flamboyant> ;
-            foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Gothique_flamboyant> ;
-            crm:P3_has_note "Structure : Pierre ciselée. Risque : Éclatement irréversible des ornementations fines au choc thermique."@fr .
+        fe:GothiqueFlamboyant a skos:Concept, fe:ArchitectureStyle ;
+            skos:prefLabel "Gothique Flamboyant"@fr ;
+            skos:broader fe:StyleGothique ;
+            skos:inScheme fe:ArchitectureThesaurus ;
+            crm:P3_has_note "Risque : Éclatement des ornementations fines."@fr .
 
 # =================================================================
-# 4. FAMILLE RENAISSANCE & BAROQUE
+# 4. FAMILLE INDUSTRIELLE & XIXe
 # =================================================================
 
-fe:StyleRenaissance a owl:Class ;
-    rdfs:subClassOf fe:ArchitectureStyle ;
-    rdfs:label "Architecture Renaissance"@fr ;
-    crm:P3_has_note "Risque transversal : Développement des cages d'escalier monumentales agissant comme des conduits d'extraction de fumée."@fr .
+fe:StyleIndustriel a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Architecture Industrielle & XIXe"@fr ;
+    skos:inScheme fe:ArchitectureThesaurus ;
+    skos:topConceptOf fe:ArchitectureThesaurus ;
+    skos:narrower fe:Haussmannien, fe:ArchitectureMetallique ;
+    crm:P3_has_note "Risque transversal : Fer et fonte sans protection thermique."@fr .
 
-fe:RenaissanceFrancaise a owl:Class ;
-    rdfs:subClassOf fe:StyleRenaissance ;
-    rdfs:label "Renaissance Française"@fr ;
-    owl:sameAs <http://dbpedia.org/resource/French_Renaissance_architecture> ;
-    foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Architecture_de_la_Renaissance_française> ;
-    crm:P3_has_note "Risque : Plafonds bois peints à haute charge calorifique et propagation par les lambris."@fr .
+fe:Haussmannien a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Haussmannien"@fr ;
+    skos:broader fe:StyleIndustriel ;
+    skos:inScheme fe:ArchitectureThesaurus ;
+    crm:P3_has_note "Risque : Propagation par combles filants et conduits de cheminées."@fr .
 
-fe:Baroque a owl:Class ;
-    rdfs:subClassOf fe:StyleRenaissance ;
-    rdfs:label "Baroque"@fr ;
-    owl:sameAs <http://dbpedia.org/resource/Baroque_architecture> ;
-    foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Architecture_baroque> ;
-    crm:P3_has_note "Structure : Lattis bois et stucs. Risque : Propagation invisible dans les faux-plafonds et cavités de décor."@fr .
-
-# =================================================================
-# 5. FAMILLE CLASSIQUE & NÉO
-# =================================================================
-
-fe:StyleClassique a owl:Class ;
-    rdfs:subClassOf fe:ArchitectureStyle ;
-    rdfs:label "Architecture Classique"@fr ;
-    crm:P3_has_note "Risque transversal : Très grands volumes d'air favorisant le développement de foyers puissants (flashover)."@fr .
-
-fe:StyleLouisXIV a owl:Class ;
-    rdfs:subClassOf fe:StyleClassique ;
-    rdfs:label "Classique Louis XIV"@fr ;
-    owl:sameAs <http://dbpedia.org/resource/French_Classicism> ;
-    foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Architecture_classique_française> ;
-    crm:P3_has_note "Structure : Toits à la Mansart. Risque : Combles aménagés avec circulations complexes, souvent sans coupe-feu."@fr .
-
-fe:StyleNeoclassique a owl:Class ;
-    rdfs:subClassOf fe:StyleClassique ;
-    rdfs:label "Néoclassique"@fr ;
-    owl:sameAs <http://dbpedia.org/resource/Neoclassical_architecture> ;
-    foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Architecture_néo-classique> ;
-    crm:P3_has_note "Structure : Pierre et charpentes fer (précoces). Risque : Fragilité des premières structures métalliques cachées."@fr .
+fe:ArchitectureMetallique a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Métallique XIXe (Eiffel)"@fr ;
+    skos:broader fe:StyleIndustriel ;
+    skos:inScheme fe:ArchitectureThesaurus ;
+    crm:P3_has_note "Risque : Ruine structurelle brutale à 450°C."@fr .
 
 # =================================================================
-# 6. FAMILLE INDUSTRIELLE & XIXe
+# 5. FAMILLE XXe & MODERNE
 # =================================================================
 
-fe:StyleIndustriel a owl:Class ;
-    rdfs:subClassOf fe:ArchitectureStyle ;
-    rdfs:label "Architecture Industrielle & XIXe"@fr ;
-    crm:P3_has_note "Risque transversal : Introduction massive du fer et de la fonte sans protection thermique."@fr .
+fe:StyleModerne a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Architecture Moderne & XXe"@fr ;
+    skos:inScheme fe:ArchitectureThesaurus ;
+    skos:topConceptOf fe:ArchitectureThesaurus ;
+    skos:narrower fe:ArtNouveau, fe:Brutalisme ;
+    crm:P3_has_note "Risque transversal : Matériaux créant des fumées toxiques."@fr .
 
-fe:Haussmannien a owl:Class ;
-    rdfs:subClassOf fe:StyleIndustriel ;
-    rdfs:label "Haussmannien"@fr ;
-    owl:sameAs <http://dbpedia.org/resource/Haussmann's_renovation_of_Paris> ;
-    foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Transformations_de_Paris_sous_le_Second_Empire> ;
-    crm:P3_has_note "Structure : Pierre, plancher bois/plâtre. Risque : Propagation horizontale par combles filants et verticale par conduits de cheminées."@fr .
-
-fe:ArchitectureMetallique a owl:Class ;
-    rdfs:subClassOf fe:StyleIndustriel ;
-    rdfs:label "Métallique XIXe (Eiffel)"@fr ;
-    owl:sameAs <http://dbpedia.org/resource/Iron_architecture> ;
-    foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Architecture_métallique> ;
-    crm:P3_has_note "Structure : Fer puddlé riveté. Risque : Ruine structurelle brutale à 450°C. Dilatation poussant les murs porteurs."@fr .
-
-# =================================================================
-# 7. FAMILLE VERNACULAIRE
-# =================================================================
-
-fe:StyleVernaculaire a owl:Class ;
-    rdfs:subClassOf fe:ArchitectureStyle ;
-    rdfs:label "Architecture Vernaculaire"@fr ;
-    crm:P3_has_note "Risque transversal : Utilisation de matériaux biosourcés combustibles (bois, paille, terre) et mitoyenneté organique."@fr .
-
-fe:PanDeBois a owl:Class ;
-    rdfs:subClassOf fe:StyleVernaculaire ;
-    rdfs:label "Pan de bois / Colombage"@fr ;
-    owl:sameAs <http://dbpedia.org/resource/Timber_framing> ;
-    foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Pan_de_bois> ;
-    crm:P3_has_note "Structure : Ossature bois porteuse. Risque : Propagation ultra-rapide par les vides entre parois."@fr .
-
-# =================================================================
-# 8. FAMILLE XXe & MODERNE
-# =================================================================
-
-fe:StyleModerne a owl:Class ;
-    rdfs:subClassOf fe:ArchitectureStyle ;
-    rdfs:label "Architecture Moderne & XXe"@fr ;
-    crm:P3_has_note "Risque transversal : Utilisation de nouveaux matériaux (béton, plastiques) créant des fumées toxiques ou des risques d'éclatement."@fr .
-
-fe:ArtNouveau a owl:Class ;
-    rdfs:subClassOf fe:StyleModerne ;
-    rdfs:label "Art Nouveau"@fr ;
-    owl:sameAs <http://dbpedia.org/resource/Art_Nouveau> ;
-    foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Art_nouveau> ;
-    crm:P3_has_note "Structure : Mixte. Risque : Verrières de toiture fragiles risquant de s'effondrer sur les chemins d'évacuation."@fr .
-
-fe:Brutalisme a owl:Class ;
-    rdfs:subClassOf fe:StyleModerne ;
-    rdfs:label "Brutalisme"@fr ;
-    owl:sameAs <http://dbpedia.org/resource/Brutalist_architecture> ;
-    foaf:isPrimaryTopicOf <https://fr.wikipedia.org/wiki/Brutalisme> ;
-    crm:P3_has_note "Structure : Béton banché. Risque : Confinement des fumées et labyrinthe spatial complexe pour les pompiers."@fr .
+fe:Brutalisme a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Brutalisme"@fr ;
+    skos:broader fe:StyleModerne ;
+    skos:inScheme fe:ArchitectureThesaurus ;
+    crm:P3_has_note "Risque : Confinement des fumées et labyrinthe spatial."@fr .

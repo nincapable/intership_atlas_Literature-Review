@@ -39,16 +39,8 @@ fe:hasMeteorologicalObservation a owl:ObjectProperty ;
     rdfs:domain fe:HazardEvent ;
     rdfs:range fe:WeatherMeasurement .
 
-# 1. Le Niveau de Sévérité (Le "Quick Look")
-fe:hasImpactSeverity a owl:ObjectProperty ;
-    rdfs:label "niveau de sévérité de l'impact"@fr ;
-    rdfs:subPropertyOf crm:P2_has_type ;
+fe:hasImpact a owl:ObjectProperty ;
+    rdfs:label "a pour impact"@fr ;
+    rdfs:subPropertyOf crm:P9_consists_of ;
     rdfs:domain fe:HazardEvent ;
-    rdfs:range fe:ImpactSeverityLevel .
-
-# 2. Le Lien vers le Rapport d'Expertise (Le "Deep Dive")
-fe:hasImpactReport a owl:ObjectProperty ;
-    rdfs:label "est détaillé par le rapport"@fr ;
-    rdfs:subPropertyOf crm:P70i_is_documented_in ;
-    rdfs:domain fe:HazardEvent ;
-    rdfs:range crm:E31_Document .
+    rdfs:range fe:ImpactAssessment .
