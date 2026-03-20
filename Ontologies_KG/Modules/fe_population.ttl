@@ -1,0 +1,67 @@
+# --- Niveau 1 : La Racine ---
+fe:Population a owl:Class ; rdfs:subClassOf crm:E74_Group .
+
+# --- Niveau 2 : Les Conteneurs de Dimensions (PopPart) ---
+fe:PopulationPartition a owl:Class ; rdfs:label "Conteneur de partition"@fr .
+
+fe:MobilityPart rdfs:subClassOf fe:PopulationPartition ; rdfs:label "Dimension Mobilité"@fr .
+fe:GroupPart    rdfs:subClassOf fe:PopulationPartition ; rdfs:label "Dimension Groupe"@fr .
+fe:TypePart     rdfs:subClassOf fe:PopulationPartition ; rdfs:label "Dimension Type"@fr .
+
+# --- Niveau 3 : Les Propriétés de Liaison vers les Conteneurs ---
+fe:hasMobilityPart a owl:ObjectProperty ; rdfs:domain fe:Population ; rdfs:range fe:MobilityPart .
+fe:hasGroupPart    a owl:ObjectProperty ; rdfs:domain fe:Population ; rdfs:range fe:GroupPart .
+fe:hasTypePart     a owl:ObjectProperty ; rdfs:domain fe:Population ; rdfs:range fe:TypePart .
+
+# --- La valeur de proportion (La donnée chiffrée) ---
+fe:proportionValue a owl:DatatypeProperty ;
+    rdfs:label "valeur de proportion"@fr ;
+    rdfs:domain fe:PopulationPartition ;
+    rdfs:range xsd:float .
+
+# Liaison vers la classe de mobilité (Valid, PMR...)
+fe:hasPartitionMobilityType a owl:ObjectProperty ;
+    rdfs:domain fe:MobilityPart ;
+    rdfs:range fe:MobilityClass .
+
+fe:hasVelocity a owl:ObjectProperty ;
+    rdfs:label "vélocité moyenne"@fr ;
+    rdfs:comment "Vitesse de déplacement moyenne pour cette partition de population (ex: 1.2 m/s)."@fr ;
+    rdfs:domain fe:MobilityPart ;
+    rdfs:range crm:E54_Dimension .
+
+# Liaison vers le groupe (Rescue, Civilian...)
+fe:hasPartitionGroup a owl:ObjectProperty ;
+    rdfs:domain fe:GroupPart ;
+    rdfs:range fe:VictimGroup .
+
+# Liaison vers le groupe (Rescue, Civilian...)
+fe:hasPartitionType a owl:ObjectProperty ;
+    rdfs:domain fe:TypePart ;
+    rdfs:range fe:PopType .
+
+# --- Propriétés qualitatives de la Population ---
+
+fe:hasRiskPerception a owl:ObjectProperty ;
+    rdfs:label "perception du risque"@fr ;
+    rdfs:comment "Évalue la conscience du danger immédiat par le groupe."@fr ;
+    rdfs:domain fe:Population ;
+    rdfs:range fe:RiskPerceptionLevel .
+
+fe:hasAwareness a owl:ObjectProperty ;
+    rdfs:label "sensibilisation"@fr ;
+    rdfs:comment "Niveau de connaissance théorique des procédures de sécurité."@fr ;
+    rdfs:domain fe:Population ;
+    rdfs:range fe:AwarenessLevel .
+
+fe:hasTraining a owl:ObjectProperty ;
+    rdfs:label "entraînement"@fr ;
+    rdfs:comment "Capacité pratique acquise par des exercices ou une formation métier."@fr ;
+    rdfs:domain fe:Population ;
+    rdfs:range fe:TrainingLevel .
+
+# Ajout de l'éducation comme demandé précédemment
+fe:hasEducationLevel a owl:ObjectProperty ;
+    rdfs:label "niveau d'éducation"@fr ;
+    rdfs:domain fe:Population ;
+    rdfs:range fe:EducationLevel .

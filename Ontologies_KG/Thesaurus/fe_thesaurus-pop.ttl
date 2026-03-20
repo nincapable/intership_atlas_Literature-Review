@@ -1,0 +1,159 @@
+fe:VictimGroup a skos:Concept ;
+    skos:prefLabel "Groupe de Victimes"@fr ;
+    skos:topConceptOf fe:PopulationTaxonomy .
+
+fe:Group_Civilian a skos:Concept ;
+    skos:prefLabel "Civil"@fr ;
+    skos:altLabel "Public"@fr, "Visiteur"@fr ;
+    skos:broader fe:VictimGroup ;
+    skos:definition "Personne n'ayant aucune fonction de secours ou de sécurité."@fr .
+
+fe:Group_Rescue a skos:Concept ;
+    skos:prefLabel "Sauveteur"@fr ;
+    skos:altLabel "Pompier"@fr, "Équipe d'intervention"@fr ;
+    skos:broader fe:VictimGroup .
+
+fe:Group_Medical a skos:Concept ;
+    skos:prefLabel "Médical"@fr ;
+    skos:altLabel "SAMU"@fr, "Ambulancier"@fr ;
+    skos:broader fe:VictimGroup .
+
+############################################################################################################""
+
+fe:MobilityClass a skos:Concept ;
+    skos:prefLabel "Classe de Mobilité"@fr ;
+    skos:topConceptOf fe:PopulationTaxonomy .
+
+fe:Mobility_Valid a skos:Concept ;
+    skos:prefLabel "Valide"@fr ;
+    skos:broader fe:MobilityClass ;
+    skos:scopeNote "Individu capable de se déplacer sans assistance à vitesse normale."@fr .
+
+fe:Mobility_Invalid a skos:Concept ;
+    skos:prefLabel "Invalide / PMR"@fr ;
+    skos:altLabel "Personne à Mobilité Réduite"@fr ;
+    skos:broader fe:MobilityClass ;
+    skos:definition "Individu nécessitant une aide technique ou humaine pour l'évacuation."@fr .
+
+fe:Mobility_Elderly a skos:Concept ;
+    skos:prefLabel "Sénior"@fr ;
+    skos:broader fe:MobilityClass ;
+    skos:scopeNote "Mobilité potentiellement ralentie par l'âge sans être une invalidité stricte."@fr .
+
+fe:Mobility_Child a skos:Concept ;
+    skos:prefLabel "Enfant"@fr ;
+    skos:broader fe:MobilityClass ;
+    skos:scopeNote "Mobilité potentiellement réduite par l'âge sans être une invalidité stricte."@fr .
+
+############################################################################################################
+
+fe:PopType a skos:Concept ;
+    skos:prefLabel "Type de Population"@fr ;
+    skos:topConceptOf fe:PopulationTaxonomy .
+
+fe:Resident a skos:Concept ;
+    skos:prefLabel "Habitant"@fr ;
+    skos:altLabel "Résident"@fr, "Local"@fr ;
+    skos:broader fe:PopType ;
+    skos:definition "Personne connaissant parfaitement les lieux et les issues de secours."@fr .
+
+fe:Tourist a skos:Concept ;
+    skos:prefLabel "Touriste"@fr ;
+    skos:altLabel "Visiteur occasionnel"@fr ;
+    skos:broader fe:PopType ;
+    skos:definition "Personne découvrant les lieux, totalement dépendante de la signalétique."@fr .
+
+fe:Staff a skos:Concept ;
+    skos:prefLabel "Personnel"@fr ;
+    skos:broader fe:PopType ;
+    skos:scopeNote "Employés du site, formés aux procédures internes."@fr .
+
+fe:rescueWorker a skos:Concept ;
+    skos:prefLabel "Sauveteur"@fr ;
+    skos:broader fe:PopType ;
+    skos:definition "Personne formée aux procédures de secours, présente sur les lieux."@fr .
+
+fe:MedicalStaff a skos:Concept ;
+    skos:prefLabel "Personnel Médical"@fr ;
+    skos:broader fe:PopType ;
+    skos:definition "Personnel médical d'urgence, présent sur les lieux."@fr .
+
+fe:lawenforcement a skos:Concept ;
+    skos:prefLabel "Forces de l'Ordre"@fr ;
+    skos:broader fe:PopType ;
+    skos:definition "Agents de police ou de sécurité publique, présents sur les lieux."@fr .
+
+fe:Firefighter a skos:Concept ;
+    skos:prefLabel "Pompier"@fr ;
+    skos:broader fe:PopType ;
+    skos:definition "Sauveteur spécialisé dans la lutte contre les incendies, présent sur les lieux."@fr .
+
+############################################################################################################
+
+# =================================================================
+# 1. PERCEPTION DU RISQUE (RiskPerceptionLevel)
+# =================================================================
+fe:Perception_None a skos:Concept, fe:RiskPerceptionLevel ;
+    skos:prefLabel "Nulle / Déni"@fr ;
+    skos:definition "Absence totale de conscience du danger ou refus d'admettre l'urgence."@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Perception_Low a skos:Concept, fe:RiskPerceptionLevel ;
+    skos:prefLabel "Faible"@fr ;
+    skos:definition "Le danger est perçu mais sous-estimé ou considéré comme lointain."@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Perception_High a skos:Concept, fe:RiskPerceptionLevel ;
+    skos:prefLabel "Élevée / Alerte"@fr ;
+    skos:definition "Conscience aiguë du danger, propice à une mise en mouvement immédiate."@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+# =================================================================
+# 2. SENSIBILISATION (AwarenessLevel)
+# =================================================================
+fe:Awareness_None a skos:Concept, fe:AwarenessLevel ;
+    skos:prefLabel "Aucune"@fr ;
+    skos:definition "La population n'a jamais été exposée aux consignes de sécurité du site."@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Awareness_Informative a skos:Concept, fe:AwarenessLevel ;
+    skos:prefLabel "Informative"@fr ;
+    skos:definition "Connaissance passive (lecture d'affiches, flyers, plans d'évacuation)."@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Awareness_Trained a skos:Concept, fe:AwarenessLevel ;
+    skos:prefLabel "Active / Briefing"@fr ;
+    skos:definition "A reçu des consignes directes ou un briefing spécifique (ex: consignes de vol)."@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+# =================================================================
+# 3. ENTRAÎNEMENT (TrainingLevel)
+# =================================================================
+fe:Training_None a skos:Concept, fe:TrainingLevel ;
+    skos:prefLabel "Aucun"@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Training_Exercise a skos:Concept, fe:TrainingLevel ;
+    skos:prefLabel "Exercice de terrain"@fr ;
+    skos:definition "A déjà participé à au moins un exercice d'évacuation réel sur le site."@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Training_Professional a skos:Concept, fe:TrainingLevel ;
+    skos:prefLabel "Professionnel"@fr ;
+    skos:definition "Formation de secouriste, d'équipier de première intervention ou équivalent."@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+# =================================================================
+# 4. ÉDUCATION (EducationLevel)
+# =================================================================
+fe:Edu_Primary a skos:Concept, fe:EducationLevel ;
+    skos:prefLabel "Primaire"@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Edu_Secondary a skos:Concept, fe:EducationLevel ;
+    skos:prefLabel "Secondaire"@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Edu_Higher a skos:Concept, fe:EducationLevel ;
+    skos:prefLabel "Supérieur / Technique"@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
