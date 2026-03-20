@@ -1,0 +1,8 @@
+fe:UNESCO a fe:ProtectionLevel ;
+    rdfs:label "Site du Patrimoine Mondial de l'UNESCO"@fr .
+
+fe:Monument_Historique a fe:ProtectionLevel ;
+    rdfs:label "Monument Historique"@fr .
+
+fe:Site_Classé a fe:ProtectionLevel ;
+    rdfs:label "Site Classé"@fr .

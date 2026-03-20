@@ -1,0 +1,63 @@
+fe:HeritageSite a owl:Class ;
+    rdfs:subClassOf crm:E27_Site ;
+    rdfs:label "Site Patrimonial"@fr ;
+    rdfs:comment "Entité globale regroupant les aspects spatiaux, humains et de sécurité."@fr .
+
+# --- Liaisons aux modules existants ---
+fe:hasZone a owl:ObjectProperty ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:Zone .
+
+fe:hasPopulation a owl:ObjectProperty ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:Population .
+
+# --- Météo ---
+fe:hasWeatherCondition a owl:ObjectProperty ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:WeatherCondition .
+
+fe:hasClimate a owl:ObjectProperty ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:Climate .
+
+# --- Topographie ---
+# On peut définir si le site est en pente, en étage, ou accidenté
+fe:hasTopography a owl:ObjectProperty ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:TopographyType .
+
+# --- Aléas (Risques identifiés pour le site) ---
+fe:hasHazard a owl:ObjectProperty ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:HazardType .
+
+# --- Plan d'Évacuation ---
+fe:hasEvacuationPlan a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P70i_is_documented_in ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range crm:E29_Design_or_Procedure ;
+    rdfs:label "Plan d'Évacuation"@fr .
+
+# --- Classification du Site ---
+fe:hasProtectionStatus a owl:ObjectProperty ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:ProtectionLevel . # (UNESCO, Monument Historique, Site Classé)
+
+fe:ProtectionLevel a owl:Class ;
+    owl:oneOf ( fe:UNESCO fe:Monument_Historique fe:Site_Classé ) ;
+    rdfs:label "Niveau de Protection du Site"@fr .
+
+# --- Statistiques de Fréquentation ---
+fe:hasAttendancePeak a owl:ObjectProperty ;
+    rdfs:label "pic de fréquentation"@fr ;
+    rdfs:comment "Nombre maximum de personnes autorisées simultanément (ERP)."@fr ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range crm:E54_Dimension .
+
+# --- Plan de Sauvegarde des Biens Culturels (PSBC) ---
+fe:hasCulturalAssetPlan a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P70i_is_documented_in ;
+    rdfs:label "plan de sauvegarde des biens"@fr ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:E29_Design_or_Procedure .
