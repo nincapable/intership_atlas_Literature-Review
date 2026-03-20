@@ -1,0 +1,85 @@
+# --- Définition du Schéma de Concepts ---
+fe:ZoneTaxonomy a skos:ConceptScheme ;
+    rdfs:label "Taxonomie des caractéristiques de Zone"@fr ;
+    skos:hasTopConcept fe:TransitType, fe:ZoneUsageType, fe:CommunicationType .
+
+# =================================================================
+# 1. RÉGIME DE TRANSIT (TransitType)
+# =================================================================
+fe:TransitType a skos:Concept ;
+    skos:prefLabel "Régime de Transit"@fr ;
+    skos:topConceptOf fe:ZoneTaxonomy .
+
+fe:Transit_Static a skos:Concept, fe:TransitType ;
+    skos:prefLabel "Statique"@fr ;
+    skos:definition "Zone destinée à l'attente ou l'occupation (ex: salle de spectacle, bureau)."@fr ;
+    skos:broader fe:TransitType ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Transit_Flow a skos:Concept, fe:TransitType ;
+    skos:prefLabel "Passage"@fr ;
+    skos:definition "Zone de circulation pure (ex: couloir, escalier, tunnel)."@fr ;
+    skos:broader fe:TransitType ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Transit_Hybrid a skos:Concept, fe:TransitType ;
+    skos:prefLabel "Hybride"@fr ;
+    skos:definition "Zone mixte permettant l'attente et le passage (ex: hall de gare, place publique)."@fr ;
+    skos:broader fe:TransitType ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+# =================================================================
+# 2. USAGE DE LA ZONE (ZoneUsageType)
+# =================================================================
+fe:ZoneUsageType a skos:Concept ;
+    skos:prefLabel "Type d'Usage de Zone"@fr ;
+    skos:topConceptOf fe:ZoneTaxonomy .
+
+fe:Usage_Touristic a skos:Concept, fe:ZoneUsageType ;
+    skos:prefLabel "Touristique"@fr ;
+    skos:definition "Zone principalement fréquentée par des visiteurs ou touristes (ex: musée, site historique)."@fr ;
+    skos:broader fe:ZoneUsageType ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Usage_Residential a skos:Concept, fe:ZoneUsageType ;
+    skos:prefLabel "Résidentielle"@fr ;
+    skos:definition "Zone principalement fréquentée par des habitants ou résidents (ex: quartier d'habitation, immeuble)."@fr ;
+    skos:broader fe:ZoneUsageType ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Usage_Mixed a skos:Concept, fe:ZoneUsageType ;
+    skos:prefLabel "Mixte"@fr ;
+    skos:definition "Zone à usage mixte, fréquentée à la fois par des résidents et des visiteurs (ex: centre-ville, zone commerciale)."@fr ;
+    skos:broader fe:ZoneUsageType ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+# =================================================================
+# 3. MOYENS DE COMMUNICATION (CommunicationType)
+# =================================================================
+fe:CommunicationType a skos:Concept ;
+    skos:prefLabel "Type de Communication"@fr ;
+    skos:topConceptOf fe:ZoneTaxonomy .
+
+fe:Comm_Radio a skos:Concept, fe:CommunicationType ;
+    skos:prefLabel "Radio"@fr ;
+    skos:definition "Communication par radio (ex: talkie-walkie, radio de secours)."@fr ;
+    skos:broader fe:CommunicationType ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Comm_WiFi a skos:Concept, fe:CommunicationType ;
+    skos:prefLabel "Wi-Fi"@fr ;
+    skos:definition "Communication par réseau Wi-Fi disponible dans la zone."@fr ;
+    skos:broader fe:CommunicationType ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Comm_5G a skos:Concept, fe:CommunicationType ;
+    skos:prefLabel "5G"@fr ;
+    skos:definition "Communication par réseau mobile 5G disponible dans la zone."@fr ;
+    skos:broader fe:CommunicationType ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Comm_Signage a skos:Concept, fe:CommunicationType ;
+    skos:prefLabel "Signalétique"@fr ;
+    skos:definition "Communication par signalétique visuelle ou sonore (ex: panneaux, annonces)."@fr ;
+    skos:broader fe:CommunicationType ;
+    skos:inScheme fe:ZoneTaxonomy .

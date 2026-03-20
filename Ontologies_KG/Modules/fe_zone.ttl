@@ -1,0 +1,62 @@
+fe:Zone a owl:Class ;
+    rdfs:subClassOf crm:E53_Place ;
+    rdfs:label "Zone d'intérêt"@fr ;
+    rdfs:comment "Espace délimité caractérisé par son usage, sa capacité et son exposition aux risques."@fr .
+
+# --- Attributs de Capacité et Flux ---
+fe:hasCapacity a owl:ObjectProperty ;
+    rdfs:label "capacité nominale"@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range crm:E54_Dimension . # Ex: 500 Personnes
+
+fe:hasTransitType a owl:ObjectProperty ;
+    rdfs:label "type de transit"@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:TransitType .
+
+fe:TransitType a owl:Class ;
+    owl:oneOf (fe:Transit_Static fe:Transit_Flow fe:Transit_Hybrid) ;
+    rdfs:label "Régime de transit de la zone"@fr .
+
+# --- Usage de la Zone ---
+fe:hasZoneUsage a owl:ObjectProperty ;
+    rdfs:label "usage de la zone"@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:ZoneUsageType . # (Touristique, Habitation, Mixte)
+
+fe:ZoneUsageType a owl:Class ;
+    owl:oneOf ( fe:Usage_Touristic fe:Usage_Residential fe:Usage_Mixed ) ;
+    rdfs:label "Type d'usage de la zone"@fr .
+
+# --- Nature de l'Espace (Morphologie) ---
+fe:hasBuilding a owl:ObjectProperty ;
+    rdfs:label "contient le bâtiment"@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:Building .
+
+fe:hasNaturalSpace a owl:ObjectProperty ;
+    rdfs:label "comprend l'espace naturel"@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:NaturalSpace .
+
+# --- Réseaux et Communications ---
+fe:hasCommunicationNode a owl:ObjectProperty ;
+    rdfs:label "nœud de communication"@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:CommunicationType . # (Radio, Wi-Fi, 5G, Signalétique sonore)
+
+fe:CommunicationType a owl:Class ;
+    owl:oneOf ( fe:Comm_Radio fe:Comm_WiFi fe:Comm_5G fe:Comm_Signage ) ;
+    rdfs:label "Type de communication disponible dans la zone"@fr .
+
+# --- Exposition aux Risques ---
+fe:isExposedTo a owl:ObjectProperty ;
+    rdfs:label "exposition au risque"@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:HazardType . # (Incendie, Inondation, Mouvement de foule)
+
+# --- Presnece d'artéfacts ---
+fe:containsArtefact a owl:ObjectProperty ;
+    rdfs:label "contient un artéfact"@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:Artefact .
