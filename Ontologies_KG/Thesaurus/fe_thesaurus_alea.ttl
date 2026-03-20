@@ -54,8 +54,7 @@ fe:Fire_Hazard a skos:Concept, fe:HazardType ;
     skos:prefLabel "Incendie"@fr ;
     skos:inScheme fe:HazardTypeScheme ;
     skos:topConceptOf fe:HazardTypeScheme ;
-    skos:narrower fe:Fire_Class_A, fe:Fire_Class_B, fe:Fire_Class_C, 
-                   fe:Fire_Class_D, fe:Fire_Class_E, fe:Fire_Class_F .
+    skos:narrower fe:Fire_Class_A, fe:Fire_Class_B, fe:Fire_Class_C, fe:Fire_Class_D, fe:Fire_Class_E, fe:Fire_Class_F .
 
     fe:Fire_Class_A a skos:Concept, fe:HazardType ;
         skos:prefLabel "Feu de Classe A (Solides)"@fr ;

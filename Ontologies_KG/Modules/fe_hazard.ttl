@@ -17,6 +17,15 @@ fe:HazardEvent a owl:Class ;
 #     rdfs:domain fe:HazardEvent ;
 #     rdfs:range xsd:duration .
 
+fe:hasHazardType a owl:ObjectProperty ;
+    rdfs:label "type d'aléa"@fr ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range fe:HazardType . # (Incendie, Inondation, Mouvement de foule, etc.)
+
+fe:HazardType a owl:Class ;
+    owl:oneOf ( fe:Fire_Hazard fe:Flood_Hazard fe:Seismic_Hazard fe:Geological_Hazard fe:Meteorological_Hazard ) ;
+    rdfs:label "Type de risque"@fr .
+
 # 1. La Classification Statique (Le "Quick Look")
 # On réutilise E55_Type pour que ce soit une liste fermée (ex: Faible, Forte, Hors-Norme)
 fe:hasIntensityLevel a owl:ObjectProperty ;
