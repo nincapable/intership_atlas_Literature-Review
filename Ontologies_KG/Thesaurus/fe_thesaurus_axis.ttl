@@ -1,0 +1,38 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix fe: <http://example.org/fire_and_evacuation#> .
+
+# --- SCHÉMA GLOBAL DES AXES ---
+fe:AxisTaxonomy a skos:ConceptScheme ;
+    rdfs:label "Taxonomie des circulations et accessibilités"@fr .
+
+# --- TYPOLOGIE DES AXES ---
+fe:AxisType skos:prefLabel "Types d'axes"@fr ; skos:topConceptOf fe:AxisTaxonomy .
+
+fe:couloir a skos:Concept ; skos:prefLabel "Couloir"@fr ; skos:broader fe:AxisType .
+fe:escalier a skos:Concept ; skos:prefLabel "Escalier"@fr ; skos:broader fe:AxisType .
+fe:porte a skos:Concept ; skos:prefLabel "Porte"@fr ; skos:broader fe:AxisType .
+fe:rampe a skos:Concept ; skos:prefLabel "Rampe"@fr ; skos:broader fe:AxisType .
+fe:ascenseur a skos:Concept ; skos:prefLabel "Ascenseur"@fr ; skos:broader fe:AxisType .
+fe:fenetre a skos:Concept ; skos:prefLabel "Fenêtre"@fr ; skos:broader fe:AxisType .
+fe:voie_ouverte a skos:Concept ; skos:prefLabel "Voie ouverte"@fr ; skos:broader fe:AxisType .
+
+# --- NIVEAUX D'ACCESSIBILITÉ PMR ---
+fe:WheelchairAccessible a skos:Concept ; 
+    skos:prefLabel "Accessible Fauteuil Roulant"@fr ; 
+    skos:definition "Autonomie totale pour les PMR."@fr .
+
+fe:PartiallyArrangedPedestrian a skos:Concept ; 
+    skos:prefLabel "Aménagement partiel"@fr .
+
+fe:PossibleHelped a skos:Concept ; 
+    skos:prefLabel "Possible avec aide"@fr ;
+    skos:definition "Nécessite l'assistance d'un tiers."@fr .
+
+fe:InaccessibleDisabledPerson a skos:Concept ; 
+    skos:prefLabel "Inaccessible"@fr .
+
+# --- NIVEAUX D'ACCESSIBILITÉ SECOURS ---
+fe:Granted a skos:Concept ; skos:prefLabel "Autorisé / Garanti"@fr .
+fe:Uncertain a skos:Concept ; skos:prefLabel "Incertain"@fr .
+fe:PossibleIfNecessary a skos:Concept ; skos:prefLabel "Possible si nécessaire"@fr .
+fe:Denied a skos:Concept ; skos:prefLabel "Refusé / Impossible"@fr .
