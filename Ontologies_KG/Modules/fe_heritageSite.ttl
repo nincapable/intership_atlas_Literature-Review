@@ -23,9 +23,32 @@ fe:hasClimate a owl:ObjectProperty ;
 
 # --- Topographie ---
 # On peut définir si le site est en pente, en étage, ou accidenté
-fe:hasTopography a owl:ObjectProperty ;
+fe:hasTopographyMeasurement a owl:ObjectProperty ;
+    rdfs:label "relevé topographique"@fr ;
     rdfs:domain fe:HeritageSite ;
-    rdfs:range fe:TopographyType .
+    rdfs:range fe:TopographicDataset .
+
+# La Classe Dataset (Le conteneur du relevé) ---
+fe:TopographicDataset a owl:Class ;
+    rdfs:subClassOf crm:E73_Information_Object ;
+    rdfs:label "Jeu de données topographiques"@fr .
+
+#  Propriétés de définition du relevé ---
+fe:hasSourceFile a owl:DatatypeProperty ;
+    rdfs:label "lien vers fichier brut"@fr ;
+    rdfs:comment "URL ou chemin vers le nuage de points (.las, .laz) ou le maillage."@fr ;
+    rdfs:domain fe:TopographicDataset ;
+    rdfs:range xsd:anyURI .
+
+fe:hasAcquisitionDate a owl:DatatypeProperty ;
+    rdfs:domain fe:TopographicDataset ;
+    rdfs:range xsd:dateTime .
+
+fe:hasResolution a owl:DatatypeProperty ;
+    rdfs:label "résolution du relevé"@fr ;
+    rdfs:comment "Densité de points par m² ou précision en cm."@fr ;
+    rdfs:domain fe:TopographicDataset ;
+    rdfs:range xsd:string .
 
 # --- Aléas (Risques identifiés pour le site) ---
 fe:hasHazard a owl:ObjectProperty ;
