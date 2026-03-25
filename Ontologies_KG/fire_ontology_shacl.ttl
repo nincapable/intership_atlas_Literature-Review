@@ -1,7 +1,9 @@
 @prefix sh:  <http://www.w3.org/ns/shacl#> .
-@prefix fe:  <http://example.org/fire_and_evacuation#> .
-@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 #################################################################
 # SHACL SHAPES pour ton ontologie
@@ -146,7 +148,7 @@ fe:PersonCapacityShape a sh:NodeShape ;
 fe:GlobalValidation a sh:NodeShape ;
     sh:closed true ;
     sh:ignoredProperties (
-        rdf:type rdfs:label rdfs:comment owl:sameAs
+        rdfs:type rdfs:label rdfs:comment owl:sameAs
     ) ;
     sh:property [
         sh:path fe:hasIndividualMaterial ;

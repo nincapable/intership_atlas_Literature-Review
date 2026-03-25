@@ -350,22 +350,22 @@ fe:Artos_Strucutral_SubType a owl:Class;
 #################################################################
 #TODO a refaire pour la doc et integrer au format modulaire
 # Template : "Récupérer dates bâtiment"
-fe:GetBuildingDates a spl:QueryTemplate ;
-    rdfs:label "Dates d'un bâtiment"@fr ;
-    rdfs:comment "Récupère toutes les dates d'un bâtiment donné"@fr ;
-    sp:text """
-    PREFIX fe: <http://example.org/feu#>
-    PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+# fe:GetBuildingDates a spl:QueryTemplate ;
+#     rdfs:label "Dates d'un bâtiment"@fr ;
+#     rdfs:comment "Récupère toutes les dates d'un bâtiment donné"@fr ;
+#     sp:text """
+#     PREFIX fe: <http://example.org/feu#>
+#     PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
     
-    SELECT ?constrStart ?constrEnd ?destruction ?renovationStart ?renovationEnd WHERE {
-      fe:{BUILDING} a fe:Building ;
-           fe:hasConstructionEvent/crm:P4_has_time-span/ 
-           [crm:P82a_begin_of_the_begin ?constrStart ;
-            crm:P82b_end_of_the_end ?constrEnd] ;
-           fe:hasDestructionEvent/crm:P4_has_time-span/
-           [crm:P82a_begin_of_the_begin ?destruction] ;
-           fe:hasRenovationEvent/crm:P4_has_time-span/
-           [crm:P82a_begin_of_the_begin ?renovationStart ;
-            crm:P82b_end_of_the_end ?renovationEnd] .
-    }
-    """ .
+#     SELECT ?constrStart ?constrEnd ?destruction ?renovationStart ?renovationEnd WHERE {
+#       fe:{BUILDING} a fe:Building ;
+#            fe:hasConstructionEvent/crm:P4_has_time-span/ 
+#            [crm:P82a_begin_of_the_begin ?constrStart ;
+#             crm:P82b_end_of_the_end ?constrEnd] ;
+#            fe:hasDestructionEvent/crm:P4_has_time-span/
+#            [crm:P82a_begin_of_the_begin ?destruction] ;
+#            fe:hasRenovationEvent/crm:P4_has_time-span/
+#            [crm:P82a_begin_of_the_begin ?renovationStart ;
+#             crm:P82b_end_of_the_end ?renovationEnd] .
+#     }
+#     """ .
