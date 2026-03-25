@@ -1,15 +1,28 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix fe: <http://example.org/fire_and_evacuation#> .
-@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
 
-fe:UNESCO a fe:ProtectionLevel ;
-    rdfs:label "Site du Patrimoine Mondial de l'UNESCO"@fr .
+# =================================================================
+# RÉFÉRENTIEL DES NIVEAUX DE PROTECTION DU PATRIMOINE
+# =================================================================
 
-fe:Monument_Historique a fe:ProtectionLevel ;
-    rdfs:label "Monument Historique"@fr .
+fe:ProtectionLevelScheme a skos:ConceptScheme ;
+    rdfs:label "Référentiel des Niveaux de Protection du Patrimoine"@fr ;
+    dct:description "Classification des types de protection juridique et patrimoniale des sites."@fr ;
+    skos:hasTopConcept fe:UNESCO, fe:Monument_Historique, fe:Site_Classé .
 
-fe:Site_Classé a fe:ProtectionLevel ;
-    rdfs:label "Site Classé"@fr .
+fe:UNESCO a skos:Concept ;
+    skos:prefLabel "Site du Patrimoine Mondial de l'UNESCO"@fr ;
+    skos:inScheme fe:ProtectionLevelScheme ;
+    skos:topConceptOf fe:ProtectionLevelScheme .
+
+fe:Monument_Historique a skos:Concept ;
+    skos:prefLabel "Monument Historique"@fr ;
+    skos:inScheme fe:ProtectionLevelScheme ;
+    skos:topConceptOf fe:ProtectionLevelScheme .
+
+fe:Site_Classé a skos:Concept ;
+    skos:prefLabel "Site Classé"@fr ;
+    skos:inScheme fe:ProtectionLevelScheme ;
+    skos:topConceptOf fe:ProtectionLevelScheme .

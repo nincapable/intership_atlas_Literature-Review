@@ -1,53 +1,81 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix fe: <http://example.org/fire_and_evacuation#> .
-@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
 
-fe:TriageCategory a owl:Class ;
-    rdfs:label "Catégorie de Triage"@fr ;
-    owl:oneOf ( fe:Green fe:Yellow fe:Red fe:Black fe:Violet fe:White ) .
+# =================================================================
+# 1. RÉFÉRENTIEL DES CATÉGORIES DE TRIAGE
+# =================================================================
 
-fe:Green a fe:TriageCategory ;
-    rdfs:label "Victime Mobile"@fr .
+fe:TriageCategoryScheme a skos:ConceptScheme ;
+    rdfs:label "Référentiel des Catégories de Triage"@fr ;
+    dct:description "Classification des victimes selon l'urgence de leur état."@fr ;
+    skos:hasTopConcept fe:Green, fe:Yellow, fe:Red, fe:Black, fe:Violet, fe:White .
 
-fe:Yellow a fe:TriageCategory ;
-    rdfs:label "Victime en Attente"@fr .
+fe:Green a skos:Concept ;
+    skos:prefLabel "Victime Mobile"@fr ;
+    skos:inScheme fe:TriageCategoryScheme ;
+    skos:topConceptOf fe:TriageCategoryScheme .
 
-fe:Red a fe:TriageCategory ;
-    rdfs:label "Victime Critique"@fr .
+fe:Yellow a skos:Concept ;
+    skos:prefLabel "Victime en Attente"@fr ;
+    skos:inScheme fe:TriageCategoryScheme ;
+    skos:topConceptOf fe:TriageCategoryScheme .
 
-fe:Black a fe:TriageCategory ;
-    rdfs:label "Décédée"@fr .
+fe:Red a skos:Concept ;
+    skos:prefLabel "Victime Critique"@fr ;
+    skos:inScheme fe:TriageCategoryScheme ;
+    skos:topConceptOf fe:TriageCategoryScheme .
 
-fe:Violet a fe:TriageCategory ;
-    rdfs:label "Victime Psychologique"@fr .
+fe:Black a skos:Concept ;
+    skos:prefLabel "Décédée"@fr ;
+    skos:inScheme fe:TriageCategoryScheme ;
+    skos:topConceptOf fe:TriageCategoryScheme .
 
-fe:White a fe:TriageCategory ;
-    rdfs:label "Disparue"@fr .
+fe:Violet a skos:Concept ;
+    skos:prefLabel "Victime Psychologique"@fr ;
+    skos:inScheme fe:TriageCategoryScheme ;
+    skos:topConceptOf fe:TriageCategoryScheme .
 
-# --- Définition du Thésaurus des Groupes ---
+fe:White a skos:Concept ;
+    skos:prefLabel "Disparue"@fr ;
+    skos:inScheme fe:TriageCategoryScheme ;
+    skos:topConceptOf fe:TriageCategoryScheme .
 
-fe:VictimGroup a owl:Class ;
-    rdfs:label "Groupe d'appartenance"@fr ;
-    owl:oneOf ( fe:Group_Civilian fe:Group_Rescuer fe:Group_Medical fe:Group_LawEnforcement fe:Group_Other ) .
 
-fe:Group_Civilian a fe:VictimGroup ;
-    rdfs:label "Civil / Public"@fr ;
-    rdfs:comment "Personnes présentes sur les lieux n'appartenant pas aux services de secours."@fr .
+# =================================================================
+# 2. THÉSAURUS DES GROUPES D'APPARTENANCE
+# =================================================================
 
-fe:Group_Rescuer a fe:VictimGroup ;
-    rdfs:label "Sauveteur / Pompier"@fr ;
-    rdfs:comment "Personnel des services d'incendie et de secours."@fr .
+fe:VictimGroupScheme a skos:ConceptScheme ;
+    rdfs:label "Thésaurus des Groupes d'appartenance"@fr ;
+    skos:hasTopConcept fe:Group_Civilian, fe:Group_Rescuer, fe:Group_Medical, fe:Group_LawEnforcement, fe:Group_Other .
 
-fe:Group_Medical a fe:VictimGroup ;
-    rdfs:label "Personnel Médical / SAMU"@fr ;
-    rdfs:comment "Équipes médicales et paramédicales d'urgence."@fr .
+fe:Group_Civilian a skos:Concept ;
+    skos:prefLabel "Civil / Public"@fr ;
+    skos:definition "Personnes présentes sur les lieux n'appartenant pas aux services de secours."@fr ;
+    skos:inScheme fe:VictimGroupScheme ;
+    skos:topConceptOf fe:VictimGroupScheme .
 
-fe:Group_LawEnforcement a fe:VictimGroup ;
-    rdfs:label "Forces de l'ordre"@fr ;
-    rdfs:comment "Police, Gendarmerie ou agents de sécurité publique."@fr .
+fe:Group_Rescuer a skos:Concept ;
+    skos:prefLabel "Sauveteur / Pompier"@fr ;
+    skos:definition "Personnel des services d'incendie et de secours."@fr ;
+    skos:inScheme fe:VictimGroupScheme ;
+    skos:topConceptOf fe:VictimGroupScheme .
 
-fe:Group_Other a fe:VictimGroup ;
-    rdfs:label "Autre / Indéterminé"@fr .
+fe:Group_Medical a skos:Concept ;
+    skos:prefLabel "Personnel Médical / SAMU"@fr ;
+    skos:definition "Équipes médicales et paramédicales d'urgence."@fr ;
+    skos:inScheme fe:VictimGroupScheme ;
+    skos:topConceptOf fe:VictimGroupScheme .
+
+fe:Group_LawEnforcement a skos:Concept ;
+    skos:prefLabel "Forces de l'ordre"@fr ;
+    skos:definition "Police, Gendarmerie ou agents de sécurité publique."@fr ;
+    skos:inScheme fe:VictimGroupScheme ;
+    skos:topConceptOf fe:VictimGroupScheme .
+
+fe:Group_Other a skos:Concept ;
+    skos:prefLabel "Autre / Indéterminé"@fr ;
+    skos:inScheme fe:VictimGroupScheme ;
+    skos:topConceptOf fe:VictimGroupScheme .
