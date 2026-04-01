@@ -64,6 +64,10 @@ fe:hostsTaxon a owl:ObjectProperty ;
     rdfs:domain fe:NaturalSpace ;
     rdfs:range fe:Taxon .
 
+fe:isTaxonHostedBy owl:inverseOf fe:hostsTaxon ;
+    rdfs:domain fe:Taxon ;
+    rdfs:range fe:NaturalSpace .
+
 # La classe des statuts UICN
 fe:IUCNCategory a owl:Class ;
     rdfs:label "Catégorie de la Liste Rouge UICN"@fr ;
@@ -82,6 +86,69 @@ fe:hasConservationMeasures a owl:objectProperty;
     rdfs:range crm:E31_Document ;
     rdfs:subPropertyOf crm:P70i_is_documented_in ;
     rdfs:comment "Lien vers la documentation de sensibilité aux contre-mesures feu"@fr .
+
+# Sensibilité Végétale au feu
+
+fe:VegetationFireSensitivity a owl:Class ; rdfs:label "Sensibilité Végétale au Feu"@fr .
+
+fe:hasFireSensitivity a owl:ObjectProperty ;
+    rdfs:domain fe:Taxon ;
+    rdfs:range fe:VegetationFireSensitivity .
+
+# Inflammabilité générale de l'espèce
+
+fe:hasFlammabilityClass a owl:ObjectProperty ;
+    rdfs:label "classe d'inflammabilité"@fr ;
+    rdfs:domain fe:VegetationFireSensitivity ;
+    rdfs:range fe:FlammabilityLevel .
+
+fe:hasValetteScore a owl:DatatypeProperty ;
+    rdfs:domain fe:VegetationFireSensitivity ;
+    rdfs:range xsd:integer ;    
+    rdfs:comment "Valeur numérique (0-5) pour permettre des calculs de seuils dans les règles d'inférence."@fr .
+
+# Traits bio-physiques (Accélérateurs et Freins)
+fe:hasFireAidingTrait a owl:ObjectProperty ;
+    rdfs:label "présence d'accélérateur"@fr ;
+    rdfs:domain fe:VegetationFireSensitivity ;
+    rdfs:range fe:FireAidingTrait .
+
+fe:hasFireResistingTrait a owl:ObjectProperty ;
+    rdfs:label "présence de frein"@fr ;
+    rdfs:domain fe:VegetationFireSensitivity ;
+    rdfs:range fe:FireResistingTrait .
+
+# Stratégie de survie
+fe:hasRegenerationStrategy a owl:ObjectProperty ;
+    rdfs:domain fe:VegetationFireSensitivity ;
+    rdfs:range fe:FireResponseStrategy .
+
+# --- Rôle Fonctionnel de la Plante ---
+fe:hasFireFunctionalRole a owl:ObjectProperty ;
+    rdfs:domain fe:VegetationFireSensitivity ;
+    rdfs:range fe:FireFunctionalRole .
+
+# --- Indice de Diffusion (Capacité de propagation lointaine) ---
+fe:hasDiffusionIndex a owl:DatatypeProperty ;
+    rdfs:label "indice de diffusion"@fr ;
+    rdfs:comment "Capacité d'une espèce à propager le feu par projection de particules incandescentes (0.0 à 1.0)."@fr ;
+    rdfs:domain fe:VegetationFireSensitivity ;
+    rdfs:range xsd:decimal .
+
+# --- Propriété de liaison vers le type de débris ---
+fe:producesEmbers a owl:ObjectProperty ;
+    rdfs:label "produit des escarbilles"@fr ;
+    rdfs:domain fe:VegetationFireSensitivity ;
+    rdfs:range fe:EmberType .
+
+#Entretien recommendé pour minimiser les risques
+# --- Documentation de Gestion ---
+fe:hasMaintenanceGuideline a owl:ObjectProperty ;
+    rdfs:label "recommandation d'entretien"@fr ;
+    rdfs:comment "Lien vers un protocole technique de taille ou de débroussaillement spécifique à l'espèce."@fr ;
+    rdfs:domain fe:Taxon ; 
+    rdfs:range crm:E31_Document ;
+    rdfs:subPropertyOf crm:P70i_is_documented_in .
 
 # =================================================================
 # 3. EXPOSITION AU RISQUE (Analyse Incendie/Naturel)

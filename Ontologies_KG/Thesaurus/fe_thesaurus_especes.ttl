@@ -166,3 +166,150 @@ fe:IUCN_NE a skos:Concept, fe:IUCNCategory ;
     skos:prefLabel "Non évalué (NE)"@fr ;
     skos:inScheme fe:IUCScheme ;
     skos:topConceptOf fe:IUCScheme .
+
+#RESISTANCE VEGETALE AU FEU
+
+# --- NIVEAUX D'INFLAMMABILITÉ (Basé sur l'échelle de Valette) ---
+fe:Flam_Extreme a skos:Concept, fe:FlammabilityLevel ;
+    skos:prefLabel "Extrêmement Inflammable"@fr ;
+    skos:definition "Valette 5 : Espèces riches en essences/résines (ex: Pinus, Eucalyptus)."@fr .
+
+fe:Flam_Very_High a skos:Concept, fe:FlammabilityLevel ;
+    skos:prefLabel "Très Inflammable"@fr ;
+    skos:definition "Valette 4 : Espèces à feuillage fin et sec (ex: Ciste, Lavande)."@fr .
+
+fe:Flam_High a skos:Concept, fe:FlammabilityLevel ;
+    skos:prefLabel "Hautement Inflammable"@fr ;
+    skos:definition "Valette 3 : Espèces à feuillage dense et huileux (ex: Chêne vert)."@fr .
+
+fe:Flam_Moderate a skos:Concept, fe:FlammabilityLevel ;
+    skos:prefLabel "Moyennement Inflammable"@fr ;
+    skos:definition "Valette 2 :Feuillus à feuilles larges et humides."@fr .
+
+fe:Flam_Low a skos:Concept, fe:FlammabilityLevel;
+    skos:prefLabel "Difficilement Inflammable"@fr;
+    skos:definition "Valette 1 : Espèces Naturellement résistantes au feu."@fr .
+
+fe:Flam_NonFlammable a skos:Concept, fe:FlammabilityLevel ;
+    skos:prefLabel "Non Inflammable"@fr ;
+    skos:definition "Valette 0 : Espèces qui ne brûlent pas (ex: plantes aquatiques)."@fr .
+
+# Traits aidant à la propagation du feu
+
+# --- Chimique (Accélérateurs volatils) ---
+
+fe:EssentialOils a skos:Concept, fe:FireAidingTrait ;
+    skos:prefLabel "Huiles Essentielles"@fr ;
+    skos:definition "Composés organiques volatils (terpènes) qui s'évaporent sous la chaleur, créant un mélange gazeux explosif autour de la plante."@fr ;
+    skos:example "Lavande, Eucalyptus, Romarin"@fr ;
+    skos:broader fe:FireAidingTrait .
+
+fe:ResinExudate a skos:Concept, fe:FireAidingTrait ;
+    skos:prefLabel "Exsudats Résineux"@fr ;
+    skos:definition "Substances visqueuses hautement inflammables coulant sur le tronc ou les branches, agissant comme un combustible liquide."@fr ;
+    skos:example "Pins, Sapins, Mélèzes"@fr ;
+    skos:broader fe:FireAidingTrait .
+
+# --- Structuels (Accélérateurs physiques) ---
+
+fe:Marcescence a skos:Concept, fe:FireAidingTrait ;
+    skos:prefLabel "Marcescence"@fr ;
+    skos:definition "Feuillage mort qui reste attaché aux branches au lieu de tomber. Crée un réservoir de combustible sec en hauteur."@fr ;
+    skos:example "Chênes pubescents, certains Hêtres"@fr ;
+    skos:broader fe:FireAidingTrait .
+
+fe:FineFuelStructure a skos:Concept ;
+    skos:prefLabel "Structure de Brindilles Fines"@fr ;
+    skos:definition "Rapport surface/volume très élevé. Les rameaux de petit diamètre (< 6mm) perdent leur humidité instantanément et s'enflamment au moindre contact."@fr ;
+    skos:example "Bruyères, Ajoncs, graminées sèches"@fr ;
+    skos:broader fe:FireAidingTrait .
+
+fe:LadderFuelArchitecture a skos:Concept ;
+    skos:prefLabel "Architecture en Échelle"@fr ;
+    skos:definition "Présence de branches basses ou de végétation grimpante créant une continuité verticale entre le sol et la cime."@fr ;
+    skos:example "Cyprès non élagués, lierre sur tronc"@fr ;
+    skos:broader fe:FireAidingTrait .
+
+# Traits freinant la propagation du feu
+
+# --- Thermique ---
+
+fe:SuberousBark a skos:Concept ;
+    skos:prefLabel "Écorce Subéreuse (Liège)"@fr ;
+    skos:definition "Écorce épaisse, alvéolée et riche en air, agissant comme un isolant thermique exceptionnel (équivalent d'un écran pare-flamme)."@fr ;
+    skos:example "Chêne-liège (Quercus suber)"@fr ;
+    skos:broader fe:FireResistingTrait .
+
+fe:ThermalInertiaTrunk a skos:Concept ;
+    skos:prefLabel "Inertie Thermique du Tronc"@fr ;
+    skos:definition "Tronc de large diamètre (> 50cm) avec une forte densité de bois, nécessitant une énergie colossale pour l'allumage."@fr ;
+    skos:example "Vieux spécimens de Chênes, Platanes centenaires"@fr ;
+    skos:broader fe:FireResistingTrait .
+
+# --- Chimiques ---
+
+fe:HighSucculence a skos:Concept ;
+    skos:prefLabel "Succulence / Teneur en eau"@fr ;
+    skos:definition "Capacité des tissus à stocker d'importantes réserves d'eau. L'allumage est impossible tant que l'eau n'est pas totalement évaporée."@fr ;
+    skos:example "Plantes grasses, Sedum, Opuntia"@fr ;
+    skos:broader fe:FireResistingTrait .
+
+fe:MineralContent a skos:Concept ;
+    skos:prefLabel "Teneur en Sels Minéraux"@fr ;
+    skos:definition "Présence de silices ou de sels minéraux dans les feuilles qui agissent comme des retardateurs de flamme naturels lors de la pyrolyse."@fr ;
+    skos:example "Certaines variétés de Lauriers, Atriplex"@fr ;
+    skos:broader fe:FireResistingTrait .
+
+# --- Rupture ---
+
+fe:SelfPruning a skos:Concept ;
+    skos:prefLabel "Auto-élagage"@fr ;
+    skos:definition "Capacité de la plante à perdre naturellement ses branches basses mortes, supprimant ainsi 'l'échelle' qui permet au feu de monter."@fr ;
+    skos:example "Pins sylvestres âgés, certains Peupliers"@fr ;
+    skos:broader fe:FireResistingTrait .
+
+fe:CrownDiscontinuity a skos:Concept ;
+    skos:prefLabel "Discontinuité du Houppier"@fr ;
+    skos:definition "Structure de branchement aérée évitant l'accumulation de poches de gaz chauds et limitant la propagation par convection."@fr ;
+    skos:broader fe:FireResistingTrait .
+
+# Role fonctionnel de la plante dans le feu
+fe:Role_Screen   a fe:FireFunctionalRole ; 
+    rdfs:label "Écran / Bouclier"@fr . # Ex: Chêne liège
+fe:Role_Ladder   a fe:FireFunctionalRole ; 
+    rdfs:label "Vecteur Vertical (Échelle)"@fr . # Ex: Cyprès mal taillé
+fe:Role_Spotter  a fe:FireFunctionalRole ; 
+    rdfs:label "Diffuseur (Projection)"@fr . # Ex: Eucalyptus
+fe:Role_Retardant a fe:FireFunctionalRole ; 
+    rdfs:label "Retardateur (pare-feu Vert)"@fr . # Ex: Plantes grasses
+
+# Stratégie de reponse au feu
+fe:Strategy_Resister a skos:Concept, fe:FireResponseStrategy ;
+    skos:prefLabel "Résistant"@fr ;
+    skos:definition "Survit au feu grâce à une écorce épaisse (ex: Chêne-liège)."@fr .
+
+fe:Strategy_Endurer a skos:Concept, fe:FireResponseStrategy ;
+    skos:prefLabel "Endurant (Rejette)"@fr ;
+    skos:definition "La partie aérienne meurt, mais la plante repart des racines."@fr .
+
+fe:Strategy_Recruiter a skos:Concept, fe:FireResponseStrategy ;
+    skos:prefLabel "Recruteur (Graines)"@fr ;
+    skos:definition "La plante meurt mais le feu déclenche la germination des graines."@fr .
+
+
+# Types de débris de feu (EmberType)
+fe:Ember_Ash a skos:Concept, fe:EmberType ;
+    skos:prefLabel "Cendres légères"@fr ;
+    skos:definition "Se décompose rapidement, transport court par le vent."@fr .
+
+fe:Ember_BarkFlake a skos:Concept, fe:EmberType ;
+    skos:prefLabel "Lambeaux d'écorce"@fr ;
+    skos:definition "Typique de l'Eucalyptus ou de certains Pins, peut voler sur des kilomètres et rester allumé longtemps."@fr .
+
+fe:Ember_Cone a skos:Concept, fe:EmberType ;
+    skos:prefLabel "Cônes / Pommes de pin"@fr ;
+    skos:definition "Peut rouler sur les pentes (diffusion topographique) ou exploser sous la chaleur."@fr .
+
+fe:noEmber a skos:Concept, fe:EmberType ;
+    skos:prefLabel "Ne produit pas d'escarbilles"@fr ;
+    skos:definition "Espèces qui ne génèrent pas de débris enflammés."@fr .
