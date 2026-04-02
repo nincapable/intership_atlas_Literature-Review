@@ -10,8 +10,7 @@
 
 fe:NaturalSpaceThesaurus a skos:ConceptScheme ;
     rdfs:label "Thésaurus des Espaces Naturels et Risques Incendie"@fr ;
-    skos:hasTopConcept fe:Forest, fe:Shrubland, fe:Grassland, 
-                       fe:Crop, fe:Wetland, fe:Parc .
+    skos:hasTopConcept fe:Forest, fe:Shrubland, fe:Grassland, fe:Crop, fe:Wetland, fe:Parc .
 
 # =================================================================
 # 2. MILIEUX FORESTIERS (Biomasse haute)
@@ -94,3 +93,83 @@ fe:Parc a skos:Concept, fe:NaturalType ;
     skos:inScheme fe:NaturalSpaceThesaurus ;
     skos:topConceptOf fe:NaturalSpaceThesaurus ;
     crm:P3_has_note "Risque : Proximité immédiate du bâti, présence fréquente de public, arbres remarquables à protéger."@fr .
+
+# =================================================================
+# 7. ENTRETIEN DES ESPACES NATURELS (Gestion du Risque)
+# =================================================================
+# Jardins
+fe:Style_French a skos:Concept, fe:MaintenanceStyle ;
+    skos:prefLabel "Jardin à la française"@fr ;
+    skos:definition "Gestion intensive, fragmentation par minéral, strate arbustive taillée."@fr ;
+    crm:P3_has_note "Risque faible : Rupture naturelle de continuité."@fr .
+
+fe:Style_English a skos:Concept, fe:MaintenanceStyle ;
+    skos:prefLabel "Parc à l'anglaise"@fr ;
+    skos:definition "Composition naturelle, alternance de pelouses et bosquets denses."@fr ;
+    crm:P3_has_note "Risque modéré : Bosquets pouvant servir de foyers isolés."@fr .
+
+fe:Style_Wild a skos:Concept, fe:MaintenanceStyle ;
+    skos:prefLabel "Friche / Espace ensauvagé"@fr ;
+    skos:definition "Absence d'entretien régulier, biomasse morte accumulée."@fr ;
+    crm:P3_has_note "Risque extrême : Continuité horizontale et verticale maximale."@fr .
+
+fe:Style_Mediterranean_Dry a skos:Concept, fe:MaintenanceStyle ;
+    skos:prefLabel "Jardin sec / Xéropaysage"@fr ;
+    skos:definition "Plantes peu consommatrices d'eau, paillage minéral prédominant."@fr ;
+    crm:P3_has_note "Risque : Très faible (absence de continuité de l'herbe)."@fr .
+
+fe:Style_Japonais a skos:Concept, fe:MaintenanceStyle ;
+    skos:prefLabel "Jardin de style japonais"@fr ;
+    skos:definition "Taille de transparence (niwaki), forte présence minérale et d'eau, mousses."@fr ;
+    crm:P3_has_note "Risque : Faible (densité contrôlée et humidité maintenue)."@fr .
+
+# Agricultural styles (saisonniers, avec des pics de risque lors des récoltes)
+fe:Style_Agricultural_Intensive a skos:Concept, fe:MaintenanceStyle ;
+    skos:prefLabel "Culture intensive"@fr ;
+    skos:definition "Sol nu ou culture homogène. Entretien par récolte mécanique."@fr ;
+    crm:P3_has_note "Risque : Très élevé juste avant moisson (paille sèche), faible après récolte."@fr .
+
+fe:Style_Pasture a skos:Concept, fe:MaintenanceStyle ;
+    skos:prefLabel "Pâturage"@fr ;
+    skos:definition "Entretien par herbivorie (animaux). Réduction de la biomasse fine au sol."@fr ;
+    crm:P3_has_note "Risque : Modéré à faible selon la pression de pâturage (pare-feu pastoral)."@fr .
+
+# Espaces Sauvages
+fe:Style_Managed_Wilderness a skos:Concept, fe:MaintenanceStyle ;
+    skos:prefLabel "Gestion évolutive contrôlée"@fr ;
+    skos:definition "Intervention minimale pour préserver la biodiversité, mais maintien de pare-feu ou d'accès DFCI."@fr ;
+    crm:P3_has_note "Risque : Élevé en raison de la litière, mais fragmenté par des aménagements de sécurité."@fr .
+
+fe:Style_Sanctuary a skos:Concept, fe:MaintenanceStyle ;
+    skos:prefLabel "Zone de protection intégrale"@fr ;
+    skos:definition "Aucun entretien humain. Libre évolution totale."@fr ;
+    crm:P3_has_note "Risque : Maximal (continuité totale), nécessite des zones tampons externes."@fr .
+
+#=================================================================
+# 8. TYPOLOGIE DE LA RÉPARTITION DE LA BIOMASSE (Densité et Continuity)
+#=================================================================
+
+fe:RepartitionHomogeneous a skos:Concept, fe:RepartitionType ;
+    skos:prefLabel "Répartition Homogène"@fr ;
+    skos:definition "Biomasse répartie de manière uniforme sur l'espace."@fr ;
+    crm:P3_has_note "Risque : Élevé en raison de la continuité maximale."@fr .
+
+fe:RepartitionPatchy a skos:Concept, fe:RepartitionType ;
+    skos:prefLabel "Répartition en Taches"@fr ;
+    skos:definition "Biomasse concentrée en zones denses séparées par des espaces plus clairs."@fr ;
+    crm:P3_has_note "Risque : Modéré, les zones claires peuvent ralentir la propagation."@fr .
+
+fe:RepartitionStriped a skos:Concept, fe:RepartitionType ;
+    skos:prefLabel "Répartition en Bandes"@fr ;
+    skos:definition "Biomasse organisée en bandes parallèles (ex: rangs de vigne)."@fr ;
+    crm:P3_has_note "Risque : Variable, les bandes peuvent canaliser le feu mais aussi accélérer sa propagation selon leur orientation par rapport au vent.".
+
+fe:RepartitionSplit a skos:Concept, fe:RepartitionType ;
+    skos:prefLabel "Répartition en Zones Fragmentées"@fr ;
+    skos:definition "Biomasse fragmentée en zones distinctes avec des corridors de végétation plus clairsemée."@fr ;
+    crm:P3_has_note "Risque : Modéré à élevé selon la taille des fragments et la connectivité entre eux."@fr .
+
+fe:RepartitionRandom a skos:Concept, fe:RepartitionType ;
+    skos:prefLabel "Répartition Aléatoire"@fr ;
+    skos:definition "Biomasse répartie de manière irrégulière sans motif discernable."@fr ;
+    crm:P3_has_note "Risque : Variable, peut présenter des zones à très haut risque et d'autres à faible risque."@fr .

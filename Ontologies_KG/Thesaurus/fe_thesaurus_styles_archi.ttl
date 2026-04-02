@@ -26,12 +26,12 @@ fe:StyleAntique a skos:Concept, fe:ArchitectureStyle ;
     skos:narrower fe:StyleGalloRomain ;
     crm:P3_has_note "Risque transversal : Instabilité des maçonneries sèches."@fr .
 
-fe:StyleGalloRomain a skos:Concept, fe:ArchitectureStyle ;
-    skos:prefLabel "Gallo-Romain"@fr ;
-    skos:broader fe:StyleAntique ;
-    skos:inScheme fe:ArchitectureThesaurus ;
-    owl:sameAs <http://dbpedia.org/resource/Gallo-Roman_culture> ;
-    crm:P3_has_note "Structure : Opus caementicium. Risque : Chutes de pierres."@fr .
+    fe:StyleGalloRomain a skos:Concept, fe:ArchitectureStyle ;
+        skos:prefLabel "Gallo-Romain"@fr ;
+        skos:broader fe:StyleAntique ;
+        skos:inScheme fe:ArchitectureThesaurus ;
+        owl:sameAs <http://dbpedia.org/resource/Gallo-Roman_culture> ;
+        crm:P3_has_note "Structure : Opus caementicium. Risque : Chutes de pierres."@fr .
 
 # =================================================================
 # 3. FAMILLE MÉDIÉVALE
@@ -71,7 +71,27 @@ fe:StyleMedieval a skos:Concept, fe:ArchitectureStyle ;
             crm:P3_has_note "Risque : Éclatement des ornementations fines."@fr .
 
 # =================================================================
-# 4. FAMILLE INDUSTRIELLE & XIXe
+# 4. RENAISSANCE, CLASSIQUE & VERNACULAIRE (Roots)
+# =================================================================
+
+fe:StyleRenaissance a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Architecture Renaissance"@fr ;
+    skos:inScheme fe:ArchitectureThesaurus ;
+    skos:topConceptOf fe:ArchitectureThesaurus .
+
+fe:StyleClassique a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Architecture Classique"@fr ;
+    skos:inScheme fe:ArchitectureThesaurus ;
+    skos:topConceptOf fe:ArchitectureThesaurus .
+
+fe:StyleVernaculaire a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Architecture Vernaculaire"@fr ;
+    skos:inScheme fe:ArchitectureThesaurus ;
+    skos:topConceptOf fe:ArchitectureThesaurus ;
+    crm:P3_has_note "Risque : Matériaux locaux (paille, pisé) à forte combustibilité."@fr .
+
+# =================================================================
+# 5. FAMILLE INDUSTRIELLE & XIXe
 # =================================================================
 
 fe:StyleIndustriel a skos:Concept, fe:ArchitectureStyle ;
@@ -81,20 +101,20 @@ fe:StyleIndustriel a skos:Concept, fe:ArchitectureStyle ;
     skos:narrower fe:Haussmannien, fe:ArchitectureMetallique ;
     crm:P3_has_note "Risque transversal : Fer et fonte sans protection thermique."@fr .
 
-fe:Haussmannien a skos:Concept, fe:ArchitectureStyle ;
-    skos:prefLabel "Haussmannien"@fr ;
-    skos:broader fe:StyleIndustriel ;
-    skos:inScheme fe:ArchitectureThesaurus ;
-    crm:P3_has_note "Risque : Propagation par combles filants et conduits de cheminées."@fr .
+    fe:Haussmannien a skos:Concept, fe:ArchitectureStyle ;
+        skos:prefLabel "Haussmannien"@fr ;
+        skos:broader fe:StyleIndustriel ;
+        skos:inScheme fe:ArchitectureThesaurus ;
+        crm:P3_has_note "Risque : Propagation par combles filants et conduits de cheminées."@fr .
 
-fe:ArchitectureMetallique a skos:Concept, fe:ArchitectureStyle ;
-    skos:prefLabel "Métallique XIXe (Eiffel)"@fr ;
-    skos:broader fe:StyleIndustriel ;
-    skos:inScheme fe:ArchitectureThesaurus ;
-    crm:P3_has_note "Risque : Ruine structurelle brutale à 450°C."@fr .
+    fe:ArchitectureMetallique a skos:Concept, fe:ArchitectureStyle ;
+        skos:prefLabel "Métallique XIXe (Eiffel)"@fr ;
+        skos:broader fe:StyleIndustriel ;
+        skos:inScheme fe:ArchitectureThesaurus ;
+        crm:P3_has_note "Risque : Ruine structurelle brutale à 450°C."@fr .
 
 # =================================================================
-# 5. FAMILLE XXe & MODERNE
+# 6. FAMILLE XXe & MODERNE
 # =================================================================
 
 fe:StyleModerne a skos:Concept, fe:ArchitectureStyle ;
@@ -104,8 +124,13 @@ fe:StyleModerne a skos:Concept, fe:ArchitectureStyle ;
     skos:narrower fe:ArtNouveau, fe:Brutalisme ;
     crm:P3_has_note "Risque transversal : Matériaux créant des fumées toxiques."@fr .
 
-fe:Brutalisme a skos:Concept, fe:ArchitectureStyle ;
-    skos:prefLabel "Brutalisme"@fr ;
-    skos:broader fe:StyleModerne ;
-    skos:inScheme fe:ArchitectureThesaurus ;
-    crm:P3_has_note "Risque : Confinement des fumées et labyrinthe spatial."@fr .
+    fe:ArtNouveau a skos:Concept, fe:ArchitectureStyle ;
+        skos:prefLabel "Art Nouveau"@fr ;
+        skos:broader fe:StyleModerne ;
+        skos:inScheme fe:ArchitectureThesaurus .
+
+    fe:Brutalisme a skos:Concept, fe:ArchitectureStyle ;
+        skos:prefLabel "Brutalisme"@fr ;
+        skos:broader fe:StyleModerne ;
+        skos:inScheme fe:ArchitectureThesaurus ;
+        crm:P3_has_note "Risque : Confinement des fumées et labyrinthe spatial."@fr .

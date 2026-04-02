@@ -5,17 +5,23 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-# --- Définition du Schéma de Concepts ---
+# =================================================================
+# 1. DÉFINITION DU SCHÉMA (CONCEPT SCHEME)
+# =================================================================
+
 fe:ZoneTaxonomy a skos:ConceptScheme ;
     rdfs:label "Taxonomie des caractéristiques de Zone"@fr ;
     skos:hasTopConcept fe:TransitType, fe:ZoneUsageType, fe:CommunicationType .
 
 # =================================================================
-# 1. RÉGIME DE TRANSIT (TransitType)
+# 2. RÉGIME DE TRANSIT (TransitType)
 # =================================================================
+
 fe:TransitType a skos:Concept ;
     skos:prefLabel "Régime de Transit"@fr ;
-    skos:topConceptOf fe:ZoneTaxonomy .
+    skos:inScheme fe:ZoneTaxonomy ;
+    skos:topConceptOf fe:ZoneTaxonomy ;
+    skos:narrower fe:Transit_Static, fe:Transit_Flow, fe:Transit_Hybrid .
 
 fe:Transit_Static a skos:Concept, fe:TransitType ;
     skos:prefLabel "Statique"@fr ;
@@ -36,11 +42,14 @@ fe:Transit_Hybrid a skos:Concept, fe:TransitType ;
     skos:inScheme fe:ZoneTaxonomy .
 
 # =================================================================
-# 2. USAGE DE LA ZONE (ZoneUsageType)
+# 3. USAGE DE LA ZONE (ZoneUsageType)
 # =================================================================
+
 fe:ZoneUsageType a skos:Concept ;
     skos:prefLabel "Type d'Usage de Zone"@fr ;
-    skos:topConceptOf fe:ZoneTaxonomy .
+    skos:inScheme fe:ZoneTaxonomy ;
+    skos:topConceptOf fe:ZoneTaxonomy ;
+    skos:narrower fe:Usage_Touristic, fe:Usage_Residential, fe:Usage_Mixed .
 
 fe:Usage_Touristic a skos:Concept, fe:ZoneUsageType ;
     skos:prefLabel "Touristique"@fr ;
@@ -61,11 +70,14 @@ fe:Usage_Mixed a skos:Concept, fe:ZoneUsageType ;
     skos:inScheme fe:ZoneTaxonomy .
 
 # =================================================================
-# 3. MOYENS DE COMMUNICATION (CommunicationType)
+# 4. MOYENS DE COMMUNICATION (CommunicationType)
 # =================================================================
+
 fe:CommunicationType a skos:Concept ;
     skos:prefLabel "Type de Communication"@fr ;
-    skos:topConceptOf fe:ZoneTaxonomy .
+    skos:inScheme fe:ZoneTaxonomy ;
+    skos:topConceptOf fe:ZoneTaxonomy ;
+    skos:narrower fe:Comm_Radio, fe:Comm_WiFi, fe:Comm_5G, fe:Comm_Signage .
 
 fe:Comm_Radio a skos:Concept, fe:CommunicationType ;
     skos:prefLabel "Radio"@fr ;

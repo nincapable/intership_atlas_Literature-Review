@@ -5,16 +5,23 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-# --- SCHÉMA GLOBAL DES AXES ---
+# =================================================================
+# 1. DÉFINITION DU SCHÉMA GLOBAL
+# =================================================================
+
 fe:AxisTaxonomy a skos:ConceptScheme ;
     rdfs:label "Taxonomie des circulations et accessibilités"@fr ;
     skos:hasTopConcept fe:AxisType, fe:PMR_Accessibility, fe:Rescue_Accessibility .
 
-# --- TYPOLOGIE DES AXES ---
+# =================================================================
+# 2. TYPOLOGIE DES AXES
+# =================================================================
+
 fe:AxisType a skos:Concept ;
     skos:prefLabel "Types d'axes"@fr ;
     skos:inScheme fe:AxisTaxonomy ;
-    skos:topConceptOf fe:AxisTaxonomy .
+    skos:topConceptOf fe:AxisTaxonomy ;
+    skos:narrower fe:couloir, fe:escalier, fe:porte, fe:rampe, fe:ascenseur, fe:fenetre, fe:voie_ouverte .
 
 fe:couloir a skos:Concept ; 
     skos:prefLabel "Couloir"@fr ; 
@@ -51,15 +58,19 @@ fe:voie_ouverte a skos:Concept ;
     skos:inScheme fe:AxisTaxonomy ;
     skos:broader fe:AxisType .
 
-# --- NIVEAUX D'ACCESSIBILITÉ PMR ---
+# =================================================================
+# 3. NIVEAUX D'ACCESSIBILITÉ PMR
+# =================================================================
+
 fe:PMR_Accessibility a skos:Concept ;
     skos:prefLabel "Accessibilité PMR"@fr ;
     skos:inScheme fe:AxisTaxonomy ;
-    skos:topConceptOf fe:AxisTaxonomy .
+    skos:topConceptOf fe:AxisTaxonomy ;
+    skos:narrower fe:WheelchairAccessible, fe:PartiallyArrangedPedestrian, fe:PossibleHelped, fe:InaccessibleDisabledPerson .
 
 fe:WheelchairAccessible a skos:Concept ; 
     skos:prefLabel "Accessible Fauteuil Roulant"@fr ; 
-    skos:definition "Autonomie totale pour les PMR."@fr ;
+    skos:definition "Autonomie totale pour les PMR (Personnes à Mobilité Réduite)."@fr ;
     skos:inScheme fe:AxisTaxonomy ;
     skos:broader fe:PMR_Accessibility .
 
@@ -70,7 +81,7 @@ fe:PartiallyArrangedPedestrian a skos:Concept ;
 
 fe:PossibleHelped a skos:Concept ; 
     skos:prefLabel "Possible avec aide"@fr ;
-    skos:definition "Nécessite l'assistance d'un tiers."@fr ;
+    skos:definition "Nécessite l'assistance d'un tiers pour franchir l'axe."@fr ;
     skos:inScheme fe:AxisTaxonomy ;
     skos:broader fe:PMR_Accessibility .
 
@@ -79,28 +90,36 @@ fe:InaccessibleDisabledPerson a skos:Concept ;
     skos:inScheme fe:AxisTaxonomy ;
     skos:broader fe:PMR_Accessibility .
 
-# --- NIVEAUX D'ACCESSIBILITÉ SECOURS ---
+# =================================================================
+# 4. NIVEAUX D'ACCESSIBILITÉ SECOURS
+# =================================================================
+
 fe:Rescue_Accessibility a skos:Concept ;
     skos:prefLabel "Accessibilité Secours"@fr ;
     skos:inScheme fe:AxisTaxonomy ;
-    skos:topConceptOf fe:AxisTaxonomy .
+    skos:topConceptOf fe:AxisTaxonomy ;
+    skos:narrower fe:Granted, fe:Uncertain, fe:PossibleIfNecessary, fe:Denied .
 
 fe:Granted a skos:Concept ; 
     skos:prefLabel "Autorisé / Garanti"@fr ;
+    skos:definition "L'accès est libre et conforme aux besoins des services de secours."@fr ;
     skos:inScheme fe:AxisTaxonomy ;
     skos:broader fe:Rescue_Accessibility .
 
 fe:Uncertain a skos:Concept ; 
     skos:prefLabel "Incertain"@fr ;
+    skos:definition "L'accessibilité dépend de conditions variables ou n'est pas confirmée."@fr ;
     skos:inScheme fe:AxisTaxonomy ;
     skos:broader fe:Rescue_Accessibility .
 
 fe:PossibleIfNecessary a skos:Concept ; 
     skos:prefLabel "Possible si nécessaire"@fr ;
+    skos:definition "Accès réalisable via des moyens spécifiques ou forçage (ex: effraction)."@fr ;
     skos:inScheme fe:AxisTaxonomy ;
     skos:broader fe:Rescue_Accessibility .
 
 fe:Denied a skos:Concept ; 
     skos:prefLabel "Refusé / Impossible"@fr ;
+    skos:definition "Obstacle infranchissable pour les services de secours."@fr ;
     skos:inScheme fe:AxisTaxonomy ;
     skos:broader fe:Rescue_Accessibility .

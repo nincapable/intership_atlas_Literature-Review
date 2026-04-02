@@ -9,13 +9,16 @@
 # =================================================================
 
 fe:HazardIntensityScheme a skos:ConceptScheme ;
-    rdfs:label "Référentiel des Niveaux d'Intensité de l'Aléa"@fr .
+    rdfs:label "Référentiel des Niveaux d'Intensité de l'Aléa"@fr ;
+    skos:hasTopConcept fe:Intensity_Low, fe:Intensity_Moderate, fe:Intensity_High, fe:Intensity_Extreme .
 
 fe:HazardTypeScheme a skos:ConceptScheme ;
-    rdfs:label "Thésaurus des Types d'Aléas (Incendies, Inondations, etc.)"@fr .
+    rdfs:label "Thésaurus des Types d'Aléas"@fr ;
+    skos:hasTopConcept fe:Fire_Hazard, fe:Flood_Hazard, fe:Seismic_Hazard, fe:Geological_Hazard, fe:Meteorological_Hazard .
 
 fe:ImpactSeverityScheme a skos:ConceptScheme ;
-    rdfs:label "Référentiel de Sévérité des Impacts"@fr .
+    rdfs:label "Référentiel de Sévérité des Impacts"@fr ;
+    skos:hasTopConcept fe:Severity_Low, fe:Severity_Moderate, fe:Severity_Heavy, fe:Severity_Extreme .
 
 # =================================================================
 # 2. INTENSITÉ DE L'ALÉA
@@ -23,25 +26,25 @@ fe:ImpactSeverityScheme a skos:ConceptScheme ;
 
 fe:Intensity_Low a skos:Concept, fe:IntensityLevel ;
     skos:prefLabel "Faible"@fr ;
-    skos:definition "Phénomène courant ou incident mineur. Maîtrisable avec des moyens locaux standards. Pas d'impact significatif hors site ou hors zone immédiate."@fr ;
+    skos:definition "Phénomène courant ou incident mineur. Maîtrisable avec des moyens locaux standards."@fr ;
     skos:inScheme fe:HazardIntensityScheme ;
     skos:topConceptOf fe:HazardIntensityScheme .
 
 fe:Intensity_Moderate a skos:Concept, fe:IntensityLevel ;
     skos:prefLabel "Modéré"@fr ;
-    skos:definition "Perturbations notables (ex: vigilance jaune). Nécessite une surveillance accrue et des moyens d'intervention spécifiques. Dommages matériels localisés possibles."@fr ;
+    skos:definition "Perturbations notables. Nécessite une surveillance accrue et des moyens spécifiques."@fr ;
     skos:inScheme fe:HazardIntensityScheme ;
     skos:topConceptOf fe:HazardIntensityScheme .
 
 fe:Intensity_High a skos:Concept, fe:IntensityLevel ;
     skos:prefLabel "Fort / Grave"@fr ;
-    skos:definition "Cinétique rapide ou seuils de danger atteints (ex: SEI/SDL). Risque pour la sécurité des personnes. Nécessite une coordination inter-services et des mesures de protection."@fr ;
+    skos:definition "Cinétique rapide ou seuils de danger atteints. Risque pour la sécurité des personnes."@fr ;
     skos:inScheme fe:HazardIntensityScheme ;
     skos:topConceptOf fe:HazardIntensityScheme .
 
 fe:Intensity_Extreme a skos:Concept, fe:IntensityLevel ;
     skos:prefLabel "Extrême / Hors-Norme"@fr ;
-    skos:definition "Comportement erratique, propagation incontrôlable, dépassement des capacités de réponse locales. Nécessite des moyens nationaux ou internationaux."@fr ;
+    skos:definition "Comportement erratique, dépassement des capacités de réponse locales."@fr ;
     skos:inScheme fe:HazardIntensityScheme ;
     skos:topConceptOf fe:HazardIntensityScheme .
 
@@ -59,43 +62,36 @@ fe:Fire_Hazard a skos:Concept, fe:HazardType ;
     fe:Fire_Class_A a skos:Concept, fe:HazardType ;
         skos:prefLabel "Feu de Classe A (Solides)"@fr ;
         skos:broader fe:Fire_Hazard ;
-        skos:definition "Feux de matériaux solides, généralement d'origine organique (bois, papier, tissus)."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Fire_Class_B a skos:Concept, fe:HazardType ;
         skos:prefLabel "Feu de Classe B (Liquides)"@fr ;
         skos:broader fe:Fire_Hazard ;
-        skos:definition "Feux de liquides ou de solides liquéfiables (essence, huile, plastiques)."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Fire_Class_C a skos:Concept, fe:HazardType ;
         skos:prefLabel "Feu de Classe C (Gaz)"@fr ;
         skos:broader fe:Fire_Hazard ;
-        skos:definition "Feux de gaz (propane, butane, méthane)."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Fire_Class_D a skos:Concept, fe:HazardType ;
         skos:prefLabel "Feu de Classe D (Métaux)"@fr ;
         skos:broader fe:Fire_Hazard ;
-        skos:definition "Feux de métaux combustibles (magnésium, aluminium)."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Fire_Class_E a skos:Concept, fe:HazardType ;
         skos:prefLabel "Feu de Classe E (Électriques)"@fr ;
         skos:broader fe:Fire_Hazard ;
-        skos:definition "Feux impliquant des équipements électriques sous tension."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Fire_Class_F a skos:Concept, fe:HazardType ;
         skos:prefLabel "Feu de Classe F (Huiles de Cuisine)"@fr ;
         skos:broader fe:Fire_Hazard ;
-        skos:definition "Feux d'huiles et de graisses de cuisson."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
 # --- Branche INONDATIONS ---
 fe:Flood_Hazard a skos:Concept, fe:HazardType ;
     skos:prefLabel "Inondation"@fr ;
-    skos:definition "Submersion rapide ou lente d'une zone habituellement hors d'eau."@fr ;
     skos:inScheme fe:HazardTypeScheme ;
     skos:topConceptOf fe:HazardTypeScheme ;
     skos:narrower fe:River_Flood, fe:Flash_Flood, fe:Coastal_Flood .
@@ -103,19 +99,16 @@ fe:Flood_Hazard a skos:Concept, fe:HazardType ;
     fe:River_Flood a skos:Concept, fe:HazardType ;
         skos:prefLabel "Crue / Débordement de cours d'eau"@fr ;
         skos:broader fe:Flood_Hazard ;
-        skos:definition "Élévation du niveau d'un fleuve ou d'une rivière suite à des précipitations."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Flash_Flood a skos:Concept, fe:HazardType ;
         skos:prefLabel "Crue Éclair"@fr ;
         skos:broader fe:Flood_Hazard ;
-        skos:definition "Inondation soudaine causée par des pluies intenses sur un bassin versant court."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Coastal_Flood a skos:Concept, fe:HazardType ;
         skos:prefLabel "Submersion Marine"@fr ;
         skos:broader fe:Flood_Hazard ;
-        skos:definition "Inondation des zones côtières par la mer (tempête, forte marée)."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
 # --- Branche SÉISMES ---
@@ -128,13 +121,11 @@ fe:Seismic_Hazard a skos:Concept, fe:HazardType ;
     fe:Tectonic_Earthquake a skos:Concept, fe:HazardType ;
         skos:prefLabel "Séisme Tectonique"@fr ;
         skos:broader fe:Seismic_Hazard ;
-        skos:definition "Libération d'énergie le long d'une faille géologique."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Induced_Seismicity a skos:Concept, fe:HazardType ;
         skos:prefLabel "Séisme Induit"@fr ;
         skos:broader fe:Seismic_Hazard ;
-        skos:definition "Secousse causée par l'activité humaine (mines, géothermie, barrages)."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
 # --- Branche RISQUES GÉOLOGIQUES ---
@@ -157,7 +148,6 @@ fe:Geological_Hazard a skos:Concept, fe:HazardType ;
 # --- Branche MÉTÉOROLOGIQUES ---
 fe:Meteorological_Hazard a skos:Concept, fe:HazardType ;
     skos:prefLabel "Aléa Météorologique"@fr ;
-    skos:definition "Phénomène atmosphérique extrême pouvant causer des dommages ou amplifier d'autres risques."@fr ;
     skos:inScheme fe:HazardTypeScheme ;
     skos:topConceptOf fe:HazardTypeScheme ;
     skos:narrower fe:Wind_Storm, fe:Thunderstorm, fe:Heat_Wave, fe:Drought, fe:Snow_Ice_Hazard .
@@ -165,31 +155,26 @@ fe:Meteorological_Hazard a skos:Concept, fe:HazardType ;
     fe:Wind_Storm a skos:Concept, fe:HazardType ;
         skos:prefLabel "Tempête / Vent Violent"@fr ;
         skos:broader fe:Meteorological_Hazard ;
-        skos:definition "Rafales de vent dépassant les seuils de sécurité (ex: > 100 km/h)."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Thunderstorm a skos:Concept, fe:HazardType ;
         skos:prefLabel "Orage / Foudre"@fr ;
         skos:broader fe:Meteorological_Hazard ;
-        skos:definition "Phénomène électrique et convectif (risque d'incendie par foudre)."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Heat_Wave a skos:Concept, fe:HazardType ;
         skos:prefLabel "Canicule / Forte Chaleur"@fr ;
         skos:broader fe:Meteorological_Hazard ;
-        skos:definition "Période prolongée de températures anormalement élevées."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Drought a skos:Concept, fe:HazardType ;
         skos:prefLabel "Sécheresse"@fr ;
         skos:broader fe:Meteorological_Hazard ;
-        skos:definition "Déficit hydrique prolongé impactant la végétation."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Snow_Ice_Hazard a skos:Concept, fe:HazardType ;
         skos:prefLabel "Neige / Verglas"@fr ;
         skos:broader fe:Meteorological_Hazard ;
-        skos:definition "Précipitations solides impactant la mobilité."@fr ;
         skos:inScheme fe:HazardTypeScheme .
 
 # =================================================================
@@ -210,12 +195,12 @@ fe:Severity_Moderate a skos:Concept, fe:ImpactSeverityLevel ;
 
 fe:Severity_Heavy a skos:Concept, fe:ImpactSeverityLevel ;
     skos:prefLabel "Lourd"@fr ;
-    skos:definition "Dommages structurels importants, mise en péril, arrêt de l'activité."@fr ;
+    skos:definition "Dommages structurels importants."@fr ;
     skos:inScheme fe:ImpactSeverityScheme ;
     skos:topConceptOf fe:ImpactSeverityScheme .
 
 fe:Severity_Extreme a skos:Concept, fe:ImpactSeverityLevel ;
     skos:prefLabel "Extrême"@fr ;
-    skos:definition "Dommages irréversibles, perte totale, menace pour la sécurité des personnes."@fr ;
+    skos:definition "Dommages irréversibles, perte totale."@fr ;
     skos:inScheme fe:ImpactSeverityScheme ;
     skos:topConceptOf fe:ImpactSeverityScheme .
