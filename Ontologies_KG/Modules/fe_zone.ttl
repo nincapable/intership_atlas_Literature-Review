@@ -59,7 +59,18 @@ fe:CommunicationType a owl:Class ;
 fe:isExposedTo a owl:ObjectProperty ;
     rdfs:label "exposition au risque"@fr ;
     rdfs:domain fe:Zone ;
-    rdfs:range fe:HazardType . # (Incendie, Inondation, Mouvement de foule)
+    rdfs:range fe:HazardType .
+
+## --- Risque Incendie ---
+fe:hasFireRiskEvaluation a owl:ObjectProperty ;
+    rdfs:label "évaluation du risque incendie"@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:FireRiskScore .
+
+fe:FireRiskScore a owl:Class ;
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:label "Score de Risque Incendie"@fr .
+
 
 # --- Presnece d'artéfacts ---
 fe:containsArtefact a owl:ObjectProperty ;

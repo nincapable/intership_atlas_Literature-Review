@@ -30,6 +30,16 @@ fe:hasNaturalType a owl:DatatypeProperty ;
     rdfs:domain fe:NaturalSpace ;
     rdfs:range fe:NaturalType .
 
+fe:MaintenanceStyle a owl:Class ;
+    rdfs:subClassOf crm:E55_Type ;
+    rdfs:label "Style Paysager / Mode de Gestion"@fr .
+
+fe:hasMaintenanceStyle a owl:ObjectProperty ;
+    rdfs:label "État d'entretien"@fr ;
+    rdfs:comment "Ex: Bien entretenu, Négligé, En friche."@fr ;
+    rdfs:domain fe:NaturalSpace ;
+    rdfs:range fe:MaintenanceStyle .
+
 # Nativement accessible, sans perte d'information
 #fe:hasSurface a owl:ObjectProperty ;
 #    rdfs:label "a pour surface"@fr ;
@@ -49,7 +59,83 @@ fe:hasNaturalType a owl:DatatypeProperty ;
 #    Cela permet de dater l'activité (P4) et d'en définir le type (P2).
 
 # =================================================================
-# 2. LES ESPÈCES PROTÉGÉES (Biodiversité)
+# 2. BIOMASSE GLOBALE ET COMPOSITION PAR TAXON
+# =================================================================
+
+# --- L'entité globale Biomasse ---
+fe:BiomassMeasurement a owl:Class ;
+    rdfs:label "Mesure de la Biomasse"@fr ;
+    rdfs:subClassOf crm:E16_Measurement ; # Ancrage dans l'activité de mesure
+    rdfs:comment "Action de quantifier la biomasse d'un espace."@fr .
+
+# Valeur globale (ex: Tonnes totales ou Tonnes/ha)
+fe:totalValue a owl:DatatypeProperty ;
+    rdfs:domain fe:BiomassMeasurement ;
+    rdfs:range xsd:decimal .
+
+# --- La composante (L'objet mesuré / La part) ---
+fe:BiomassComponent a owl:Class ;
+    rdfs:label "Composante de Biomasse"@fr ;
+    # On le définit comme une dimension (E54) car c'est une valeur quantitative
+    rdfs:subClassOf crm:E54_Dimension ; 
+    rdfs:comment "Définit la part d'un taxon spécifique dans la biomasse globale."@fr .
+
+# Liaison Espace -> Mesure
+fe:hasBiomassMeasurement a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P39i_was_measured_by ; # Propriété inverse native
+    rdfs:domain fe:NaturalSpace ;
+    rdfs:range fe:BiomassMeasurement .
+
+# Liaison Mesure -> Composante
+fe:hasComponent a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P40_observed_dimension ; # Propriété native de l'E16
+    rdfs:domain fe:BiomassMeasurement ;
+    rdfs:range fe:BiomassComponent .
+
+# Liaison Composante -> Taxon
+fe:refersToTaxon a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P2_has_type ; # Le taxon est le "Type" de la dimension
+    rdfs:domain fe:BiomassComponent ;
+    rdfs:range fe:Taxon .
+
+fe:percentageShare a owl:DatatypeProperty ;
+    rdfs:domain fe:BiomassComponent ;
+    rdfs:range xsd:decimal . # Valeur de 0 à 100
+
+# Liaison Espace -> Biomasse
+fe:hasBiomassState a owl:ObjectProperty ;
+    rdfs:domain fe:NaturalSpace ;
+    rdfs:range fe:BiomassMeasurement .
+
+# Valeur globale (ex: Tonnes totales ou Tonnes/ha)
+fe:totalValue a owl:DatatypeProperty ;
+    rdfs:domain fe:BiomassMeasurement ;
+    rdfs:range xsd:decimal .
+
+fe:hasComponent a owl:ObjectProperty ;
+    rdfs:domain fe:BiomassMeasurement ;
+    rdfs:range fe:BiomassComponent .
+
+fe:refersToTaxon a owl:ObjectProperty ;
+    rdfs:domain fe:BiomassComponent ;
+    rdfs:range fe:Taxon .
+
+fe:percentageShare a owl:DatatypeProperty ;
+    rdfs:domain fe:BiomassComponent ;
+    rdfs:range xsd:decimal . # Valeur de 0 à 100
+
+fe:RepartitionType a owl:Class ;
+    rdfs:label "Typologie de Répartition de la Biomasse"@fr ;
+    rdfs:subClassOf crm:E55_Type ;
+    rdfs:comment "Classification de la répartition de la biomasse (ex: homogène, en taches, en bandes)."@fr .
+
+fe:hasRepartitionType a owl:ObjectProperty ;
+    rdfs:domain fe:BiomassComponent ;
+    rdfs:range fe:RepartitionType ; # Ex: homogène, en taches, en bandes
+    rdfs:comment "Indique la nature de la répartition (ex: homogène, en taches, en bandes)."@fr .
+
+# =================================================================
+# 3. LES ESPÈCES PROTÉGÉES (Biodiversité)
 # =================================================================
 
 fe:Taxon a owl:Class ;
@@ -67,6 +153,30 @@ fe:hostsTaxon a owl:ObjectProperty ;
 fe:isTaxonHostedBy owl:inverseOf fe:hostsTaxon ;
     rdfs:domain fe:Taxon ;
     rdfs:range fe:NaturalSpace .
+
+# --- La classe de liaison ---
+fe:BiomassObservation a owl:Class ;
+    rdfs:label "Observation de Biomasse"@fr ;
+    rdfs:subClassOf crm:E16_Measurement ;
+    rdfs:comment "Consigne la présence d'un taxon dans un espace et sa part relative."@fr .
+
+# --- Les propriétés de liaison ---
+fe:observedInSpace a owl:ObjectProperty ;
+    rdfs:domain fe:BiomassObservation ;
+    rdfs:range fe:NaturalSpace ;
+    rdfs:label "observé dans l'espace"@fr .
+# --- Propriété inverse
+fe:specifiesTaxon a owl:ObjectProperty ;
+    rdfs:domain fe:BiomassObservation ;
+    rdfs:range fe:Taxon ;
+    rdfs:label "concerne le taxon"@fr .
+
+# --- La valeur de proportion ---
+fe:biomassPercentage a owl:DatatypeProperty ;
+    rdfs:domain fe:BiomassObservation ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "pourcentage de biomasse"@fr ;
+    rdfs:comment "Valeur de 0 à 100 représentant la part de ce taxon dans la biomasse totale de l'espace."@fr .
 
 # La classe des statuts UICN
 fe:IUCNCategory a owl:Class ;
@@ -153,6 +263,67 @@ fe:hasMaintenanceGuideline a owl:ObjectProperty ;
 # =================================================================
 # 3. EXPOSITION AU RISQUE (Analyse Incendie/Naturel)
 # =================================================================
-fe:hasNaturalExposure rdfs:subPropertyOf fe:hasFireExposure ;
-    rdfs:domain fe:NaturalSpace .
+# --- Valeurs Normalisées de Performance Thermique --- valeur calculée à partir des traits de l'espèce
 
+fe:spontaneousIgnitionThreshold a owl:DatatypeProperty ;
+    rdfs:label "inflammabilité spontanée"@fr ;
+    rdfs:comment "Capacité à s'enflammer par simple rayonnement/chaleur sans contact de flamme (0.0 à 1.0)."@fr ;
+    rdfs:domain fe:VegetationFireSensitivity ;
+    rdfs:range xsd:decimal .
+
+fe:contactIgnitionSensitivity a owl:DatatypeProperty ;
+    rdfs:label "inflammabilité par contact"@fr ;
+    rdfs:comment "Réactivité au contact direct d'une flamme ou d'une escarbille (0.0 à 1.0)."@fr ;
+    rdfs:domain fe:VegetationFireSensitivity ;
+    rdfs:range xsd:decimal .
+
+fe:fireResistanceDuration a owl:DatatypeProperty ;
+    rdfs:label "résistance au feu"@fr ;
+    rdfs:comment "Temps avant que l'intégrité de la plante ne soit rompue ou qu'elle ne devienne un vecteur (0.0 à 1.0)."@fr ;
+    rdfs:domain fe:VegetationFireSensitivity ;
+    rdfs:range xsd:decimal .
+
+fe:fireStoppingPower a owl:DatatypeProperty ;
+    rdfs:label "pouvoir d'arrêt"@fr ;
+    rdfs:comment "Capacité de l'espèce à agir comme un pare-feu (effet écran, humidité, faible biomasse) (0.0 à 1.0)."@fr ;
+    rdfs:domain fe:VegetationFireSensitivity ;
+    rdfs:range xsd:decimal .
+
+fe:heatReleasePotential a owl:DatatypeProperty ;
+    rdfs:label "puissance calorifique potentialle"@fr ;
+    rdfs:comment "Énergie libérée lors de la combustion (charge thermique) (0.0 à 1.0)."@fr ;
+    rdfs:domain fe:VegetationFireSensitivity ;
+    rdfs:range xsd:decimal .
+
+# Sensisiblité à l'extension du feu de l'espace naturel
+#Calculée à partir de la combinaison des performances thermiques des espèces, de la biomasse et de l'entretien de l'espace
+
+fe:globalIgnitionProbability a owl:DatatypeProperty ;
+    rdfs:label "probabilité d'allumage globale"@fr ;
+    rdfs:comment "Risque qu'un foyer démarre dans l'espace (combinaison de l'inflammabilité des taxons et de l'entretien) (0.0 à 1.0)."@fr ;
+    rdfs:domain fe:NaturalSpace ;
+    rdfs:range xsd:decimal .
+
+fe:firePropagationVelocity a owl:DatatypeProperty ;
+    rdfs:label "vitesse de propagation potentielle"@fr ;
+    rdfs:comment "Vitesse théorique de progression du front de flamme basée sur la continuité de la biomasse et la répartition (0.0 à 1.0)."@fr ;
+    rdfs:domain fe:NaturalSpace ;
+    rdfs:range xsd:decimal .
+
+fe:structuralFireBarrierEffect a owl:DatatypeProperty ;
+    rdfs:label "efficacité de barrière thermique"@fr ;
+    rdfs:comment "Capacité réelle du site à stopper un feu venant de l'extérieur (ex: jardin à la française entretenu vs forêt dense) (0.0 à 1.0)."@fr ;
+    rdfs:domain fe:NaturalSpace ;
+    rdfs:range xsd:decimal .
+
+fe:fireIntensityPotential a owl:DatatypeProperty ;
+    rdfs:label "puissance de feu potentielle (Ligne de feu)"@fr ;
+    rdfs:comment "Énergie libérée par mètre linéaire de front de flamme (basé sur la charge de biomasse totale) (0.0 à 1.0)."@fr ;
+    rdfs:domain fe:NaturalSpace ;
+    rdfs:range xsd:decimal .
+
+fe:emberEmissionPotential a owl:DatatypeProperty ;
+    rdfs:label "potentiel d'émission d'escarbilles"@fr ;
+    rdfs:comment "Capacité de l'espace à générer des sauts de feu vers les zones adjacentes (0.0 à 1.0)."@fr ;
+    rdfs:domain fe:NaturalSpace ;
+    rdfs:range xsd:decimal .
