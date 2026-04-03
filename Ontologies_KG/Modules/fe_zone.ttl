@@ -71,6 +71,15 @@ fe:FireRiskScore a owl:Class ;
     rdfs:subClassOf crm:E54_Dimension ;
     rdfs:label "Score de Risque Incendie"@fr .
 
+fe:hasFireRiskBuildingFactors a owl:ObjectProperty ;
+    rdfs:label "facteurs de risque liés au bâti"@fr ;
+    rdfs:domain fe:FireRiskScore ;
+    rdfs:range fe:building . # (Proximité, Matériaux, Occupation)
+
+fe:hasFireRiskNaturalFactors a owl:ObjectProperty ;
+    rdfs:label "facteurs de risque liés à l'environnement naturel"@fr ;
+    rdfs:domain fe:FireRiskScore ;
+    rdfs:range fe:naturalSpace . # (Végétation, Topographie, Conditions Météo)
 
 # --- Presnece d'artéfacts ---
 fe:containsArtefact a owl:ObjectProperty ;

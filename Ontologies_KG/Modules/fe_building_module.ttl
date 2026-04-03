@@ -4,22 +4,24 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
+# =================================================================
+# 1. CLASSES PRINCIPALES
+# =================================================================
+
 fe:Building a owl:Class ; 
-    rdfs:subClassOf crm:E25_Man_Made_Feature .
+    rdfs:label "Bâtiment"@fr ;
+    rdfs:subClassOf crm:E25_Man_Made_Feature ;
+    rdfs:comment "Structure architecturale fixe (monument, dépendance, abri)."@fr .
 
 fe:MaterialInstance a owl:Class ; 
-    rdfs:subClassOf crm:E57_Material .
+    rdfs:label "Instance de Matériau"@fr ;
+    rdfs:subClassOf crm:E57_Material ;
+    rdfs:comment "Type de matière physique composant le bâti (Pierre, Bois, Béton, Verre)."@fr .
 
-## Architecture Styles ##################################################
-fe:ArchitectureStyle a owl:Class ; rdfs:subClassOf crm:E55_Type .
-
-## End architecture styles ##############################################
-
-# Propriétés d’objet Building
-###### Non accessible nativement sans perte d'information ######
-fe:hasConstructionEvent a owl:ObjectProperty, owl:FunctionalProperty ;
-    rdfs:domain fe:Building ; rdfs:range crm:E12_Production ;
-    rdfs:subPropertyOf crm:P108i_was_produced_by .
+fe:ArchitectureStyle a owl:Class ; 
+    rdfs:label "Style Architectural"@fr ;
+    rdfs:subClassOf crm:E55_Type ;
+    rdfs:comment "Définit la morphologie et les méthodes constructives (Gothique, Classique, Moderne)."@fr .
 
 ####### Nativement accessible, sans perte d'information ########
 # fe:hasDestructionEvent a owl:ObjectProperty ;
@@ -31,44 +33,10 @@ fe:hasConstructionEvent a owl:ObjectProperty, owl:FunctionalProperty ;
 #     rdfs:domain fe:Building ; rdfs:range crm:E11_Modification ;
 #     rdfs:subPropertyOf crm:P31i_was_modified_by .
 
-###### Non accessible nativement sans perte d'information ######
-fe:hasArchitectureStyle a owl:ObjectProperty ;
-    rdfs:domain fe:Building ; rdfs:range fe:ArchitectureStyle ; 
-    rdfs:subPropertyOf crm:P2_has_type .
-
-###### Non accessible nativement sans perte d'information ######
-fe:hasIndividualMaterial a owl:ObjectProperty ;
-    rdfs:domain fe:Building ; rdfs:range fe:MaterialInstance ;
-    rdfs:subPropertyOf crm:P45_consists_of .
-
-###### Non accessible nativement sans perte d'information ######
-fe:hasSubstructure a owl:ObjectProperty ;
-    rdfs:domain fe:Building ; rdfs:range crm:E25_Man_Made_Feature ; 
-    rdfs:subPropertyOf crm:P46i_forms_part_of.
-
-###### Non accessible nativement sans perte d'information ######
-fe:hasPersonCapacity a owl:ObjectProperty ;
-    rdfs:domain fe:Building ; rdfs:range crm:E54_Dimension ; 
-    rdfs:subPropertyOf crm:P43_has_dimension .
-
 ####### Nativement accessible, sans perte d'information ########
 # fe:hasCurrentUse a owl:ObjectProperty ;
 #     rdfs:domain fe:Building ; rdfs:range crm:E7_Activity ;
 #     rdfs:subPropertyOf crm:P9_consists_of .
-
-###### Non accessible nativement sans perte d'information ######
-fe:isInZone a owl:ObjectProperty ;
-    rdfs:domain fe:Building ; rdfs:range crm:E53_Place ; 
-    rdfs:subPropertyOf crm:P89_falls_within .
-
-###### Non accessible nativement sans perte d'information ######
-#deplace dans le core.ttl pour être accessible à tous les modules
-# fe:hasRiskExposure a owl:ObjectProperty ;
-#     rdfs:domain fe:Building ; rdfs:range crm:E3_Condition_State ;
-#     rdfs:subPropertyOf crm:P44_has_condition .
-
-fe:hasBuildingExposure rdfs:subPropertyOf fe:hasFireExposure ;
-    rdfs:domain fe:Building .
 
 ####### Nativement accessible, sans perte d'information ########
 # fe:hasGeoDimensions a owl:ObjectProperty ;
@@ -80,25 +48,143 @@ fe:hasBuildingExposure rdfs:subPropertyOf fe:hasFireExposure ;
 #     rdfs:domain fe:Building ; rdfs:range crm:E53_Place ; 
 #     rdfs:subPropertyOf crm:P53_has_former_or_current_location .
 
-###### Non accessible nativement sans perte d'information ######
+# =================================================================
+# 2. COMPOSITION ET STRUCTURE (Liaisons sémantiques)
+# =================================================================
+
+# --- Classe de liaison pour les proportions de matériaux ---
+fe:MaterialComposition a owl:Class ;
+    rdfs:label "Composition de Matériau"@fr ;
+    rdfs:subClassOf crm:E54_Dimension ; 
+    rdfs:comment "Définit la part d'un matériau spécifique dans la structure globale."@fr .
+
+fe:hasMaterialComposition a owl:ObjectProperty ;
+    rdfs:label "est composé de (proportion)"@fr ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:domain fe:Building ;
+    rdfs:range fe:MaterialComposition .
+
+fe:refersToMaterial a owl:ObjectProperty ;
+    rdfs:label "concerne le matériau"@fr ;
+    rdfs:subPropertyOf crm:P45_consists_of ;
+    rdfs:domain fe:MaterialComposition ;
+    rdfs:range fe:MaterialInstance .
+
+fe:materialPercentage a owl:DatatypeProperty ;
+    rdfs:label "pourcentage du matériau"@fr ;
+    rdfs:domain fe:MaterialComposition ;
+    rdfs:range xsd:decimal ;
+    rdfs:comment "Valeur de 0.0 à 1.0 représentant la part du matériau dans l'enveloppe ou la structure."@fr .
+
+# --- Style et Sous-structures ---
+fe:hasArchitectureStyle a owl:ObjectProperty ;
+    rdfs:label "a pour style architectural"@fr ;
+    rdfs:domain fe:Building ; 
+    rdfs:range fe:ArchitectureStyle ; 
+    rdfs:subPropertyOf crm:P2_has_type .
+
+fe:hasSubstructure a owl:ObjectProperty ;
+    rdfs:label "comprend la sous-structure"@fr ;
+    rdfs:domain fe:Building ; 
+    rdfs:range crm:E25_Man_Made_Feature ; 
+    rdfs:subPropertyOf crm:P46i_forms_part_of .
+
+# =================================================================
+# 3. INDICATEURS DE PERFORMANCE CALCULÉS (Output de l'évaluateur)
+# =================================================================
+
+fe:hasBuildingFireRisk a owl:ObjectProperty ;
+    rdfs:label "a pour indicateur de risque incendie"@fr ;
+    rdfs:domain fe:Building ; 
+    rdfs:range fe:buildingFireRisk ; 
+    rdfs:subPropertyOf crm:P43_has_dimension .
+
+fe:buildingFireRisk a owl:Class ;
+    rdfs:label "résistance au feu du bâtiment"@fr ;
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:comment "Score global de risque incendie du bâtiment basé sur les matériaux, la morphologie et les facteurs d'exposition."@fr .
+
+fe:buildingCombustibility a owl:DatatypeProperty ;
+    rdfs:label "combustibilité globale du bâtiment"@fr ;
+    rdfs:comment "Score (0.0-1.0) résultant de la réaction au feu des matériaux de surface."@fr ;
+    rdfs:domain fe:buildingFireRisk ;
+    rdfs:range xsd:decimal .
+
+fe:buildingInflammability a owl:DatatypeProperty ;
+    rdfs:label "inflammabilité globale du bâtiment"@fr ;
+    rdfs:comment "Score (0.0-1.0) résultant de la réaction au feu des matériaux de surface."@fr ;
+    rdfs:domain fe:buildingFireRisk ;
+    rdfs:range xsd:decimal .
+
+fe:structuralFragility a owl:DatatypeProperty ;
+    rdfs:label "fragilité structurelle au feu"@fr ;
+    rdfs:comment "Probabilité d'effondrement précoce (0.0-1.0) basée sur REI et style architectural."@fr ;
+    rdfs:domain fe:buildingFireRisk ;
+    rdfs:range xsd:decimal .
+
+fe:smokePropensity a owl:DatatypeProperty ;
+    rdfs:label "Propension à la production de fumée"@fr ;
+    rdfs:comment "Sensibilité à la production de fumée (0.0-1.0) basée sur les propriétés des matériaux."@fr ;
+    rdfs:domain fe:buildingFireRisk ;
+    rdfs:range xsd:decimal .
+
+fe:thermalInertiaScore a owl:DatatypeProperty ;
+    rdfs:label "indice d'inertie thermique"@fr ;
+    rdfs:comment "Capacité du bâti à ralentir la chaleur externe (0.0-1.0) basée sur les propriétés des matériaux."@fr ;
+    rdfs:domain fe:buildingFireRisk ;
+    rdfs:range xsd:decimal .
+
+fe:fireExpansionFactor a owl:DatatypeProperty ;
+    rdfs:label "facteur d'expansion du feu"@fr ;
+    rdfs:comment "Potentiel de propagation interne/externe lié au style (vides, conduits) et aux prorpietes précedentes (0.0-1.0)."@fr ;
+    rdfs:domain fe:buildingFireRisk ;
+    rdfs:range xsd:decimal .
+
+# =================================================================
+# 4. ÉVÉNEMENTS ET HISTORIQUE (Ancrage CIDOC-CRM)
+# =================================================================
+
+fe:hasConstructionEvent a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "événement de construction"@fr ;
+    rdfs:domain fe:Building ; 
+    rdfs:range crm:E12_Production ;
+    rdfs:subPropertyOf crm:P108i_was_produced_by .
+
+# Note : Les événements de destruction (E6) et rénovation (E11) 
+# sont accessibles via les propriétés natives P13i et P31i.
+
+# =================================================================
+# 5. EXPOSITION ET ZONE
+# =================================================================
+
+fe:isInZone a owl:ObjectProperty ;
+    rdfs:label "est situé dans la zone"@fr ;
+    rdfs:domain fe:Building ; 
+    rdfs:range crm:E53_Place ; 
+    rdfs:subPropertyOf crm:P89_falls_within .
+
+# =================================================================
+# 6. CAPACITÉ ET FLUX
+# =================================================================
+
+fe:hasPersonCapacity a owl:ObjectProperty ;
+    rdfs:label "capacité d'accueil"@fr ;
+    rdfs:domain fe:Building ; 
+    rdfs:range crm:E54_Dimension ; 
+    rdfs:subPropertyOf crm:P43_has_dimension .
+
+# =================================================================
+# 7. DOCUMENTATION TECHNIQUE
+# =================================================================
+
 fe:hasEmergencyEvacuationDocument a owl:ObjectProperty ;
-    rdfs:label "a une procédure d'évacuation (document)"@fr ;
+    rdfs:label "procédure d'évacuation"@fr ;
     rdfs:domain fe:Building ; 
     rdfs:range crm:E31_Document ;
-    rdfs:subPropertyOf crm:P70i_is_documented_in ;
-    rdfs:comment "Lien vers le plan d'intervention ou la procédure globale du bâtiment."@fr .
+    rdfs:subPropertyOf crm:P70i_is_documented_in .
 
-###### Non accessible nativement sans perte d'information ######
 fe:hasEmergencyInterventionDocument a owl:ObjectProperty ;
-    rdfs:label "a une procédure d'intervention (document)"@fr ;
+    rdfs:label "plan d'intervention"@fr ;
     rdfs:domain fe:Building ; 
     rdfs:range crm:E31_Document ;
-    rdfs:subPropertyOf crm:P70i_is_documented_in ;
-    rdfs:comment "Lien vers le plan d'intervention ou la procédure globale du bâtiment."@fr .
-
-#---------------------------------------------------------------------------------------------
-# Propriétés d’objet MaterialInstance
-fe:hasReactionToFire a owl:ObjectProperty ;
-    rdfs:label "a pour réaction au feu"@fr ;
-    rdfs:domain fe:MaterialInstance ;
-    rdfs:range fe:ReactionToFire .
+    rdfs:subPropertyOf crm:P70i_is_documented_in .
