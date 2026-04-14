@@ -9,6 +9,7 @@
 
 fe:TriageCategoryScheme a skos:ConceptScheme ;
     rdfs:label "Référentiel des Catégories de Triage"@fr ;
+    skos:prefLabel "Référentiel des Catégories de Triage"@fr ;
     dct:description "Classification des victimes selon l'urgence de leur état (Code couleur standardisé)."@fr ;
     skos:hasTopConcept fe:Green, fe:Yellow, fe:Red, fe:Black, fe:Violet, fe:White .
 
@@ -55,6 +56,7 @@ fe:White a skos:Concept ;
 
 fe:VictimGroupScheme a skos:ConceptScheme ;
     rdfs:label "Thésaurus des Groupes d'appartenance"@fr ;
+    skos:prefLabel "Thésaurus des Groupes d'appartenance"@fr ;
     dct:description "Classification des personnes selon leur rôle ou leur service d'origine."@fr ;
     skos:hasTopConcept fe:Group_Civilian, fe:Group_Rescuer, fe:Group_Medical, fe:Group_LawEnforcement, fe:Group_Other .
 

@@ -11,6 +11,7 @@
 
 fe:ArchitectureThesaurus a skos:ConceptScheme ;
     rdfs:label "Thésaurus des Styles Architecturaux et Risques Incendie"@fr ;
+    skos:prefLabel "Thésaurus des Styles Architecturaux et Risques Incendie"@fr ;
     skos:hasTopConcept fe:StyleAntique, fe:StyleMedieval, fe:StyleRenaissance, 
                        fe:StyleClassique, fe:StyleIndustriel, fe:StyleVernaculaire, 
                        fe:StyleModerne .

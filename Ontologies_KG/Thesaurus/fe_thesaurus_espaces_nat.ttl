@@ -10,6 +10,7 @@
 
 fe:NaturalSpaceThesaurus a skos:ConceptScheme ;
     rdfs:label "Thésaurus des Espaces Naturels et Risques Incendie"@fr ;
+    skos:prefLabel "Thésaurus des Espaces Naturels et Risques Incendie"@fr ;
     skos:hasTopConcept fe:Forest, fe:Shrubland, fe:Grassland, fe:Crop, fe:Wetland, fe:Parc .
 
 # =================================================================

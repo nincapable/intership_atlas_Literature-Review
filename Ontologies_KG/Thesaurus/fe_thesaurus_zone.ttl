@@ -11,6 +11,7 @@
 
 fe:ZoneTaxonomy a skos:ConceptScheme ;
     rdfs:label "Taxonomie des caractéristiques de Zone"@fr ;
+    skos:prefLabel "Taxonomie des caractéristiques de Zone"@fr ;
     skos:hasTopConcept fe:TransitType, fe:ZoneUsageType, fe:CommunicationType .
 
 # =================================================================

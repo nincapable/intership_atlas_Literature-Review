@@ -11,6 +11,7 @@
 
 fe:AxisTaxonomy a skos:ConceptScheme ;
     rdfs:label "Taxonomie des circulations et accessibilités"@fr ;
+    skos:prefLabel "Taxonomie des circulations et accessibilités"@fr ;
     skos:hasTopConcept fe:AxisType, fe:PMR_Accessibility, fe:Rescue_Accessibility .
 
 # =================================================================

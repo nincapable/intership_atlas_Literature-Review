@@ -11,10 +11,12 @@
 
 fe:PopulationTaxonomy a skos:ConceptScheme ;
     rdfs:label "Taxonomie des Populations et Mobilités"@fr ;
+    skos:prefLabel "Taxonomie des Populations et Mobilités"@fr ;
     skos:hasTopConcept fe:VictimGroup, fe:MobilityClass, fe:PopType .
 
 fe:HumanFactorsTaxonomy a skos:ConceptScheme ;
     rdfs:label "Référentiel des Facteurs Humains et Cognitifs"@fr ;
+    skos:prefLabel "Référentiel des Facteurs Humains et Cognitifs"@fr ;
     skos:hasTopConcept fe:RiskPerceptionLevel, fe:AwarenessLevel, fe:TrainingLevel, fe:EducationLevel .
 
 # =================================================================

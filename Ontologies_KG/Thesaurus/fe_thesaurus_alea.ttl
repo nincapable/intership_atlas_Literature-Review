@@ -10,14 +10,17 @@
 
 fe:HazardIntensityScheme a skos:ConceptScheme ;
     rdfs:label "Référentiel des Niveaux d'Intensité de l'Aléa"@fr ;
+    skos:prefLabel "Référentiel des Niveaux d'Intensité de l'Aléa"@fr ;
     skos:hasTopConcept fe:Intensity_Low, fe:Intensity_Moderate, fe:Intensity_High, fe:Intensity_Extreme .
 
 fe:HazardTypeScheme a skos:ConceptScheme ;
     rdfs:label "Thésaurus des Types d'Aléas"@fr ;
+    skos:prefLabel "Thésaurus des Types d'Aléas"@fr ;
     skos:hasTopConcept fe:Fire_Hazard, fe:Flood_Hazard, fe:Seismic_Hazard, fe:Geological_Hazard, fe:Meteorological_Hazard .
 
 fe:ImpactSeverityScheme a skos:ConceptScheme ;
     rdfs:label "Référentiel de Sévérité des Impacts"@fr ;
+    skos:prefLabel "Référentiel de Sévérité des Impacts"@fr ;
     skos:hasTopConcept fe:Severity_Low, fe:Severity_Moderate, fe:Severity_Heavy, fe:Severity_Extreme .
 
 # =================================================================
