@@ -4,12 +4,15 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
+# =================================================================
+# 1. CLASSE PRINCIPALE ET RELATIONS STRUCTURELLES
+# =================================================================
+
 fe:HeritageSite a owl:Class ;
     rdfs:subClassOf crm:E27_Site ;
     rdfs:label "Site Patrimonial"@fr ;
     rdfs:comment "Entité globale regroupant les aspects spatiaux, humains et de sécurité."@fr .
 
-# --- Liaisons aux modules existants ---
 fe:hasZone a owl:ObjectProperty ;
     rdfs:domain fe:HeritageSite ;
     rdfs:range fe:Zone .
@@ -18,7 +21,10 @@ fe:hasPopulation a owl:ObjectProperty ;
     rdfs:domain fe:HeritageSite ;
     rdfs:range fe:Population .
 
-# --- Météo ---
+# =================================================================
+# 2. ENVIRONNEMENT (Météo et Topographie)
+# =================================================================
+
 fe:hasWeatherCondition a owl:ObjectProperty ;
     rdfs:domain fe:HeritageSite ;
     rdfs:range fe:WeatherCondition .
@@ -27,66 +33,37 @@ fe:hasClimate a owl:ObjectProperty ;
     rdfs:domain fe:HeritageSite ;
     rdfs:range fe:Climate .
 
-# --- Topographie ---
-# On peut définir si le site est en pente, en étage, ou accidenté
-fe:hasTopographyMeasurement a owl:ObjectProperty ;
-    rdfs:label "relevé topographique"@fr ;
+# =================================================================
+# 3. SÉCURITÉ ET PROTECTION (Liaisons SKOS)
+# =================================================================
+
+fe:ProtectionLevel a owl:Class ;
+    rdfs:subClassOf crm:E55_Type ;
+    rdfs:label "Niveau de Protection du Site"@fr .
+
+fe:hasProtectionStatus a owl:ObjectProperty ;
     rdfs:domain fe:HeritageSite ;
-    rdfs:range fe:TopographicDataset .
+    rdfs:range fe:ProtectionLevel .
 
-# La Classe Dataset (Le conteneur du relevé) ---
-fe:TopographicDataset a owl:Class ;
-    rdfs:subClassOf crm:E73_Information_Object ;
-    rdfs:label "Jeu de données topographiques"@fr .
+fe:HazardType a owl:Class ;
+    rdfs:subClassOf crm:E55_Type .
 
-#  Propriétés de définition du relevé ---
-fe:hasSourceFile a owl:DatatypeProperty ;
-    rdfs:label "lien vers fichier brut"@fr ;
-    rdfs:comment "URL ou chemin vers le nuage de points (.las, .laz) ou le maillage."@fr ;
-    rdfs:domain fe:TopographicDataset ;
-    rdfs:range xsd:anyURI .
-
-fe:hasAcquisitionDate a owl:DatatypeProperty ;
-    rdfs:domain fe:TopographicDataset ;
-    rdfs:range xsd:dateTime .
-
-fe:hasResolution a owl:DatatypeProperty ;
-    rdfs:label "résolution du relevé"@fr ;
-    rdfs:comment "Densité de points par m² ou précision en cm."@fr ;
-    rdfs:domain fe:TopographicDataset ;
-    rdfs:range xsd:string .
-
-# --- Aléas (Risques identifiés pour le site) ---
 fe:hasHazard a owl:ObjectProperty ;
     rdfs:domain fe:HeritageSite ;
     rdfs:range fe:HazardType .
 
-# --- Plan d'Évacuation ---
+# Documentation de sécurité
 fe:hasEvacuationPlan a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P70i_is_documented_in ;
     rdfs:domain fe:HeritageSite ;
-    rdfs:range crm:E29_Design_or_Procedure ;
-    rdfs:label "Plan d'Évacuation"@fr .
+    rdfs:range crm:E29_Design_or_Procedure .
 
-# --- Classification du Site ---
-fe:hasProtectionStatus a owl:ObjectProperty ;
-    rdfs:domain fe:HeritageSite ;
-    rdfs:range fe:ProtectionLevel . # (UNESCO, Monument Historique, Site Classé)
-
-fe:ProtectionLevel a owl:Class ;
-    owl:oneOf ( fe:UNESCO fe:Monument_Historique fe:Site_Classé ) ;
-    rdfs:label "Niveau de Protection du Site"@fr .
-
-# --- Statistiques de Fréquentation ---
-fe:hasAttendancePeak a owl:ObjectProperty ;
-    rdfs:label "pic de fréquentation"@fr ;
-    rdfs:comment "Nombre maximum de personnes autorisées simultanément (ERP)."@fr ;
-    rdfs:domain fe:HeritageSite ;
-    rdfs:range crm:E54_Dimension .
-
-# --- Plan de Sauvegarde des Biens Culturels (PSBC) ---
 fe:hasCulturalAssetPlan a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P70i_is_documented_in ;
-    rdfs:label "plan de sauvegarde des biens"@fr ;
     rdfs:domain fe:HeritageSite ;
-    rdfs:range fe:E29_Design_or_Procedure .
+    rdfs:range crm:E29_Design_or_Procedure .
+
+# Fréquentation
+fe:hasAttendancePeak a owl:ObjectProperty ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range crm:E54_Dimension .

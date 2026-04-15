@@ -1,0 +1,199 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix fe: <http://example.org/fire_and_evacuation#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# =================================================================
+# 1. DÉFINITION DES SCHÉMAS (CONCEPT SCHEMES)
+# =================================================================
+
+fe:PopulationTaxonomy a skos:ConceptScheme ;
+    rdfs:label "Taxonomie des Populations et Mobilités"@fr ;
+    dct:description "Référentiel complet des types de populations, de leurs capacités de mouvement et de leurs rôles."@fr ;
+    skos:hasTopConcept fe:VictimGroup, fe:MobilityClass, fe:PopType .
+
+fe:HumanFactorsTaxonomy a skos:ConceptScheme ;
+    rdfs:label "Référentiel des Facteurs Humains et Cognitifs"@fr ;
+    dct:description "Indicateurs psychologiques et éducatifs influençant le temps de réaction."@fr ;
+    skos:hasTopConcept fe:RiskPerceptionLevel, fe:AwarenessLevel, fe:TrainingLevel, fe:EducationLevel .
+
+# =================================================================
+# 2. CLASSES DE MOBILITÉ (Liaison fe:MobilityClass)
+# =================================================================
+
+fe:MobilityClass a skos:Concept ;
+    skos:prefLabel "Classe de Mobilité"@fr ;
+    skos:inScheme fe:PopulationTaxonomy ;
+    skos:topConceptOf fe:PopulationTaxonomy ;
+    skos:narrower fe:Mobility_Valid, fe:Mobility_Invalid, fe:Mobility_Elderly, fe:Mobility_Child .
+
+fe:Mobility_Valid a skos:Concept, fe:MobilityClass ;
+    skos:prefLabel "Valide"@fr ;
+    skos:scopeNote "Individu capable de se déplacer sans assistance à vitesse normale."@fr ;
+    skos:broader fe:MobilityClass ;
+    skos:inScheme fe:PopulationTaxonomy .
+
+fe:Mobility_Invalid a skos:Concept, fe:MobilityClass ;
+    skos:prefLabel "Invalide / PMR"@fr ;
+    skos:altLabel "Personne à Mobilité Réduite"@fr ;
+    skos:definition "Individu nécessitant une aide technique ou humaine pour l'évacuation."@fr ;
+    skos:broader fe:MobilityClass ;
+    skos:inScheme fe:PopulationTaxonomy .
+
+fe:Mobility_Elderly a skos:Concept, fe:MobilityClass ;
+    skos:prefLabel "Sénior"@fr ;
+    skos:scopeNote "Mobilité potentiellement ralentie par l'âge sans être une invalidité stricte."@fr ;
+    skos:broader fe:MobilityClass ;
+    skos:inScheme fe:PopulationTaxonomy .
+
+fe:Mobility_Child a skos:Concept, fe:MobilityClass ;
+    skos:prefLabel "Enfant"@fr ;
+    skos:scopeNote "Mobilité réduite par le pas ou besoin d'encadrement."@fr ;
+    skos:broader fe:MobilityClass ;
+    skos:inScheme fe:PopulationTaxonomy .
+
+# =================================================================
+# 3. GROUPES DE VICTIMES / RÔLES (Liaison fe:VictimGroup)
+# =================================================================
+
+fe:VictimGroup a skos:Concept ;
+    skos:prefLabel "Groupe de Victimes"@fr ;
+    skos:inScheme fe:PopulationTaxonomy ;
+    skos:topConceptOf fe:PopulationTaxonomy ;
+    skos:narrower fe:Group_Civilian, fe:Group_Rescue, fe:Group_Medical .
+
+fe:Group_Civilian a skos:Concept, fe:VictimGroup ;
+    skos:prefLabel "Civil"@fr ;
+    skos:altLabel "Public"@fr, "Visiteur"@fr ;
+    skos:definition "Personne n'ayant aucune fonction de secours ou de sécurité."@fr ;
+    skos:broader fe:VictimGroup ;
+    skos:inScheme fe:PopulationTaxonomy .
+
+fe:Group_Rescue a skos:Concept, fe:VictimGroup ;
+    skos:prefLabel "Sauveteur"@fr ;
+    skos:altLabel "Pompier"@fr, "Équipe d'intervention"@fr ;
+    skos:broader fe:VictimGroup ;
+    skos:inScheme fe:PopulationTaxonomy .
+
+fe:Group_Medical a skos:Concept, fe:VictimGroup ;
+    skos:prefLabel "Médical"@fr ;
+    skos:altLabel "SAMU"@fr, "Ambulancier"@fr ;
+    skos:broader fe:VictimGroup ;
+    skos:inScheme fe:PopulationTaxonomy .
+
+# =================================================================
+# 4. TYPES D'USAGE / STATUTS (Liaison fe:PopType)
+# =================================================================
+
+fe:PopType a skos:Concept ;
+    skos:prefLabel "Type de Population"@fr ;
+    skos:inScheme fe:PopulationTaxonomy ;
+    skos:topConceptOf fe:PopulationTaxonomy ;
+    skos:narrower fe:Resident, fe:Tourist, fe:Staff, fe:LawEnforcement, fe:Firefighter .
+
+fe:Resident a skos:Concept, fe:PopType ;
+    skos:prefLabel "Habitant"@fr ;
+    skos:altLabel "Résident"@fr, "Local"@fr ;
+    skos:definition "Personne connaissant parfaitement les lieux et les issues de secours."@fr ;
+    skos:broader fe:PopType ;
+    skos:inScheme fe:PopulationTaxonomy .
+
+fe:Tourist a skos:Concept, fe:PopType ;
+    skos:prefLabel "Touriste"@fr ;
+    skos:altLabel "Visiteur occasionnel"@fr ;
+    skos:definition "Personne découvrant les lieux, totalement dépendante de la signalétique."@fr ;
+    skos:broader fe:PopType ;
+    skos:inScheme fe:PopulationTaxonomy .
+
+fe:Staff a skos:Concept, fe:PopType ;
+    skos:prefLabel "Personnel"@fr ;
+    skos:scopeNote "Employés du site, formés aux procédures internes."@fr ;
+    skos:broader fe:PopType ;
+    skos:inScheme fe:PopulationTaxonomy .
+
+fe:LawEnforcement a skos:Concept, fe:PopType ;
+    skos:prefLabel "Forces de l'Ordre"@fr ;
+    skos:broader fe:PopType ;
+    skos:inScheme fe:PopulationTaxonomy .
+
+fe:Firefighter a skos:Concept, fe:PopType ;
+    skos:prefLabel "Pompier"@fr ;
+    skos:broader fe:PopType ;
+    skos:inScheme fe:PopulationTaxonomy .
+
+# =================================================================
+# 5. FACTEURS HUMAINS (Liaisons fe:RiskPerceptionLevel, etc.)
+# =================================================================
+
+# --- Perception du Risque ---
+fe:RiskPerceptionLevel a skos:Concept ;
+    skos:prefLabel "Niveau de Perception du Risque"@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy ;
+    skos:topConceptOf fe:HumanFactorsTaxonomy ;
+    skos:narrower fe:Perception_None, fe:Perception_Low, fe:Perception_High .
+
+fe:Perception_None a skos:Concept, fe:RiskPerceptionLevel ;
+    skos:prefLabel "Nulle / Déni"@fr ;
+    skos:definition "Absence totale de conscience du danger ou refus d'admettre l'urgence."@fr ;
+    skos:broader fe:RiskPerceptionLevel ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Perception_Low a skos:Concept, fe:RiskPerceptionLevel ;
+    skos:prefLabel "Faible"@fr ;
+    skos:broader fe:RiskPerceptionLevel ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Perception_High a skos:Concept, fe:RiskPerceptionLevel ;
+    skos:prefLabel "Élevée / Alerte"@fr ;
+    skos:broader fe:RiskPerceptionLevel ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+# --- Sensibilisation (Awareness) ---
+fe:AwarenessLevel a skos:Concept ;
+    skos:prefLabel "Niveau de Sensibilisation"@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy ;
+    skos:topConceptOf fe:HumanFactorsTaxonomy ;
+    skos:narrower fe:Awareness_None, fe:Awareness_Informative, fe:Awareness_Trained .
+
+fe:Awareness_None a skos:Concept, fe:AwarenessLevel ;
+    skos:prefLabel "Aucune"@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Awareness_Informative a skos:Concept, fe:AwarenessLevel ;
+    skos:prefLabel "Informative"@fr ;
+    skos:definition "Connaissance passive (plans, affiches)."@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Awareness_Trained a skos:Concept, fe:AwarenessLevel ;
+    skos:prefLabel "Active / Briefing"@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+# --- Entraînement (Training) ---
+fe:TrainingLevel a skos:Concept ;
+    skos:prefLabel "Niveau d'Entraînement"@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy ;
+    skos:topConceptOf fe:HumanFactorsTaxonomy ;
+    skos:narrower fe:Training_None, fe:Training_Exercise, fe:Training_Professional .
+
+fe:Training_None a skos:Concept, fe:TrainingLevel ;
+    skos:prefLabel "Aucun"@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Training_Exercise a skos:Concept, fe:TrainingLevel ;
+    skos:prefLabel "Exercice de terrain"@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+fe:Training_Professional a skos:Concept, fe:TrainingLevel ;
+    skos:prefLabel "Professionnel"@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy .
+
+# --- Éducation ---
+fe:EducationLevel a skos:Concept ;
+    skos:prefLabel "Niveau d'Éducation"@fr ;
+    skos:inScheme fe:HumanFactorsTaxonomy ;
+    skos:topConceptOf fe:HumanFactorsTaxonomy ;
+    skos:narrower fe:Edu_Primary, fe:Edu_Secondary, fe:Edu_Higher .
+
+fe:Edu_Primary a skos:Concept, fe:EducationLevel ; skos:prefLabel "Primaire"@fr ; skos:inScheme fe:HumanFactorsTaxonomy .
+fe:Edu_Secondary a skos:Concept, fe:EducationLevel ; skos:prefLabel "Secondaire"@fr ; skos:inScheme fe:HumanFactorsTaxonomy .
+fe:Edu_Higher a skos:Concept, fe:EducationLevel ; skos:prefLabel "Supérieur / Technique"@fr ; skos:inScheme fe:HumanFactorsTaxonomy .

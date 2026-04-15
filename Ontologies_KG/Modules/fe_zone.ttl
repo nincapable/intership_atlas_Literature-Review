@@ -4,37 +4,42 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
+# =================================================================
+# 1. LA CLASSE ZONE
+# =================================================================
+
 fe:Zone a owl:Class ;
     rdfs:subClassOf crm:E53_Place ;
     rdfs:label "Zone d'intérêt"@fr ;
     rdfs:comment "Espace délimité caractérisé par son usage, sa capacité et son exposition aux risques."@fr .
 
-# --- Attributs de Capacité et Flux ---
+# =================================================================
+# 2. CAPACITÉ ET FLUX (TRANSIT)
+# =================================================================
+
+fe:TransitType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+
 fe:hasCapacity a owl:ObjectProperty ;
     rdfs:label "capacité nominale"@fr ;
     rdfs:domain fe:Zone ;
-    rdfs:range crm:E54_Dimension . # Ex: 500 Personnes
+    rdfs:range crm:E54_Dimension . # Connecté à crm:P90_has_value pour le nombre de personnes
 
 fe:hasTransitType a owl:ObjectProperty ;
     rdfs:label "type de transit"@fr ;
     rdfs:domain fe:Zone ;
     rdfs:range fe:TransitType .
 
-fe:TransitType a owl:Class ;
-    owl:oneOf (fe:Transit_Static fe:Transit_Flow fe:Transit_Hybrid) ;
-    rdfs:label "Régime de transit de la zone"@fr .
+# =================================================================
+# 3. USAGE ET MORPHOLOGIE
+# =================================================================
 
-# --- Usage de la Zone ---
+fe:ZoneUsageType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+
 fe:hasZoneUsage a owl:ObjectProperty ;
     rdfs:label "usage de la zone"@fr ;
     rdfs:domain fe:Zone ;
-    rdfs:range fe:ZoneUsageType . # (Touristique, Habitation, Mixte)
+    rdfs:range fe:ZoneUsageType .
 
-fe:ZoneUsageType a owl:Class ;
-    owl:oneOf ( fe:Usage_Touristic fe:Usage_Residential fe:Usage_Mixed ) ;
-    rdfs:label "Type d'usage de la zone"@fr .
-
-# --- Nature de l'Espace (Morphologie) ---
 fe:hasBuilding a owl:ObjectProperty ;
     rdfs:label "contient le bâtiment"@fr ;
     rdfs:domain fe:Zone ;
@@ -45,44 +50,110 @@ fe:hasNaturalSpace a owl:ObjectProperty ;
     rdfs:domain fe:Zone ;
     rdfs:range fe:NaturalSpace .
 
-# --- Réseaux et Communications ---
+fe:containsArtefact a owl:ObjectProperty ;
+    rdfs:label "contient un artéfact"@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:Artefact .
+
+# =================================================================
+# 4. RÉSEAUX ET COMMUNICATIONS
+# =================================================================
+
+fe:CommunicationType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+
 fe:hasCommunicationNode a owl:ObjectProperty ;
     rdfs:label "nœud de communication"@fr ;
     rdfs:domain fe:Zone ;
-    rdfs:range fe:CommunicationType . # (Radio, Wi-Fi, 5G, Signalétique sonore)
+    rdfs:range fe:CommunicationType .
 
-fe:CommunicationType a owl:Class ;
-    owl:oneOf ( fe:Comm_Radio fe:Comm_WiFi fe:Comm_5G fe:Comm_Signage ) ;
-    rdfs:label "Type de communication disponible dans la zone"@fr .
-
-# --- Exposition aux Risques ---
-fe:isExposedTo a owl:ObjectProperty ;
-    rdfs:label "exposition au risque"@fr ;
-    rdfs:domain fe:Zone ;
-    rdfs:range fe:HazardType .
-
-## --- Risque Incendie ---
-fe:hasFireRiskEvaluation a owl:ObjectProperty ;
-    rdfs:label "évaluation du risque incendie"@fr ;
-    rdfs:domain fe:Zone ;
-    rdfs:range fe:FireRiskScore .
+# =================================================================
+# 5. ÉVALUATION DES RISQUES
+# =================================================================
 
 fe:FireRiskScore a owl:Class ;
     rdfs:subClassOf crm:E54_Dimension ;
     rdfs:label "Score de Risque Incendie"@fr .
 
+fe:isExposedTo a owl:ObjectProperty ;
+    rdfs:label "exposition au risque"@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:HazardType .
+
+fe:hasFireRiskEvaluation a owl:ObjectProperty ;
+    rdfs:label "évaluation du risque incendie"@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:FireRiskScore .
+
 fe:hasFireRiskBuildingFactors a owl:ObjectProperty ;
     rdfs:label "facteurs de risque liés au bâti"@fr ;
     rdfs:domain fe:FireRiskScore ;
-    rdfs:range fe:building . # (Proximité, Matériaux, Occupation)
+    rdfs:range fe:Building . 
 
 fe:hasFireRiskNaturalFactors a owl:ObjectProperty ;
     rdfs:label "facteurs de risque liés à l'environnement naturel"@fr ;
     rdfs:domain fe:FireRiskScore ;
-    rdfs:range fe:naturalSpace . # (Végétation, Topographie, Conditions Météo)
+    rdfs:range fe:NaturalSpace .
 
-# --- Presnece d'artéfacts ---
-fe:containsArtefact a owl:ObjectProperty ;
-    rdfs:label "contient un artéfact"@fr ;
-    rdfs:domain fe:Zone ;
-    rdfs:range fe:Artefact .
+# =================================================================
+# 6.STRUCTURE TOPOGRAPHIQUE (LIDAR TILES)
+# =================================================================
+
+fe:hasTopographyMeasurement a owl:ObjectProperty ;
+    rdfs:label "relevé topographique"@fr ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:TopographicDataset .
+
+fe:TopographicDataset a owl:Class ;
+    rdfs:subClassOf crm:E73_Information_Object ;
+    rdfs:label "Jeu de données topographiques"@fr .
+
+# --- Décomposition en Tuiles ---
+
+fe:LidarTile a owl:Class ;
+    rdfs:subClassOf crm:E73_Information_Object ;
+    rdfs:label "Tuile LiDAR"@fr .
+
+fe:hasTile a owl:ObjectProperty ;
+    rdfs:label "comprend la tuile"@fr ;
+    rdfs:domain fe:TopographicDataset ;
+    rdfs:range fe:LidarTile .
+
+# --- Propriétés du Dataset (Global) ---
+
+fe:hasAcquisitionDate a owl:DatatypeProperty ;
+    rdfs:label "date d'acquisition"@fr ;
+    rdfs:domain fe:TopographicDataset ;
+    rdfs:range xsd:dateTime .
+
+fe:hasResolution a owl:DatatypeProperty ;
+    rdfs:label "résolution nominale"@fr ;
+    rdfs:domain fe:TopographicDataset ;
+    rdfs:range xsd:string .
+
+fe:hasAcquisitionMethod a owl:ObjectProperty ;
+    rdfs:label "méthode d'acquisition"@fr ;
+    rdfs:domain fe:TopographicDataset ;
+    rdfs:range fe:AcquisitionMethod . # Vers SKOS
+
+# --- Propriétés de la Tuile (Local) ---
+
+fe:hasTileIndex a owl:DatatypeProperty ;
+    rdfs:label "index de la tuile"@fr ;
+    rdfs:comment "ex: Tile_A1"@fr ;
+    rdfs:domain fe:LidarTile ;
+    rdfs:range xsd:string .
+
+fe:hasSourceFile a owl:DatatypeProperty ;
+    rdfs:label "fichier source"@fr ;
+    rdfs:comment "Lien vers le fichier .las ou .laz spécifique à cette tuile"@fr ;
+    rdfs:domain fe:LidarTile ;
+    rdfs:range xsd:anyURI .
+
+fe:hasBoundingBox a owl:DatatypeProperty ;
+    rdfs:label "emprise spatiale (BBOX)"@fr ;
+    rdfs:comment "Format WKT: POLYGON((...))"@fr ;
+    rdfs:domain fe:LidarTile ;
+    rdfs:range xsd:string .
+
+# Classe de référentiel pour SKOS
+fe:AcquisitionMethod a owl:Class ; rdfs:subClassOf crm:E55_Type .

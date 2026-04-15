@@ -4,14 +4,18 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
-#################################################################
-# 1. MODULE RÉACTION (Comportement du matériau)
-#################################################################
+# =================================================================
+# 1. RÉACTION AU FEU (Matériaux)
+# =================================================================
 
 fe:ReactionToFire a owl:Class ;
     rdfs:label "Propriétés de Réaction au Feu"@fr .
 
-# Propriétés de la "boîte" Reaction
+# Classes de référentiels (Peuplées par SKOS)
+fe:ReactionToFireClass a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:SmokeProductionClass a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:FlamingDropletsClass a owl:Class ; rdfs:subClassOf crm:E55_Type .
+
 fe:hasReactionClass a owl:ObjectProperty, owl:FunctionalProperty ;
     rdfs:domain fe:ReactionToFire ;
     rdfs:range fe:ReactionToFireClass .
@@ -24,76 +28,57 @@ fe:hasDropletClass a owl:ObjectProperty, owl:FunctionalProperty ;
     rdfs:domain fe:ReactionToFire ;
     rdfs:range fe:FlamingDropletsClass .
 
-# Énumérations (Les valeurs autorisées)
-fe:ReactionToFireClass a owl:Class ; owl:oneOf ( fe:A1 fe:A2 fe:B fe:C fe:D fe:E fe:F ) .
-fe:SmokeProductionClass a owl:Class ; owl:oneOf ( fe:s1 fe:s2 fe:s3 ) .
-fe:FlamingDropletsClass a owl:Class ; owl:oneOf ( fe:d0 fe:d1 fe:d2 ) .
-
-#################################################################
-# 2. MODULE RÉSISTANCE (Performance de l'élément)
-#################################################################
-
-fe:FireResistanceRating a owl:Class ;
-    rdfs:label "Degré de Résistance au Feu"@fr .
-
-# Propriétés de la "boîte" Resistance
-fe:resistanceComponents a owl:ObjectProperty ;
-    rdfs:domain fe:FireResistanceRating ;
-    rdfs:range fe:FireResistanceComponent .
-
-# Énumérations REI
-fe:FireResistanceComponent a owl:Class ;
-    owl:oneOf ( fe:R fe:E fe:I fe:W ) .
-
-fe:resistanceDuration a owl:DatatypeProperty ;
-    rdfs:domain fe:FireResistanceRating ;
-    rdfs:range xsd:integer .
-
-#################################################################
-# 3. ATTACHE AUX OBJETS (Modularité)
-#################################################################
-
-# Un matériau a une réaction
+# Liaison à l'objet
 fe:hasReaction a owl:ObjectProperty ;
     rdfs:domain fe:MaterialInstance ;
     rdfs:range fe:ReactionToFire .
 
-# Un élément (Bâtiment ou Axe) a une résistance
+# =================================================================
+# 2. RÉSISTANCE AU FEU (Éléments de Structure)
+# =================================================================
+
+fe:FireResistanceRating a owl:Class ;
+    rdfs:label "Degré de Résistance au Feu"@fr .
+
+fe:FireResistanceComponent a owl:Class ; rdfs:subClassOf crm:E55_Type .
+
+fe:resistanceComponents a owl:ObjectProperty ;
+    rdfs:domain fe:FireResistanceRating ;
+    rdfs:range fe:FireResistanceComponent .
+
+fe:resistanceDuration a owl:DatatypeProperty ;
+    rdfs:label "durée de résistance (min)"@fr ;
+    rdfs:domain fe:FireResistanceRating ;
+    rdfs:range xsd:integer .
+
+# Liaison aux éléments (Bâtiment ou Axe/Voie)
 fe:hasResistance a owl:ObjectProperty ;
     rdfs:domain [ owl:unionOf (fe:Building fe:Axis) ] ;
     rdfs:range fe:FireResistanceRating .
 
-#################################################################
-# 4. EXPOSITION AU RISQUE (Analyse Incendie)
-#################################################################
+# =================================================================
+# 3. EXPOSITION ET PROPAGATION (Analyse de Risque)
+# =================================================================
+
+fe:FireExposureBuildingClassification a owl:Class ;
+    rdfs:subClassOf crm:E55_Type ;
+    rdfs:label "Exposition aux Risques Incendie (Bâti)"@fr .
+
+fe:FireExposureNaturalClassification a owl:Class ;
+    rdfs:subClassOf crm:E55_Type ;
+    rdfs:label "Exposition au Risque Incendie (Espaces Naturels)"@fr .
+
+fe:CombustibilityType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:PropagationType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+
+fe:hasCombustibilityType a owl:ObjectProperty ;
+    rdfs:domain [ owl:unionOf (fe:FireExposureBuildingClassification fe:FireExposureNaturalClassification) ] ;
+    rdfs:range fe:CombustibilityType .
+
+fe:hasPropagationType a owl:ObjectProperty ;
+    rdfs:domain [ owl:unionOf (fe:FireExposureBuildingClassification fe:FireExposureNaturalClassification) ] ;
+    rdfs:range fe:PropagationType .
 
 fe:hasFireExposure a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P44_has_condition ;
-    rdfs:range fe:FireExposureBuildingClassification, fe:FireExposureNaturalClassification .
-
-#Building
-fe:FireExposureBuildingClassification a owl:Class ;
-    rdfs:label "Exposition aux Risques Incendie"@fr ;
-    rdfs:subClassOf crm:E55_Type .
-
-# --- Les Sous-Catégories Fonctionnelles ---
-fe:hasCombustibilityType a owl:ObjectProperty ;
-    rdfs:domain fe:FireExposureBuildingClassification ;
-    rdfs:range fe:CombustibilityType .
-
-#--- Combustibilité General de l'environnement (exposition au risque) ---
-fe:CombustibilityType a owl:Class ;
-    rdfs:label "Type de Combustibilité"@fr ;
-    owl:oneOf ( fe:DelayedIgnition fe:FlashFuel fe:PyrophileHigh ) .
-
-#--- Propagation dans l'environnement (exposition au risque) ---
-fe:PropagationType a owl:Class ;
-    rdfs:label "Type de Propagation Thermique"@fr ;
-    rdfs:comment "Définit le mode principal de transfert de chaleur permettant l'extension du foyer."@fr ;
-    owl:oneOf ( fe:Convection fe:Conduction fe:Radiation fe:Projection ) .
-
-#Natural
-fe:FireExposureNaturalClassification a owl:Class ;
-    rdfs:label "Classification de l'Exposition au Risque Incendie pour les Espaces Naturels"@fr ;
-    rdfs:subClassOf crm:E55_Type  .
-
+    rdfs:range [ owl:unionOf (fe:FireExposureBuildingClassification fe:FireExposureNaturalClassification) ] .

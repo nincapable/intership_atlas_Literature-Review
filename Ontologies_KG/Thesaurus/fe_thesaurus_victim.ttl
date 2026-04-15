@@ -9,46 +9,43 @@
 
 fe:TriageCategoryScheme a skos:ConceptScheme ;
     rdfs:label "Référentiel des Catégories de Triage"@fr ;
-    skos:prefLabel "Référentiel des Catégories de Triage"@fr ;
-    dct:description "Classification des victimes selon l'urgence de leur état (Code couleur standardisé)."@fr ;
-    skos:hasTopConcept fe:Green, fe:Yellow, fe:Red, fe:Black, fe:Violet, fe:White .
+    dct:description "Classification des victimes selon l'urgence de leur état (Code couleur standardisé)."@fr .
 
-fe:Green a skos:Concept ;
+fe:Green a skos:Concept, fe:TriageCategory ;
     skos:prefLabel "Victime Mobile"@fr ;
+    skos:altLabel "Vert"@fr ;
     skos:definition "Urgence relative (UR) : Victime valide ou blessée légère pouvant se déplacer seule."@fr ;
-    skos:inScheme fe:TriageCategoryScheme ;
-    skos:topConceptOf fe:TriageCategoryScheme .
+    skos:inScheme fe:TriageCategoryScheme .
 
-fe:Yellow a skos:Concept ;
+fe:Yellow a skos:Concept, fe:TriageCategory ;
     skos:prefLabel "Victime en Attente"@fr ;
+    skos:altLabel "Jaune"@fr ;
     skos:definition "Urgence relative (UR) : Victime ne pouvant pas se déplacer mais dont l'état est stable."@fr ;
-    skos:inScheme fe:TriageCategoryScheme ;
-    skos:topConceptOf fe:TriageCategoryScheme .
+    skos:inScheme fe:TriageCategoryScheme .
 
-fe:Red a skos:Concept ;
+fe:Red a skos:Concept, fe:TriageCategory ;
     skos:prefLabel "Victime Critique"@fr ;
+    skos:altLabel "Rouge"@fr ;
     skos:definition "Urgence Absolue (UA) : Pronostic vital engagé, nécessite une réanimation immédiate."@fr ;
-    skos:inScheme fe:TriageCategoryScheme ;
-    skos:topConceptOf fe:TriageCategoryScheme .
+    skos:inScheme fe:TriageCategoryScheme .
 
-fe:Black a skos:Concept ;
+fe:Black a skos:Concept, fe:TriageCategory ;
     skos:prefLabel "Décédée"@fr ;
+    skos:altLabel "Noir"@fr ;
     skos:definition "Victime dont le décès a été constaté sur place."@fr ;
-    skos:inScheme fe:TriageCategoryScheme ;
-    skos:topConceptOf fe:TriageCategoryScheme .
+    skos:inScheme fe:TriageCategoryScheme .
 
-fe:Violet a skos:Concept ;
+fe:Violet a skos:Concept, fe:TriageCategory ;
     skos:prefLabel "Victime Psychologique"@fr ;
+    skos:altLabel "Violet"@fr ;
     skos:definition "Impliqué : Personne non blessée physiquement mais présentant un choc traumatique."@fr ;
-    skos:inScheme fe:TriageCategoryScheme ;
-    skos:topConceptOf fe:TriageCategoryScheme .
+    skos:inScheme fe:TriageCategoryScheme .
 
-fe:White a skos:Concept ;
+fe:White a skos:Concept, fe:TriageCategory ;
     skos:prefLabel "Disparue"@fr ;
+    skos:altLabel "Blanc"@fr ;
     skos:definition "Personne signalée présente sur les lieux mais non localisée par les secours."@fr ;
-    skos:inScheme fe:TriageCategoryScheme ;
-    skos:topConceptOf fe:TriageCategoryScheme .
-
+    skos:inScheme fe:TriageCategoryScheme .
 
 # =================================================================
 # 2. THÉSAURUS DES GROUPES D'APPARTENANCE
@@ -56,36 +53,44 @@ fe:White a skos:Concept ;
 
 fe:VictimGroupScheme a skos:ConceptScheme ;
     rdfs:label "Thésaurus des Groupes d'appartenance"@fr ;
-    skos:prefLabel "Thésaurus des Groupes d'appartenance"@fr ;
-    dct:description "Classification des personnes selon leur rôle ou leur service d'origine."@fr ;
-    skos:hasTopConcept fe:Group_Civilian, fe:Group_Rescuer, fe:Group_Medical, fe:Group_LawEnforcement, fe:Group_Other .
+    dct:description "Classification des personnes selon leur rôle ou leur service d'origine."@fr .
 
-fe:Group_Civilian a skos:Concept ;
+fe:Group_Civilian a skos:Concept, fe:VictimGroup ;
     skos:prefLabel "Civil / Public"@fr ;
     skos:definition "Personnes présentes sur les lieux n'appartenant pas aux services de secours."@fr ;
-    skos:inScheme fe:VictimGroupScheme ;
-    skos:topConceptOf fe:VictimGroupScheme .
+    skos:inScheme fe:VictimGroupScheme .
 
-fe:Group_Rescuer a skos:Concept ;
+fe:Group_Rescuer a skos:Concept, fe:VictimGroup ;
     skos:prefLabel "Sauveteur / Pompier"@fr ;
     skos:definition "Personnel des services d'incendie et de secours (SDIS, BSPP, BMPM)."@fr ;
-    skos:inScheme fe:VictimGroupScheme ;
-    skos:topConceptOf fe:VictimGroupScheme .
+    skos:inScheme fe:VictimGroupScheme .
 
-fe:Group_Medical a skos:Concept ;
+fe:Group_Medical a skos:Concept, fe:VictimGroup ;
     skos:prefLabel "Personnel Médical / SAMU"@fr ;
     skos:definition "Équipes médicales et paramédicales d'urgence (SMUR, Croix-Rouge, etc.)."@fr ;
-    skos:inScheme fe:VictimGroupScheme ;
-    skos:topConceptOf fe:VictimGroupScheme .
+    skos:inScheme fe:VictimGroupScheme .
 
-fe:Group_LawEnforcement a skos:Concept ;
+fe:Group_LawEnforcement a skos:Concept, fe:VictimGroup ;
     skos:prefLabel "Forces de l'ordre"@fr ;
     skos:definition "Police Nationale, Gendarmerie ou agents de sécurité publique."@fr ;
-    skos:inScheme fe:VictimGroupScheme ;
-    skos:topConceptOf fe:VictimGroupScheme .
+    skos:inScheme fe:VictimGroupScheme .
 
-fe:Group_Other a skos:Concept ;
+fe:Group_Other a skos:Concept, fe:VictimGroup ;
     skos:prefLabel "Autre / Indéterminé"@fr ;
     skos:definition "Toute personne dont l'appartenance n'est pas encore identifiée."@fr ;
-    skos:inScheme fe:VictimGroupScheme ;
-    skos:topConceptOf fe:VictimGroupScheme .
+    skos:inScheme fe:VictimGroupScheme .
+
+# =================================================================
+# 3. RÉFÉRENTIEL DES GENRES
+# =================================================================
+
+fe:GenderScheme a skos:ConceptScheme ;
+    rdfs:label "Référentiel des Genres"@fr .
+
+fe:Male a skos:Concept, fe:GenderType ;
+    skos:prefLabel "Homme"@fr ;
+    skos:inScheme fe:GenderScheme .
+
+fe:Female a skos:Concept, fe:GenderType ;
+    skos:prefLabel "Femme"@fr ;
+    skos:inScheme fe:GenderScheme .

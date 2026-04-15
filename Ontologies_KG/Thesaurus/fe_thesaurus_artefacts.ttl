@@ -1,0 +1,205 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix fe: <http://example.org/fire_and_evacuation#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# =================================================================
+# 1. RÉFÉRENTIEL DES TYPES D'OBJETS (TAXONOMIE ARTOS)
+# =================================================================
+
+fe:ArtefactTaxonomyScheme a skos:ConceptScheme ;
+    rdfs:label "Taxonomie complète des Artefacts Patrimoniaux"@fr ;
+    skos:prefLabel "Taxonomie complète des Artefacts Patrimoniaux"@fr ;
+    skos:hasTopConcept fe:Domestique, fe:Martiale, fe:Culturelle, fe:Spirituelle, fe:Scientifique, fe:Structurelle .
+
+# --- BRANCHE : DOMESTIQUE ---
+fe:Domestique a skos:Concept, fe:Artos_Type ;
+    skos:prefLabel "Usage Domestique"@fr ;
+    skos:inScheme fe:ArtefactTaxonomyScheme ;
+    skos:narrower fe:Vaisselle, fe:Mobilier, fe:Hygiene, fe:Outillage .
+
+    fe:Vaisselle a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Vaisselle et Récipients"@fr ;
+        skos:broader fe:Domestique ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Mobilier a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Mobilier"@fr ;
+        skos:broader fe:Domestique ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Hygiene a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Hygiène et Soin"@fr ;
+        skos:broader fe:Domestique ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Outillage a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Outillage"@fr ;
+        skos:broader fe:Domestique ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+# --- BRANCHE : MARTIALE ---
+fe:Martiale a skos:Concept, fe:Artos_Type ;
+    skos:prefLabel "Usage Martial et Militaire"@fr ;
+    skos:inScheme fe:ArtefactTaxonomyScheme ;
+    skos:narrower fe:Armes, fe:Armure, fe:Harnachement .
+
+    fe:Armes a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Armement"@fr ;
+        skos:broader fe:Martiale ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Armure a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Protection et Armure"@fr ;
+        skos:broader fe:Martiale ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Harnachement a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Harnachement et Cavalerie"@fr ;
+        skos:broader fe:Martiale ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+# --- BRANCHE : CULTURELLE ---
+fe:Culturelle a skos:Concept, fe:Artos_Type ;
+    skos:prefLabel "Usage Culturel et Social"@fr ;
+    skos:inScheme fe:ArtefactTaxonomyScheme ;
+    skos:narrower fe:Bijouterie, fe:Textile, fe:Statut, fe:Instruments .
+
+    fe:Bijouterie a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Bijouterie et Parure"@fr ;
+        skos:broader fe:Culturelle ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Textile a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Textile et Costume"@fr ;
+        skos:broader fe:Culturelle ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Statut a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Objet de Statut (Insignes, Sceptres)"@fr ;
+        skos:broader fe:Culturelle ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Instruments a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Instruments de Musique"@fr ;
+        skos:broader fe:Culturelle ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+# --- BRANCHE : SPIRITUELLE ---
+fe:Spirituelle a skos:Concept, fe:Artos_Type ;
+    skos:prefLabel "Usage Spirituel et Religieux"@fr ;
+    skos:inScheme fe:ArtefactTaxonomyScheme ;
+    skos:narrower fe:Icone, fe:Funeraire, fe:Esoterisme, fe:Meuble_Lithurgique .
+
+    fe:Icone a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Icône ou Image sainte"@fr ;
+        skos:broader fe:Spirituelle ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Funeraire a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Objet Funéraire"@fr ;
+        skos:broader fe:Spirituelle ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Esoterisme a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Objet Ésotérique ou Magique"@fr ;
+        skos:broader fe:Spirituelle ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Meuble_Lithurgique a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Mobilier Liturgique (Autels, Chaires)"@fr ;
+        skos:broader fe:Spirituelle ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+# --- BRANCHE : SCIENTIFIQUE ---
+fe:Scientifique a skos:Concept, fe:Artos_Type ;
+    skos:prefLabel "Usage Scientifique et Savant"@fr ;
+    skos:inScheme fe:ArtefactTaxonomyScheme ;
+    skos:narrower fe:Epigraphie, fe:Numismatique, fe:Metrique .
+
+    fe:Epigraphie a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Épigraphie (Inscriptions)"@fr ;
+        skos:broader fe:Scientifique ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Numismatique a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Numismatique (Monnaies)"@fr ;
+        skos:broader fe:Scientifique ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Metrique a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Instruments de Mesure et Métrique"@fr ;
+        skos:broader fe:Scientifique ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+# --- BRANCHE : STRUCTURELLE ---
+fe:Structurelle a skos:Concept, fe:Artos_Type ;
+    skos:prefLabel "Élément Structurel ou Décoratif fixe"@fr ;
+    skos:inScheme fe:ArtefactTaxonomyScheme ;
+    skos:narrower fe:Decoration, fe:Structure, fe:Amenagement .
+
+    fe:Decoration a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Élément de Décoration (Fresque, Stuc, Boiserie)"@fr ;
+        skos:broader fe:Structurelle ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Structure a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Élément de Structure (Chapiteau, Colonne)"@fr ;
+        skos:broader fe:Structurelle ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+    fe:Amenagement a skos:Concept, fe:Artos_SubType ;
+        skos:prefLabel "Aménagement fixe intégré"@fr ;
+        skos:broader fe:Structurelle ;
+        skos:inScheme fe:ArtefactTaxonomyScheme .
+
+# =================================================================
+# 2. RÉFÉRENTIEL DE MOBILITÉ (MobilityType)
+# =================================================================
+
+fe:MobilityScheme a skos:ConceptScheme ;
+    rdfs:label "Référentiel de Mobilité opérationnelle"@fr ;
+    skos:hasTopConcept fe:Mobile, fe:SemiMobile, fe:Fixe .
+
+fe:Mobile a skos:Concept, fe:MobilityType ;
+    skos:prefLabel "Mobile"@fr ;
+    skos:definition "Objet transportable à la main par une seule personne."@fr ;
+    skos:inScheme fe:MobilityScheme .
+
+fe:SemiMobile a skos:Concept, fe:MobilityType ;
+    skos:prefLabel "Semi-mobile"@fr ;
+    skos:definition "Nécessite une aide mécanique ou plusieurs personnes pour le déplacement."@fr ;
+    skos:inScheme fe:MobilityScheme .
+
+fe:Fixe a skos:Concept, fe:MobilityType ;
+    skos:prefLabel "Fixe / Inamovible"@fr ;
+    skos:definition "Objet scellé, intégré au bâti ou nécessitant un démontage complexe."@fr ;
+    skos:inScheme fe:MobilityScheme .
+
+# =================================================================
+# 3. RÉFÉRENTIEL DE FRAGILITÉ (FragilityType)
+# =================================================================
+
+fe:FragilityScheme a skos:ConceptScheme ;
+    rdfs:label "Référentiel de Fragilité et Sensibilité aux agents d'extinction"@fr ;
+    skos:hasTopConcept fe:Thermosensible, fe:Hydrosensible, fe:ShockSensitive, fe:Robust .
+
+fe:Thermosensible a skos:Concept, fe:FragilityType ;
+    skos:prefLabel "Thermosensible"@fr ;
+    skos:definition "Sensible à la chaleur (risque de fonte, décoloration, déformation)."@fr ;
+    skos:inScheme fe:FragilityScheme .
+
+fe:Hydrosensible a skos:Concept, fe:FragilityType ;
+    skos:prefLabel "Hydrosensible"@fr ;
+    skos:definition "Sensible à l'eau et à l'humidité (extinction incendie)."@fr ;
+    skos:inScheme fe:FragilityScheme .
+
+fe:ShockSensitive a skos:Concept, fe:FragilityType ;
+    skos:prefLabel "Fragile (Chocs)"@fr ;
+    skos:definition "Sensible aux manipulations brutales, vibrations et chocs physiques."@fr ;
+    skos:inScheme fe:FragilityScheme .
+
+fe:Robust a skos:Concept, fe:FragilityType ;
+    skos:prefLabel "Robuste"@fr ;
+    skos:definition "Peu sensible aux agents extérieurs immédiats."@fr ;
+    skos:inScheme fe:FragilityScheme .

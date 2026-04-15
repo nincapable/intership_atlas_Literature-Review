@@ -1,195 +1,85 @@
 @prefix fe:   <http://example.org/fire_and_evacuation#> .
-@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-# =================================================================
-# 1. DÉFINITION DES SCHÉMAS (CONCEPT SCHEMES)
-# =================================================================
+# Schémas
+fe:TaxonomyScheme a skos:ConceptScheme ; rdfs:label "Thésaurus de la Taxonomie Biologique"@fr ; skos:hasTopConcept fe:Animal, fe:Plant, fe:Fungus .
+fe:IUCScheme a skos:ConceptScheme ; rdfs:label "Référentiel des Statuts de Conservation UICN"@fr ; skos:hasTopConcept fe:IUCN_EX, fe:IUCN_EW, fe:IUCN_CR, fe:IUCN_EN, fe:IUCN_VU, fe:IUCN_NT, fe:IUCN_LC, fe:IUCN_DD, fe:IUCN_NE .
+fe:FireTraitScheme a skos:ConceptScheme ; rdfs:label "Thésaurus des Traits face au Feu"@fr ; skos:hasTopConcept fe:FlammabilityScale, fe:FireAidingTrait, fe:FireResistingTrait, fe:EmberTypeRoot .
+fe:PlantFireStrategyScheme a skos:ConceptScheme ; rdfs:label "Référentiel des Stratégies de Réponse"@fr ; skos:hasTopConcept fe:FireResponseStrategyRoot, fe:FireFunctionalRoleRoot .
 
-fe:TaxonomyScheme a skos:ConceptScheme ;
-    rdfs:label "Thésaurus de la Taxonomie Biologique"@fr ;
-    skos:prefLabel "Thésaurus de la Taxonomie Biologique"@fr ;
-    skos:hasTopConcept fe:Animal, fe:Plant, fe:Fungus .
+# --- Classification (fe:Taxon) ---
+fe:Animal a skos:Concept, fe:Taxon ; skos:prefLabel "Animal"@fr ; skos:inScheme fe:TaxonomyScheme ; skos:narrower fe:Invertebrate, fe:Vertebrate .
+fe:Invertebrate a skos:Concept, fe:Taxon ; skos:prefLabel "Invertébré"@fr ; skos:broader fe:Animal ; skos:narrower fe:Insect .
+fe:Insect a skos:Concept, fe:Taxon ; skos:prefLabel "Insecte"@fr ; skos:broader fe:Invertebrate .
+fe:Vertebrate a skos:Concept, fe:Taxon ; skos:prefLabel "Vertébré"@fr ; skos:broader fe:Animal ; skos:narrower fe:Mammal, fe:Bird, fe:Fish, fe:Amphibian, fe:Reptile .
+fe:Mammal a skos:Concept, fe:Taxon ; skos:prefLabel "Mammifère"@fr ; skos:broader fe:Vertebrate .
+fe:Bird a skos:Concept, fe:Taxon ; skos:prefLabel "Oiseau"@fr ; skos:broader fe:Vertebrate .
+fe:Fish a skos:Concept, fe:Taxon ; skos:prefLabel "Poisson"@fr ; skos:broader fe:Vertebrate .
+fe:Amphibian a skos:Concept, fe:Taxon ; skos:prefLabel "Amphibien"@fr ; skos:broader fe:Vertebrate .
+fe:Reptile a skos:Concept, fe:Taxon ; skos:prefLabel "Reptile"@fr ; skos:broader fe:Vertebrate .
 
-fe:IUCScheme a skos:ConceptScheme ;
-    rdfs:label "Référentiel des Statuts de Conservation UICN"@fr ;
-    skos:prefLabel "Référentiel des Statuts de Conservation UICN"@fr ;
-    skos:hasTopConcept fe:IUCN_EX, fe:IUCN_EW, fe:IUCN_CR, fe:IUCN_EN, fe:IUCN_VU, fe:IUCN_NT, fe:IUCN_LC, fe:IUCN_DD, fe:IUCN_NE .
+fe:Plant a skos:Concept, fe:Taxon ; skos:prefLabel "Plante / Flore"@fr ; skos:inScheme fe:TaxonomyScheme ; skos:narrower fe:Bryophyte, fe:VascularPlant .
+fe:Bryophyte a skos:Concept, fe:Taxon ; skos:prefLabel "Bryophyte (Mousses)"@fr ; skos:broader fe:Plant .
+fe:VascularPlant a skos:Concept, fe:Taxon ; skos:prefLabel "Plante Vasculaire"@fr ; skos:broader fe:Plant ; skos:narrower fe:Pteridophyte, fe:Spermatophyte .
+fe:Pteridophyte a skos:Concept, fe:Taxon ; skos:prefLabel "Ptéridophyte (Fougères)"@fr ; skos:broader fe:VascularPlant .
+fe:Spermatophyte a skos:Concept, fe:Taxon ; skos:prefLabel "Spermatophyte"@fr ; skos:broader fe:VascularPlant ; skos:narrower fe:Gymnosperme, fe:Angiosperme .
+fe:Gymnosperme a skos:Concept, fe:Taxon ; skos:prefLabel "Gymnosperme"@fr ; skos:broader fe:Spermatophyte .
+fe:Angiosperme a skos:Concept, fe:Taxon ; skos:prefLabel "Angiosperme"@fr ; skos:broader fe:Spermatophyte .
 
-fe:FireTraitScheme a skos:ConceptScheme ;
-    rdfs:label "Thésaurus des Traits et Comportements face au Feu"@fr ;
-    skos:prefLabel "Thésaurus des Traits et Comportements face au Feu"@fr ;
-    skos:hasTopConcept fe:FlammabilityScale, fe:FireAidingTrait, fe:FireResistingTrait, fe:EmberTypeRoot .
+fe:Fungus a skos:Concept, fe:Taxon ; skos:prefLabel "Champignon / Fongique"@fr ; skos:inScheme fe:TaxonomyScheme ; skos:narrower fe:Lichen .
+fe:Lichen a skos:Concept, fe:Taxon ; skos:prefLabel "Lichen"@fr ; skos:broader fe:Fungus .
 
-fe:PlantFireStrategyScheme a skos:ConceptScheme ;
-    rdfs:label "Référentiel des Stratégies de Réponse et Rôles Fonctionnels"@fr ;
-    skos:prefLabel "Référentiel des Stratégies de Réponse et Rôles Fonctionnels"@fr ;
-    skos:hasTopConcept fe:FireResponseStrategyRoot, fe:FireFunctionalRoleRoot .
+# --- UICN (fe:IUCNCategory) ---
+fe:IUCN_EX a skos:Concept, fe:IUCNCategory ; skos:prefLabel "Éteint (EX)"@fr ; skos:inScheme fe:IUCScheme .
+fe:IUCN_EW a skos:Concept, fe:IUCNCategory ; skos:prefLabel "Éteint à l'état sauvage (EW)"@fr ; skos:inScheme fe:IUCScheme .
+fe:IUCN_CR a skos:Concept, fe:IUCNCategory ; skos:prefLabel "En danger critique (CR)"@fr ; skos:inScheme fe:IUCScheme .
+fe:IUCN_EN a skos:Concept, fe:IUCNCategory ; skos:prefLabel "En danger (EN)"@fr ; skos:inScheme fe:IUCScheme .
+fe:IUCN_VU a skos:Concept, fe:IUCNCategory ; skos:prefLabel "Vulnérable (VU)"@fr ; skos:inScheme fe:IUCScheme .
+fe:IUCN_NT a skos:Concept, fe:IUCNCategory ; skos:prefLabel "Quasi menacé (NT)"@fr ; skos:inScheme fe:IUCScheme .
+fe:IUCN_LC a skos:Concept, fe:IUCNCategory ; skos:prefLabel "Préoccupation mineure (LC)"@fr ; skos:inScheme fe:IUCScheme .
+fe:IUCN_DD a skos:Concept, fe:IUCNCategory ; skos:prefLabel "Données insuffisantes (DD)"@fr ; skos:inScheme fe:IUCScheme .
+fe:IUCN_NE a skos:Concept, fe:IUCNCategory ; skos:prefLabel "Non évalué (NE)"@fr ; skos:inScheme fe:IUCScheme .
 
-# =================================================================
-# 2. CLASSIFICATION TAXONOMIQUE
-# =================================================================
+# --- Traits Feu (fe:FlammabilityLevel, fe:FireAidingTrait, etc.) ---
+fe:FlammabilityScale a skos:Concept ; skos:prefLabel "Échelle d'Inflammabilité"@fr ; skos:inScheme fe:FireTraitScheme ; skos:narrower fe:Flam_Extreme, fe:Flam_Very_High, fe:Flam_High, fe:Flam_Moderate, fe:Flam_Low, fe:Flam_NonFlammable .
+fe:Flam_Extreme a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Extrêmement Inflammable"@fr ; skos:broader fe:FlammabilityScale .
+fe:Flam_Very_High a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Très Inflammable"@fr ; skos:broader fe:FlammabilityScale .
+fe:Flam_High a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Hautement Inflammable"@fr ; skos:broader fe:FlammabilityScale .
+fe:Flam_Moderate a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Moyennement Inflammable"@fr ; skos:broader fe:FlammabilityScale .
+fe:Flam_Low a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Difficilement Inflammable"@fr ; skos:broader fe:FlammabilityScale .
+fe:Flam_NonFlammable a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Non Inflammable"@fr ; skos:broader fe:FlammabilityScale .
 
-fe:Animal a skos:Concept, fe:Taxon ;
-    skos:prefLabel "Animal"@fr ;
-    skos:inScheme fe:TaxonomyScheme ;
-    skos:topConceptOf fe:TaxonomyScheme ;
-    skos:narrower fe:Invertebrate, fe:Vertebrate .
+fe:FireAidingTrait a skos:Concept ; skos:prefLabel "Traits favorisant le feu"@fr ; skos:inScheme fe:FireTraitScheme ; skos:narrower fe:EssentialOils, fe:ResinExudate, fe:Marcescence, fe:FineFuelStructure, fe:LadderFuelArchitecture .
+fe:EssentialOils a skos:Concept, fe:FireAidingTrait ; skos:prefLabel "Huiles Essentielles"@fr ; skos:broader fe:FireAidingTrait .
+fe:ResinExudate a skos:Concept, fe:FireAidingTrait ; skos:prefLabel "Exsudats Résineux"@fr ; skos:broader fe:FireAidingTrait .
+fe:Marcescence a skos:Concept, fe:FireAidingTrait ; skos:prefLabel "Marcescence"@fr ; skos:broader fe:FireAidingTrait .
+fe:FineFuelStructure a skos:Concept, fe:FireAidingTrait ; skos:prefLabel "Structure de Brindilles Fines"@fr ; skos:broader fe:FireAidingTrait .
+fe:LadderFuelArchitecture a skos:Concept, fe:FireAidingTrait ; skos:prefLabel "Architecture en Échelle"@fr ; skos:broader fe:FireAidingTrait .
 
-    fe:Invertebrate a skos:Concept, fe:Taxon ;
-        skos:prefLabel "Invertébré"@fr ;
-        skos:broader fe:Animal ;
-        skos:inScheme fe:TaxonomyScheme ;
-        skos:narrower fe:Insect .
+fe:FireResistingTrait a skos:Concept ; skos:prefLabel "Traits résistant au feu"@fr ; skos:inScheme fe:FireTraitScheme ; skos:narrower fe:SuberousBark, fe:ThermalInertiaTrunk, fe:HighSucculence, fe:MineralContent, fe:SelfPruning, fe:CrownDiscontinuity .
+fe:SuberousBark a skos:Concept, fe:FireResistingTrait ; skos:prefLabel "Écorce Subéreuse (Liège)"@fr ; skos:broader fe:FireResistingTrait .
+fe:ThermalInertiaTrunk a skos:Concept, fe:FireResistingTrait ; skos:prefLabel "Inertie Thermique du Tronc"@fr ; skos:broader fe:FireResistingTrait .
+fe:HighSucculence a skos:Concept, fe:FireResistingTrait ; skos:prefLabel "Succulence / Teneur en eau"@fr ; skos:broader fe:FireResistingTrait .
+fe:MineralContent a skos:Concept, fe:FireResistingTrait ; skos:prefLabel "Teneur en Sels Minéraux"@fr ; skos:broader fe:FireResistingTrait .
+fe:SelfPruning a skos:Concept, fe:FireResistingTrait ; skos:prefLabel "Auto-élagage"@fr ; skos:broader fe:FireResistingTrait .
+fe:CrownDiscontinuity a skos:Concept, fe:FireResistingTrait ; skos:prefLabel "Discontinuité du Houppier"@fr ; skos:broader fe:FireResistingTrait .
 
-        fe:Insect a skos:Concept, fe:Taxon ;
-            skos:prefLabel "Insecte"@fr ;
-            skos:broader fe:Invertebrate ;
-            skos:inScheme fe:TaxonomyScheme .
+# --- Stratégies (fe:FireResponseStrategy) ---
+fe:FireFunctionalRoleRoot a skos:Concept ; skos:prefLabel "Rôles fonctionnels face au feu"@fr ; skos:inScheme fe:PlantFireStrategyScheme ; skos:narrower fe:Role_Screen, fe:Role_Ladder, fe:Role_Spotter, fe:Role_Retardant .
+fe:Role_Screen a skos:Concept, fe:FireResponseStrategy ; skos:prefLabel "Écran / Bouclier"@fr ; skos:broader fe:FireFunctionalRoleRoot .
+fe:Role_Ladder a skos:Concept, fe:FireResponseStrategy ; skos:prefLabel "Vecteur Vertical (Échelle)"@fr ; skos:broader fe:FireFunctionalRoleRoot .
+fe:Role_Spotter a skos:Concept, fe:FireResponseStrategy ; skos:prefLabel "Diffuseur (Projection)"@fr ; skos:broader fe:FireFunctionalRoleRoot .
+fe:Role_Retardant a skos:Concept, fe:FireResponseStrategy ; skos:prefLabel "Retardateur (pare-feu Vert)"@fr ; skos:broader fe:FireFunctionalRoleRoot .
 
-    fe:Vertebrate a skos:Concept, fe:Taxon ;
-        skos:prefLabel "Vertébré"@fr ;
-        skos:broader fe:Animal ;
-        skos:inScheme fe:TaxonomyScheme ;
-        skos:narrower fe:Mammal, fe:Bird, fe:Fish, fe:Amphibian, fe:Reptile .
+fe:FireResponseStrategyRoot a skos:Concept ; skos:prefLabel "Stratégies de réponse au feu"@fr ; skos:inScheme fe:PlantFireStrategyScheme ; skos:narrower fe:Strategy_Resister, fe:Strategy_Endurer, fe:Strategy_Recruiter .
+fe:Strategy_Resister a skos:Concept, fe:FireResponseStrategy ; skos:prefLabel "Résistant"@fr ; skos:broader fe:FireResponseStrategyRoot .
+fe:Strategy_Endurer a skos:Concept, fe:FireResponseStrategy ; skos:prefLabel "Endurant (Rejette)"@fr ; skos:broader fe:FireResponseStrategyRoot .
+fe:Strategy_Recruiter a skos:Concept, fe:FireResponseStrategy ; skos:prefLabel "Recruteur (Graines)"@fr ; skos:broader fe:FireResponseStrategyRoot .
 
-        fe:Mammal a skos:Concept, fe:Taxon ; skos:prefLabel "Mammifère"@fr ; skos:broader fe:Vertebrate ; skos:inScheme fe:TaxonomyScheme .
-        fe:Bird a skos:Concept, fe:Taxon ; skos:prefLabel "Oiseau"@fr ; skos:broader fe:Vertebrate ; skos:inScheme fe:TaxonomyScheme .
-        fe:Fish a skos:Concept, fe:Taxon ; skos:prefLabel "Poisson"@fr ; skos:broader fe:Vertebrate ; skos:inScheme fe:TaxonomyScheme .
-        fe:Amphibian a skos:Concept, fe:Taxon ; skos:prefLabel "Amphibien"@fr ; skos:broader fe:Vertebrate ; skos:inScheme fe:TaxonomyScheme .
-        fe:Reptile a skos:Concept, fe:Taxon ; skos:prefLabel "Reptile"@fr ; skos:broader fe:Vertebrate ; skos:inScheme fe:TaxonomyScheme .
-
-fe:Plant a skos:Concept, fe:Taxon ;
-    skos:prefLabel "Plante / Flore"@fr ;
-    skos:inScheme fe:TaxonomyScheme ;
-    skos:topConceptOf fe:TaxonomyScheme ;
-    skos:narrower fe:Bryophyte, fe:VascularPlant .
-
-    fe:Bryophyte a skos:Concept, fe:Taxon ;
-        skos:prefLabel "Bryophyte (Mousses)"@fr ;
-        skos:broader fe:Plant ;
-        skos:inScheme fe:TaxonomyScheme .
-
-    fe:VascularPlant a skos:Concept, fe:Taxon ;
-        skos:prefLabel "Plante Vasculaire"@fr ;
-        skos:broader fe:Plant ;
-        skos:inScheme fe:TaxonomyScheme ;
-        skos:narrower fe:Pteridophyte, fe:Spermatophyte .
-
-        fe:Pteridophyte a skos:Concept, fe:Taxon ; skos:prefLabel "Ptéridophyte (Fougères)"@fr ; skos:broader fe:VascularPlant ; skos:inScheme fe:TaxonomyScheme .
-        fe:Spermatophyte a skos:Concept, fe:Taxon ;
-            skos:prefLabel "Spermatophyte"@fr ;
-            skos:broader fe:VascularPlant ;
-            skos:inScheme fe:TaxonomyScheme ;
-            skos:narrower fe:Gymnosperme, fe:Angiosperme .
-
-            fe:Gymnosperme a skos:Concept, fe:Taxon ; skos:prefLabel "Gymnosperme"@fr ; skos:broader fe:Spermatophyte ; skos:inScheme fe:TaxonomyScheme .
-            fe:Angiosperme a skos:Concept, fe:Taxon ; skos:prefLabel "Angiosperme"@fr ; skos:broader fe:Spermatophyte ; skos:inScheme fe:TaxonomyScheme .
-
-fe:Fungus a skos:Concept, fe:Taxon ;
-    skos:prefLabel "Champignon / Fongique"@fr ;
-    skos:inScheme fe:TaxonomyScheme ;
-    skos:topConceptOf fe:TaxonomyScheme ;
-    skos:narrower fe:Lichen .
-
-    fe:Lichen a skos:Concept, fe:Taxon ; skos:prefLabel "Lichen"@fr ; skos:broader fe:Fungus ; skos:inScheme fe:TaxonomyScheme .
-
-# =================================================================
-# 3. STATUT DE CONSERVATION (UICN)
-# =================================================================
-
-fe:IUCN_EX a skos:Concept ; skos:prefLabel "Éteint (EX)"@fr ; skos:inScheme fe:IUCScheme ; skos:topConceptOf fe:IUCScheme .
-fe:IUCN_EW a skos:Concept ; skos:prefLabel "Éteint à l'état sauvage (EW)"@fr ; skos:inScheme fe:IUCScheme ; skos:topConceptOf fe:IUCScheme .
-fe:IUCN_CR a skos:Concept ; skos:prefLabel "En danger critique (CR)"@fr ; skos:inScheme fe:IUCScheme ; skos:topConceptOf fe:IUCScheme .
-fe:IUCN_EN a skos:Concept ; skos:prefLabel "En danger (EN)"@fr ; skos:inScheme fe:IUCScheme ; skos:topConceptOf fe:IUCScheme .
-fe:IUCN_VU a skos:Concept ; skos:prefLabel "Vulnérable (VU)"@fr ; skos:inScheme fe:IUCScheme ; skos:topConceptOf fe:IUCScheme .
-fe:IUCN_NT a skos:Concept ; skos:prefLabel "Quasi menacé (NT)"@fr ; skos:inScheme fe:IUCScheme ; skos:topConceptOf fe:IUCScheme .
-fe:IUCN_LC a skos:Concept ; skos:prefLabel "Préoccupation mineure (LC)"@fr ; skos:inScheme fe:IUCScheme ; skos:topConceptOf fe:IUCScheme .
-fe:IUCN_DD a skos:Concept ; skos:prefLabel "Données insuffisantes (DD)"@fr ; skos:inScheme fe:IUCScheme ; skos:topConceptOf fe:IUCScheme .
-fe:IUCN_NE a skos:Concept ; skos:prefLabel "Non évalué (NE)"@fr ; skos:inScheme fe:IUCScheme ; skos:topConceptOf fe:IUCScheme .
-
-# =================================================================
-# 4. INFLAMMABILITÉ ET TRAITS FEU
-# =================================================================
-
-fe:FlammabilityScale a skos:Concept ;
-    skos:prefLabel "Échelle d'Inflammabilité"@fr ;
-    skos:inScheme fe:FireTraitScheme ;
-    skos:topConceptOf fe:FireTraitScheme ;
-    skos:narrower fe:Flam_Extreme, fe:Flam_Very_High, fe:Flam_High, fe:Flam_Moderate, fe:Flam_Low, fe:Flam_NonFlammable .
-
-fe:Flam_Extreme a skos:Concept ; skos:prefLabel "Extrêmement Inflammable"@fr ; skos:broader fe:FlammabilityScale ; skos:inScheme fe:FireTraitScheme .
-fe:Flam_Very_High a skos:Concept ; skos:prefLabel "Très Inflammable"@fr ; skos:broader fe:FlammabilityScale ; skos:inScheme fe:FireTraitScheme .
-fe:Flam_High a skos:Concept ; skos:prefLabel "Hautement Inflammable"@fr ; skos:broader fe:FlammabilityScale ; skos:inScheme fe:FireTraitScheme .
-fe:Flam_Moderate a skos:Concept ; skos:prefLabel "Moyennement Inflammable"@fr ; skos:broader fe:FlammabilityScale ; skos:inScheme fe:FireTraitScheme .
-fe:Flam_Low a skos:Concept ; skos:prefLabel "Difficilement Inflammable"@fr ; skos:broader fe:FlammabilityScale ; skos:inScheme fe:FireTraitScheme .
-fe:Flam_NonFlammable a skos:Concept ; skos:prefLabel "Non Inflammable"@fr ; skos:broader fe:FlammabilityScale ; skos:inScheme fe:FireTraitScheme .
-
-# --- Traits favorisant le feu ---
-fe:FireAidingTrait a skos:Concept ;
-    skos:prefLabel "Traits favorisant le feu"@fr ;
-    skos:inScheme fe:FireTraitScheme ;
-    skos:topConceptOf fe:FireTraitScheme ;
-    skos:narrower fe:EssentialOils, fe:ResinExudate, fe:Marcescence, fe:FineFuelStructure, fe:LadderFuelArchitecture .
-
-fe:EssentialOils a skos:Concept ; skos:prefLabel "Huiles Essentielles"@fr ; skos:broader fe:FireAidingTrait ; skos:inScheme fe:FireTraitScheme .
-fe:ResinExudate a skos:Concept ; skos:prefLabel "Exsudats Résineux"@fr ; skos:broader fe:FireAidingTrait ; skos:inScheme fe:FireTraitScheme .
-fe:Marcescence a skos:Concept ; skos:prefLabel "Marcescence"@fr ; skos:broader fe:FireAidingTrait ; skos:inScheme fe:FireTraitScheme .
-fe:FineFuelStructure a skos:Concept ; skos:prefLabel "Structure de Brindilles Fines"@fr ; skos:broader fe:FireAidingTrait ; skos:inScheme fe:FireTraitScheme .
-fe:LadderFuelArchitecture a skos:Concept ; skos:prefLabel "Architecture en Échelle"@fr ; skos:broader fe:FireAidingTrait ; skos:inScheme fe:FireTraitScheme .
-
-# --- Traits résistant au feu ---
-fe:FireResistingTrait a skos:Concept ;
-    skos:prefLabel "Traits résistant au feu"@fr ;
-    skos:inScheme fe:FireTraitScheme ;
-    skos:topConceptOf fe:FireTraitScheme ;
-    skos:narrower fe:SuberousBark, fe:ThermalInertiaTrunk, fe:HighSucculence, fe:MineralContent, fe:SelfPruning, fe:CrownDiscontinuity .
-
-fe:SuberousBark a skos:Concept ; skos:prefLabel "Écorce Subéreuse (Liège)"@fr ; skos:broader fe:FireResistingTrait ; skos:inScheme fe:FireTraitScheme .
-fe:ThermalInertiaTrunk a skos:Concept ; skos:prefLabel "Inertie Thermique du Tronc"@fr ; skos:broader fe:FireResistingTrait ; skos:inScheme fe:FireTraitScheme .
-fe:HighSucculence a skos:Concept ; skos:prefLabel "Succulence / Teneur en eau"@fr ; skos:broader fe:FireResistingTrait ; skos:inScheme fe:FireTraitScheme .
-fe:MineralContent a skos:Concept ; skos:prefLabel "Teneur en Sels Minéraux"@fr ; skos:broader fe:FireResistingTrait ; skos:inScheme fe:FireTraitScheme .
-fe:SelfPruning a skos:Concept ; skos:prefLabel "Auto-élagage"@fr ; skos:broader fe:FireResistingTrait ; skos:inScheme fe:FireTraitScheme .
-fe:CrownDiscontinuity a skos:Concept ; skos:prefLabel "Discontinuité du Houppier"@fr ; skos:broader fe:FireResistingTrait ; skos:inScheme fe:FireTraitScheme .
-
-# =================================================================
-# 5. RÔLES ET STRATÉGIES
-# =================================================================
-
-fe:FireFunctionalRoleRoot a skos:Concept ;
-    skos:prefLabel "Rôles fonctionnels face au feu"@fr ;
-    skos:inScheme fe:PlantFireStrategyScheme ;
-    skos:topConceptOf fe:PlantFireStrategyScheme ;
-    skos:narrower fe:Role_Screen, fe:Role_Ladder, fe:Role_Spotter, fe:Role_Retardant .
-
-fe:Role_Screen a skos:Concept ; skos:prefLabel "Écran / Bouclier"@fr ; skos:broader fe:FireFunctionalRoleRoot ; skos:inScheme fe:PlantFireStrategyScheme .
-fe:Role_Ladder a skos:Concept ; skos:prefLabel "Vecteur Vertical (Échelle)"@fr ; skos:broader fe:FireFunctionalRoleRoot ; skos:inScheme fe:PlantFireStrategyScheme .
-fe:Role_Spotter a skos:Concept ; skos:prefLabel "Diffuseur (Projection)"@fr ; skos:broader fe:FireFunctionalRoleRoot ; skos:inScheme fe:PlantFireStrategyScheme .
-fe:Role_Retardant a skos:Concept ; skos:prefLabel "Retardateur (pare-feu Vert)"@fr ; skos:broader fe:FireFunctionalRoleRoot ; skos:inScheme fe:PlantFireStrategyScheme .
-
-fe:FireResponseStrategyRoot a skos:Concept ;
-    skos:prefLabel "Stratégies de réponse au feu"@fr ;
-    skos:inScheme fe:PlantFireStrategyScheme ;
-    skos:topConceptOf fe:PlantFireStrategyScheme ;
-    skos:narrower fe:Strategy_Resister, fe:Strategy_Endurer, fe:Strategy_Recruiter .
-
-fe:Strategy_Resister a skos:Concept ; skos:prefLabel "Résistant"@fr ; skos:broader fe:FireResponseStrategyRoot ; skos:inScheme fe:PlantFireStrategyScheme .
-fe:Strategy_Endurer a skos:Concept ; skos:prefLabel "Endurant (Rejette)"@fr ; skos:broader fe:FireResponseStrategyRoot ; skos:inScheme fe:PlantFireStrategyScheme .
-fe:Strategy_Recruiter a skos:Concept ; skos:prefLabel "Recruteur (Graines)"@fr ; skos:broader fe:FireResponseStrategyRoot ; skos:inScheme fe:PlantFireStrategyScheme .
-
-# =================================================================
-# 6. DÉBRIS ET ESCARBILLES
-# =================================================================
-
-fe:EmberTypeRoot a skos:Concept ;
-    skos:prefLabel "Types de débris et escarbilles"@fr ;
-    skos:inScheme fe:FireTraitScheme ;
-    skos:topConceptOf fe:FireTraitScheme ;
-    skos:narrower fe:Ember_Ash, fe:Ember_BarkFlake, fe:Ember_Cone, fe:noEmber .
-
-fe:Ember_Ash a skos:Concept ; skos:prefLabel "Cendres légères"@fr ; skos:broader fe:EmberTypeRoot ; skos:inScheme fe:FireTraitScheme .
-fe:Ember_BarkFlake a skos:Concept ; skos:prefLabel "Lambeaux d'écorce"@fr ; skos:broader fe:EmberTypeRoot ; skos:inScheme fe:FireTraitScheme .
-fe:Ember_Cone a skos:Concept ; skos:prefLabel "Cônes / Pommes de pin"@fr ; skos:broader fe:EmberTypeRoot ; skos:inScheme fe:FireTraitScheme .
-fe:noEmber a skos:Concept ; skos:prefLabel "Ne produit pas d'escarbilles"@fr ; skos:broader fe:EmberTypeRoot ; skos:inScheme fe:FireTraitScheme .
+# --- Escarbilles (fe:EmberType) ---
+fe:EmberTypeRoot a skos:Concept ; skos:prefLabel "Types de débris et escarbilles"@fr ; skos:inScheme fe:FireTraitScheme ; skos:narrower fe:Ember_Ash, fe:Ember_BarkFlake, fe:Ember_Cone, fe:noEmber .
+fe:Ember_Ash a skos:Concept, fe:EmberType ; skos:prefLabel "Cendres légères"@fr ; skos:broader fe:EmberTypeRoot .
+fe:Ember_BarkFlake a skos:Concept, fe:EmberType ; skos:prefLabel "Lambeaux d'écorce"@fr ; skos:broader fe:EmberTypeRoot .
+fe:Ember_Cone a skos:Concept, fe:EmberType ; skos:prefLabel "Cônes / Pommes de pin"@fr ; skos:broader fe:EmberTypeRoot .
+fe:noEmber a skos:Concept, fe:EmberType ; skos:prefLabel "Ne produit pas d'escarbilles"@fr ; skos:broader fe:EmberTypeRoot .

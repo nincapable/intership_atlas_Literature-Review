@@ -7,11 +7,19 @@
 fe:core a owl:Ontology ;
     rdfs:label "Fire and Evacuation Ontology - Core Entry Point"@fr ;
     rdfs:comment "Point d'entrée unique important les modules thématiques."@fr ;
-    # Importation des fichiers locaux ou distants
-    owl:imports <http://example.org/fire_and_evacuation/building_module> ,
-                <http://example.org/fire_and_evacuation/axis_module> ,
-                <http://example.org/fire_and_evacuation/artefact_module> ,
-                <http://example.org/fire_and_evacuation/safety_module> .
+    # Importation des fichiers locaux du dossier Modules
+    owl:imports <fe_building_module.ttl> ,
+                <fe_axis_module.ttl> ,
+                <fe_artefact_module.ttl> ,
+                <fe_hazard.ttl> ,
+                <fe_heritageSite.ttl> ,
+                <fe_Impact.ttl> ,
+                <fe_natural_space.ttl> ,
+                <fe_population.ttl> ,
+                <fe_safety.ttl> ,
+                <fe_victim.ttl> ,
+                <fe_weather.ttl> ,
+                <fe_zone.ttl> .
 
 fe:hasRiskExposure a owl:ObjectProperty ;
     rdfs:label "exposition au risque"@fr ;

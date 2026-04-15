@@ -1,0 +1,69 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix fe: <http://example.org/fire_and_evacuation#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# =================================================================
+# 1. RÉFÉRENTIEL DE SÉVÉRITÉ (Dégâts matériels et naturels)
+# =================================================================
+
+fe:SeverityScheme a skos:ConceptScheme ;
+    rdfs:label "Échelle de Sévérité des Dégâts"@fr .
+
+fe:Severity_None a skos:Concept, fe:ImpactSeverityLevel ;
+    skos:prefLabel "Aucun dégât"@fr ;
+    skos:inScheme fe:SeverityScheme .
+
+fe:Severity_Light a skos:Concept, fe:ImpactSeverityLevel ;
+    skos:prefLabel "Léger"@fr ;
+    skos:definition "Dommages superficiels n'affectant pas la structure ou la viabilité."@fr ;
+    skos:inScheme fe:SeverityScheme .
+
+fe:Severity_Moderate a skos:Concept, fe:ImpactSeverityLevel ;
+    skos:prefLabel "Modéré"@fr ;
+    skos:definition "Dommages nécessitant des réparations significatives ou affectant partiellement l'écosystème."@fr ;
+    skos:inScheme fe:SeverityScheme .
+
+fe:Severity_Severe a skos:Concept, fe:ImpactSeverityLevel ;
+    skos:prefLabel "Grave"@fr ;
+    skos:definition "Structure compromise ou destruction majeure de la biomasse."@fr ;
+    skos:inScheme fe:SeverityScheme .
+
+fe:Severity_Total a skos:Concept, fe:ImpactSeverityLevel ;
+    skos:prefLabel "Destruction Totale"@fr ;
+    skos:inScheme fe:SeverityScheme .
+
+# =================================================================
+# 2. RÉFÉRENTIEL DE TRIAGE MÉDICAL (Impact Humain)
+# =================================================================
+
+fe:TriageScheme a skos:ConceptScheme ;
+    rdfs:label "Codes de Triage des Victimes"@fr .
+
+fe:Triage_UrgenceAbsolue a skos:Concept, fe:TriageCategory ;
+    skos:prefLabel "Urgence Absolue (UA)"@fr ;
+    skos:altLabel "Rouge"@fr ;
+    skos:definition "Victimes présentant des blessures menaçant le pronostic vital immédiat."@fr ;
+    skos:inScheme fe:TriageScheme .
+
+fe:Triage_UrgenceRelative a skos:Concept, fe:TriageCategory ;
+    skos:prefLabel "Urgence Relative (UR)"@fr ;
+    skos:altLabel "Jaune"@fr ;
+    skos:definition "Blessés graves nécessitant une hospitalisation mais dont le pronostic vital n'est pas engagé à l'immédiat."@fr ;
+    skos:inScheme fe:TriageScheme .
+
+fe:Triage_BlesséLéger a skos:Concept, fe:TriageCategory ;
+    skos:prefLabel "Blessé Léger (BL)"@fr ;
+    skos:altLabel "Vert"@fr ;
+    skos:definition "Victimes valides présentant des blessures mineures."@fr ;
+    skos:inScheme fe:TriageScheme .
+
+fe:Triage_Décédé a skos:Concept, fe:TriageCategory ;
+    skos:prefLabel "Décédé / Urgence Dépassée"@fr ;
+    skos:altLabel "Noir"@fr ;
+    skos:inScheme fe:TriageScheme .
+
+fe:Triage_Impliqué a skos:Concept, fe:TriageCategory ;
+    skos:prefLabel "Impliqué"@fr ;
+    skos:altLabel "Gris"@fr ;
+    skos:definition "Personne présente sur les lieux, non blessée physiquement mais nécessitant un soutien psychologique ou un recensement."@fr ;
+    skos:inScheme fe:TriageScheme .

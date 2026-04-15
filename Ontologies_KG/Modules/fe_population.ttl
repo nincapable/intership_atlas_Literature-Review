@@ -4,70 +4,80 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-# --- Niveau 1 : La Racine ---
-fe:Population a owl:Class ; rdfs:subClassOf crm:E74_Group .
+# =================================================================
+# 1. STRUCTURE GLOBALE DE LA POPULATION
+# =================================================================
 
-# --- Niveau 2 : Les Conteneurs de Dimensions (PopPart) ---
-fe:PopulationPartition a owl:Class ; rdfs:label "Conteneur de partition"@fr .
+fe:Population a owl:Class ; 
+    rdfs:subClassOf crm:E74_Group ;
+    rdfs:label "Population"@fr .
 
-fe:MobilityPart rdfs:subClassOf fe:PopulationPartition ; rdfs:label "Dimension Mobilité"@fr .
-fe:GroupPart    rdfs:subClassOf fe:PopulationPartition ; rdfs:label "Dimension Groupe"@fr .
-fe:TypePart     rdfs:subClassOf fe:PopulationPartition ; rdfs:label "Dimension Type"@fr .
+# --- Système de Partitions (Les tiroirs de données) ---
 
-# --- Niveau 3 : Les Propriétés de Liaison vers les Conteneurs ---
+fe:PopulationPartition a owl:Class ; 
+    rdfs:label "Partition de Population"@fr .
+
+fe:MobilityPart rdfs:subClassOf fe:PopulationPartition ; rdfs:label "Partition Mobilité"@fr .
+fe:GroupPart    rdfs:subClassOf fe:PopulationPartition ; rdfs:label "Partition Groupe"@fr .
+fe:TypePart     rdfs:subClassOf fe:PopulationPartition ; rdfs:label "Partition Statutaire"@fr .
+
 fe:hasMobilityPart a owl:ObjectProperty ; rdfs:domain fe:Population ; rdfs:range fe:MobilityPart .
 fe:hasGroupPart    a owl:ObjectProperty ; rdfs:domain fe:Population ; rdfs:range fe:GroupPart .
 fe:hasTypePart     a owl:ObjectProperty ; rdfs:domain fe:Population ; rdfs:range fe:TypePart .
 
-# --- La valeur de proportion (La donnée chiffrée) ---
 fe:proportionValue a owl:DatatypeProperty ;
     rdfs:label "valeur de proportion"@fr ;
+    rdfs:comment "Valeur entre 0 et 1 ou pourcentage."@fr ;
     rdfs:domain fe:PopulationPartition ;
     rdfs:range xsd:float .
 
-# Liaison vers la classe de mobilité (Valid, PMR...)
+# =================================================================
+# 2. CLASSES DE RÉFÉRENTIELS (Points d'ancrage SKOS)
+# =================================================================
+
+fe:MobilityClass a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:VictimGroup a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:PopType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:RiskPerceptionLevel a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:AwarenessLevel a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:TrainingLevel a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:EducationLevel a owl:Class ; rdfs:subClassOf crm:E55_Type .
+
+# =================================================================
+# 3. PROPRIÉTÉS DE LIAISON
+# =================================================================
+
+# Liaisons au sein des partitions
 fe:hasPartitionMobilityType a owl:ObjectProperty ;
     rdfs:domain fe:MobilityPart ;
     rdfs:range fe:MobilityClass .
 
-fe:hasVelocity a owl:ObjectProperty ;
-    rdfs:label "vélocité moyenne"@fr ;
-    rdfs:comment "Vitesse de déplacement moyenne pour cette partition de population (ex: 1.2 m/s)."@fr ;
-    rdfs:domain fe:MobilityPart ;
-    rdfs:range crm:E54_Dimension .
-
-# Liaison vers le groupe (Rescue, Civilian...)
 fe:hasPartitionGroup a owl:ObjectProperty ;
     rdfs:domain fe:GroupPart ;
     rdfs:range fe:VictimGroup .
 
-# Liaison vers le groupe (Rescue, Civilian...)
 fe:hasPartitionType a owl:ObjectProperty ;
     rdfs:domain fe:TypePart ;
     rdfs:range fe:PopType .
 
-# --- Propriétés qualitatives de la Population ---
+fe:hasVelocity a owl:ObjectProperty ;
+    rdfs:label "vélocité moyenne"@fr ;
+    rdfs:domain fe:MobilityPart ;
+    rdfs:range crm:E54_Dimension .
 
+# Facteurs Humains (Qualitatifs)
 fe:hasRiskPerception a owl:ObjectProperty ;
-    rdfs:label "perception du risque"@fr ;
-    rdfs:comment "Évalue la conscience du danger immédiat par le groupe."@fr ;
     rdfs:domain fe:Population ;
     rdfs:range fe:RiskPerceptionLevel .
 
 fe:hasAwareness a owl:ObjectProperty ;
-    rdfs:label "sensibilisation"@fr ;
-    rdfs:comment "Niveau de connaissance théorique des procédures de sécurité."@fr ;
     rdfs:domain fe:Population ;
     rdfs:range fe:AwarenessLevel .
 
 fe:hasTraining a owl:ObjectProperty ;
-    rdfs:label "entraînement"@fr ;
-    rdfs:comment "Capacité pratique acquise par des exercices ou une formation métier."@fr ;
     rdfs:domain fe:Population ;
     rdfs:range fe:TrainingLevel .
 
-# Ajout de l'éducation comme demandé précédemment
 fe:hasEducationLevel a owl:ObjectProperty ;
-    rdfs:label "niveau d'éducation"@fr ;
     rdfs:domain fe:Population ;
     rdfs:range fe:EducationLevel .

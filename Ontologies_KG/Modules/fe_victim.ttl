@@ -4,53 +4,65 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-# --- La Classe Victime ---
+# =================================================================
+# 1. LA CLASSE VICTIME
+# =================================================================
+
 fe:Victim a owl:Class ;
     rdfs:subClassOf crm:E21_Person ;
     rdfs:label "Victime / Personne Impliquée"@fr .
 
-# --- 1. Classe de Triage (Couleurs) ---
+# =================================================================
+# 2. PROPRIÉTÉS DE CLASSIFICATION (Vers SKOS)
+# =================================================================
+
+# --- Triage ---
+fe:TriageCategory a owl:Class ; rdfs:subClassOf crm:E55_Type .
+
 fe:hasTriageCategory a owl:ObjectProperty ;
     rdfs:label "catégorie de triage"@fr ;
     rdfs:domain fe:Victim ;
-    rdfs:range fe:TriageCategory . # Instance de Vert, Jaune, Rouge, etc.
+    rdfs:range fe:TriageCategory .
 
-# Propriété pour définir le genre (Sexe)
-# On utilise P2_has_type car c'est une classification de l'individu
+# --- Genre ---
+fe:GenderType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+
 fe:hasGender a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P2_has_type ;
     rdfs:domain fe:Victim ;
     rdfs:range fe:GenderType .
 
-# Instances du Thésaurus
-fe:GenderType a owl:Class ; rdfs:subClassOf crm:E55_Type ;
-    owl:oneOf ( fe:Male fe:Female ) .
+# --- Groupe d'appartenance ---
+fe:VictimGroup a owl:Class ; rdfs:subClassOf crm:E55_Type .
 
-# Propriété pour définir l'âge
+fe:hasVictimGroup a owl:ObjectProperty ;
+    rdfs:label "groupe d'appartenance"@fr ;
+    rdfs:domain fe:Victim ;
+    rdfs:range fe:VictimGroup .
+
+# =================================================================
+# 3. DIMENSIONS PHYSIQUES ET TEMPORELLES
+# =================================================================
+
+fe:AgeDimension a owl:Class ;
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:label "Dimension d'âge"@fr .
+
 fe:hasAge a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:domain fe:Victim ;
     rdfs:range fe:AgeDimension .
 
-# Classe spécifique pour l'âge
-fe:AgeDimension a owl:Class ;
-    rdfs:subClassOf crm:E54_Dimension .
-# fe:AgeDimension -> crm:P90_has_value (xsd:decimal)
-# fe:AgeDimension -> crm:P91_has_unit (fe:Years)
+# =================================================================
+# 4. LOCALISATION ET DOCUMENTATION
+# =================================================================
 
-# --- 3. Groupe d'appartenance ---
-fe:hasVictimGroup a owl:ObjectProperty ;
-    rdfs:label "groupe d'appartenance"@fr ;
-    rdfs:domain fe:Victim ;
-    rdfs:range fe:VictimGroup . # Sauveteur, Civil, etc.
-
-# --- 4. Localisation (Point géographique ou Pièce du bâtiment) ---
 fe:foundAtLocation a owl:ObjectProperty ;
+    rdfs:label "lieu de découverte"@fr ;
     rdfs:domain fe:Victim ;
     rdfs:range crm:E53_Place ; 
     rdfs:subPropertyOf crm:P53_has_former_or_current_location .
 
-# --- 5. Lien vers la Fiche d'Intervention ---
 fe:hasInterventionForm a owl:ObjectProperty ;
     rdfs:label "fiche d'intervention associée"@fr ;
     rdfs:domain fe:Victim ;

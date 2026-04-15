@@ -1,0 +1,65 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix fe: <http://example.org/fire_and_evacuation#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# =================================================================
+# 1. RÉFÉRENTIEL DES TYPES DE CLIMATS (Classification Köppen)
+# =================================================================
+
+fe:ClimateScheme a skos:ConceptScheme ;
+    rdfs:label "Classification des Climats"@fr ;
+    dct:description "Classification climatique mondiale pour l'analyse des risques environnementaux."@fr .
+
+fe:Climate_Mediterranean a skos:Concept, fe:ClimateClassification ;
+    skos:prefLabel "Climat Méditerranéen"@fr ;
+    skos:definition "Été chaud et sec, hiver doux et humide. Fort risque incendie estival."@fr ;
+    skos:inScheme fe:ClimateScheme .
+
+fe:Climate_Oceanic a skos:Concept, fe:ClimateClassification ;
+    skos:prefLabel "Climat Océanique"@fr ;
+    skos:definition "Précipitations régulières toute l'année, amplitudes thermiques faibles."@fr ;
+    skos:inScheme fe:ClimateScheme .
+
+fe:Climate_Continental a skos:Concept, fe:ClimateClassification ;
+    skos:prefLabel "Climat Continental"@fr ;
+    skos:definition "Hivers froids, étés chauds et orageux. Sécheresses ponctuelles."@fr ;
+    skos:inScheme fe:ClimateScheme .
+
+fe:Climate_Mountain a skos:Concept, fe:ClimateClassification ;
+    skos:prefLabel "Climat Montagnard"@fr ;
+    skos:inScheme fe:ClimateScheme .
+
+# =================================================================
+# 2. RÉFÉRENTIEL DU VENT (Échelle de Beaufort)
+# =================================================================
+
+fe:BeaufortScheme a skos:ConceptScheme ;
+    rdfs:label "Échelle de Beaufort"@fr .
+
+fe:Beaufort_0 a skos:Concept ;
+    skos:prefLabel "Calme (Force 0)"@fr ;
+    skos:scopeNote "Vitesse < 1 km/h. La fumée monte verticalement."@fr ;
+    skos:inScheme fe:BeaufortScheme .
+
+fe:Beaufort_5 a skos:Concept ;
+    skos:prefLabel "Bonne Brise (Force 5)"@fr ;
+    skos:scopeNote "29-38 km/h. Les branches s'agitent. Facteur aggravant pour la propagation."@fr ;
+    skos:inScheme fe:BeaufortScheme .
+
+fe:Beaufort_9 a skos:Concept ;
+    skos:prefLabel "Fort Coup de Vent (Force 9)"@fr ;
+    skos:scopeNote "75-88 km/h. Dégâts légers aux bâtiments. Risque de projection d'escarbilles à longue distance."@fr ;
+    skos:inScheme fe:BeaufortScheme .
+
+# =================================================================
+# 3. UNITÉS DE MESURE (Précision des Dimensions)
+# =================================================================
+
+fe:UnitScheme a skos:ConceptScheme ;
+    rdfs:label "Unités de Mesure Météo"@fr .
+
+fe:Celsius a skos:Concept ; skos:prefLabel "Degré Celsius"@fr ; skos:notation "°C" ; skos:inScheme fe:UnitScheme .
+fe:Kmh a skos:Concept ; skos:prefLabel "Kilomètre par heure"@fr ; skos:notation "km/h" ; skos:inScheme fe:UnitScheme .
+fe:Percentage a skos:Concept ; skos:prefLabel "Pourcentage"@fr ; skos:notation "%" ; skos:inScheme fe:UnitScheme .
+fe:Millimeter a skos:Concept ; skos:prefLabel "Millimètre"@fr ; skos:notation "mm" ; skos:inScheme fe:UnitScheme .

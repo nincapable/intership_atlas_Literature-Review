@@ -90,6 +90,79 @@ fe:Comm_WiFi a skos:Concept, fe:CommunicationType ;
     skos:prefLabel "Wi-Fi"@fr ;
     skos:definition "Communication par réseau Wi-Fi disponible dans la zone."@fr ;
     skos:broader fe:CommunicationType ;
+    skos:inScheme fe:ZoneTaxonomy .@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix fe: <http://example.org/fire_and_evacuation#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# =================================================================
+# 1. DÉFINITION DU RÉFÉRENTIEL
+# =================================================================
+
+fe:ZoneTaxonomy a skos:ConceptScheme ;
+    rdfs:label "Taxonomie des caractéristiques de Zone"@fr ;
+    dct:description "Référentiel des régimes de transit, usages et moyens de communication des zones."@fr .
+
+# =================================================================
+# 2. RÉGIME DE TRANSIT
+# =================================================================
+
+fe:Transit_Static a skos:Concept, fe:TransitType ;
+    skos:prefLabel "Statique"@fr ;
+    skos:definition "Zone destinée à l'attente ou l'occupation (ex: salle de spectacle, bureau)."@fr ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Transit_Flow a skos:Concept, fe:TransitType ;
+    skos:prefLabel "Passage"@fr ;
+    skos:definition "Zone de circulation pure (ex: couloir, escalier, tunnel)."@fr ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Transit_Hybrid a skos:Concept, fe:TransitType ;
+    skos:prefLabel "Hybride"@fr ;
+    skos:definition "Zone mixte permettant l'attente et le passage (ex: hall de gare, place publique)."@fr ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+# =================================================================
+# 3. USAGE DE LA ZONE
+# =================================================================
+
+fe:Usage_Touristic a skos:Concept, fe:ZoneUsageType ;
+    skos:prefLabel "Touristique"@fr ;
+    skos:definition "Zone principalement fréquentée par des visiteurs ou touristes (ex: musée, site historique)."@fr ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Usage_Residential a skos:Concept, fe:ZoneUsageType ;
+    skos:prefLabel "Résidentielle"@fr ;
+    skos:definition "Zone principalement fréquentée par des habitants ou résidents (ex: quartier d'habitation, immeuble)."@fr ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Usage_Mixed a skos:Concept, fe:ZoneUsageType ;
+    skos:prefLabel "Mixte"@fr ;
+    skos:definition "Zone à usage mixte, fréquentée à la fois par des résidents et des visiteurs (ex: centre-ville, zone commerciale)."@fr ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+# =================================================================
+# 4. MOYENS DE COMMUNICATION
+# =================================================================
+
+fe:Comm_Radio a skos:Concept, fe:CommunicationType ;
+    skos:prefLabel "Radio"@fr ;
+    skos:definition "Communication par radio (ex: talkie-walkie, radio de secours)."@fr ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Comm_WiFi a skos:Concept, fe:CommunicationType ;
+    skos:prefLabel "Wi-Fi"@fr ;
+    skos:definition "Communication par réseau Wi-Fi disponible dans la zone."@fr ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Comm_5G a skos:Concept, fe:CommunicationType ;
+    skos:prefLabel "5G"@fr ;
+    skos:definition "Communication par réseau mobile 5G disponible dans la zone."@fr ;
+    skos:inScheme fe:ZoneTaxonomy .
+
+fe:Comm_Signage a skos:Concept, fe:CommunicationType ;
+    skos:prefLabel "Signalétique"@fr ;
+    skos:definition "Communication par signalétique visuelle ou sonore (ex: panneaux, annonces)."@fr ;
     skos:inScheme fe:ZoneTaxonomy .
 
 fe:Comm_5G a skos:Concept, fe:CommunicationType ;
@@ -103,3 +176,19 @@ fe:Comm_Signage a skos:Concept, fe:CommunicationType ;
     skos:definition "Communication par signalétique visuelle ou sonore (ex: panneaux, annonces)."@fr ;
     skos:broader fe:CommunicationType ;
     skos:inScheme fe:ZoneTaxonomy .
+
+# =================================================================
+# 5. METHODES ACQUISITION LIDAR
+# =================================================================
+fe:AcquisitionMethodScheme a skos:ConceptScheme ;
+    rdfs:label "Méthodes d'acquisition topographique"@fr .
+
+fe:Lidar_Aéroporté a skos:Concept, fe:AcquisitionMethod ;
+    skos:prefLabel "LiDAR Aéroporté"@fr ;
+    skos:definition "Acquisition par drone ou avion, générant des tuiles à large emprise."@fr ;
+    skos:inScheme fe:AcquisitionMethodScheme .
+
+fe:Lidar_Terrestre a skos:Concept, fe:AcquisitionMethod ;
+    skos:prefLabel "LiDAR Terrestre (TLS)"@fr ;
+    skos:definition "Scanner fixe sur trépied, haute précision pour structure bâti."@fr ;
+    skos:inScheme fe:AcquisitionMethodScheme .

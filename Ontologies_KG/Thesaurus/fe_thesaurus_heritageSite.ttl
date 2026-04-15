@@ -11,26 +11,25 @@ fe:ProtectionLevelScheme a skos:ConceptScheme ;
     rdfs:label "Référentiel des Niveaux de Protection du Patrimoine"@fr ;
     skos:prefLabel "Référentiel des Niveaux de Protection du Patrimoine"@fr ;
     dct:description "Classification des types de protection juridique et patrimoniale des sites."@fr ;
-    # Indispensable pour l'inférence descendante
     skos:hasTopConcept fe:UNESCO, fe:Monument_Historique, fe:Site_Classé .
 
 # =================================================================
-# 2. LES CONCEPTS
+# 2. LES CONCEPTS (Individus instanciables)
 # =================================================================
 
-fe:UNESCO a skos:Concept ;
+fe:UNESCO a skos:Concept, fe:ProtectionLevel ;
     skos:prefLabel "Site du Patrimoine Mondial de l'UNESCO"@fr ;
     skos:definition "Bien inscrit sur la liste du patrimoine mondial de l'Organisation des Nations unies pour l'éducation, la science et la culture."@fr ;
     skos:inScheme fe:ProtectionLevelScheme ;
     skos:topConceptOf fe:ProtectionLevelScheme .
 
-fe:Monument_Historique a skos:Concept ;
+fe:Monument_Historique a skos:Concept, fe:ProtectionLevel ;
     skos:prefLabel "Monument Historique"@fr ;
     skos:definition "Meuble ou immeuble recevant un statut juridique particulier destiné à le protéger, du fait de son intérêt historique, artistique ou architectural."@fr ;
     skos:inScheme fe:ProtectionLevelScheme ;
     skos:topConceptOf fe:ProtectionLevelScheme .
 
-fe:Site_Classé a skos:Concept ;
+fe:Site_Classé a skos:Concept, fe:ProtectionLevel ;
     skos:prefLabel "Site Classé"@fr ;
     skos:definition "Espace naturel ou bâti dont la conservation présente un intérêt général au point de vue artistique, historique, scientifique, légendaire ou pittoresque."@fr ;
     skos:inScheme fe:ProtectionLevelScheme ;

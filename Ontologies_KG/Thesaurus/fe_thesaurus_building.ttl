@@ -1,0 +1,151 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+
+# =================================================================
+# DÉFINITION DU RÉFÉRENTIEL BÂTIMENT
+# =================================================================
+
+fe:BuildingTaxonomy a skos:ConceptScheme ;
+    rdfs:label "Référentiel détaillé du Bâti : Styles et Matériaux"@fr ;
+    skos:hasTopConcept fe:ArchitectureStyleRoot, fe:MaterialRoot .
+
+# =================================================================
+# 1. THÉSAURUS DES STYLES ARCHITECTURAUX (fe:ArchitectureStyle)
+# =================================================================
+
+fe:ArchitectureStyleRoot a skos:Concept ;
+    skos:prefLabel "Styles Architecturaux"@fr ;
+    skos:inScheme fe:BuildingTaxonomy ;
+    skos:topConceptOf fe:BuildingTaxonomy .
+
+# --- ANTIQUITÉ ---
+fe:StyleAntique a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Architecture Antique"@fr ;
+    skos:broader fe:ArchitectureStyleRoot ;
+    skos:inScheme fe:BuildingTaxonomy ;
+    skos:narrower fe:StyleGalloRomain, fe:StyleGrec .
+
+    fe:StyleGalloRomain a skos:Concept, fe:ArchitectureStyle ;
+        skos:prefLabel "Gallo-Romain"@fr ;
+        skos:definition "Maçonnerie de pierre et mortier de chaux (opus caementicium)."@fr ;
+        skos:broader fe:StyleAntique ;
+        skos:inScheme fe:BuildingTaxonomy .
+
+# --- MÉDIÉVAL ---
+fe:StyleMedieval a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Architecture Médiévale"@fr ;
+    skos:broader fe:ArchitectureStyleRoot ;
+    skos:inScheme fe:BuildingTaxonomy ;
+    skos:narrower fe:StyleRoman, fe:StyleGothique, fe:StylePanDeBois .
+
+    fe:StyleRoman a skos:Concept, fe:ArchitectureStyle ;
+        skos:prefLabel "Roman"@fr ;
+        skos:broader fe:StyleMedieval ;
+        skos:inScheme fe:BuildingTaxonomy .
+
+    fe:StyleGothique a skos:Concept, fe:ArchitectureStyle ;
+        skos:prefLabel "Gothique"@fr ;
+        skos:broader fe:StyleMedieval ;
+        skos:inScheme fe:BuildingTaxonomy ;
+        skos:narrower fe:GothiquePrimitif, fe:GothiqueRayonnant, fe:GothiqueFlamboyant .
+
+    fe:StylePanDeBois a skos:Concept, fe:ArchitectureStyle ;
+        skos:prefLabel "Maison à Pan de Bois / Colombage"@fr ;
+        skos:definition "Structure porteuse en bois avec remplissage (torchis, brique)."@fr ;
+        skos:broader fe:StyleMedieval ;
+        skos:inScheme fe:BuildingTaxonomy .
+
+# --- INDUSTRIEL & MODERNE ---
+fe:StyleIndustriel a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Architecture Industrielle & XIXe"@fr ;
+    skos:broader fe:ArchitectureStyleRoot ;
+    skos:inScheme fe:BuildingTaxonomy ;
+    skos:narrower fe:Haussmannien, fe:StyleEiffel .
+
+    fe:Haussmannien a skos:Concept, fe:ArchitectureStyle ;
+        skos:prefLabel "Haussmannien"@fr ;
+        skos:definition "Pierre de taille, murs porteurs épais, combles en zinc."@fr ;
+        skos:broader fe:StyleIndustriel ;
+        skos:inScheme fe:BuildingTaxonomy .
+
+fe:StyleModerne a skos:Concept, fe:ArchitectureStyle ;
+    skos:prefLabel "Architecture Moderne & XXe"@fr ;
+    skos:broader fe:ArchitectureStyleRoot ;
+    skos:inScheme fe:BuildingTaxonomy ;
+    skos:narrower fe:Brutalisme, fe:StyleInternational .
+
+# =================================================================
+# 2. THÉSAURUS DES MATÉRIAUX (fe:MaterialInstance)
+# =================================================================
+
+fe:MaterialRoot a skos:Concept ;
+    skos:prefLabel "Matériaux de Construction"@fr ;
+    skos:inScheme fe:BuildingTaxonomy ;
+    skos:topConceptOf fe:BuildingTaxonomy .
+
+# --- MINÉRAUX (Incombustibles) ---
+fe:MineralMaterial a skos:Concept, fe:MaterialInstance ;
+    skos:prefLabel "Matériaux Minéraux"@fr ;
+    skos:broader fe:MaterialRoot ;
+    skos:inScheme fe:BuildingTaxonomy ;
+    skos:narrower fe:Stone, fe:Concrete, fe:Brick, fe:Glass .
+
+    fe:Stone a skos:Concept, fe:MaterialInstance ;
+        skos:prefLabel "Pierre"@fr ;
+        skos:broader fe:MineralMaterial ;
+        skos:inScheme fe:BuildingTaxonomy ;
+        skos:narrower fe:Limestone, fe:Granite, fe:Sandstone .
+
+        fe:Limestone a skos:Concept, fe:MaterialInstance ; skos:prefLabel "Calcaire"@fr ; skos:broader fe:Stone ; skos:inScheme fe:BuildingTaxonomy .
+        fe:Granite a skos:Concept, fe:MaterialInstance ; skos:prefLabel "Granit"@fr ; skos:broader fe:Stone ; skos:inScheme fe:BuildingTaxonomy .
+
+    fe:Concrete a skos:Concept, fe:MaterialInstance ;
+        skos:prefLabel "Béton"@fr ;
+        skos:broader fe:MineralMaterial ;
+        skos:inScheme fe:BuildingTaxonomy ;
+        skos:narrower fe:ReinforcedConcrete, fe:PrestressedConcrete .
+
+# --- BIO-SOURCÉS (Combustibles) ---
+fe:OrganicMaterial a skos:Concept, fe:MaterialInstance ;
+    skos:prefLabel "Matériaux Organiques / Bio-sourcés"@fr ;
+    skos:broader fe:MaterialRoot ;
+    skos:inScheme fe:BuildingTaxonomy ;
+    skos:narrower fe:Wood, fe:Straw, fe:Thatch .
+
+    fe:Wood a skos:Concept, fe:MaterialInstance ;
+        skos:prefLabel "Bois"@fr ;
+        skos:broader fe:OrganicMaterial ;
+        skos:inScheme fe:BuildingTaxonomy ;
+        skos:narrower fe:Softwood, fe:Hardwood, fe:Glulam .
+
+        fe:Glulam a skos:Concept, fe:MaterialInstance ; 
+            skos:prefLabel "Bois Lamellé-Collé"@fr ; 
+            skos:definition "Haute résistance au feu par carbonisation lente."@fr ;
+            skos:broader fe:Wood ; 
+            skos:inScheme fe:BuildingTaxonomy .
+
+# --- MÉTAUX (Sensibles à la chaleur) ---
+fe:MetallicMaterial a skos:Concept, fe:MaterialInstance ;
+    skos:prefLabel "Matériaux Métalliques"@fr ;
+    skos:broader fe:MaterialRoot ;
+    skos:inScheme fe:BuildingTaxonomy ;
+    skos:narrower fe:Steel, fe:Iron, fe:Lead, fe:Copper .
+
+    fe:Steel a skos:Concept, fe:MaterialInstance ;
+        skos:prefLabel "Acier"@fr ;
+        skos:broader fe:MetallicMaterial ;
+        skos:inScheme fe:BuildingTaxonomy .
+
+    fe:Iron a skos:Concept, fe:MaterialInstance ;
+        skos:prefLabel "Fer / Fonte"@fr ;
+        skos:broader fe:MetallicMaterial ;
+        skos:inScheme fe:BuildingTaxonomy .
+
+# --- SYNTHÉTIQUES & COMPOSITES ---
+fe:SyntheticMaterial a skos:Concept, fe:MaterialInstance ;
+    skos:prefLabel "Matériaux Synthétiques"@fr ;
+    skos:broader fe:MaterialRoot ;
+    skos:inScheme fe:BuildingTaxonomy ;
+    skos:narrower fe:PVC, fe:Polycarbonate, fe:Polystyrene .

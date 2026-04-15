@@ -4,42 +4,56 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-# --- CLASSES ---
-fe:Axis a owl:Class ; rdfs:subClassOf crm:E25_Man_Made_Feature .
-fe:AxisType a owl:Class .
-fe:AccessibilityLevel a owl:Class .
-fe:RescueAccessibilityLevel a owl:Class .
+# =================================================================
+# CLASSIFICATION DES AXES (Ontologie Structurelle)
+# =================================================================
 
-# --- PROPRIÉTÉS D'OBJET (Liaisons vers le thésaurus) ---
+fe:Axis a owl:Class ; 
+    rdfs:label "Axe de circulation"@fr ;
+    rdfs:subClassOf crm:E25_Man_Made_Feature .
+
+# --- Classes de Référentiel (Conteneurs pour le SKOS) ---
+
+fe:AxisType a owl:Class ;
+    rdfs:label "Type d'axe"@fr ;
+    rdfs:subClassOf crm:E55_Type .
+
+fe:AccessibilityLevel a owl:Class ;
+    rdfs:label "Niveau d'accessibilité PMR"@fr ;
+    rdfs:subClassOf crm:E55_Type .
+
+fe:RescueAccessibilityLevel a owl:Class ;
+    rdfs:label "Niveau d'accessibilité Secours"@fr ;
+    rdfs:subClassOf crm:E55_Type .
+
+# --- Propriétés d'Objet ---
+
 fe:hasAxisType a owl:ObjectProperty ; 
-    rdfs:domain fe:Axis ; rdfs:range fe:AxisType .
+    rdfs:label "a pour type d'axe"@fr ;
+    rdfs:domain fe:Axis ; 
+    rdfs:range fe:AxisType .
 
 fe:accessibilityType a owl:ObjectProperty ; 
-    rdfs:domain fe:Axis ; rdfs:range fe:AccessibilityLevel .
+    rdfs:label "accessibilité PMR"@fr ;
+    rdfs:domain fe:Axis ; 
+    rdfs:range fe:AccessibilityLevel .
 
 fe:rescueAccessibilityType a owl:ObjectProperty ; 
-    rdfs:domain fe:Axis ; rdfs:range fe:RescueAccessibilityLevel .
+    rdfs:label "accessibilité secours"@fr ;
+    rdfs:domain fe:Axis ; 
+    rdfs:range fe:RescueAccessibilityLevel .
 
 fe:isConnectedTo a owl:ObjectProperty, owl:SymmetricProperty ; 
-    rdfs:domain fe:Axis ; rdfs:range fe:Axis .
+    rdfs:domain fe:Axis ; 
+    rdfs:range fe:Axis .
 
-fe:hasZoneLocation a owl:ObjectProperty ; 
-    rdfs:domain fe:Axis ; rdfs:range fe:Zone .
-
-#P53 : has_former_or_current_location -> E53_Place -> P168 : place is defined by -> E94_Space_Primitive (ex: coordonnées GPS, adresse, etc.)
-#P53 : has_former_or_current_location -> E53_Place -> P121 : overlaps with -> E53_Place (Building, Zone)
-#P53 : has_former_or_current_location -> E53_Place -> P122 : border with -> E53_Place (Axe, Zone, Building)
-
-# --- PROPRIÉTÉS DE DONNÉES (Calculs) ---
+# --- Propriétés de Données ---
 fe:width  a owl:DatatypeProperty ; rdfs:range xsd:decimal .
 fe:length a owl:DatatypeProperty ; rdfs:range xsd:decimal .
 fe:slope  a owl:DatatypeProperty ; rdfs:range xsd:decimal .
 fe:isOnLevel a owl:DatatypeProperty ; rdfs:range xsd:integer .
 
-fe:pedestrianCapacity a owl:DatatypeProperty ; rdfs:range xsd:decimal .
-fe:practicabilityLevel a owl:DatatypeProperty ; rdfs:range xsd:decimal .
-
-# --- BLOC ÉTAT & RISQUE ---
-fe:hasCurrentBlockingState a owl:ObjectProperty ; rdfs:range crm:E3_Condition_State; rdfs:domain fe:Axis .
-fe:currentBlockingLevel a owl:DatatypeProperty ; rdfs:domain crm:E3_Condition_State ; rdfs:range xsd:decimal .
-fe:hasPotentialBlockingEvent a owl:ObjectProperty ; rdfs:range crm:E5_Event ; rdfs:domain fe:Axis .
+# --- Bloc État ---
+fe:hasCurrentBlockingState a owl:ObjectProperty ; 
+    rdfs:domain fe:Axis ; 
+    rdfs:range crm:E3_Condition_State .

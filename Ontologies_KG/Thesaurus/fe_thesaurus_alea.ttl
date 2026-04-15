@@ -1,63 +1,19 @@
-@prefix fe:   <http://example.org/fire_and_evacuation#> .
-@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 # =================================================================
-# 1. DÉFINITION DES SCHÉMAS (CONCEPT SCHEMES)
+# 1. RÉFÉRENTIEL DES TYPES D'ALÉAS (HazardType)
 # =================================================================
-
-fe:HazardIntensityScheme a skos:ConceptScheme ;
-    rdfs:label "Référentiel des Niveaux d'Intensité de l'Aléa"@fr ;
-    skos:prefLabel "Référentiel des Niveaux d'Intensité de l'Aléa"@fr ;
-    skos:hasTopConcept fe:Intensity_Low, fe:Intensity_Moderate, fe:Intensity_High, fe:Intensity_Extreme .
 
 fe:HazardTypeScheme a skos:ConceptScheme ;
-    rdfs:label "Thésaurus des Types d'Aléas"@fr ;
-    skos:prefLabel "Thésaurus des Types d'Aléas"@fr ;
+    rdfs:label "Thésaurus complet des Types d'Aléas"@fr ;
     skos:hasTopConcept fe:Fire_Hazard, fe:Flood_Hazard, fe:Seismic_Hazard, fe:Geological_Hazard, fe:Meteorological_Hazard .
-
-fe:ImpactSeverityScheme a skos:ConceptScheme ;
-    rdfs:label "Référentiel de Sévérité des Impacts"@fr ;
-    skos:prefLabel "Référentiel de Sévérité des Impacts"@fr ;
-    skos:hasTopConcept fe:Severity_Low, fe:Severity_Moderate, fe:Severity_Heavy, fe:Severity_Extreme .
-
-# =================================================================
-# 2. INTENSITÉ DE L'ALÉA
-# =================================================================
-
-fe:Intensity_Low a skos:Concept, fe:IntensityLevel ;
-    skos:prefLabel "Faible"@fr ;
-    skos:definition "Phénomène courant ou incident mineur. Maîtrisable avec des moyens locaux standards."@fr ;
-    skos:inScheme fe:HazardIntensityScheme ;
-    skos:topConceptOf fe:HazardIntensityScheme .
-
-fe:Intensity_Moderate a skos:Concept, fe:IntensityLevel ;
-    skos:prefLabel "Modéré"@fr ;
-    skos:definition "Perturbations notables. Nécessite une surveillance accrue et des moyens spécifiques."@fr ;
-    skos:inScheme fe:HazardIntensityScheme ;
-    skos:topConceptOf fe:HazardIntensityScheme .
-
-fe:Intensity_High a skos:Concept, fe:IntensityLevel ;
-    skos:prefLabel "Fort / Grave"@fr ;
-    skos:definition "Cinétique rapide ou seuils de danger atteints. Risque pour la sécurité des personnes."@fr ;
-    skos:inScheme fe:HazardIntensityScheme ;
-    skos:topConceptOf fe:HazardIntensityScheme .
-
-fe:Intensity_Extreme a skos:Concept, fe:IntensityLevel ;
-    skos:prefLabel "Extrême / Hors-Norme"@fr ;
-    skos:definition "Comportement erratique, dépassement des capacités de réponse locales."@fr ;
-    skos:inScheme fe:HazardIntensityScheme ;
-    skos:topConceptOf fe:HazardIntensityScheme .
-
-# =================================================================
-# 3. TYPE DE L'ALÉA (Hazard Type)
-# =================================================================
 
 # --- Branche INCENDIES ---
 fe:Fire_Hazard a skos:Concept, fe:HazardType ;
     skos:prefLabel "Incendie"@fr ;
+    skos:definition "Combustion non maîtrisée se propageant dans le temps et l'espace."@fr ;
     skos:inScheme fe:HazardTypeScheme ;
     skos:topConceptOf fe:HazardTypeScheme ;
     skos:narrower fe:Fire_Class_A, fe:Fire_Class_B, fe:Fire_Class_C, fe:Fire_Class_D, fe:Fire_Class_E, fe:Fire_Class_F .
@@ -83,12 +39,12 @@ fe:Fire_Hazard a skos:Concept, fe:HazardType ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Fire_Class_E a skos:Concept, fe:HazardType ;
-        skos:prefLabel "Feu de Classe E (Électriques)"@fr ;
+        skos:prefLabel "Feu de Classe E (Électrique)"@fr ;
         skos:broader fe:Fire_Hazard ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Fire_Class_F a skos:Concept, fe:HazardType ;
-        skos:prefLabel "Feu de Classe F (Huiles de Cuisine)"@fr ;
+        skos:prefLabel "Feu de Classe F (Huiles)"@fr ;
         skos:broader fe:Fire_Hazard ;
         skos:inScheme fe:HazardTypeScheme .
 
@@ -100,12 +56,12 @@ fe:Flood_Hazard a skos:Concept, fe:HazardType ;
     skos:narrower fe:River_Flood, fe:Flash_Flood, fe:Coastal_Flood .
 
     fe:River_Flood a skos:Concept, fe:HazardType ;
-        skos:prefLabel "Crue / Débordement de cours d'eau"@fr ;
+        skos:prefLabel "Crue / Débordement"@fr ;
         skos:broader fe:Flood_Hazard ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Flash_Flood a skos:Concept, fe:HazardType ;
-        skos:prefLabel "Crue Éclair"@fr ;
+        skos:prefLabel "Crue Éclair / Ruissellement"@fr ;
         skos:broader fe:Flood_Hazard ;
         skos:inScheme fe:HazardTypeScheme .
 
@@ -116,7 +72,7 @@ fe:Flood_Hazard a skos:Concept, fe:HazardType ;
 
 # --- Branche SÉISMES ---
 fe:Seismic_Hazard a skos:Concept, fe:HazardType ;
-    skos:prefLabel "Séisme / Tremblement de terre"@fr ;
+    skos:prefLabel "Séisme"@fr ;
     skos:inScheme fe:HazardTypeScheme ;
     skos:topConceptOf fe:HazardTypeScheme ;
     skos:narrower fe:Tectonic_Earthquake, fe:Induced_Seismicity .
@@ -144,7 +100,7 @@ fe:Geological_Hazard a skos:Concept, fe:HazardType ;
         skos:inScheme fe:HazardTypeScheme .
 
     fe:Rockfall a skos:Concept, fe:HazardType ;
-        skos:prefLabel "Éboulement / Chute de pierres"@fr ;
+        skos:prefLabel "Éboulement / Chute"@fr ;
         skos:broader fe:Geological_Hazard ;
         skos:inScheme fe:HazardTypeScheme .
 
@@ -181,29 +137,65 @@ fe:Meteorological_Hazard a skos:Concept, fe:HazardType ;
         skos:inScheme fe:HazardTypeScheme .
 
 # =================================================================
-# 4. SÉVÉRITÉ DE L'IMPACT
+# 2. RÉFÉRENTIEL D'INTENSITÉ DE L'ALÉA (IntensityLevel)
 # =================================================================
 
-fe:Severity_Low a skos:Concept, fe:ImpactSeverityLevel ;
+fe:HazardIntensityScheme a skos:ConceptScheme ;
+    rdfs:label "Référentiel des Niveaux d'Intensité"@fr ;
+    skos:hasTopConcept fe:Intensity_Low, fe:Intensity_Moderate, fe:Intensity_High, fe:Intensity_Extreme .
+
+fe:Intensity_Low a skos:Concept, fe:IntensityLevel ;
     skos:prefLabel "Faible"@fr ;
-    skos:definition "Dommages superficiels, esthétiques, n'affectant pas l'usage."@fr ;
+    skos:definition "Incident mineur sans cinétique majeure."@fr ;
+    skos:inScheme fe:HazardIntensityScheme ;
+    skos:topConceptOf fe:HazardIntensityScheme .
+
+fe:Intensity_Moderate a skos:Concept, fe:IntensityLevel ;
+    skos:prefLabel "Modérée"@fr ;
+    skos:definition "Risque notable, surveillance active."@fr ;
+    skos:inScheme fe:HazardIntensityScheme ;
+    skos:topConceptOf fe:HazardIntensityScheme .
+
+fe:Intensity_High a skos:Concept, fe:IntensityLevel ;
+    skos:prefLabel "Forte"@fr ;
+    skos:definition "Danger immédiat, moyens spécifiques requis."@fr ;
+    skos:inScheme fe:HazardIntensityScheme ;
+    skos:topConceptOf fe:HazardIntensityScheme .
+
+fe:Intensity_Extreme a skos:Concept, fe:IntensityLevel ;
+    skos:prefLabel "Hors-Norme"@fr ;
+    skos:definition "Scénario catastrophe, dépassement des seuils."@fr ;
+    skos:inScheme fe:HazardIntensityScheme ;
+    skos:topConceptOf fe:HazardIntensityScheme .
+
+# =================================================================
+# 3. RÉFÉRENTIEL DE SÉVÉRITÉ DES IMPACTS (ImpactSeverityLevel)
+# =================================================================
+
+fe:ImpactSeverityScheme a skos:ConceptScheme, fe:SeverityLevel ;
+    rdfs:label "Référentiel de Sévérité des Impacts"@fr ;
+    skos:hasTopConcept fe:Severity_Low, fe:Severity_Moderate, fe:Severity_Heavy, fe:Severity_Extreme .
+
+fe:Severity_Low a skos:Concept, fe:ImpactSeverityLevel ;
+    skos:prefLabel "Sévérité Faible"@fr ;
+    skos:definition "Dommages superficiels ou mineurs, sans remise en cause de l'intégrité."@fr ;
     skos:inScheme fe:ImpactSeverityScheme ;
     skos:topConceptOf fe:ImpactSeverityScheme .
 
 fe:Severity_Moderate a skos:Concept, fe:ImpactSeverityLevel ;
-    skos:prefLabel "Modéré"@fr ;
-    skos:definition "Dommages modérés, impactant l'usage."@fr ;
+    skos:prefLabel "Sévérité Modérée"@fr ;
+    skos:definition "Dommages partiels nécessitant des réparations, fonction altérée."@fr ;
     skos:inScheme fe:ImpactSeverityScheme ;
     skos:topConceptOf fe:ImpactSeverityScheme .
 
 fe:Severity_Heavy a skos:Concept, fe:ImpactSeverityLevel ;
-    skos:prefLabel "Lourd"@fr ;
-    skos:definition "Dommages structurels importants."@fr ;
+    skos:prefLabel "Sévérité Lourde"@fr ;
+    skos:definition "Dommages structurels majeurs, risque d'effondrement ou perte de fonction."@fr ;
     skos:inScheme fe:ImpactSeverityScheme ;
     skos:topConceptOf fe:ImpactSeverityScheme .
 
 fe:Severity_Extreme a skos:Concept, fe:ImpactSeverityLevel ;
-    skos:prefLabel "Extrême"@fr ;
-    skos:definition "Dommages irréversibles, perte totale."@fr ;
+    skos:prefLabel "Sévérité Extrême"@fr ;
+    skos:definition "Destruction totale, perte irréversible de l'artefact ou du bâtiment."@fr ;
     skos:inScheme fe:ImpactSeverityScheme ;
     skos:topConceptOf fe:ImpactSeverityScheme .

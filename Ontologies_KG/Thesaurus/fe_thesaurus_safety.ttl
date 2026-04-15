@@ -3,68 +3,110 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 # =================================================================
-# 1. RÉFÉRENTIEL DE COMBUSTIBILITÉ
+# 1. RÉFÉRENTIEL DES EUROCLASSES (Réaction au Feu)
+# =================================================================
+
+fe:EuroclassScheme a skos:ConceptScheme ;
+    rdfs:label "Référentiel des Euroclasses de Réaction au Feu"@fr .
+
+# -- Classes principales (A1 à F) --
+fe:A1 a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "A1 (Incombustible)"@fr ; skos:inScheme fe:EuroclassScheme .
+fe:A2 a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "A2"@fr ; skos:inScheme fe:EuroclassScheme .
+fe:B  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "B"@fr ; skos:inScheme fe:EuroclassScheme .
+fe:C  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "C"@fr ; skos:inScheme fe:EuroclassScheme .
+fe:D  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "D"@fr ; skos:inScheme fe:EuroclassScheme .
+fe:E  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "E"@fr ; skos:inScheme fe:EuroclassScheme .
+fe:F  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "F (Non classé/Facilement inflammable)"@fr ; skos:inScheme fe:EuroclassScheme .
+
+# -- Fumées (s) --
+fe:s1 a skos:Concept, fe:SmokeProductionClass ; skos:prefLabel "s1 (Faible fumée)"@fr ; skos:inScheme fe:EuroclassScheme .
+fe:s2 a skos:Concept, fe:SmokeProductionClass ; skos:prefLabel "s2 (Moyenne fumée)"@fr ; skos:inScheme fe:EuroclassScheme .
+fe:s3 a skos:Concept, fe:SmokeProductionClass ; skos:prefLabel "s3 (Forte fumée)"@fr ; skos:inScheme fe:EuroclassScheme .
+
+# -- Gouttelettes (d) --
+fe:d0 a skos:Concept, fe:FlamingDropletsClass ; skos:prefLabel "d0 (Aucune goutte)"@fr ; skos:inScheme fe:EuroclassScheme .
+fe:d1 a skos:Concept, fe:FlamingDropletsClass ; skos:prefLabel "d1 (Gouttelettes persistantes < 10s)"@fr ; skos:inScheme fe:EuroclassScheme .
+fe:d2 a skos:Concept, fe:FlamingDropletsClass ; skos:prefLabel "d2 (Nombreuses gouttelettes)"@fr ; skos:inScheme fe:EuroclassScheme .
+
+# =================================================================
+# 2. RÉFÉRENTIEL DE RÉSISTANCE (REI)
+# =================================================================
+
+fe:ResistanceScheme a skos:ConceptScheme ;
+    rdfs:label "Critères de Résistance au Feu"@fr .
+
+fe:R a skos:Concept, fe:FireResistanceComponent ;
+    skos:prefLabel "R - Capacité porteuse"@fr ;
+    skos:definition "Aptitude de l'élément à résister mécaniquement sous sollicitation sans s'effondrer."@fr ;
+    skos:inScheme fe:ResistanceScheme .
+
+fe:E a skos:Concept, fe:FireResistanceComponent ;
+    skos:prefLabel "E - Étanchéité aux gaz et flammes"@fr ;
+    skos:definition "Aptitude à empêcher le passage des gaz chauds ou des flammes vers le côté non exposé."@fr ;
+    skos:inScheme fe:ResistanceScheme .
+
+fe:I a skos:Concept, fe:FireResistanceComponent ;
+    skos:prefLabel "I - Isolation thermique"@fr ;
+    skos:definition "Limitation de la transmission de chaleur pour éviter l'auto-inflammation de la face non exposée."@fr ;
+    skos:inScheme fe:ResistanceScheme .
+
+fe:W a skos:Concept, fe:FireResistanceComponent ;
+    skos:prefLabel "W - Rayonnement"@fr ;
+    skos:definition "Aptitude de l'élément à réduire la transmission du rayonnement thermique."@fr ;
+    skos:inScheme fe:ResistanceScheme .
+
+# =================================================================
+# 3. RÉFÉRENTIEL DE COMBUSTIBILITÉ (Avec vos notes d'impact)
 # =================================================================
 
 fe:CombustibilityScheme a skos:ConceptScheme ;
-    rdfs:label "Référentiel des types de combustibilité"@fr ;
-    skos:prefLabel "Référentiel des types de combustibilité"@fr ;
-    skos:hasTopConcept fe:PyrophileHigh, fe:FlashFuel, fe:DelayedIgnition .
+    rdfs:label "Référentiel des types de combustibilité"@fr .
 
 fe:PyrophileHigh a skos:Concept, fe:CombustibilityType ;
     skos:prefLabel "Haute Inflammabilité"@fr ;
     skos:definition "S'enflamme instantanément au contact d'une source de chaleur. Typique des essences résineuses ou des matériaux volatils."@fr ;
     skos:note "Impact : Risque d'embrasement généralisé éclair (Flashover)."@fr ;
-    skos:inScheme fe:CombustibilityScheme ;
-    skos:topConceptOf fe:CombustibilityScheme .
+    skos:inScheme fe:CombustibilityScheme .
 
 fe:FlashFuel a skos:Concept, fe:CombustibilityType ;
     skos:prefLabel "Combustible Éclair"@fr ;
     skos:definition "Brûle très rapidement avec une forte intensité mais sur une courte durée (herbes sèches, litière fine, tissus légers)."@fr ;
     skos:note "Impact : Propagation horizontale rapide, mais faible charge calorifique résiduelle."@fr ;
-    skos:inScheme fe:CombustibilityScheme ;
-    skos:topConceptOf fe:CombustibilityScheme .
+    skos:inScheme fe:CombustibilityScheme .
 
 fe:DelayedIgnition a skos:Concept, fe:CombustibilityType ;
     skos:prefLabel "Allumage Retardé"@fr ;
     skos:definition "Nécessite une exposition prolongée à une source de chaleur intense pour s'enflammer (gros bois, structures massives)."@fr ;
     skos:note "Impact : Stabilité structurelle maintenue plus longtemps, mais foyer difficile à éteindre une fois allumé."@fr ;
-    skos:inScheme fe:CombustibilityScheme ;
-    skos:topConceptOf fe:CombustibilityScheme .
+    skos:inScheme fe:CombustibilityScheme .
 
 # =================================================================
-# 2. RÉFÉRENTIEL DE PROPAGATION THERMIQUE
+# 4. RÉFÉRENTIEL DE PROPAGATION (Avec vos exemples et notes)
 # =================================================================
 
 fe:PropagationScheme a skos:ConceptScheme ;
-    rdfs:label "Référentiel des modes de propagation thermique"@fr ;
-    skos:prefLabel "Référentiel des modes de propagation thermique"@fr ;
-    skos:hasTopConcept fe:Conduction, fe:Convection, fe:Radiation, fe:Projection .
+    rdfs:label "Référentiel des modes de propagation thermique"@fr .
 
 fe:Conduction a skos:Concept, fe:PropagationType ;
     skos:prefLabel "Conduction"@fr ;
     skos:definition "Transfert de chaleur direct au sein d'un même matériau ou entre objets en contact physique."@fr ;
     skos:example "Poutre traversant un mur porteur, racines souterraines enflammées, rails métalliques."@fr ;
-    skos:inScheme fe:PropagationScheme ;
-    skos:topConceptOf fe:PropagationScheme .
+    skos:inScheme fe:PropagationScheme .
 
 fe:Convection a skos:Concept, fe:PropagationType ;
     skos:prefLabel "Convection"@fr ;
     skos:definition "Transfert par déplacement de gaz ou liquides chauds (air brûlant, fumées)."@fr ;
     skos:note "Impact : Cause principale des feux de cimes (vertical) et de l'emprisonnement des fumées en intérieur."@fr ;
-    skos:inScheme fe:PropagationScheme ;
-    skos:topConceptOf fe:PropagationScheme .
+    skos:inScheme fe:PropagationScheme .
 
 fe:Radiation a skos:Concept, fe:PropagationType ;
     skos:prefLabel "Rayonnement (Radiation)"@fr ;
     skos:definition "Transfert par ondes électromagnétiques infrarouges sans contact nécessaire."@fr ;
     skos:note "Impact : Peut embraser un bâtiment voisin à travers une vitre ou une façade sans que les flammes ne le touchent."@fr ;
-    skos:inScheme fe:PropagationScheme ;
-    skos:topConceptOf fe:PropagationScheme .
+    skos:inScheme fe:PropagationScheme .
 
 fe:Projection a skos:Concept, fe:PropagationType ;
     skos:prefLabel "Projection (Sauts de feu)"@fr ;
     skos:definition "Transport de particules enflammées (escarbilles, brindilles) par convection et vent."@fr ;
     skos:note "Impact : Création de nouveaux foyers secondaires à distance (spotting), franchissement de coupures de combustible."@fr ;
-    skos:inScheme fe:PropagationScheme ;
-    skos:topConceptOf fe:PropagationScheme .
+    skos:inScheme fe:PropagationScheme .
