@@ -17,9 +17,9 @@ fe:fireSafetyType a owl:Class ; rdfs:subClassOf crm:E55_Type .
 fe:RiskExposureType a owl:Class ; rdfs:subClassOf crm:E55_Type .
 
 # Classes de référentiels (Peuplées par SKOS)
-fe:ReactionToFireClass a owl:Class ; rdfs:subClassOf crm:fireSafetyType .
-fe:SmokeProductionClass a owl:Class ; rdfs:subClassOf crm:fireSafetyType .
-fe:FlamingDropletsClass a owl:Class ; rdfs:subClassOf crm:fireSafetyType .
+fe:ReactionToFireClass a owl:Class ; rdfs:subClassOf fe:fireSafetyType .
+fe:SmokeProductionClass a owl:Class ; rdfs:subClassOf fe:fireSafetyType .
+fe:FlamingDropletsClass a owl:Class ; rdfs:subClassOf fe:fireSafetyType .
 
 fe:hasReactionClass a owl:ObjectProperty, owl:FunctionalProperty ;
     rdfs:domain fe:ReactionToFire ;
@@ -45,7 +45,7 @@ fe:hasReaction a owl:ObjectProperty ;
 fe:FireResistanceRating a owl:Class ;
     rdfs:label "Degré de Résistance au Feu"@fr .
 
-fe:FireResistanceComponent a owl:Class ; rdfs:subClassOf crm:fireSafetyType .
+fe:FireResistanceComponent a owl:Class ; rdfs:subClassOf fe:fireSafetyType .
 
 fe:resistanceComponents a owl:ObjectProperty ;
     rdfs:domain fe:FireResistanceRating ;

@@ -9,8 +9,8 @@
 # =================================================================
 
 fe:NaturalSpace a owl:Class ;
-    rdfs:label "Espace Naturel"@fr ;
-    rdfs:subClassOf crm:E27_Site .
+    rdfs:subClassOf crm:E27_Site ;
+    rdfs:label "Espace Naturel"@fr.
 
 fe:Biotype a owl:Class;
     rdfs:label "Biotype"@fr ;

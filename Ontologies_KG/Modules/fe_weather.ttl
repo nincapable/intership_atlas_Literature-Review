@@ -36,8 +36,8 @@ fe:hasAvgSunshineDuration a owl:DatatypeProperty ; rdfs:domain fe:Climate ; rdfs
 # =================================================================
 
 fe:WeatherMeasurement a owl:Class ;
-    rdfs:label "Relevé Météorologique"@fr ;
-    rdfs:subClassOf crm:E16_Measurement .
+    rdfs:subClassOf crm:E16_Measurement ;
+    rdfs:label "Relevé Météorologique"@fr .
 
 fe:weatherQualifier a owl:Class ; rdfs:subClassOf fe:TechnicalType .
 

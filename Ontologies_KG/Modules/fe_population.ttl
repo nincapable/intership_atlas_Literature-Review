@@ -18,7 +18,8 @@ fe:VictimType a owl:Class ; rdfs:subClassOf fe:HumanFactorType ; rdfs:label "Typ
 
 # --- Système de Partitions (Les tiroirs de données) ---
 
-fe:PopulationPartition a owl:Class ; 
+fe:PopulationPartition a owl:Class ;
+    rdfs:subClassOf crm:E54_Dimension ;
     rdfs:label "Partition de Population"@fr .
 
 fe:MobilityPart rdfs:subClassOf fe:PopulationPartition ; rdfs:label "Partition Mobilité"@fr .

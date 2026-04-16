@@ -13,12 +13,12 @@ fe:Axis a owl:Class ;
     rdfs:subClassOf crm:E25_Man_Made_Feature .
 
 fe:OperationnalType a owl:Class ;
-    rdfs:label "Type d'axe"@fr ;
+    rdfs:label "Types Operationnels"@fr ;
     rdfs:subClassOf crm:E55_Type .
 # --- Classes de Référentiel (Conteneurs pour le SKOS) ---
 
 fe:AxisType a owl:Class ;
-    rdfs:label "Type d'axe"@fr ;
+    rdfs:label "Types d'axe"@fr ;
     rdfs:subClassOf fe:OperationnalType .
 
 fe:AccessibilityLevel a owl:Class ;

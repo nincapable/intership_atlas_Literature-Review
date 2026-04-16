@@ -67,11 +67,13 @@ fe:naturalDamageLevel a owl:ObjectProperty ;
 # =================================================================
 
 fe:HumanToll a owl:Class ;
+    rdfs:subClassOf crm:E54_Dimension;
     rdfs:label "Bilan Humain Global"@fr ;
     rdfs:comment "Regroupe l'ensemble des victimes et les statistiques de triage pour un événement."@fr .
 
 fe:TriageCount a owl:Class ;
-    rdfs:label "Ligne de comptage triage"@fr .
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:label "Ligne de Triage"@fr .
 
 fe:hasTriageCount a owl:ObjectProperty ;
     rdfs:domain fe:HumanToll ;
