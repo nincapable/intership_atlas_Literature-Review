@@ -4,6 +4,8 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
+<http://example.org/fire_and_evacuation/victim> a owl:Ontology .
+
 # =================================================================
 # 1. LA CLASSE VICTIME
 # =================================================================
@@ -13,7 +15,7 @@ fe:Victim a owl:Class ;
     rdfs:label "Victime / Personne Impliquée"@fr .
 
 fe:VictimType a owl:Class ;
-    rdfs:subClassOf crm:HumanFactorType ;
+    rdfs:subClassOf fe:HumanFactorType ;
     rdfs:label "Type de Victime"@fr .
 
 # =================================================================

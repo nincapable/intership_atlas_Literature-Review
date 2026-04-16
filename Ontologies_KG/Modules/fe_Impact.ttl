@@ -4,6 +4,7 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> . 
 
+<http://example.org/fire_and_evacuation/impact> a owl:Ontology .
 # =================================================================
 # 1. ÉVALUATION GLOBALE DE L'IMPACT
 # =================================================================
@@ -48,6 +49,7 @@ fe:buildingDamageLevel a owl:ObjectProperty ;
 # =================================================================
 
 fe:NaturalDamage a owl:Class ;
+    rdfs:subClassOf crm:E54_Dimension ;
     rdfs:label "Constat de Dégât Naturel"@fr .
 
 fe:hasNaturalDamage a owl:ObjectProperty ;

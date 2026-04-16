@@ -4,6 +4,8 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
+<http://example.org/fire_and_evacuation/hazard> a owl:Ontology .
+
 # --- CLASSE PRINCIPALE ---
 fe:HazardEvent a owl:Class ;
     rdfs:label "Aléa / Événement de Risque"@fr ;

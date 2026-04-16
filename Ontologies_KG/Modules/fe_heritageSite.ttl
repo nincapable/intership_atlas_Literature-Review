@@ -4,6 +4,8 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
+<http://example.org/fire_and_evacuation/site> a owl:Ontology .
+
 # =================================================================
 # 1. CLASSE PRINCIPALE ET RELATIONS STRUCTURELLES
 # =================================================================

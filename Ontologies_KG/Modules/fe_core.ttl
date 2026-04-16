@@ -4,7 +4,7 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-fe:core a owl:Ontology ;
+<http://example.org/fire_and_evacuation/core> a owl:Ontology ;
     rdfs:label "Fire and Evacuation Ontology - Core Entry Point"@fr ;
     rdfs:comment "Point d'entrée unique important les modules thématiques."@fr ;
     # Importation des fichiers locaux du dossier Modules
@@ -20,11 +20,3 @@ fe:core a owl:Ontology ;
                 <fe_victim.ttl> ,
                 <fe_weather.ttl> ,
                 <fe_zone.ttl> .
-
-fe:hasRiskExposure a owl:ObjectProperty ;
-    rdfs:label "exposition au risque"@fr ;
-    rdfs:comment "Relie une entité physique (bâtiment, parc, forêt) à un état de risque constaté."@fr ;
-    # Le domaine englobe désormais Bâtiments ET Espaces Naturels
-    rdfs:domain crm:E18_Physical_Thing ; 
-    rdfs:range crm:E3_Condition_State ;
-    rdfs:subPropertyOf crm:P44_has_condition .

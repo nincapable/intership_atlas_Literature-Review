@@ -4,6 +4,8 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
+<http://example.org/fire_and_evacuation/natural_space> a owl:Ontology .
+
 # =================================================================
 # 1. STRUCTURE DE L'ESPACE NATUREL
 # =================================================================

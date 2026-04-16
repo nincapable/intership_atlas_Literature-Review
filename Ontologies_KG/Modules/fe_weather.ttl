@@ -4,6 +4,8 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
+<http://example.org/fire_and_evacuation/weather> a owl:Ontology .
+
 # =================================================================
 # 1. LE CLIMAT (STATISTIQUES / NORMALES)
 # =================================================================
@@ -35,9 +37,18 @@ fe:hasAvgSunshineDuration a owl:DatatypeProperty ; rdfs:domain fe:Climate ; rdfs
 # 2. LE RELEVÉ MÉTÉO (ÉVÉNEMENT PONCTUEL)
 # =================================================================
 
+fe:WeatherCondition a owl:Class ;
+    rdfs:subClassOf crm:E54_Dimension ; # Ou E73_Information_Object selon préférence
+    rdfs:label "État Météorologique Global"@fr ;
+    rdfs:comment "Regroupe l'ensemble des dimensions météo relevées pour un site à un instant T."@fr .
+
 fe:WeatherMeasurement a owl:Class ;
     rdfs:subClassOf crm:E16_Measurement ;
     rdfs:label "Relevé Météorologique"@fr .
+
+fe:hasWeatherMeasurement a owl:ObjectProperty ;
+    rdfs:domain fe:WeatherCondition ;
+    rdfs:range fe:WeatherMeasurement .
 
 fe:weatherQualifier a owl:Class ; rdfs:subClassOf fe:TechnicalType .
 
@@ -52,7 +63,7 @@ fe:Temperature a owl:Class ; rdfs:subClassOf crm:E54_Dimension .
 # --- Propriétés d'Objet : Connexion Pivot ---
 fe:hasWeatherDimension a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P43_has_dimension ;
-    rdfs:domain fe:WeatherMeasurement ;
+    rdfs:domain fe:Weathercondition ;
     rdfs:range crm:E54_Dimension .
 
 # Propriété pour qualifier la dimension (ex: Beaufort pour le vent - Liaison SKOS)
