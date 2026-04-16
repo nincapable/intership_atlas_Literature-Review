@@ -12,12 +12,16 @@ fe:Victim a owl:Class ;
     rdfs:subClassOf crm:E21_Person ;
     rdfs:label "Victime / Personne Impliquée"@fr .
 
+fe:VictimType a owl:Class ;
+    rdfs:subClassOf crm:HumanFactorType ;
+    rdfs:label "Type de Victime"@fr .
+
 # =================================================================
 # 2. PROPRIÉTÉS DE CLASSIFICATION (Vers SKOS)
 # =================================================================
 
 # --- Triage ---
-fe:TriageCategory a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:TriageCategory a owl:Class ; rdfs:subClassOf fe:VictimType .
 
 fe:hasTriageCategory a owl:ObjectProperty ;
     rdfs:label "catégorie de triage"@fr ;
@@ -25,7 +29,7 @@ fe:hasTriageCategory a owl:ObjectProperty ;
     rdfs:range fe:TriageCategory .
 
 # --- Genre ---
-fe:GenderType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:GenderType a owl:Class ; rdfs:subClassOf fe:VictimType .
 
 fe:hasGender a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P2_has_type ;
@@ -33,7 +37,7 @@ fe:hasGender a owl:ObjectProperty ;
     rdfs:range fe:GenderType .
 
 # --- Groupe d'appartenance ---
-fe:VictimGroup a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:VictimGroup a owl:Class ; rdfs:subClassOf fe:VictimType .
 
 fe:hasVictimGroup a owl:ObjectProperty ;
     rdfs:label "groupe d'appartenance"@fr ;

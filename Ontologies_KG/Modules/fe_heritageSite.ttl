@@ -38,15 +38,12 @@ fe:hasClimate a owl:ObjectProperty ;
 # =================================================================
 
 fe:ProtectionLevel a owl:Class ;
-    rdfs:subClassOf crm:E55_Type ;
+    rdfs:subClassOf fe:OperationnalType ;
     rdfs:label "Niveau de Protection du Site"@fr .
 
 fe:hasProtectionStatus a owl:ObjectProperty ;
     rdfs:domain fe:HeritageSite ;
     rdfs:range fe:ProtectionLevel .
-
-fe:HazardType a owl:Class ;
-    rdfs:subClassOf crm:E55_Type .
 
 fe:hasHazard a owl:ObjectProperty ;
     rdfs:domain fe:HeritageSite ;

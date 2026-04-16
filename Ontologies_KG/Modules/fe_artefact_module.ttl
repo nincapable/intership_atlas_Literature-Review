@@ -14,6 +14,10 @@ fe:Artefact a owl:Class ;
     rdfs:subClassOf crm:E22_Man_Made_Object ;
     rdfs:comment "Objet physique d'intérêt patrimonial nécessitant une protection ou une évacuation."@fr .
 
+fe:ArtefectType a owl:Class ;
+    rdfs:label "Type d'Artefact"@fr ;
+    rdfs:subClassOf crm:E55_Type .
+
 # =================================================================
 # 2. PROPRIÉTÉS DE CLASSIFICATION (LIAISON THÉSAURUS)
 # =================================================================
@@ -54,19 +58,19 @@ fe:hasFragilityType a owl:ObjectProperty ;
 
 fe:Artos_Type a owl:Class ;
     rdfs:label "Type d'Artefact"@fr ;
-    rdfs:subClassOf crm:E55_Type .
+    rdfs:subClassOf fe:ArtefectType .
 
 fe:Artos_SubType a owl:Class ;
     rdfs:label "Sous-Type d'Artefact"@fr ;
-    rdfs:subClassOf fe:Artos_Type .
+    rdfs:subClassOf fe:ArtefectType .
 
 fe:MobilityType a owl:Class ;
     rdfs:label "Type de Mobilité"@fr ;
-    rdfs:subClassOf crm:E55_Type .
+    rdfs:subClassOf fe:ArtefectType .
 
 fe:FragilityType a owl:Class ;
     rdfs:label "Type de Fragilité"@fr ;
-    rdfs:subClassOf crm:E55_Type .
+    rdfs:subClassOf fe:ArtefectType .
 
 # =================================================================
 # 4. DOCUMENTATION ET PROCÉDURES

@@ -18,7 +18,7 @@ fe:MaterialInstance a owl:Class ;
 
 fe:ArchitectureStyle a owl:Class ; 
     rdfs:label "Classe des Styles Architecturaux"@fr ;
-    rdfs:subClassOf crm:E55_Type .
+    rdfs:subClassOf fe:OperationnalType .
 
 # =================================================================
 # 2. COMPOSITION ET STYLE (Liaisons vers Thésaurus)

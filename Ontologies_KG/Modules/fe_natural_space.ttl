@@ -12,12 +12,24 @@ fe:NaturalSpace a owl:Class ;
     rdfs:label "Espace Naturel"@fr ;
     rdfs:subClassOf crm:E27_Site .
 
+fe:Biotype a owl:Class;
+    rdfs:label "Biotype"@fr ;
+    rdfs:subClassOf crm:E55_Type .
+
+fe:BioFireType a owl:Class ;
+    rdfs:label "Type de Biotype à Risque Incendie"@fr ;
+    rdfs:subClassOf fe:Biotype .
+
+fe:EnvironmentalType a owl:Class;
+    rdfs:label "Type Environnemental"@fr ;
+    dfs:subClassOf crm:E55_Type .
+
 # --- Classes de Référentiel ---
-fe:NaturalType a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:MaintenanceStyle a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:Taxon a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:IUCNCategory a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:RepartitionType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:NaturalType a owl:Class ; rdfs:subClassOf fe:EnvironmentalType .
+fe:MaintenanceStyle a owl:Class ; rdfs:subClassOf fe:EnvironmentalType .
+fe:Taxon a owl:Class ; rdfs:subClassOf fe:Biotype .
+fe:IUCNCategory a owl:Class ; rdfs:subClassOf fe:Biotype .
+fe:RepartitionType a owl:Class ; rdfs:subClassOf fe:EnvironmentalType .
 
 # --- Propriétés ---
 fe:hasNaturalType a owl:ObjectProperty ;
@@ -50,11 +62,11 @@ fe:percentageShare a owl:DatatypeProperty ; rdfs:range xsd:decimal .
 fe:VegetationFireSensitivity a owl:Class ; rdfs:subClassOf crm:E54_Dimension .
 fe:hasFireSensitivity a owl:ObjectProperty ; rdfs:domain fe:Taxon ; rdfs:range fe:VegetationFireSensitivity .
 
-fe:FlammabilityLevel a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:FireAidingTrait a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:FireResistingTrait a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:FireResponseStrategy a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:EmberType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:FlammabilityLevel a owl:Class ; rdfs:subClassOf fe:BioFiretype .
+fe:FireAidingTrait a owl:Class ; rdfs:subClassOf fe:BioFiretype .
+fe:FireResistingTrait a owl:Class ; rdfs:subClassOf fe:BioFiretype .
+fe:FireResponseStrategy a owl:Class ; rdfs:subClassOf fe:BioFiretype .
+fe:EmberType a owl:Class ; rdfs:subClassOf fe:BioFiretype .
 
 fe:hasFlammabilityClass a owl:ObjectProperty ; rdfs:range fe:FlammabilityLevel .
 fe:hasFireAidingTrait a owl:ObjectProperty ; rdfs:range fe:FireAidingTrait .

@@ -21,7 +21,7 @@ fe:hasImpactReport a owl:ObjectProperty ;
 
 # Classe de référence pour les niveaux de gravité (peuplée par SKOS)
 fe:ImpactSeverityLevel a owl:Class ;
-    rdfs:subClassOf crm:E55_Type ;
+    rdfs:subClassOf fe:RiskType ;
     rdfs:label "Niveau de Sévérité de l'Impact"@fr .
 
 # =================================================================
@@ -78,9 +78,6 @@ fe:hasTriageCount a owl:ObjectProperty ;
     rdfs:range fe:TriageCount .
 
 # Classe de référence pour les catégories de triage (peuplée par SKOS)
-fe:TriageCategory a owl:Class ;
-    rdfs:subClassOf crm:E55_Type ;
-    rdfs:label "Catégorie de Triage"@fr .
 
 fe:hasVictimCategory a owl:ObjectProperty ;
     rdfs:domain fe:TriageCount ;

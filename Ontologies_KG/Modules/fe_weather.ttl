@@ -9,9 +9,9 @@
 # =================================================================
 
 fe:Climate a owl:Class ;
-    rdfs:label "Climat Statistique"@fr ;
+    rdfs:label 'Climat Statistique'@fr ;
     rdfs:comment "Représente les moyennes climatiques d'une zone sur une longue période (Normales)."@fr ;
-    rdfs:subClassOf crm:E55_Type .
+    rdfs:subClassOf crm:EnvironmentalType .
 
 # Propriété pour classifier le type de climat (Liaison SKOS)
 fe:hasClimateType a owl:ObjectProperty ;
@@ -19,7 +19,7 @@ fe:hasClimateType a owl:ObjectProperty ;
     rdfs:domain fe:Climate ;
     rdfs:range fe:ClimateClassification .
 
-fe:ClimateClassification a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:ClimateClassification a owl:Class ; rdfs:subClassOf crm:EnvironmentalType .
 
 # --- Données Statistiques (Moyennes) ---
 fe:hasAvgTemp a owl:DatatypeProperty ; rdfs:domain fe:Climate ; rdfs:range xsd:decimal .
@@ -39,6 +39,8 @@ fe:WeatherMeasurement a owl:Class ;
     rdfs:label "Relevé Météorologique"@fr ;
     rdfs:subClassOf crm:E16_Measurement .
 
+fe:weatherQualifier a owl:Class ; rdfs:subClassOf fe:TechnicalType .
+
 # --- Classes de Dimensions ---
 fe:WindSpeed a owl:Class ; rdfs:subClassOf crm:E54_Dimension .
 fe:WindDirection a owl:Class ; rdfs:subClassOf crm:E54_Dimension .
@@ -56,7 +58,7 @@ fe:hasWeatherDimension a owl:ObjectProperty ;
 # Propriété pour qualifier la dimension (ex: Beaufort pour le vent - Liaison SKOS)
 fe:hasWeatherQualifier a owl:ObjectProperty ;
     rdfs:domain crm:E54_Dimension ;
-    rdfs:range crm:E55_Type .
+    rdfs:range fe:weatherQualifier .
 
 # Sous-propriétés spécifiques
 fe:hasWindSpeed a owl:ObjectProperty ; rdfs:subPropertyOf fe:hasWeatherDimension ; rdfs:range fe:WindSpeed .

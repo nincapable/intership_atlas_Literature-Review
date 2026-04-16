@@ -12,6 +12,10 @@ fe:Population a owl:Class ;
     rdfs:subClassOf crm:E74_Group ;
     rdfs:label "Population"@fr .
 
+fe:HumanFactorType a owl:Class ; rdfs:subClassOf crm:E55_Type ; rdfs:label "Type de Facteur Humain"@fr .
+
+fe:VictimType a owl:Class ; rdfs:subClassOf fe:HumanFactorType ; rdfs:label "Type de Victime"@fr .
+
 # --- Système de Partitions (Les tiroirs de données) ---
 
 fe:PopulationPartition a owl:Class ; 
@@ -35,13 +39,13 @@ fe:proportionValue a owl:DatatypeProperty ;
 # 2. CLASSES DE RÉFÉRENTIELS (Points d'ancrage SKOS)
 # =================================================================
 
-fe:MobilityClass a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:VictimGroup a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:PopType a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:RiskPerceptionLevel a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:AwarenessLevel a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:TrainingLevel a owl:Class ; rdfs:subClassOf crm:E55_Type .
-fe:EducationLevel a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:MobilityClass a owl:Class ; rdfs:subClassOf fe:HumanFactorType .
+fe:VictimGroup a owl:Class ; rdfs:subClassOf fe:VictimType .
+fe:PopType a owl:Class ; rdfs:subClassOf fe:HumanFactorType .
+fe:RiskPerceptionLevel a owl:Class ; rdfs:subClassOf fe:HumanFactorType .
+fe:AwarenessLevel a owl:Class ; rdfs:subClassOf fe:HumanFactorType .
+fe:TrainingLevel a owl:Class ; rdfs:subClassOf fe:HumanFactorType .
+fe:EducationLevel a owl:Class ; rdfs:subClassOf fe:HumanFactorType .
 
 # =================================================================
 # 3. PROPRIÉTÉS DE LIAISON

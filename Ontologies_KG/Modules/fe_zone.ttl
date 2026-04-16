@@ -13,11 +13,13 @@ fe:Zone a owl:Class ;
     rdfs:label "Zone d'intérêt"@fr ;
     rdfs:comment "Espace délimité caractérisé par son usage, sa capacité et son exposition aux risques."@fr .
 
+fe:TechnicalType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+
 # =================================================================
 # 2. CAPACITÉ ET FLUX (TRANSIT)
 # =================================================================
 
-fe:TransitType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:TransitType a owl:Class ; rdfs:subClassOf fe:OperationnalType .
 
 fe:hasCapacity a owl:ObjectProperty ;
     rdfs:label "capacité nominale"@fr ;
@@ -33,7 +35,7 @@ fe:hasTransitType a owl:ObjectProperty ;
 # 3. USAGE ET MORPHOLOGIE
 # =================================================================
 
-fe:ZoneUsageType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:ZoneUsageType a owl:Class ; rdfs:subClassOf fe:OperationnalType .
 
 fe:hasZoneUsage a owl:ObjectProperty ;
     rdfs:label "usage de la zone"@fr ;
@@ -59,7 +61,7 @@ fe:containsArtefact a owl:ObjectProperty ;
 # 4. RÉSEAUX ET COMMUNICATIONS
 # =================================================================
 
-fe:CommunicationType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:CommunicationType a owl:Class ; rdfs:subClassOf fe:OperationnalType .
 
 fe:hasCommunicationNode a owl:ObjectProperty ;
     rdfs:label "nœud de communication"@fr ;
@@ -156,4 +158,4 @@ fe:hasBoundingBox a owl:DatatypeProperty ;
     rdfs:range xsd:string .
 
 # Classe de référentiel pour SKOS
-fe:AcquisitionMethod a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:AcquisitionMethod a owl:Class ; rdfs:subClassOf fe:TechnicalType .

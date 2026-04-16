@@ -9,6 +9,10 @@ fe:HazardEvent a owl:Class ;
     rdfs:label "Aléa / Événement de Risque"@fr ;
     rdfs:subClassOf crm:E5_Event .
 
+fe:RiskType a owl:Class ;
+    rdfs:label "Type de Risque"@fr ;
+    rdfs:subClassOf crm:E55_Type .
+
 # --- PROPRIÉTÉS DE LIAISON ---
 
 fe:hasHazardType a owl:ObjectProperty ;
@@ -50,12 +54,12 @@ fe:hasImpact a owl:ObjectProperty ;
 
 fe:HazardType a owl:Class ;
     rdfs:label "Type de risque"@fr ;
-    rdfs:subClassOf crm:E55_Type .
+    rdfs:subClassOf fe:RiskType .
 
 fe:IntensityLevel a owl:Class ;
     rdfs:label "Niveau d'intensité"@fr ;
-    rdfs:subClassOf crm:E55_Type .
+    rdfs:subClassOf fe:RiskType .
 
 fe:SeverityLevel a owl:Class ;
     rdfs:label "Niveau de gravité"@fr ;
-    rdfs:subClassOf crm:E55_Type .
+    rdfs:subClassOf fe:RiskType .
