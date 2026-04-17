@@ -6,8 +6,9 @@
 
 <http://example.org/fire_and_evacuation/core> a owl:Ontology ;
     rdfs:label "Fire and Evacuation Ontology - Core Entry Point"@fr ;
-    rdfs:comment "Point d'entrée unique important les modules thématiques."@fr ;
-    # Importation des fichiers locaux du dossier Modules
+    rdfs:comment "Point d'entrée unique important les modules thématiques et les thésaurus associés."@fr ;
+    
+    # --- Importation des Modules Logiques (OWL) ---
     owl:imports <fe_building_module.ttl> ,
                 <fe_axis_module.ttl> ,
                 <fe_artefact_module.ttl> ,
@@ -19,4 +20,19 @@
                 <fe_safety.ttl> ,
                 <fe_victim.ttl> ,
                 <fe_weather.ttl> ,
-                <fe_zone.ttl> .
+                <fe_zone.ttl> ,
+
+    # --- Importation des Thésaurus (Vocabulaires Contrôlés SKOS) ---
+                <fe_thesaurus_alea.ttl> ,
+                <fe_thesaurus_building.ttl> ,
+                <fe_thesaurus_heritageSite.ttl> ,
+                <fe_thesaurus_safety.ttl> ,
+                <fe_thesaurus_zone.ttl> ,
+                <fe_thesaurus_artefacts.ttl> ,
+                <fe_thesaurus_espaces_nat.ttl> ,
+                <fe_thesaurus_impact.ttl> ,
+                <fe_thesaurus_victim.ttl> ,
+                <fe_thesaurus_axis.ttl> ,
+                <fe_thesaurus_especes.ttl> ,
+                <fe_thesaurus_population.ttl> ,
+                <fe_thesaurus_weather.ttl> .
