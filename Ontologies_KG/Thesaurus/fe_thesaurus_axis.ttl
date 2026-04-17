@@ -42,17 +42,17 @@ fe:rampe a skos:Concept, fe:AxisType ;
     skos:broader fe:AxisTypeConcept ;
     skos:inScheme fe:AxisTaxonomy .
 
-fe:ascenseur a skos:Concept ; 
+fe:ascenseur a skos:Concept, fe:AxisType ; 
     skos:prefLabel "Ascenseur"@fr ; 
     skos:inScheme fe:AxisTaxonomy ;
     skos:broader fe:AxisType .
 
-fe:fenetre a skos:Concept ; 
+fe:fenetre a skos:Concept, fe:AxisType ; 
     skos:prefLabel "Fenêtre"@fr ; 
     skos:inScheme fe:AxisTaxonomy ;
     skos:broader fe:AxisType .
 
-fe:voie_ouverte a skos:Concept ; 
+fe:voie_ouverte a skos:Concept, fe:AxisType ; 
     skos:prefLabel "Voie ouverte"@fr ; 
     skos:inScheme fe:AxisTaxonomy ;
     skos:broader fe:AxisType .

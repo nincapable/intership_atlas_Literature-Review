@@ -45,7 +45,8 @@ fe:hasReaction a owl:ObjectProperty ;
 # =================================================================
 
 fe:FireResistanceRating a owl:Class ;
-    rdfs:label "Degré de Résistance au Feu"@fr .
+    rdfs:subClassOf fe:TechnicalDimension ;
+    rdfs:label "Classe de Résistance au Feu"@fr .
 
 fe:FireResistanceComponent a owl:Class ; rdfs:subClassOf fe:fireSafetyType .
 

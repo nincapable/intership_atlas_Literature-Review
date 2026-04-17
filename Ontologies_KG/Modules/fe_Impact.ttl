@@ -30,6 +30,7 @@ fe:ImpactSeverityLevel a owl:Class ;
 # =================================================================
 
 fe:BuildingDamage a owl:Class ;
+    rdfs:subClassOf fe:EnvironmentalDimension ;
     rdfs:label "Constat de Dégât Bâtiment"@fr .
 
 fe:hasBuildingDamage a owl:ObjectProperty ;
