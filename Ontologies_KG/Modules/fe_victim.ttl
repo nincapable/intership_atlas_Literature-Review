@@ -51,7 +51,7 @@ fe:hasVictimGroup a owl:ObjectProperty ;
 # =================================================================
 
 fe:AgeDimension a owl:Class ;
-    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:subClassOf fe:HumanDimension ;
     rdfs:label "Dimension d'âge"@fr .
 
 fe:hasAge a owl:ObjectProperty ;

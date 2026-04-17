@@ -17,6 +17,10 @@ fe:Zone a owl:Class ;
 
 fe:TechnicalType a owl:Class ; rdfs:subClassOf crm:E55_Type .
 
+fe:RiskDimension a owl:Class ;
+    rdfs:label "Dimension de Risque"@fr ;
+    rdfs:subClassOf fe:RiskDimension .
+
 # =================================================================
 # 2. CAPACITÉ ET FLUX (TRANSIT)
 # =================================================================
@@ -75,7 +79,7 @@ fe:hasCommunicationNode a owl:ObjectProperty ;
 # =================================================================
 
 fe:FireRiskScore a owl:Class ;
-    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:subClassOf fe:RiskDimension ;
     rdfs:label "Score de Risque Incendie"@fr .
 
 fe:isExposedTo a owl:ObjectProperty ;

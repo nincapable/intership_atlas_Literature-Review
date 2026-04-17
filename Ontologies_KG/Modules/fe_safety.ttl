@@ -11,7 +11,7 @@
 # =================================================================
 
 fe:ReactionToFire a owl:Class ;
-    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:subClassOf fe:TechnicalDimension ;
     rdfs:label "Propriétés de Réaction au Feu"@fr .
 
 fe:fireSafetyType a owl:Class ; rdfs:subClassOf crm:E55_Type .

@@ -18,10 +18,12 @@ fe:HumanFactorType a owl:Class ; rdfs:subClassOf crm:E55_Type ; rdfs:label "Type
 
 fe:VictimType a owl:Class ; rdfs:subClassOf fe:HumanFactorType ; rdfs:label "Type de Victime"@fr .
 
+fe:HumanDimension a owl:Class ; rdfs:subClassOf crm:E54_Dimension ; rdfs:label "Dimension Humaine"@fr .
+
 # --- Système de Partitions (Les tiroirs de données) ---
 
 fe:PopulationPartition a owl:Class ;
-    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:subClassOf fe:HumanDimension ;
     rdfs:label "Partition de Population"@fr .
 
 fe:MobilityPart rdfs:subClassOf fe:PopulationPartition ; rdfs:label "Partition Mobilité"@fr .

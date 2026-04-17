@@ -37,17 +37,17 @@ fe:Climate_Mountain a skos:Concept, fe:ClimateClassification ;
 fe:BeaufortScheme a skos:ConceptScheme ;
     rdfs:label "Échelle de Beaufort"@fr .
 
-fe:Beaufort_0 a skos:Concept ;
+fe:Beaufort_0 a skos:Concept, fe:weatherQualifier ;
     skos:prefLabel "Calme (Force 0)"@fr ;
     skos:scopeNote "Vitesse < 1 km/h. La fumée monte verticalement."@fr ;
     skos:inScheme fe:BeaufortScheme .
 
-fe:Beaufort_5 a skos:Concept ;
+fe:Beaufort_5 a skos:Concept, fe:weatherQualifier ;
     skos:prefLabel "Bonne Brise (Force 5)"@fr ;
     skos:scopeNote "29-38 km/h. Les branches s'agitent. Facteur aggravant pour la propagation."@fr ;
     skos:inScheme fe:BeaufortScheme .
 
-fe:Beaufort_9 a skos:Concept ;
+fe:Beaufort_9 a skos:Concept, fe:weatherQualifier ;
     skos:prefLabel "Fort Coup de Vent (Force 9)"@fr ;
     skos:scopeNote "75-88 km/h. Dégâts légers aux bâtiments. Risque de projection d'escarbilles à longue distance."@fr ;
     skos:inScheme fe:BeaufortScheme .

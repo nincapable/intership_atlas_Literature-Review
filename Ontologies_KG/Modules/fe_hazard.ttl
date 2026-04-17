@@ -15,6 +15,10 @@ fe:RiskType a owl:Class ;
     rdfs:label "Type de Risque"@fr ;
     rdfs:subClassOf crm:E55_Type .
 
+fe:RiskDimension a owl:Class ;
+    rdfs:label "Dimension de Risque"@fr ;
+    rdfs:subClassOf crm:E54_Dimension .
+
 # --- PROPRIÉTÉS DE LIAISON ---
 
 fe:hasHazardType a owl:ObjectProperty ;

@@ -49,7 +49,7 @@ fe:buildingDamageLevel a owl:ObjectProperty ;
 # =================================================================
 
 fe:NaturalDamage a owl:Class ;
-    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:subClassOf fe:EnvironmentalDimension ;
     rdfs:label "Constat de Dégât Naturel"@fr .
 
 fe:hasNaturalDamage a owl:ObjectProperty ;
@@ -69,12 +69,12 @@ fe:naturalDamageLevel a owl:ObjectProperty ;
 # =================================================================
 
 fe:HumanToll a owl:Class ;
-    rdfs:subClassOf crm:E54_Dimension;
+    rdfs:subClassOf fe:HumanDimension;
     rdfs:label "Bilan Humain Global"@fr ;
     rdfs:comment "Regroupe l'ensemble des victimes et les statistiques de triage pour un événement."@fr .
 
 fe:TriageCount a owl:Class ;
-    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:subClassOf fe:HumanDimension ;
     rdfs:label "Ligne de Triage"@fr .
 
 fe:hasTriageCount a owl:ObjectProperty ;
