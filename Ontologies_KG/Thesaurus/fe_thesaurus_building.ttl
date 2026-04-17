@@ -3,6 +3,10 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
 
+<http://example.org/fire_and_evacuation/thesaurus_building> a owl:Ontology ;
+    owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS
+    rdfs:label "Vocabulaire des Bâtiments"@fr .
+
 # =================================================================
 # DÉFINITION DU RÉFÉRENTIEL BÂTIMENT
 # =================================================================

@@ -5,6 +5,10 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
+<http://example.org/fire_and_evacuation/thesaurus_zone> a owl:Ontology ;
+    owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS
+    rdfs:label "Vocabulaire des Zones"@fr .
+
 # =================================================================
 # 1. DÉFINITION DU SCHÉMA (CONCEPT SCHEME)
 # =================================================================

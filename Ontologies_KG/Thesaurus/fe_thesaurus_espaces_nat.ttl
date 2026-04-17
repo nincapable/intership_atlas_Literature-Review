@@ -3,6 +3,10 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
+<http://example.org/fire_and_evacuation/thesaurus_espaces_nat> a owl:Ontology ;
+    owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS
+    rdfs:label "Vocabulaire des Espaces Naturels"@fr .
+
 fe:NaturalSpaceThesaurus a skos:ConceptScheme ;
     rdfs:label "Thésaurus exhaustif des Espaces Naturels et Risques Incendie"@fr ;
     skos:hasTopConcept fe:Forest, fe:Shrubland, fe:Grassland, fe:Crop, fe:Wetland, fe:Parc .

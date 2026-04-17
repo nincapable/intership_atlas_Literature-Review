@@ -6,9 +6,9 @@
 
 <http://example.org/fire_and_evacuation/core> a owl:Ontology ;
     rdfs:label "Fire and Evacuation Ontology - Core Entry Point"@fr ;
-    rdfs:comment "Point d'entrée unique important les modules thématiques et les thésaurus associés."@fr ;
+    rdfs:comment "Point d'entrée unique important les modules thématiques et les thésaurus."@fr ;
     
-    # --- Importation des Modules Logiques (OWL) ---
+    # --- IMPORT DES MODULES LOGIQUES (Même dossier) ---
     owl:imports <fe_building_module.ttl> ,
                 <fe_axis_module.ttl> ,
                 <fe_artefact_module.ttl> ,
@@ -22,17 +22,18 @@
                 <fe_weather.ttl> ,
                 <fe_zone.ttl> ,
 
-    # --- Importation des Thésaurus (Vocabulaires Contrôlés SKOS) ---
-                <fe_thesaurus_alea.ttl> ,
-                <fe_thesaurus_building.ttl> ,
-                <fe_thesaurus_heritageSite.ttl> ,
-                <fe_thesaurus_safety.ttl> ,
-                <fe_thesaurus_zone.ttl> ,
-                <fe_thesaurus_artefacts.ttl> ,
-                <fe_thesaurus_espaces_nat.ttl> ,
-                <fe_thesaurus_impact.ttl> ,
-                <fe_thesaurus_victim.ttl> ,
-                <fe_thesaurus_axis.ttl> ,
-                <fe_thesaurus_especes.ttl> ,
-                <fe_thesaurus_population.ttl> ,
-                <fe_thesaurus_weather.ttl> .
+    # --- IMPORT DES THÉSAURUS (Dossier parent puis /Thesaurus/) ---
+    # Note : Protégé utilisera ces chemins pour localiser les fichiers physiquement.
+                <../Thesaurus/fe_thesaurus_alea.ttl> ,
+                <../Thesaurus/fe_thesaurus_building.ttl> ,
+                <../Thesaurus/fe_thesaurus_heritageSite.ttl> ,
+                <../Thesaurus/fe_thesaurus_safety.ttl> ,
+                <../Thesaurus/fe_thesaurus_zone.ttl> ,
+                <../Thesaurus/fe_thesaurus_artefacts.ttl> ,
+                <../Thesaurus/fe_thesaurus_espaces_nat.ttl> ,
+                <../Thesaurus/fe_thesaurus_impact.ttl> ,
+                <../Thesaurus/fe_thesaurus_victim.ttl> ,
+                <../Thesaurus/fe_thesaurus_axis.ttl> ,
+                <../Thesaurus/fe_thesaurus_especes.ttl> ,
+                <../Thesaurus/fe_thesaurus_population.ttl> ,
+                <../Thesaurus/fe_thesaurus_weather.ttl> .

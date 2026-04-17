@@ -2,6 +2,10 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
+<http://example.org/fire_and_evacuation/thesaurus_especes> a owl:Ontology ;
+    owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS
+    rdfs:label "Vocabulaire des Espèces"@fr .
+
 # Schémas
 fe:TaxonomyScheme a skos:ConceptScheme ; rdfs:label "Thésaurus de la Taxonomie Biologique"@fr ; skos:hasTopConcept fe:Animal, fe:Plant, fe:Fungus .
 fe:IUCScheme a skos:ConceptScheme ; rdfs:label "Référentiel des Statuts de Conservation UICN"@fr ; skos:hasTopConcept fe:IUCN_EX, fe:IUCN_EW, fe:IUCN_CR, fe:IUCN_EN, fe:IUCN_VU, fe:IUCN_NT, fe:IUCN_LC, fe:IUCN_DD, fe:IUCN_NE .

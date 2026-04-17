@@ -2,6 +2,10 @@
 @prefix fe: <http://example.org/fire_and_evacuation#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
+<http://example.org/fire_and_evacuation/thesaurus_safety> a owl:Ontology ;
+    owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS
+    rdfs:label "Vocabulaire de la Sécurité"@fr .
+
 # =================================================================
 # 1. RÉFÉRENTIEL DES EUROCLASSES (Réaction au Feu)
 # =================================================================
