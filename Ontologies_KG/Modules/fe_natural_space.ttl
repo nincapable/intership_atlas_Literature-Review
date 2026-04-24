@@ -92,6 +92,8 @@ fe:hasFireResponseStrategy a owl:ObjectProperty ; rdfs:domain fe:BioDivision  ; 
 fe:hasEmberType a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:EmberType .
 fe:hasFireFunctionalRole a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:FireFunctionalRole .
 
+fe:isExceptionTo a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:BioTrait ; rdfs:label "Exception à un trait hérité"@fr .
+
 fe:verticalTransferPotential a owl:DatatypeProperty ;rdfs:domain [ owl:unionOf (fe:FireAidingTrait fe:FireResistingTrait ) ]; rdfs:range xsd:decimal .
 fe:horizontalTransferPotential a owl:DatatypeProperty ;rdfs:domain [ owl:unionOf (fe:FireAidingTrait fe:FireResistingTrait) ]; rdfs:range xsd:decimal .
 fe:spontaneousIgnitionThreshold a owl:DatatypeProperty ; rdfs:domain [ owl:unionOf (fe:FireAidingTrait fe:FireResistingTrait) ]; rdfs:range xsd:decimal .
