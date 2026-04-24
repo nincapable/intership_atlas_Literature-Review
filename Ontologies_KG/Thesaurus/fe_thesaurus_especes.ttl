@@ -7,32 +7,155 @@
     rdfs:label "Vocabulaire des Espèces"@fr .
 
 # Schémas
-fe:TaxonomyScheme a skos:ConceptScheme ; rdfs:label "Thésaurus de la Taxonomie Biologique"@fr ; skos:hasTopConcept fe:Animal, fe:Plant, fe:Fungus .
 fe:IUCScheme a skos:ConceptScheme ; rdfs:label "Référentiel des Statuts de Conservation UICN"@fr ; skos:hasTopConcept fe:IUCN_EX, fe:IUCN_EW, fe:IUCN_CR, fe:IUCN_EN, fe:IUCN_VU, fe:IUCN_NT, fe:IUCN_LC, fe:IUCN_DD, fe:IUCN_NE .
 fe:FireTraitScheme a skos:ConceptScheme ; rdfs:label "Thésaurus des Traits face au Feu"@fr ; skos:hasTopConcept fe:FlammabilityScale, fe:FireAidingTrait, fe:FireResistingTrait, fe:EmberTypeRoot .
 fe:PlantFireStrategyScheme a skos:ConceptScheme ; rdfs:label "Référentiel des Stratégies de Réponse"@fr ; skos:hasTopConcept fe:FireResponseStrategyRoot, fe:FireFunctionalRoleRoot .
 
-# --- Classification (fe:Taxon) ---
-fe:Animal a skos:Concept, fe:Taxon ; skos:prefLabel "Animal"@fr ; skos:inScheme fe:TaxonomyScheme ; skos:narrower fe:Invertebrate, fe:Vertebrate .
-fe:Invertebrate a skos:Concept, fe:Taxon ; skos:prefLabel "Invertébré"@fr ; skos:broader fe:Animal ; skos:narrower fe:Insect .
-fe:Insect a skos:Concept, fe:Taxon ; skos:prefLabel "Insecte"@fr ; skos:broader fe:Invertebrate .
-fe:Vertebrate a skos:Concept, fe:Taxon ; skos:prefLabel "Vertébré"@fr ; skos:broader fe:Animal ; skos:narrower fe:Mammal, fe:Bird, fe:Fish, fe:Amphibian, fe:Reptile .
-fe:Mammal a skos:Concept, fe:Taxon ; skos:prefLabel "Mammifère"@fr ; skos:broader fe:Vertebrate .
-fe:Bird a skos:Concept, fe:Taxon ; skos:prefLabel "Oiseau"@fr ; skos:broader fe:Vertebrate .
-fe:Fish a skos:Concept, fe:Taxon ; skos:prefLabel "Poisson"@fr ; skos:broader fe:Vertebrate .
-fe:Amphibian a skos:Concept, fe:Taxon ; skos:prefLabel "Amphibien"@fr ; skos:broader fe:Vertebrate .
-fe:Reptile a skos:Concept, fe:Taxon ; skos:prefLabel "Reptile"@fr ; skos:broader fe:Vertebrate .
 
-fe:Plant a skos:Concept, fe:Taxon ; skos:prefLabel "Plante / Flore"@fr ; skos:inScheme fe:TaxonomyScheme ; skos:narrower fe:Bryophyte, fe:VascularPlant .
-fe:Bryophyte a skos:Concept, fe:Taxon ; skos:prefLabel "Bryophyte (Mousses)"@fr ; skos:broader fe:Plant .
-fe:VascularPlant a skos:Concept, fe:Taxon ; skos:prefLabel "Plante Vasculaire"@fr ; skos:broader fe:Plant ; skos:narrower fe:Pteridophyte, fe:Spermatophyte .
-fe:Pteridophyte a skos:Concept, fe:Taxon ; skos:prefLabel "Ptéridophyte (Fougères)"@fr ; skos:broader fe:VascularPlant .
-fe:Spermatophyte a skos:Concept, fe:Taxon ; skos:prefLabel "Spermatophyte"@fr ; skos:broader fe:VascularPlant ; skos:narrower fe:Gymnosperme, fe:Angiosperme .
-fe:Gymnosperme a skos:Concept, fe:Taxon ; skos:prefLabel "Gymnosperme"@fr ; skos:broader fe:Spermatophyte .
-fe:Angiosperme a skos:Concept, fe:Taxon ; skos:prefLabel "Angiosperme"@fr ; skos:broader fe:Spermatophyte .
+fe:TaxonomyScheme a skos:ConceptScheme ; rdfs:label "Thésaurus de la Taxonomie Biologique"@fr ; skos:hasTopConcept fe:Animal, fe:Plant, fe:Fungus .
 
-fe:Fungus a skos:Concept, fe:Taxon ; skos:prefLabel "Champignon / Fongique"@fr ; skos:inScheme fe:TaxonomyScheme ; skos:narrower fe:Lichen .
-fe:Lichen a skos:Concept, fe:Taxon ; skos:prefLabel "Lichen"@fr ; skos:broader fe:Fungus .
+# --- NIVEAU RÈGNE (Reign) ---
+fe:Animal a skos:Concept, fe:BioReign ; 
+    skos:prefLabel "Animal"@fr ; 
+    skos:inScheme fe:TaxonomyScheme ; 
+    skos:narrower fe:Invertebrate, fe:Vertebrate .
+
+# --- NIVEAU DIVISION (Division / Phylum) ---
+fe:Invertebrate a skos:Concept, fe:BioDivision ; 
+    skos:prefLabel "Invertébré (Arthropodes, Mollusques, etc.)"@fr ; 
+    skos:broader fe:Animal ; 
+    skos:narrower fe:Hexapoda . 
+
+# --- NIVEAU SOUS-DIVISION (SubDivision / SubPhylum) ---
+fe:Vertebrate a skos:Concept, fe:BioSubDivision ; 
+    skos:prefLabel "Vertébré (Vertebrata)"@fr ; 
+    skos:broader fe:Animal ; 
+    skos:narrower fe:Mammal, fe:Bird, fe:Fish, fe:Amphibian, fe:Reptile .
+
+fe:Hexapoda a skos:Concept, fe:BioSubDivision ;
+    skos:prefLabel "Hexapodes"@fr ;
+    skos:broader fe:Invertebrate ;
+    skos:narrower fe:Insect .
+
+# --- NIVEAU CLASSE (Class) ---
+fe:Mammal a skos:Concept, fe:BioClass ; 
+    skos:prefLabel "Mammifère"@fr ; 
+    skos:broader fe:Vertebrate .
+
+fe:Bird a skos:Concept, fe:BioClass ; 
+    skos:prefLabel "Oiseau"@fr ; 
+    skos:broader fe:Vertebrate .
+
+fe:Fish a skos:Concept, fe:BioClass ; 
+    skos:prefLabel "Poisson (Osteichthyes/Chondrichthyes)"@fr ; 
+    skos:broader fe:Vertebrate .
+
+fe:Amphibian a skos:Concept, fe:BioClass ; 
+    skos:prefLabel "Amphibien"@fr ; 
+    skos:broader fe:Vertebrate .
+
+fe:Reptile a skos:Concept, fe:BioClass ; 
+    skos:prefLabel "Reptile (Sauropsida)"@fr ; 
+    skos:broader fe:Vertebrate .
+
+fe:Insect a skos:Concept, fe:BioClass ; 
+    skos:prefLabel "Insecte"@fr ; 
+    skos:broader fe:Hexapoda .
+
+# --- NIVEAU RÈGNE (Reign) ---
+fe:Plant a skos:Concept, fe:BioReign ; 
+    skos:prefLabel "Plante / Flore"@fr ; 
+    skos:inScheme fe:TaxonomyScheme ; 
+    skos:narrower fe:Bryophyte, fe:VascularPlant .
+
+# --- NIVEAU DIVISION (Division) ---
+fe:VascularPlant a skos:Concept, fe:BioDivision ; 
+    skos:prefLabel "Plante Vasculaire (Trachéophyte)"@fr ; 
+    skos:broader fe:Plant ; 
+    skos:narrower fe:Spermatophyta .
+
+fe:Bryophyte a skos:Concept, fe:BioDivision ; 
+    skos:prefLabel "Bryophyte (Mousses)"@fr ; 
+    skos:broader fe:Plant .
+
+# --- NIVEAU SOUS-DIVISION (SubDivision) ---
+fe:Spermatophyta a skos:Concept, fe:BioSubDivision ;
+    skos:prefLabel "Spermatophytes (Plantes à graines)"@fr ;
+    skos:broader fe:VascularPlant ;
+    skos:narrower fe:Gymnospermae, fe:Angiospermae .
+
+fe:Pteridophyte a skos:Concept, fe:BioSubDivision ; 
+    skos:prefLabel "Ptéridophyte (Fougères)"@fr ; 
+    skos:broader fe:VascularPlant .
+
+# --- NIVEAU CLASSE (Class) ---
+fe:Gymnospermae a skos:Concept, fe:BioClass ;
+    skos:prefLabel "Gymnospermes"@fr ;
+    skos:broader fe:Spermatophyta.
+
+fe:Angiospermae a skos:Concept, fe:BioClass ;
+    skos:prefLabel "Angiospermes"@fr ;
+    skos:broader fe:Spermatophyta .
+
+# --- NIVEAU RÈGNE (Reign) ---
+fe:Fungus a skos:Concept, fe:BioReign ; 
+    skos:prefLabel "Champignon (Fungi)"@fr ; 
+    skos:inScheme fe:TaxonomyScheme ; 
+    skos:narrower fe:Dikarya, fe:LichenizedFungi .
+
+# --- NIVEAU DIVISION (Division) ---
+fe:Dikarya a skos:Concept, fe:BioDivision ;
+    skos:prefLabel "Champignons Supérieurs (Dikarya)"@fr ;
+    skos:broader fe:Fungus ;
+    skos:narrower fe:Ascomycota, fe:Basidiomycota .
+
+fe:LichenizedFungi a skos:Concept, fe:BioDivision ;
+    skos:prefLabel "Champignons Lichénisés"@fr ;
+    skos:broader fe:Fungus_Reign ;
+    skos:narrower fe:Lecanoromycetes .
+
+# --- NIVEAU SOUS-DIVISION (SubDivision) ---
+fe:Basidiomycota a skos:Concept, fe:BioSubDivision ;
+    skos:prefLabel "Basidiomycètes"@fr ;
+    skos:broader fe:Dikarya ;
+    skos:narrower fe:Agaricomycetes .
+
+fe:Ascomycota a skos:Concept, fe:BioSubDivision ;
+    skos:prefLabel "Ascomycètes"@fr ;
+    skos:broader fe:Dikarya .
+
+# --- NIVEAU CLASSE (Class) ---
+fe:Agaricomycetes a skos:Concept, fe:BioClass ;
+    skos:prefLabel "Agaricomycètes"@fr ;
+    skos:broader fe:Basidiomycota.
+
+fe:Lecanoromycetes a skos:Concept, fe:BioClass ;
+    skos:prefLabel "Lécanoromycètes (Lichens principaux)"@fr ;
+    skos:broader fe:LichenizedFungi .
+
+# --- NIVEAU ORDRE (Order) ---
+fe:Polyporales a skos:Concept, fe:BioOrder ;
+    skos:prefLabel "Polyporales"@fr ;
+    skos:broader fe:Agaricomycetes ;
+    skos:narrower fe:Fomitopsidaceae .
+
+# --- NIVEAU FAMILLE (Family) ---
+fe:Fomitopsidaceae a skos:Concept, fe:BioFamily ;
+    skos:prefLabel "Fomitopsidacées"@fr ;
+    skos:broader fe:Polyporales ;
+    skos:narrower fe:Fomitopsis .
+
+# --- NIVEAU GENRE (Genre) ---
+fe:Fomitopsis a skos:Concept, fe:BioGenre ;
+    skos:prefLabel "Fomitopsis (Genre)"@fr ;
+    skos:broader fe:Fomitopsidaceae ;
+    skos:narrower fe:FomitopsisPinicola .
+
+# --- NIVEAU TAXON (Espèce) ---
+fe:FomitopsisPinicola a skos:Concept, fe:Taxon ;
+    skos:prefLabel "Polypore du Pin"@fr ;
+    skos:broader fe:Fomitopsis.
+
 
 # --- UICN (fe:IUCNCategory) ---
 fe:IUCN_EX a skos:Concept, fe:IUCNCategory ; skos:prefLabel "Éteint (EX)"@fr ; skos:inScheme fe:IUCScheme .
@@ -47,12 +170,12 @@ fe:IUCN_NE a skos:Concept, fe:IUCNCategory ; skos:prefLabel "Non évalué (NE)"@
 
 # --- Traits Feu (fe:FlammabilityLevel, fe:FireAidingTrait, etc.) ---
 fe:FlammabilityScale a skos:Concept ; skos:prefLabel "Échelle d'Inflammabilité"@fr ; skos:inScheme fe:FireTraitScheme ; skos:narrower fe:Flam_Extreme, fe:Flam_Very_High, fe:Flam_High, fe:Flam_Moderate, fe:Flam_Low, fe:Flam_NonFlammable .
-fe:Flam_Extreme a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Extrêmement Inflammable"@fr ; skos:broader fe:FlammabilityScale; fe:hasValetteScore 5 .
-fe:Flam_Very_High a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Très Inflammable"@fr ; skos:broader fe:FlammabilityScale; fe:hasValetteScore 4 .
-fe:Flam_High a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Hautement Inflammable"@fr ; skos:broader fe:FlammabilityScale; fe:hasValetteScore 3 .
-fe:Flam_Moderate a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Moyennement Inflammable"@fr ; skos:broader fe:FlammabilityScale ; fe:hasValetteScore 2 .
-fe:Flam_Low a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Difficilement Inflammable"@fr ; skos:broader fe:FlammabilityScale ; fe:hasValetteScore 1 .
-fe:Flam_NonFlammable a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Non Inflammable"@fr ; skos:broader fe:FlammabilityScale ; fe:hasValetteScore 0 .
+fe:Flam_Extreme a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Extrêmement Inflammable"@fr ; skos:broader fe:FlammabilityScale; fe:ValetteScore 5.
+fe:Flam_Very_High a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Très Inflammable"@fr ; skos:broader fe:FlammabilityScale; fe:ValetteScore 4 .
+fe:Flam_High a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Hautement Inflammable"@fr ; skos:broader fe:FlammabilityScale; fe:ValetteScore 3 .
+fe:Flam_Moderate a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Moyennement Inflammable"@fr ; skos:broader fe:FlammabilityScale ; fe:ValetteScore 2 .
+fe:Flam_Low a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Difficilement Inflammable"@fr ; skos:broader fe:FlammabilityScale ; fe:ValetteScore 1 .
+fe:Flam_NonFlammable a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Non Inflammable"@fr ; skos:broader fe:FlammabilityScale ; fe:ValetteScore 0 .
 
 fe:FireAidingTrait a skos:Concept ; skos:prefLabel "Traits favorisant le feu"@fr ; skos:inScheme fe:FireTraitScheme ; skos:narrower fe:EssentialOils, fe:ResinExudate, fe:Marcescence, fe:FineFuelStructure, fe:LadderFuelArchitecture .
 fe:EssentialOils a skos:Concept, fe:FireAidingTrait ;

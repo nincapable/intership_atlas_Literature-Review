@@ -33,7 +33,17 @@ fe:EnvironmentalDimension a owl:Class ;
 # --- Classes de Référentiel ---
 fe:NaturalType a owl:Class ; rdfs:subClassOf fe:EnvironmentalType .
 fe:MaintenanceStyle a owl:Class ; rdfs:subClassOf fe:EnvironmentalType .
-fe:Taxon a owl:Class ; rdfs:subClassOf fe:Biotype .
+
+#Vive la Taxonomie
+fe:Taxon a owl:Class ; rdfs:subClassOf fe:BioGenre .
+fe:BioGenre a owl:Class ; rdfs:subClassOf fe:BioFamily .
+fe:BioFamily a owl:Class ; rdfs:subClassOf fe:BioOrder .
+fe:BioOrder a owl:Class ; rdfs:subClassOf fe:BioClass .
+fe:BioClass a owl:Class ; rdfs:subClassOf fe:BioSubDivision .
+fe:BioSubDivision a owl:Class ; rdfs:subClassOf fe:BioDivision .
+fe:BioDivision a owl:Class ; rdfs:subClassOf fe:BioReign .
+fe:BioReign a owl:Class ; rdfs:subClassOf fe:Biotype .
+
 fe:IUCNCategory a owl:Class ; rdfs:subClassOf fe:Biotype .
 fe:RepartitionType a owl:Class ; rdfs:subClassOf fe:EnvironmentalType .
 
@@ -68,32 +78,36 @@ fe:percentageShare a owl:DatatypeProperty ; rdfs:range xsd:decimal .
 fe:VegetationFireSensitivity a owl:Class ; rdfs:subClassOf fe:EnvironmentalDimension .
 fe:hasFireSensitivity a owl:ObjectProperty ; rdfs:domain fe:Taxon ; rdfs:range fe:VegetationFireSensitivity .
 
-fe:FlammabilityLevel a owl:Class ; rdfs:subClassOf fe:BioFireType .
-fe:FireAidingTrait a owl:Class ; rdfs:subClassOf fe:BioFireType .
-fe:FireResistingTrait a owl:Class ; rdfs:subClassOf fe:BioFireType .
-fe:FireResponseStrategy a owl:Class ; rdfs:subClassOf fe:BioFireType .
-fe:EmberType a owl:Class ; rdfs:subClassOf fe:BioFireType .
-fe:FireFunctionalRole a owl:Class ; rdfs:subClassOf fe:BioFireType .
+fe:BioTrait a owl:Class ; rdfs:subClassOf fe:BioClass .
+fe:FireAidingTrait a owl:Class ; rdfs:subClassOf fe:BioTrait .
+fe:FireResistingTrait a owl:Class ; rdfs:subClassOf fe:BioTrait .
+fe:FireResponseStrategy a owl:Class ; rdfs:subClassOf fe:BioTrait .
+fe:EmberType a owl:Class ; rdfs:subClassOf fe:BioTrait .
+fe:FireFunctionalRole a owl:Class ; rdfs:subClassOf fe:BioTrait .
 
 fe:hasFlammabilityClass a owl:ObjectProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range fe:FlammabilityLevel .
-fe:hasFireAidingTrait a owl:ObjectProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range fe:FireAidingTrait .
-fe:hasFireResistingTrait a owl:ObjectProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range fe:FireResistingTrait .
-fe:hasFireResponseStrategy a owl:ObjectProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range fe:FireResponseStrategy .
-fe:hasEmberType a owl:ObjectProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range fe:EmberType .
-fe:hasFireFunctionalRole a owl:ObjectProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range fe:FireFunctionalRole .
+fe:hasFireAidingTrait a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:FireAidingTrait .
+fe:hasFireResistingTrait a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:FireResistingTrait .
+fe:hasFireResponseStrategy a owl:ObjectProperty ; rdfs:domain fe:BioDivision  ; rdfs:range fe:FireResponseStrategy .
+fe:hasEmberType a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:EmberType .
+fe:hasFireFunctionalRole a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:FireFunctionalRole .
 
-fe:verticalTransferPotential a owl:DatatypeProperty ; rdfs:range xsd:decimal .
-fe:horizontalTransferPotential a owl:DatatypeProperty ; rdfs:range xsd:decimal .
-fe:spontaneousIgnitionThreshold a owl:DatatypeProperty ; rdfs:range xsd:decimal .
-fe:fireResistanceDuration a owl:DatatypeProperty ; rdfs:range xsd:decimal .
-fe:heatReleasePotential a owl:DatatypeProperty ; rdfs:range xsd:decimal .
-fe:hasValetteScore a owl:DatatypeProperty ; rdfs:range xsd:integer .
+fe:verticalTransferPotential a owl:DatatypeProperty ;rdfs:domain [ owl:unionOf (fe:FireAidingTrait fe:FireResistingTrait ) ]; rdfs:range xsd:decimal .
+fe:horizontalTransferPotential a owl:DatatypeProperty ;rdfs:domain [ owl:unionOf (fe:FireAidingTrait fe:FireResistingTrait) ]; rdfs:range xsd:decimal .
+fe:spontaneousIgnitionThreshold a owl:DatatypeProperty ; rdfs:domain [ owl:unionOf (fe:FireAidingTrait fe:FireResistingTrait) ]; rdfs:range xsd:decimal .
+fe:fireResistanceDuration a owl:DatatypeProperty ; rdfs:domain [ owl:unionOf (fe:FireAidingTrait fe:FireResistingTrait) ]; rdfs:range xsd:decimal .
+fe:heatReleasePotential a owl:DatatypeProperty ; rdfs:domain [ owl:unionOf (fe:FireAidingTrait fe:FireResistingTrait) ]; rdfs:range xsd:decimal .
+fe:ignitionDelay a owl:DatatypeProperty ; rdfs:domain [ owl:unionOf (fe:FireAidingTrait fe:FireResistingTrait) ]; rdfs:range xsd:decimal .
+
+fe:ValetteScore a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:integer .
+
 
 fe:calculatedIgnitionThreshold a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:decimal .
 fe:calculatedHeatReleasePotential a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:decimal .
 fe:calculatedHorizontalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:decimal .
 fe:calculatedVerticalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:decimal .
 fe:calculatedGeneralFireRisk a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:decimal .
+fe:calculatedFlammabilityLevel a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:decimal .
 
 # =================================================================
 # 4. EXPOSITION GLOBALE
