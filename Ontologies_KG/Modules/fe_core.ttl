@@ -37,3 +37,15 @@
                 <../Thesaurus/fe_thesaurus_especes.ttl> ,
                 <../Thesaurus/fe_thesaurus_population.ttl> ,
                 <../Thesaurus/fe_thesaurus_weather.ttl> .
+
+fe:riskWeight a owl:DatatypeProperty ;
+    rdfs:label "Poids de risque de base"@fr ;
+    rdfs:range xsd:decimal .
+
+fe:hazardMultiplier a owl:DatatypeProperty ;
+    rdfs:label "Multiplicateur de dangerosité"@fr ;
+    rdfs:range xsd:decimal .
+
+fe:vulnerabilityIndex a owl:DatatypeProperty ;
+    rdfs:label "Index de vulnérabilité calculé"@fr ;
+    rdfs:range xsd:decimal .

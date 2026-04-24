@@ -47,34 +47,70 @@ fe:IUCN_NE a skos:Concept, fe:IUCNCategory ; skos:prefLabel "Non évalué (NE)"@
 
 # --- Traits Feu (fe:FlammabilityLevel, fe:FireAidingTrait, etc.) ---
 fe:FlammabilityScale a skos:Concept ; skos:prefLabel "Échelle d'Inflammabilité"@fr ; skos:inScheme fe:FireTraitScheme ; skos:narrower fe:Flam_Extreme, fe:Flam_Very_High, fe:Flam_High, fe:Flam_Moderate, fe:Flam_Low, fe:Flam_NonFlammable .
-fe:Flam_Extreme a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Extrêmement Inflammable"@fr ; skos:broader fe:FlammabilityScale .
-fe:Flam_Very_High a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Très Inflammable"@fr ; skos:broader fe:FlammabilityScale .
-fe:Flam_High a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Hautement Inflammable"@fr ; skos:broader fe:FlammabilityScale .
-fe:Flam_Moderate a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Moyennement Inflammable"@fr ; skos:broader fe:FlammabilityScale .
-fe:Flam_Low a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Difficilement Inflammable"@fr ; skos:broader fe:FlammabilityScale .
-fe:Flam_NonFlammable a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Non Inflammable"@fr ; skos:broader fe:FlammabilityScale .
+fe:Flam_Extreme a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Extrêmement Inflammable"@fr ; skos:broader fe:FlammabilityScale; fe:hasValetteScore 5 .
+fe:Flam_Very_High a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Très Inflammable"@fr ; skos:broader fe:FlammabilityScale; fe:hasValetteScore 4 .
+fe:Flam_High a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Hautement Inflammable"@fr ; skos:broader fe:FlammabilityScale; fe:hasValetteScore 3 .
+fe:Flam_Moderate a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Moyennement Inflammable"@fr ; skos:broader fe:FlammabilityScale ; fe:hasValetteScore 2 .
+fe:Flam_Low a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Difficilement Inflammable"@fr ; skos:broader fe:FlammabilityScale ; fe:hasValetteScore 1 .
+fe:Flam_NonFlammable a skos:Concept, fe:FlammabilityLevel ; skos:prefLabel "Non Inflammable"@fr ; skos:broader fe:FlammabilityScale ; fe:hasValetteScore 0 .
 
 fe:FireAidingTrait a skos:Concept ; skos:prefLabel "Traits favorisant le feu"@fr ; skos:inScheme fe:FireTraitScheme ; skos:narrower fe:EssentialOils, fe:ResinExudate, fe:Marcescence, fe:FineFuelStructure, fe:LadderFuelArchitecture .
-fe:EssentialOils a skos:Concept, fe:FireAidingTrait ; skos:prefLabel "Huiles Essentielles"@fr ; skos:broader fe:FireAidingTrait .
-fe:ResinExudate a skos:Concept, fe:FireAidingTrait ; skos:prefLabel "Exsudats Résineux"@fr ; skos:broader fe:FireAidingTrait .
-fe:Marcescence a skos:Concept, fe:FireAidingTrait ; skos:prefLabel "Marcescence"@fr ; skos:broader fe:FireAidingTrait .
-fe:FineFuelStructure a skos:Concept, fe:FireAidingTrait ; skos:prefLabel "Structure de Brindilles Fines"@fr ; skos:broader fe:FireAidingTrait .
-fe:LadderFuelArchitecture a skos:Concept, fe:FireAidingTrait ; skos:prefLabel "Architecture en Échelle"@fr ; skos:broader fe:FireAidingTrait .
+fe:EssentialOils a skos:Concept, fe:FireAidingTrait ;
+    skos:prefLabel "Huiles Essentielles"@fr ;
+    fe:heatReleasePotential "25.0"^^xsd:decimal ;    # Augmente la puissance calorifique
+    fe:spontaneousIgnitionThreshold "150.0"^^xsd:decimal . # Baisse le seuil d'allumage
+
+fe:ResinExudate a skos:Concept, fe:FireAidingTrait ;
+    skos:prefLabel "Exsudats Résineux"@fr ;
+    fe:heatReleasePotential "30.0"^^xsd:decimal .
+
+fe:Marcescence a skos:Concept, fe:FireAidingTrait ;
+    skos:prefLabel "Marcescence"@fr ;
+    fe:spontaneousIgnitionThreshold "180.0"^^xsd:decimal ;
+    fe:heatReleasePotential "15.0"^^xsd:decimal .
+
+fe:LadderFuelArchitecture a skos:Concept, fe:FireAidingTrait ;
+    skos:prefLabel "Architecture en Échelle"@fr ;
+    fe:verticalTransferPotential "50.0"^^xsd:decimal .
+
+fe:FineFuelStructure a skos:Concept, fe:FireAidingTrait ;
+    skos:prefLabel "Structure de Brindilles Fines"@fr ;
+    fe:spontaneousIgnitionThreshold "160.0"^^xsd:decimal ;
+    fe:heatReleasePotential "10.0"^^xsd:decimal ;
+    fe:horizontalTransferPotential "40.0"^^xsd:decimal .
+
 
 fe:FireResistingTrait a skos:Concept ; skos:prefLabel "Traits résistant au feu"@fr ; skos:inScheme fe:FireTraitScheme ; skos:narrower fe:SuberousBark, fe:ThermalInertiaTrunk, fe:HighSucculence, fe:MineralContent, fe:SelfPruning, fe:CrownDiscontinuity .
-fe:SuberousBark a skos:Concept, fe:FireResistingTrait ; skos:prefLabel "Écorce Subéreuse (Liège)"@fr ; skos:broader fe:FireResistingTrait .
-fe:ThermalInertiaTrunk a skos:Concept, fe:FireResistingTrait ; skos:prefLabel "Inertie Thermique du Tronc"@fr ; skos:broader fe:FireResistingTrait .
-fe:HighSucculence a skos:Concept, fe:FireResistingTrait ; skos:prefLabel "Succulence / Teneur en eau"@fr ; skos:broader fe:FireResistingTrait .
-fe:MineralContent a skos:Concept, fe:FireResistingTrait ; skos:prefLabel "Teneur en Sels Minéraux"@fr ; skos:broader fe:FireResistingTrait .
-fe:SelfPruning a skos:Concept, fe:FireResistingTrait ; skos:prefLabel "Auto-élagage"@fr ; skos:broader fe:FireResistingTrait .
-fe:CrownDiscontinuity a skos:Concept, fe:FireResistingTrait ; skos:prefLabel "Discontinuité du Houppier"@fr ; skos:broader fe:FireResistingTrait .
+fe:SuberousBark a skos:Concept, fe:FireResistingTrait ;
+    skos:prefLabel "Écorce Subéreuse (Liège)"@fr ;
+    fe:fireResistanceDuration "40.0"^^xsd:decimal .
+
+fe:ThermalInertiaTrunk a skos:Concept, fe:FireResistingTrait ;
+    skos:prefLabel "Inertie Thermique du Tronc"@fr ;
+    fe:fireResistanceDuration "60.0"^^xsd:decimal .
+
+fe:HighSucculence a skos:Concept, fe:FireResistingTrait ;
+    skos:prefLabel "Succulence / Teneur en eau"@fr ;
+    fe:spontaneousIgnitionThreshold "150.0"^^xsd:decimal .
+
+fe:MineralContent a skos:Concept, fe:FireResistingTrait ;
+    skos:prefLabel "Teneur en Sels Minéraux"@fr ;
+    fe:spontaneousIgnitionThreshold "50.0"^^xsd:decimal .
+
+fe:SelfPruning a skos:Concept, fe:FireResistingTrait ;
+    skos:prefLabel "Auto-élagage"@fr ;
+    fe:verticalTransferPotential "-50.0"^^xsd:decimal .
+
+fe:CrownDiscontinuity a skos:Concept, fe:FireResistingTrait ;
+    skos:prefLabel "Discontinuité du Houppier"@fr ;
+    fe:horizontalTransferPotential "-40.0"^^xsd:decimal .
 
 # --- Stratégies (fe:FireResponseStrategy) ---
 fe:FireFunctionalRoleRoot a skos:Concept ; skos:prefLabel "Rôles fonctionnels face au feu"@fr ; skos:inScheme fe:PlantFireStrategyScheme ; skos:narrower fe:Role_Screen, fe:Role_Ladder, fe:Role_Spotter, fe:Role_Retardant .
-fe:Role_Screen a skos:Concept, fe:FireResponseStrategy ; skos:prefLabel "Écran / Bouclier"@fr ; skos:broader fe:FireFunctionalRoleRoot .
-fe:Role_Ladder a skos:Concept, fe:FireResponseStrategy ; skos:prefLabel "Vecteur Vertical (Échelle)"@fr ; skos:broader fe:FireFunctionalRoleRoot .
-fe:Role_Spotter a skos:Concept, fe:FireResponseStrategy ; skos:prefLabel "Diffuseur (Projection)"@fr ; skos:broader fe:FireFunctionalRoleRoot .
-fe:Role_Retardant a skos:Concept, fe:FireResponseStrategy ; skos:prefLabel "Retardateur (pare-feu Vert)"@fr ; skos:broader fe:FireFunctionalRoleRoot .
+fe:Role_Screen a skos:Concept, fe:FireFunctionalRole; skos:prefLabel "Écran / Bouclier"@fr ; skos:broader fe:FireFunctionalRoleRoot .
+fe:Role_Ladder a skos:Concept, fe:FireFunctionalRole ; skos:prefLabel "Vecteur Vertical (Échelle)"@fr ; skos:broader fe:FireFunctionalRoleRoot .
+fe:Role_Spotter a skos:Concept, fe:FireFunctionalRole ; skos:prefLabel "Diffuseur (Projection)"@fr ; skos:broader fe:FireFunctionalRoleRoot .
+fe:Role_Retardant a skos:Concept, fe:FireFunctionalRole ; skos:prefLabel "Retardateur (pare-feu Vert)"@fr ; skos:broader fe:FireFunctionalRoleRoot .
 
 fe:FireResponseStrategyRoot a skos:Concept ; skos:prefLabel "Stratégies de réponse au feu"@fr ; skos:inScheme fe:PlantFireStrategyScheme ; skos:narrower fe:Strategy_Resister, fe:Strategy_Endurer, fe:Strategy_Recruiter .
 fe:Strategy_Resister a skos:Concept, fe:FireResponseStrategy ; skos:prefLabel "Résistant"@fr ; skos:broader fe:FireResponseStrategyRoot .

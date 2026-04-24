@@ -1,0 +1,16 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/fire_and_evacuation/indices> a owl:Ontology ;
+    rdfs:label "Module de calcul des indices de risque"@fr .
+
+# Propriétés de sortie (Calculées par inférence)
+fe:hasIgnitionPotential a owl:DatatypeProperty ; 
+    rdfs:label "Potentiel d'allumage"@fr ;
+    rdfs:range xsd:decimal .
+
+fe:hasPropagationPotential a owl:DatatypeProperty ; 
+    rdfs:label "Potentiel de propagation"@fr ;
+    rdfs:range xsd:decimal .
