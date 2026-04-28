@@ -16,7 +16,8 @@ fe:TaxonomyScheme a skos:ConceptScheme ; rdfs:label "Thésaurus de la Taxonomie 
 
 # --- NIVEAU RÈGNE (Reign) ---
 fe:Animal a skos:Concept, fe:BioReign ; 
-    skos:prefLabel "Animal"@fr ; 
+    skos:prefLabel "Animal"@fr ;
+    fe:organicIgnitionBasis 220 ;
     skos:inScheme fe:TaxonomyScheme ; 
     skos:narrower fe:Invertebrate, fe:Vertebrate .
 
@@ -64,7 +65,8 @@ fe:Insect a skos:Concept, fe:BioClass ;
 
 # --- NIVEAU RÈGNE (Reign) ---
 fe:Plant a skos:Concept, fe:BioReign ; 
-    skos:prefLabel "Plante / Flore"@fr ; 
+    skos:prefLabel "Plante / Flore"@fr ;
+    fe:organicIgnitionBasis 425 ; 
     skos:inScheme fe:TaxonomyScheme ; 
     skos:narrower fe:Bryophyte, fe:VascularPlant .
 
@@ -99,7 +101,8 @@ fe:Angiospermae a skos:Concept, fe:BioClass ;
 
 # --- NIVEAU RÈGNE (Reign) ---
 fe:Fungus a skos:Concept, fe:BioReign ; 
-    skos:prefLabel "Champignon (Fungi)"@fr ; 
+    skos:prefLabel "Champignon (Fungi)"@fr ;
+    fe:organicIgnitionBasis 340 ;
     skos:inScheme fe:TaxonomyScheme ; 
     skos:narrower fe:Dikarya, fe:LichenizedFungi .
 

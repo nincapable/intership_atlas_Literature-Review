@@ -126,6 +126,39 @@ fe:hasTile a owl:ObjectProperty ;
     rdfs:domain fe:TopographicDataset ;
     rdfs:range fe:LidarTile .
 
+fe:isAdjacentTo a owl:SymmetricProperty, owl:ObjectProperty ;
+    rdfs:label "est adjacent à"@fr ;
+    rdfs:comment "Indique que deux tuiles partagent une bordure commune."@fr ;
+    rdfs:domain fe:LidarTile ;
+    rdfs:range fe:LidarTile .
+
+fe:isAbove a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:label "est au-dessus de"@fr ;
+    rdfs:comment "Pour la superposition (ex: LiDAR aérien au-dessus d'un scan terrestre)."@fr ;
+    rdfs:domain fe:LidarTile ;
+    rdfs:range fe:LidarTile .
+
+fe:overlapsWith a owl:SymmetricProperty, owl:ObjectProperty ;
+    rdfs:label "chevauche"@fr ;
+    rdfs:comment "Indique une zone de recouvrement partiel entre deux tuiles."@fr ;
+    rdfs:domain fe:LidarTile ;
+    rdfs:range fe:LidarTile .
+
+fe:hasAverageSlope a owl:DatatypeProperty ;
+    rdfs:label "pente moyenne"@fr ;
+    rdfs:domain fe:LidarTile ;
+    rdfs:range xsd:decimal .
+
+fe:hasMaxElevation a owl:DatatypeProperty ;
+    rdfs:label "altitude maximale"@fr ;
+    rdfs:domain fe:LidarTile ;
+    rdfs:range xsd:decimal .
+
+fe:hasMinElevation a owl:DatatypeProperty ;
+    rdfs:label "altitude minimale"@fr ;
+    rdfs:domain fe:LidarTile ;
+    rdfs:range xsd:decimal .
+
 # --- Propriétés du Dataset (Global) ---
 
 fe:hasAcquisitionDate a owl:DatatypeProperty ;
