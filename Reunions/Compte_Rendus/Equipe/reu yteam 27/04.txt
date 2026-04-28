@@ -1,0 +1,20 @@
+Ordre du jour : 
+- 20/04 : problematiques licences, evaluation des besoins et de la nécessité de renouvellement, faire l'état des lieux des usages de l'quipe (actuellment 3 serveurs dediés Vasco)
+etudier une migration du stockage
+- team controllée, Inria team, qui a besoin de redefinir son projet pour faire de la cybersecurité sur la défense et les systemes critiques, notamment sur l'ia (2029)
+- new members must go to security meeting (next monday, new student intership helping fanny on questionnaire)
+- Rencontre avec DPO (vendredi 24/04) pour l'intro au questionnaire, validée, a reformuler e tvalider aupres du DPO
+- Coordination d'un projet MIRA (multidisciplinary IA) demander de l'info sur le Serious Game en dev qui doit aider les etudiants a mieux se manager
+- demander le sacces a 7h send  a email to guillaume
+
+
+pour les personnes qui on demander a rejoindre la team : 
+- 2 personnes seront recus en entretiens (~15/05) du fait d'une séléction par un comité.
+- 
+
+voir ce qu'est l'iscram conference (neitherland lahaye)
+voir ce qu'est l'itdrr (greece)
+
+presentation next week form flavien and MAPS Conférence 11/05
+
+15/06 presentation des travaux : 10 minutes

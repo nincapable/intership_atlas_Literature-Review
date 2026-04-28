@@ -3,134 +3,151 @@ from owlready2 import *
 # --- CONFIGURATION ---
 ONTO_PATH = "../Modules/fe_natural_space.ttl"
 THESAURUS_PATH = "../Thesaurus/fe_thesaurus_especes.ttl"
+OUTPUT_PATH = "../Modules/fe_natural_space_updated.ttl"
 
-def load_data():
-    try:
-        onto = get_ontology(ONTO_PATH).load()
-        thesaurus = get_ontology(THESAURUS_PATH).load()
-        return onto, thesaurus
-    except Exception as e:
-        print(f"❌ Erreur de chargement : {e}")
-        return None, None
+def load_ontology(onto_path, thesaurus_path):
+    onto = get_ontology(onto_path).load()
+    get_ontology(thesaurus_path).load()
+    sync_reasoner() 
+    return onto
 
-def get_all_traits(taxon):
-    """Récupère les traits et gère les exceptions via la hiérarchie SKOS."""
-    traits = set()
-    exceptions = set()
-    to_visit = [taxon]
-    visited = set()
-    
-    relations = ["hasFireAidingTrait", "hasFireResistingTrait", "hasFireResponseStrategy", "hasEmberType", "hasFireFunctionalRole"]
-
-    while to_visit:
-        current = to_visit.pop()
-        if current in visited: continue
-        visited.add(current)
-
-        for prop in relations:
-            if hasattr(current, prop):
-                traits.update(getattr(current, prop))
-        
-        if hasattr(current, "isExceptionTo"):
-            exceptions.update(getattr(current, "isExceptionTo"))
-
-        if hasattr(current, "broader"):
-            to_visit.extend(current.broader)
-
-    return [t for t in traits if t not in exceptions]
-
-def compute_weakness_analysis(taxon, sensi):
+def get_filtered_inherited_traits(entity, property_name):
     """
-    Analyse de vulnérabilité biophysique :
-    Détermine le point de rupture le plus bas entre la matière organique de base
-    et les faiblesses apportées par les traits.
+    Collecte les traits en respectant la priorité (bas vers haut)
+    et en filtrant les exceptions (isExceptionTo).
     """
-    traits = get_all_traits(taxon)
-    
-    # 1. RÉCUPÉRATION DU SOCLE BIOLOGIQUE
-    # Défaut à 450.0 si non renseigné (Base Plantae standard)
-    t_basis = float(getattr(taxon, "organicIgnitionBasis", 450.0) or 450.0)
+    unique_traits = {}
+    excluded_trait_names = set()
 
-    # 2. RÉPARTITION FONCTIONNELLE DES TRAITS
-    sources = [] # Traits avec potentiel énergétique (HRP)
-    passives = [] # Traits de vulnérabilité simple (sans HRP)
+    for cls in entity.ancestors():
+        # Gestion des exceptions (priorité aux niveaux bas)
+        if hasattr(cls, "isExceptionTo"):
+            exceptions = getattr(cls, "isExceptionTo")
+            if exceptions:
+                list_exc = exceptions if isinstance(exceptions, (list, iterators.IndirectList)) else [exceptions]
+                for exc in list_exc:
+                    excluded_trait_names.add(exc.name)
+
+        # Collecte des traits
+        if hasattr(cls, property_name):
+            values = getattr(cls, property_name)
+            if values:
+                list_values = values if isinstance(values, (list, iterators.IndirectList)) else [values]
+                for t in list_values:
+                    if t.name not in excluded_trait_names and t.name not in unique_traits:
+                        unique_traits[t.name] = t
     
-    for t in traits:
-        hrp = float(getattr(t, "heatReleasePotential", 0.0) or 0.0)
-        ign = float(getattr(t, "spontaneousIgnitionThreshold", 0.0) or 0.0)
+    return list(unique_traits.values())
+
+def compute_individual_behavioral_indices(biomass_component):
+    taxon = biomass_component.refersToTaxon
+    if not taxon or not taxon.hasFireSensitivity:
+        return
+
+    sensi = taxon.hasFireSensitivity[0]
+
+    # 1. VALEUR DE BASE
+    hrp_base = 0.0
+    for cls in taxon.ancestors():
+        if hasattr(cls, "organicIgnitionBasis"):
+            hrp_base = float(cls.organicIgnitionBasis or 0.0)
+            if hrp_base > 0: break
+
+    # 2. INITIALISATION DES COMPTEURS
+    # On sépare les forces d'accélération et de résistance
+    hrp_plus = 0.0
+    hrp_minus = 0.0
+    v_trans_plus = 0.0
+    v_trans_minus = 0.0
+    h_trans_plus = 0.0
+    h_trans_minus = 0.0
+    
+    # 3. TRAITEMENT DES AIDING TRAITS (Accélérateurs)
+    aiding_traits = get_filtered_inherited_traits(taxon, "hasFireAidingTrait")
+    for t in aiding_traits:
+        impact_factor = 1.0
+        # Vérification maintenance
+        if hasattr(t, "hasrecommendedMaintenance"):
+            protocols = t.hasrecommendedMaintenance
+            if any(getattr(p, "isMaintained", False) for p in protocols):
+                efficiency = max([float(getattr(p, "maintenanceEfficiency", 0.0) or 0.0) for p in protocols])
+                impact_factor = 1.0 - efficiency
         
-        if hrp != 0:
-            sources.append({"ign": ign, "hrp": hrp})
-        elif ign != 0:
-            passives.append(ign)
+        hrp_plus += (float(getattr(t, "heatReleasePotential", 0.0) or 0.0) * impact_factor)
+        v_trans_plus += (float(getattr(t, "verticalTransferPotential", 0.0) or 0.0) * impact_factor)
+        h_trans_plus += (float(getattr(t, "horizontalTransferPotential", 0.0) or 0.0) * impact_factor)
 
-    # 3. CALCUL DU POINT DE RUPTURE (Calcul de la Faiblesse)
-    
-    # Le seuil initial est la base organique (ex: 450 pour bois, 190 pour animal)
-    final_ignition = t_basis
-
-    # A. Loi du Maillon Faible (Vulnérabilités passives)
-    # Si un organe ou un trait passif est plus sensible que la base, il devient le nouveau seuil.
-    if passives:
-        min_passive = min(passives)
-        if min_passive < final_ignition:
-            final_ignition = min_passive
-
-    # B. Loi de la Cascade Énergétique (Sources actives)
-    # Si une source (ex: résine, graisse) a un HRP suffisant, elle force la rupture.
-    if sources:
-        sources.sort(key=lambda x: x["ign"])
-        # Seuil de rupture : l'HRP doit vaincre 20% de l'inertie de la base
-        breaking_point = t_basis * 0.20 
+    # 4. TRAITEMENT DES RESISTING TRAITS (Modérateurs)
+    resisting_traits = get_filtered_inherited_traits(taxon, "hasFireResistingTrait")
+    for t in resisting_traits:
+        # Note : On ne réduit généralement pas l'efficacité d'un trait de résistance par la maintenance
+        # sauf si la maintenance est mauvaise (ex: taille qui crée du bois mort).
+        # Ici on prend la pleine valeur de résistance.
+        hrp_minus += float(getattr(t, "heatReleasePotential", 0.0) or 0.0)
+        v_trans_minus += float(getattr(t, "verticalTransferPotential", 0.0) or 0.0)
+        h_trans_minus += float(getattr(t, "horizontalTransferPotential", 0.0) or 0.0)
         
-        for s in sources:
-            if s["hrp"] > breaking_point:
-                # Si la source offre un allumage plus précoce que le seuil actuel
-                if s["ign"] < final_ignition:
-                    final_ignition = s["ign"]
-                    break
+        # On alimente aussi les BarrierPotentials (spécifiques aux traits résistants)
+        res_dur = float(getattr(t, "fireResistanceDuration", 0.0) or 0.0)
+        sensi.calculatedHorizontalBarrierPotential += (res_dur * 0.7)
+        sensi.calculatedVerticalBarrierPotential += (res_dur * 0.3)
+        sensi.calculatedHorizontalTransferPotential += (res_dur * 0.3)
 
-    # 4. AGGRÉGATION DES POTENTIELS ET CALCUL DES INDICES CALCULÉS
-    def sum_prop(prop_name):
-        return sum(float(getattr(t, prop_name, 0.0) or 0.0) for t in traits)
-
-    total_hrp = sum_prop("heatReleasePotential")
-    v_trans = sum_prop("verticalTransferPotential")
-    h_trans = sum_prop("horizontalTransferPotential")
-
-    # Injection dans l'ontologie
-    sensi.calculatedIgnitionThreshold = final_ignition
-    sensi.calculatedHeatReleasePotential = total_hrp
-    sensi.calculatedVerticalTransferPotential = v_trans
-    sensi.calculatedHorizontalTransferPotential = h_trans
+    # 5. SYNTHÈSE DES INDICES
+    # HRP Final = (Base + Bonus inflammabilité) - Capacités d'absorption thermique
+    total_hrp = max(0, (hrp_base + hrp_plus) - hrp_minus)
     
-    # Calcul du risque général : Pondération (Puissance + Propagation)
-    sensi.calculatedGeneralFireRisk = (total_hrp * 0.4) + (v_trans * 0.4) + (h_trans * 0.2)
+    # Transfert Vertical Final = Potentiel de mèche - Obstacles physiques
+    total_v_trans = max(0, v_trans_plus - v_trans_minus)
     
-    # Niveau d'inflammabilité normalisé (0 à 100)
-    # Plus le seuil est bas, plus l'inflammabilité est haute.
-    sensi.calculatedFlammabilityLevel = max(0, min(100, (600 - final_ignition) / 4))
+    # Transfert Horizontal Final = Potentiel de mèche - Obstacles physiques
+    total_h_trans = max(0, h_trans_plus - h_trans_minus)
 
-    return final_ignition
+    # Écriture dans l'Ontologie
+    sensi.calculatedHeatReleasePotential = float(total_hrp)
+    sensi.calculatedVerticalTransferPotential = float(total_v_trans)
+    
+    # Risque Général (Vision Pompier : Puissance vs Capacité d'arrêt)
+    # Un arbre avec beaucoup de résistance (ex: Chêne liège) verra son risque chuter drastiquement
+    sensi.calculatedGeneralFireRisk = float((total_hrp * 0.4) + (total_v_trans * 0.6))
+    
+    return sensi
 
-def main():
-    onto, thesaurus = load_data()
-    if not onto: return
-
-    print(f"{'Taxon':<25} | {'Base Bio':<10} | {'Ign. Calc':<10} | {'Risk':<8}")
-    print("-" * 65)
-
-    for taxon in thesaurus.Taxon.instances():
-        if hasattr(taxon, "hasFireSensitivity") and taxon.hasFireSensitivity:
-            sensi = taxon.hasFireSensitivity[0]
-            ign_calc = compute_weakness_analysis(taxon, sensi)
+def compute_global_ignition_probability(natural_space):
+    """Calcule P_ignition et déclenche les calculs individuels."""
+    total_p_ignition = 0.0
+    measurements = natural_space.hasBiomassState
+    
+    for meas in measurements:
+        for component in meas.hasComponent:
+            taxon = component.refersToTaxon
+            if not taxon: continue
             
-            t_basis = float(getattr(taxon, "organicIgnitionBasis", 450.0) or 450.0)
-            print(f"{taxon.name[:24]:<25} | {t_basis:>8.1f} | {ign_calc:>8.1f} | {sensi.calculatedGeneralFireRisk:>7.1f}")
+            # P_ignition pondérée
+            valette_score = 2 # Valeur par défaut
+            if taxon.hasFireSensitivity:
+                valette_score = getattr(taxon.hasFireSensitivity[0], "ValetteScore", 2) or 2
+            
+            share = getattr(component, "percentageShare", 0.0) or 0.0
+            total_p_ignition += (float(valette_score) * (float(share) / 100.0))
+            
+            # Calcul des indices de l'individu
+            compute_individual_behavioral_indices(component)
 
-    # Sauvegarde
-    onto.save(file="fe_systemic_results.ttl", format="ntriples")
-    print(f"\n✅ Analyse de faiblesse terminée. Résultats sauvegardés.")
+    natural_space.globalIgnitionProbability = float(total_p_ignition)
+    return total_p_ignition
+
+def run_calculation():
+    onto = load_ontology(ONTO_PATH, THESAURUS_PATH)
+    
+    print("--- Analyse des Espaces Naturels ---")
+    for ns in onto.NaturalSpace.instances():
+        p_ign = compute_global_ignition_probability(ns)
+        print(f"Propriété globalIgnitionProbability mise à jour pour {ns.name} : {p_ign:.2f}")
+        
+    # Sauvegarde finale
+    onto.save(file=OUTPUT_PATH, format="turtle")
+    print(f"--- Fichier sauvegardé : {OUTPUT_PATH} ---")
 
 if __name__ == "__main__":
-    main()
+    run_calculation()
