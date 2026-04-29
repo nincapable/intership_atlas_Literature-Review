@@ -87,6 +87,9 @@ fe:FireFunctionalRole a owl:Class ; rdfs:subClassOf fe:BioTrait .
 
 fe:recommendsMaintenance a owl:ObjectProperty ; rdfs:domain fe:Taxon ; rdfs:range fe:MaintenanceProtocol .
 
+fe:bioFireSensitivity a owl:Class ; rdfs:subClassOf fe:EnvironmentalDimension .
+fe:hasbioFireSensitivity a owl:ObjectProperty ; rdfs:domain fe:Taxon ; rdfs:range fe:bioFireSensitivity .
+
 fe:hasFireAidingTrait a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:FireAidingTrait .
 fe:hasFireResistingTrait a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:FireResistingTrait .
 fe:hasFireResponseStrategy a owl:ObjectProperty ; rdfs:domain fe:BioDivision  ; rdfs:range fe:FireResponseStrategy .
@@ -95,14 +98,13 @@ fe:hasFireFunctionalRole a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdf
 
 fe:isExceptionTo a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:BioTrait ; rdfs:label "Exception à un trait hérité"@fr .
 
+fe:ReactivityFactor a owl:DatatypeProperty ; rdfs:domain fe:BioDivision ; rdfs:range xsd:decimal . # Valeur de 0.0 (non réactif) à 1.0 (très réactif), pour le potentiel de contribution au feu.
+
 # =================================================================
 # 3. SENSIBILITÉ AU FEU (Traits Végétaux)
 # =================================================================
 
-fe:VegetationFireSensitivity a owl:Class ; rdfs:subClassOf fe:EnvironmentalDimension .
-fe:hasFireSensitivity a owl:ObjectProperty ; rdfs:domain fe:Taxon ; rdfs:range fe:VegetationFireSensitivity .
-
-fe:ValetteScore a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:integer .
+fe:ValetteScore a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:integer .
 
 fe:hasrecommendedMaintenance a owl:ObjectProperty ; rdfs:domain fe:BioTrait ; rdfs:range fe:MaintenanceProtocol .
 fe:maintenanceEfficiency a owl:DatatypeProperty ; rdfs:domain fe:MaintenanceProtocol ; rdfs:range xsd:decimal . # Valeur de 0.0 (aucune) à 1.0 (totale), pour le pouvoir de neutralisation du trait maintenu.
@@ -116,13 +118,13 @@ fe:heatReleasePotential a owl:DatatypeProperty ; rdfs:domain [ owl:unionOf (fe:F
 fe:spontaneousIgnitionThreshold a owl:DatatypeProperty ; rdfs:domain [ owl:unionOf (fe:FireAidingTrait fe:FireResistingTrait) ]; rdfs:range xsd:decimal .
 fe:ignitionDelay a owl:DatatypeProperty ; rdfs:domain [ owl:unionOf (fe:FireAidingTrait fe:FireResistingTrait) ]; rdfs:range xsd:decimal .
 
-fe:calculatedHeatReleasePotential a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:decimal .
-fe:calculatedHorizontalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:decimal .
-fe:calculatedVerticalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:decimal .
-fe:calculatedHorizontalBarrierPotential a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:decimal .
-fe:calculatedVerticalBarrierPotential a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:decimal .
+fe:calculatedHeatReleasePotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+fe:calculatedHorizontalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+fe:calculatedVerticalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+fe:calculatedHorizontalBarrierPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+fe:calculatedVerticalBarrierPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
 # A exploiter.
-fe:calculatedGeneralFireRisk a owl:DatatypeProperty ; rdfs:domain fe:VegetationFireSensitivity ; rdfs:range xsd:decimal .
+fe:calculatedGeneralFireRisk a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
 
 # =================================================================
 # 4. EXPOSITION GLOBALE
