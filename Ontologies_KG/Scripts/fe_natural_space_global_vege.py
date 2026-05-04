@@ -1,5 +1,4 @@
 from owlready2 import *
-# On importe les deux moteurs
 import Ontologies_KG.Scripts.fe_taxon_vege as veg_engine 
 import Ontologies_KG.Scripts.fe_taxon_animal as ani_engine
 
@@ -8,73 +7,94 @@ ONTO_PATH = "../Modules/fe_natural_space.ttl"
 THESAURUS_PATH = "../Thesaurus/fe_thesaurus_especes.ttl"
 OUTPUT_PATH = "../Modules/fe_natural_space_final.ttl"
 
+def get_inherited_value(entity, property_name, default_value):
+    """Utilitaire pour récupérer les valeurs sur les ancêtres (logique de la feuille)."""
+    for cls in entity.ancestors():
+        if hasattr(cls, property_name):
+            val = getattr(cls, property_name)
+            if val is not None:
+                return val[0] if isinstance(val, (list, iterators.IndirectList)) else val
+    return default_value
+
 def compute_all_space_indices(natural_space):
-    """Agrège les indices de tous les taxons (Végétaux & Animaux) présents dans l'espace."""
+    """
+    Agrège les indices : 
+    - Flore = Ignition + Propagation linéaire
+    - Faune = Propagation par saut (Spotting) boostée par la panique
+    """
     total_p_ign = 0.0
     total_vel = 0.0
     total_bar = 0.0
+    max_protection_weight = 0.0
     
-    # On accède aux états de biomasse
+    # On suppose une seule mesure d'état de biomasse par espace pour l'analyse
     measurements = natural_space.hasBiomassState
     for meas in measurements:
         for comp in meas.hasComponent:
             taxon = comp.refersToTaxon
             if not taxon: continue
             
-            # --- 1. ROUTAGE ET CALCUL INDIVIDUEL ---
-            # On utilise la fonction de vérification du moteur végétal
+            # 1. Calculs via les moteurs dédiés
             if veg_engine.is_combustible_organism(taxon):
-                f_reac = veg_engine.compute_taxon_full_indices(taxon)
+                veg_engine.compute_taxon_full_indices(taxon)
+                is_animal = False
             else:
-                # Si ce n'est pas un végétal/fungi, on considère que c'est un animal
-                f_reac = ani_engine.compute_animal_indices(taxon)
+                ani_engine.compute_animal_indices(taxon)
+                is_animal = True
             
-            # Si le calcul a échoué (None), on passe au suivant
-            if f_reac is None: continue
-
-            # --- 2. RÉCUPÉRATION DES DONNÉES CALCULÉES ---
             sensi = taxon.hasFireSensitivity[0]
-            share = float(getattr(comp, "percentageShare", 0.0) or 0.0)
-            weight = share / 100.0
+            weight = float(getattr(comp, "percentageShare", 0.0) or 0.0) / 100.0
             
-            # A. Ignition (Valette pondéré par la réactivité spécifique)
-            valette = float(getattr(sensi, "ValetteScore", 2) or 2)
-            total_p_ign += (valette * f_reac) * weight
+            # --- CALCUL DE L'IGNITION (Uniquement Végétal) ---
+            if not is_animal:
+                # Valette (Structure) * ReactivityFactor (Physique: Seuil/Délai)
+                valette = float(get_inherited_value(sensi, "ValetteScore", 2.0))
+                f_reac_phys = float(sensi.ReactivityFactor or 1.0)
+                total_p_ign += (valette * f_reac_phys) * weight
+            # else: total_p_ign += 0  <-- L'animal ne participe pas à l'éclosion
             
-            # B. Propagation (Transferts)
-            # Pour les animaux, HT peut être élevé (vecteur) et VT souvent nul.
-            vt = float(getattr(sensi, "calculatedVerticalTransferPotential", 0.0) or 0.0)
-            ht = float(getattr(sensi, "calculatedHorizontalTransferPotential", 0.0) or 0.0)
-            total_vel += ((vt + ht) / 2.0) * weight
+            # --- CALCUL DE LA PROPAGATION (VELOCITY) ---
+            ht = float(sensi.calculatedHorizontalTransferPotential or 0.0)
+            vt = float(sensi.calculatedVerticalTransferPotential or 0.0)
             
-            # C. Barrière (Principalement végétale)
-            vb = float(getattr(sensi, "calculatedVerticalBarrierPotential", 0.0) or 0.0)
-            hb = float(getattr(sensi, "calculatedHorizontalBarrierPotential", 0.0) or 0.0)
-            total_bar += (vb + hb) * weight
+            if is_animal:
+                # L'animal est un vecteur horizontal. Sa panique (f_reac) 
+                # amplifie sa vitesse de déplacement des foyers.
+                panic_factor = float(sensi.ReactivityFactor or 0.5) # f_reac animal
+                # Plus la panique est forte (seuil bas), plus l'impact est grand
+                total_vel += (ht * (1.5 - panic_factor)) * weight
+            else:
+                # Propagation végétale standard
+                total_vel += ((vt + ht) / 2.0) * weight
+            
+            # --- BARRIÈRE ET PROTECTION ---
+            total_bar += float(sensi.calculatedHorizontalBarrierPotential or 0.0) * weight
+            
+            # Utilisation du poids UICN pour la priorité d'évacuation
+            # (Via la fonction définie précédemment ou accès direct au mapping)
+            prio = float(get_inherited_value(sensi, "protectionPriorityWeight", 1.0))
+            if prio > max_protection_weight:
+                max_protection_weight = prio
 
-    # --- 3. ÉCRITURE DES RÉSULTATS GLOBAUX SUR L'ESPACE ---
+    # 3. Écriture des résultats sur l'instance NaturalSpace
     natural_space.globalIgnitionProbability = float(total_p_ign)
     natural_space.firePropagationVelocity = float(total_vel)
     natural_space.structuralFireBarrierEffect = float(total_bar)
+    natural_space.globalEvacuationUrgency = float(max_protection_weight)
     
     return total_p_ign
 
 def run():
-    # Chargement des ontologies
     onto = get_ontology(ONTO_PATH).load()
     get_ontology(THESAURUS_PATH).load()
-    
-    # Synchronisation du raisonneur pour s'assurer que les ancestors() sont à jour
     sync_reasoner()
 
-    print("--- Analyse Multi-Règne des Espaces Naturels ---")
+    print("--- Analyse des Espaces Naturels (Correction Physique OK) ---")
     for ns in onto.NaturalSpace.instances():
         res = compute_all_space_indices(ns)
-        print(f"Espace : {ns.name} | P_Ignition Globale : {res:.2f}")
+        print(f"Espace : {ns.name:20} | P_Ign (Végétale) : {res:5.2f} | Urgency : {ns.globalEvacuationUrgency}")
 
-    # Sauvegarde du graphe enrichi
     onto.save(file=OUTPUT_PATH, format="turtle")
-    print(f"Analyse terminée. Fichier sauvegardé : {OUTPUT_PATH}")
 
 if __name__ == "__main__":
     run()
