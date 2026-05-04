@@ -123,7 +123,21 @@ fe:calculatedHorizontalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe
 fe:calculatedVerticalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
 fe:calculatedHorizontalBarrierPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
 fe:calculatedVerticalBarrierPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
-# A exploiter.
+
+fe:calculatedGeneralFireRisk a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+
+# =================================================================
+# 4. SENSIBILITÉ AU FEU (Traits Animaux)
+# =================================================================
+
+# --- Propriétés Spécifiques aux Animaux ---
+fe:mobilityScore a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal . # 0 (lent) à 1 (rapide)
+fe:panicThreshold a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal . # Seuil de stress
+fe:evacuationPriority a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:integer .
+
+# Propriétés de transfert (Vecteur de feu)
+fe:isPotentialFireVector a owl:DatatypeProperty ; rdfs:domain fe:BioDivision ; rdfs:range xsd:decimal .
+
 fe:calculatedGeneralFireRisk a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
 
 # =================================================================
