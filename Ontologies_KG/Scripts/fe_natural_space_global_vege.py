@@ -70,9 +70,18 @@ def compute_all_space_indices(natural_space):
             # --- BARRIÈRE ET PROTECTION ---
             total_bar += float(sensi.calculatedHorizontalBarrierPotential or 0.0) * weight
             
-            # Utilisation du poids UICN pour la priorité d'évacuation
-            # (Via la fonction définie précédemment ou accès direct au mapping)
-            prio = float(get_inherited_value(sensi, "protectionPriorityWeight", 1.0))
+            status_object = get_inherited_value(sensi, "hasProtectionStatus", None)
+
+            if status_object:
+                # 2. On va chercher le poids numérique sur cet objet de statut
+                # On peut réutiliser get_inherited_value sur l'objet de statut au cas où 
+                # le poids soit défini au niveau de la classe SpeciesProtectionStatus
+                prio = float(get_inherited_value(status_object, "protectionPriorityWeight", 1.0))
+            else:
+                # Statut par défaut (Non évalué ou Préoccupation mineure)
+                prio = 1.0
+
+            # 3. Mise à jour du maximum de l'espace
             if prio > max_protection_weight:
                 max_protection_weight = prio
 
