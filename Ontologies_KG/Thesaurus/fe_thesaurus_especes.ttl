@@ -249,3 +249,43 @@ fe:Ember_Ash a skos:Concept, fe:EmberType ; skos:prefLabel "Cendres légères"@f
 fe:Ember_BarkFlake a skos:Concept, fe:EmberType ; skos:prefLabel "Lambeaux d'écorce"@fr ; skos:broader fe:EmberTypeRoot .
 fe:Ember_Cone a skos:Concept, fe:EmberType ; skos:prefLabel "Cônes / Pommes de pin"@fr ; skos:broader fe:EmberTypeRoot .
 fe:noEmber a skos:Concept, fe:EmberType ; skos:prefLabel "Ne produit pas d'escarbilles"@fr ; skos:broader fe:EmberTypeRoot .
+
+#Status de Protection de l'Espèce (fe:SpeciesProtectionStatus) - à relier aux catégories UICN
+fe:UICNStatusScheme a skos:ConceptScheme ;
+    rdfs:label "Référentiel des Statuts de Conservation (UICN)"@fr .
+
+# --- Éteint (Priorité 0 ou basse car protection physique inutile) ---
+fe:StatusEX a skos:Concept, fe:SpeciesProtectionStatus ;
+    skos:prefLabel "EX - Éteint"@fr ;
+    fe:protectionPriorityWeight 0.0 ;
+    skos:inScheme fe:UICNStatusScheme .
+
+# --- En Danger Critique (Priorité Maximale) ---
+fe:StatusCR a skos:Concept, fe:SpeciesProtectionStatus ;
+    skos:prefLabel "CR - En danger critique"@fr ;
+    fe:protectionPriorityWeight 5.0 ; 
+    skos:inScheme fe:UICNStatusScheme .
+
+# --- En Danger ---
+fe:StatusEN a skos:Concept, fe:SpeciesProtectionStatus ;
+    skos:prefLabel "EN - En danger"@fr ;
+    fe:protectionPriorityWeight 4.0 ;
+    skos:inScheme fe:UICNStatusScheme .
+
+# --- Vulnérable ---
+fe:StatusVU a skos:Concept, fe:SpeciesProtectionStatus ;
+    skos:prefLabel "VU - Vulnérable"@fr ;
+    fe:protectionPriorityWeight 3.0 ;
+    skos:inScheme fe:UICNStatusScheme .
+
+# --- Quasi Menacé ---
+fe:StatusNT a skos:Concept, fe:SpeciesProtectionStatus ;
+    skos:prefLabel "NT - Quasi menacé"@fr ;
+    fe:protectionPriorityWeight 2.0 ;
+    skos:inScheme fe:UICNStatusScheme .
+
+# --- Préoccupation Mineure ---
+fe:StatusLC a skos:Concept, fe:SpeciesProtectionStatus ;
+    skos:prefLabel "LC - Préoccupation mineure"@fr ;
+    fe:protectionPriorityWeight 1.0 ;
+    skos:inScheme fe:UICNStatusScheme .

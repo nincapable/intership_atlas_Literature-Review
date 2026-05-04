@@ -48,7 +48,7 @@ def compute_animal_indices(taxon):
     # 1. Facteur de Réactivité (Comportemental)
     # Plus la mobilité est faible et le seuil de panique élevé, plus l'animal est "réactif" au danger
     # On ajoute le v_score car un vecteur actif augmente la dangerosité immédiate
-    f_reac = ((1.0 - m_score) * (1.0 + p_threshold)) + (v_score * 2.0)
+    f_reac = p_threshold #associé à l'instabilité (panique)
     sensi.ReactivityFactor = float(f_reac)
 
     # 2. Potentiels de Transfert (Spotting / Saute de feu)
