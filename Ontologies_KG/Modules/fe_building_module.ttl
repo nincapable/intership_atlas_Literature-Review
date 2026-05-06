@@ -63,6 +63,8 @@ fe:hasBuildingFireRisk a owl:ObjectProperty ;
     rdfs:domain fe:Building ; 
     rdfs:range fe:buildingFireRisk .
 
+fe:structuralFragilityCoefficient a owl:DatatypeProperty ; rdfs:domain fe:ArchitectureStyle ; rdfs:range xsd:decimal .
+
 # Scores de performance (Datatypes)
 fe:buildingCombustibility a owl:DatatypeProperty ; rdfs:domain fe:buildingFireRisk ; rdfs:range xsd:decimal .
 fe:buildingInflammability a owl:DatatypeProperty ; rdfs:domain fe:buildingFireRisk ; rdfs:range xsd:decimal .
