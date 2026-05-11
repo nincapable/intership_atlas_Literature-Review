@@ -7,3 +7,14 @@ serious gaming below a simulator, managing about risk (carol)
 
 reply to email, with motivation letter, cv and marks
 send email to targeted people : 
+Équipe MOEX (Inria) : Dirigée par Jérôme Euzenat. Ils travaillent sur l'évolution de la connaissance, les graphes de connaissances (Knowledge Graphs) et les ontologies. C'est l'équipe de référence pour la RC pure.
+
+Équipe TYREX : Focalisée sur les types et le raisonnement pour le Web (XML, RDF, SPARQL). Idéal si tu aimes les aspects formels et le Web sémantique.
+
+Équipe SIGMA : Ils travaillent sur les systèmes d'information et la modélisation adaptable.
+
+Équipe MARVIN : IA et Robotique, où la représentation des connaissances est utilisée pour la planification et l'autonomie des agents.
+Projet Patrimalp
+
+
+site du LIG :  https://www.liglab.fr/fr/produits-recherche/theses-et-hdr
