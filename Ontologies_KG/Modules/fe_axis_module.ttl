@@ -18,6 +18,7 @@ fe:Axis a owl:Class ;
 fe:OperationnalType a owl:Class ;
     rdfs:label "Types Operationnels"@fr ;
     rdfs:subClassOf crm:E55_Type .
+
 # --- Classes de Référentiel (Conteneurs pour le SKOS) ---
 
 fe:AxisType a owl:Class ;
@@ -63,3 +64,60 @@ fe:isOnLevel a owl:DatatypeProperty ; rdfs:range xsd:integer .
 fe:hasCurrentBlockingState a owl:ObjectProperty ; 
     rdfs:domain fe:Axis ; 
     rdfs:range crm:E3_Condition_State .
+
+#--- Bloc Vulnérabilité ---
+
+@prefix fe: <http://example.org/fire_and_evacuation#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# --- Classes de Liaison ---
+
+fe:AxisVulnerability a owl:Class ;
+    rdfs:label "Vulnérabilité de l'axe"@fr ;
+    rdfs:subClassOf fe:RiskDimension ;
+    rdfs:comment "Représente l'intersection entre un axe, une menace physique et un aléa spécifique."@fr .
+
+fe:BlockingSource a owl:Class ;
+    rdfs:label "Source de blocage"@fr ;
+    rdfs:comment "Interface regroupant tout objet (Bâtiment, Taxon, Véhicule) pouvant obstruer un axe."@fr .
+
+# --- Propriétés d'Objet ---
+
+fe:hasVulnerability a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ;
+    rdfs:range fe:AxisVulnerability .
+
+fe:triggeredBy a owl:ObjectProperty ;
+    rdfs:label "déclenché par"@fr ;
+    rdfs:domain fe:AxisVulnerability ;
+    rdfs:range fe:HazardType . # Ex: fe:Fire, fe:Flood
+
+fe:causedBy a owl:ObjectProperty ;
+    rdfs:label "causé par"@fr ;
+    rdfs:domain fe:AxisVulnerability ;
+    rdfs:range fe:BlockingSource . # Ex: Instance du Bâtiment_A
+
+fe:blockingNature a owl:ObjectProperty ;
+    rdfs:label "nature du blocage"@fr ;
+    rdfs:domain fe:AxisVulnerability ;
+    rdfs:range fe:BlockingFactor . # Ex: fe:StructuralCollapse (issu du thésaurus)
+
+# --- Propriétés de Données (Calculées) ---
+
+fe:blockingProbability a owl:DatatypeProperty ; 
+    rdfs:domain fe:AxisVulnerability ; 
+    rdfs:range xsd:decimal .
+
+fe:estimatedClearanceTime a owl:DatatypeProperty ; 
+    rdfs:label "Temps de dégagement estimé (min)"@fr ;
+    rdfs:domain fe:AxisVulnerability ; 
+    rdfs:range xsd:integer .
+
+# --- La Propriété de Capacité (Le chaînon manquant) ---
+fe:isPotentialBlockingFactor a owl:ObjectProperty ;
+    rdfs:label "est un facteur de blocage potentiel"@fr ;
+    rdfs:domain owl:Thing ;
+    rdfs:range fe:BlockingSource ;
+    rdfs:comment "Permet de typer n'importe quel objet comme source de menace pour le système."@fr .

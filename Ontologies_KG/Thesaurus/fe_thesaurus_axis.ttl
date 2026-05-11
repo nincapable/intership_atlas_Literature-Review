@@ -104,3 +104,65 @@ fe:Denied a skos:Concept, fe:RescueAccessibilityLevel ;
     skos:prefLabel "Refusé / Impossible"@fr ;
     skos:broader fe:Rescue_AccessibilityConcept ;
     skos:inScheme fe:AxisTaxonomy .
+
+
+# =================================================================
+# 4. FACTEURS BLOQUANTS (fe:BlockingFactor)
+# =================================================================
+
+fe:BlockingNatureScheme a skos:ConceptScheme ;
+    rdfs:label "Référentiel des Natures d'Obstruction des Axes"@fr ;
+    skos:definition "Qualifie le type de blocage physique résultant d'une vulnérabilité."@fr .
+
+# --- CATEGORIE : OBSTRUCTION MATÉRIELLE (Débris) ---
+fe:DebrisObstruction a skos:Concept, fe:BlockingFactor ;
+    skos:prefLabel "Obstruction par débris"@fr ;
+    skos:inScheme fe:BlockingNatureScheme ;
+    skos:narrower fe:StructuralCollapse, fe:VegetationFall, fe:GlassRain .
+
+    fe:StructuralCollapse a skos:Concept, fe:BlockingFactor ;
+        skos:prefLabel "Effondrement de structure"@fr ;
+        skos:definition "Chute d'éléments porteurs ou de maçonnerie sur la voie."@fr ;
+        skos:broader fe:DebrisObstruction ;
+        skos:inScheme fe:BlockingNatureScheme .
+
+    fe:VegetationFall a skos:Concept, fe:BlockingFactor ;
+        skos:prefLabel "Chute de végétation"@fr ;
+        skos:definition "Obstruction par des troncs, branches ou litière végétale."@fr ;
+        skos:broader fe:DebrisObstruction ;
+        skos:inScheme fe:BlockingNatureScheme .
+
+    fe:GlassRain a skos:Concept, fe:BlockingFactor ;
+        skos:prefLabel "Pluie de verre / Éclats"@fr ;
+        skos:broader fe:DebrisObstruction ;
+        skos:inScheme fe:BlockingNatureScheme .
+
+# --- CATEGORIE : OBSTRUCTION ATMOSPHÉRIQUE (Environnement) ---
+fe:AtmosphericObstruction a skos:Concept, fe:BlockingFactor ;
+    skos:prefLabel "Obstruction atmosphérique"@fr ;
+    skos:inScheme fe:BlockingNatureScheme ;
+    skos:narrower fe:SmokeOpacity, fe:ThermalStress .
+
+    fe:SmokeOpacity a skos:Concept, fe:BlockingFactor ;
+        skos:prefLabel "Opacité critique"@fr ;
+        skos:definition "Visibilité inférieure à la distance de sécurité (ex: 2m)."@fr ;
+        skos:broader fe:AtmosphericObstruction ;
+        skos:inScheme fe:BlockingNatureScheme .
+
+    fe:ThermalStress a skos:Concept, fe:BlockingFactor ;
+        skos:prefLabel "Flux thermique insupportable"@fr ;
+        skos:definition "Rayonnement empêchant le passage sans équipement lourd."@fr ;
+        skos:broader fe:AtmosphericObstruction ;
+        skos:inScheme fe:BlockingNatureScheme .
+
+# --- CATEGORIE : OBSTRUCTION FLUIDE ---
+fe:FluidObstruction a skos:Concept, fe:BlockingFactor ;
+    skos:prefLabel "Obstruction par fluides"@fr ;
+    skos:inScheme fe:BlockingNatureScheme ;
+    skos:narrower fe:FlashFlood, fe:GasLeak .
+
+# --- CATEGORIE : OBSTRUCTION SOCIALE ---
+fe:SocialObstruction a skos:Concept, fe:BlockingFactor ;
+    skos:prefLabel "Obstruction humaine"@fr ;
+    skos:inScheme fe:BlockingNatureScheme ;
+    skos:narrower fe:CrowdCrush .
