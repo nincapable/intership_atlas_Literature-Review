@@ -27,10 +27,19 @@ fe:SocialInteractionType a owl:Class ;
     rdfs:comment "Nature de la dynamique inter-archétypes (ex: Contagion de panique, Guidage directif, Assistance)."@fr .
 
 # =================================================================
-# 2. PROFILAGE DES ARCHÉTYPES (Configuration Initiale)
+# 2. ARCHÉTYPES HUMAINS (Profils Comportementaux Typés)
 # =================================================================
 
-# --- Vulnérabilité d'un Archétype aux Biais ---
+fe:HumanArchetype a owl:Class ;
+    rdfs:subClassOf crm:E55_Type ;
+    rdfs:label "Archétype Humain"@fr ;
+    rdfs:comment "Profil psychologique et opérationnel type dictant les règles de comportement en cas d'urgence."@fr .
+
+# Lien entre tes statistiques de population et les archétypes réels
+fe:representsArchetype a owl:ObjectProperty ;
+    rdfs:label "représente l'archétype"@fr ;
+    rdfs:domain fe:TypePart ; # Lie une partition statistique à un comportement
+    rdfs:range fe:HumanArchetype .
 
 fe:ArchetypeBiasSensitivity a owl:Class ;
     rdfs:label "Sensibilité aux Biais de l'Archétype"@fr ;
@@ -69,71 +78,44 @@ fe:stressThreshold a owl:DatatypeProperty ;
     rdfs:range xsd:float .
 
 # =================================================================
-# 3. MATRICE COMPORTEMENTALE COMBINATOIRE (Interactions)
+# 3. SYSTÈME D'INTERFÉRENCE RELATIONNEL UNIQUE (CORRIGÉ)
 # =================================================================
 
-fe:InterArchetypeInfluence a owl:Class ;
-    rdfs:label "Influence et Chimie Inter-Archétypes"@fr ;
-    rdfs:comment "Représente la règle d'émergence sociale lorsqu'un archétype source entre en contact avec un archétype cible."@fr .
+fe:InterferenceRelation a owl:Class ;
+    rdfs:label "Relation d'Interférence"@fr ;
+    rdfs:comment "La boîte unique qui contient le fait que l'Acteur modifie la probabilité d'un Comportement chez la Cible."@fr .
 
-fe:hasSourceArchetype a owl:ObjectProperty ;
-    rdfs:label "a pour archétype source"@fr ;
-    rdfs:domain fe:InterArchetypeInfluence ;
+# --- Propriétés de base de la boîte d'association ---
+
+fe:hasAsActeur a owl:ObjectProperty ;
+    rdfs:label "a pour acteur (émetteur)"@fr ;
+    rdfs:domain fe:InterferenceRelation ;
     rdfs:range fe:HumanArchetype .
 
-fe:hasTargetArchetype a owl:ObjectProperty ;
-    rdfs:label "a pour archétype cible"@fr ;
-    rdfs:domain fe:InterArchetypeInfluence ;
+fe:hasAsCible a owl:ObjectProperty ;
+    rdfs:label "a pour cible (récepteur)"@fr ;
+    rdfs:domain fe:InterferenceRelation ;
     rdfs:range fe:HumanArchetype .
 
-fe:mediatedByInteraction a owl:ObjectProperty ;
-    rdfs:label "médié par l'interaction"@fr ;
-    rdfs:domain fe:InterArchetypeInfluence ;
-    rdfs:range fe:SocialInteractionType .
+fe:targetBehavior a owl:ObjectProperty ;
+    rdfs:label "comportement concerné"@fr ;
+    rdfs:domain fe:InterferenceRelation ;
+    rdfs:range fe:HumanBehavior .
 
-fe:producesEffect a owl:ObjectProperty ;
-    rdfs:label "produit l'effet"@fr ;
-    rdfs:comment "Liaison vers les conséquences cognitives ou comportementales de l'interaction."@fr ;
-    rdfs:domain fe:InterArchetypeInfluence ;
-    rdfs:range fe:InfluenceEffect .
-
-# =================================================================
-# 4. TYPOLOGIE DES EFFETS PARAMÉTRÉS VIA THÉSAURUS
-# =================================================================
-
-fe:InfluenceEffect a owl:Class ;
-    rdfs:subClassOf fe:HumanFactorType ;
-    rdfs:label "Effet d'Influence"@fr ;
-    rdfs:comment "Structure générique qualifiant l'impact d'une interaction via des concepts du thésaurus."@fr .
-
-fe:hasImpactAction a owl:ObjectProperty ;
-    rdfs:label "action d'impact"@fr ;
-    rdfs:comment "La nature mathématique/logique de l'effet (ex: Augmenter, Diminuer, Annuler)."@fr ;
-    rdfs:domain fe:InfluenceEffect ;
-    rdfs:range fe:ImpactActionType . # Point d'ancrage SKOS
-
-fe:hasCognitiveTargetType a owl:ObjectProperty ;
-    rdfs:label "type de cible cognitive"@fr ;
-    rdfs:comment "La catégorie de l'élément impacté (ex: Le Stress, Un Biais, Un Comportement)."@fr ;
-    rdfs:domain fe:InfluenceEffect ;
-    rdfs:range fe:CognitiveTargetCategory . # Point d'ancrage SKOS
-
-# --- Liaison dynamique vers l'entité SKOS ou OWL précise ---
-
-fe:targetEntity a owl:ObjectProperty ;
-    rdfs:label "entité cible spécifique"@fr ;
-    rdfs:comment "Le biais précis (ex: fe:NormalcyBias) ou le comportement précis (ex: fe:PanicFlight) qui subit l'effet."@fr ;
-    rdfs:domain fe:InfluenceEffect ;
-    rdfs:range [ owl:unionOf (fe:CognitiveBias fe:HumanBehavior) ] .
-
-# --- La seule et unique valeur numérique requise ---
-
-fe:effectValue a owl:DatatypeProperty ;
-    rdfs:label "valeur de l'effet"@fr ;
-    rdfs:comment "Le delta, le multiplicateur ou la probabilité à appliquer (ex: 0.25 ou 0.0)."@fr ;
-    rdfs:domain fe:InfluenceEffect ;
+fe:probabilityModifier a owl:DatatypeProperty ;
+    rdfs:label "modificateur de probabilité"@fr ;
+    rdfs:domain fe:InterferenceRelation ;
     rdfs:range xsd:float .
 
-# --- Classes de Référentiels pour SKOS ---
-fe:ImpactActionType a owl:Class ; rdfs:subClassOf fe:HumanFactorType .
-fe:CognitiveTargetCategory a owl:Class ; rdfs:subClassOf fe:HumanFactorType .
+# --- Propriétés d'accès direct depuis les Archétypes (Inverses structurels) ---
+
+fe:subitInterference a owl:ObjectProperty ;
+    rdfs:label "subit l'interférence"@fr ;
+    rdfs:domain fe:HumanArchetype ;
+    rdfs:range fe:InterferenceRelation .
+
+# Ici, on crée une propriété inverse propre pour l'acteur sans conflit de Domaine/Range
+fe:estActeurDelInterférence a owl:ObjectProperty ;
+    rdfs:label "est acteur de l'interférence"@fr ;
+    rdfs:domain fe:HumanArchetype ;
+    rdfs:range fe:InterferenceRelation .

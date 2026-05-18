@@ -1,26 +1,207 @@
-# --- Catégories de Cibles Cognitives ---
-fe:TargetStress a skos:Concept, fe:CognitiveTargetCategory ;
-    skos:prefLabel "Jauge de Stress"@fr .
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-fe:TargetBias a skos:Concept, fe:CognitiveTargetCategory ;
-    skos:prefLabel "Biais Cognitif"@fr .
+# =================================================================
+# DÉFINITION DU SCHÉMA DE CONCEPT GLOBALE
+# =================================================================
 
-fe:TargetBehavior a skos:Concept, fe:CognitiveTargetCategory ;
-    skos:prefLabel "Comportement"@fr .
+fe:CognitiveBehaviorThesaurus a skos:ConceptScheme ;
+    skos:prefLabel "Thésaurus des Facteurs Humains pour la Simulation d'Évacuation"@fr ;
+    skos:definition "Référentiel des comportements, biais cognitifs et types d'interactions pour l'analyse des mouvements de foule en situation d'urgence."@fr .
 
-# --- Actions Mathématiques / Logiques ---
-fe:ActionIncrease a skos:Concept, fe:ImpactActionType ;
-    skos:prefLabel "Augmenter (Addition)"@fr ;
-    skos:note "Ajoute la valeur à la variable cible (cible = cible + valeur)"@fr .
+# =================================================================
+# 1. DÉCLARATION DES INSTANCES D'ARCHÉTYPES
+# =================================================================
 
-fe:ActionDecrease a skos:Concept, fe:ImpactActionType ;
-    skos:prefLabel "Diminuer (Soustraction)"@fr ;
-    skos:note "Soustrait la valeur à la variable cible (cible = cible - valeur)"@fr .
+fe:ArchetypeIndividualist a fe:HumanArchetype ;
+    rdfs:label "L'Individualiste"@fr .
 
-fe:ActionMultiply a skos:Concept, fe:ImpactActionType ;
-    skos:prefLabel "Multiplier"@fr ;
-    skos:note "Multiplie la variable ou la probabilité (cible = cible * valeur)"@fr .
+fe:ArchetypeAltruist a fe:HumanArchetype ;
+    rdfs:label "L'Altruiste"@fr .
 
-fe:ActionSetTo a skos:Concept, fe:ImpactActionType ;
-    skos:prefLabel "Fixer à"@fr ;
-    skos:note "Écrase la valeur actuelle (cible = valeur). Utile pour forcer à 0 ou 1."@fr .
+fe:ArchetypeVulnerable a fe:HumanArchetype ;
+    rdfs:label "Le Vulnérable"@fr .
+
+fe:ArchetypeLeader a fe:HumanArchetype ;
+    rdfs:label "Le Leader"@fr .
+
+fe:ArchetypePassive a fe:HumanArchetype ;
+    rdfs:label "Le Passif"@fr .
+
+# =================================================================
+# 2. BRANCHE : COMPORTEMENTS HUMAINS (fe:HumanBehavior)
+# =================================================================
+
+fe:BehaviorConceptRoot a skos:Concept ;
+    skos:prefLabel "Comportements d'Évacuation"@fr ;
+    skos:topConceptOf fe:CognitiveBehaviorThesaurus .
+
+# --- Sous-comportements ---
+
+fe:BehaviorFlight a skos:Concept, fe:HumanBehavior ;
+    skos:prefLabel "Fuite active / Évacuation"@fr ;
+    skos:definition "L'agent se déplace activement vers une sortie connue ou signalée."@fr ;
+    skos:broader fe:BehaviorConceptRoot .
+
+fe:BehaviorFreezing a skos:Concept, fe:HumanBehavior ;
+    skos:prefLabel "Sidération / Immobilisme"@fr ;
+    skos:definition "Incapacité temporaire à agir ou à se déplacer, souvent provoquée par un choc émotionnel ou un stress dépassant le seuil critique."@fr ;
+    skos:broader fe:BehaviorConceptRoot .
+
+fe:BehaviorInformationSeeking a skos:Concept, fe:HumanBehavior ;
+    skos:prefLabel "Recherche d'Information"@fr ;
+    skos:definition "L'agent cherche à valider l'alerte (regarde les autres, cherche l'origine de la fumée, pose des questions)."@fr ;
+    skos:broader fe:BehaviorConceptRoot .
+
+fe:BehaviorHelp a skos:Concept, fe:HumanBehavior ;
+    skos:prefLabel "Assistance / Comportement Altruiste"@fr ;
+    skos:definition "L'agent consacre du temps et de l'énergie à guider, porter ou attendre un autre agent en difficulté."@fr ;
+    skos:broader fe:BehaviorConceptRoot .
+
+fe:BehaviorSheltering a skos:Concept, fe:HumanBehavior ;
+    skos:prefLabel "Confinement / Recherche de refuge"@fr ;
+    skos:definition "L'agent s'isole dans une pièce fermée plutôt que de tenter de fuir vers l'extérieur."@fr ;
+    skos:broader fe:BehaviorConceptRoot .
+
+
+# =================================================================
+# 3. BRANCHE : BIAIS COGNITIFS (fe:CognitiveBias)
+# =================================================================
+
+fe:BiasConceptRoot a skos:Concept ;
+    skos:prefLabel "Biais Cognitifs en Crise"@fr ;
+    skos:topConceptOf fe:CognitiveBehaviorThesaurus .
+
+# --- Sous-biais ---
+
+fe:NormalcyBias a skos:Concept, fe:CognitiveBias ;
+    skos:prefLabel "Biais de Normalité / Incrédulité"@fr ;
+    skos:definition "Tendance à sous-estimer la probabilité ou la gravité d'une catastrophe et à interpréter les signaux d'alerte comme des faux positifs (ex: bruit d'alarme confondu avec un exercice)."@fr ;
+    skos:broader fe:BiasConceptRoot .
+
+fe:AnchoringBias a skos:Concept, fe:CognitiveBias ;
+    skos:prefLabel "Biais d'Ancrage Spatial"@fr ;
+    skos:definition "Focalisation sur la première information reçue ou l'itinéraire d'entrée. L'agent s'obstine à vouloir sortir par là où il est entré, ignorant les sorties de secours plus proches."@fr ;
+    skos:broader fe:BiasConceptRoot .
+
+fe:SocialAnhedoniaCrisis a skos:Concept, fe:CognitiveBias ;
+    skos:prefLabel "Effet Témoin / Diffusion de Responsabilité"@fr ;
+    skos:definition "Diminution de la probabilité d'agir ou d'aider lorsque d'autres personnes sont présentes, chaque individu attendant que l'autre fasse le premier pas."@fr ;
+    skos:broader fe:BiasConceptRoot .
+
+fe:AffiliativeBias a skos:Concept, fe:CognitiveBias ;
+    skos:prefLabel "Biais d'Affiliation / Effet de Groupe"@fr ;
+    skos:definition "Priorisation absolue du regroupement avec les proches (famille, amis) avant d'entamer la moindre action d'évacuation."@fr ;
+    skos:broader fe:BiasConceptRoot .
+
+
+# =================================================================
+# 4. BRANCHE : TYPES D'INTERACTIONS SOCIALES (fe:SocialInteractionType)
+# =================================================================
+
+fe:InteractionConceptRoot a skos:Concept ;
+    skos:prefLabel "Dynamiques d'Interactions Sociales"@fr ;
+    skos:topConceptOf fe:CognitiveBehaviorThesaurus ;
+    skos:narrower fe:InteractionHerding ;
+    skos:narrower fe:InteractionGuidance ;
+    skos:narrower fe:InteractionAggression ;
+    skos:narrower fe:InteractionMutualSupport .
+
+# --- Sous-interactions (Les concepts qualificatifs) ---
+
+fe:InteractionHerding a skos:Concept, fe:SocialInteractionType ;
+    skos:prefLabel "Contagion comportementale / Effet de Troupeau"@fr ;
+    skos:definition "Imitation automatique et inconsciente du comportement de la majorité visible."@fr ;
+    skos:broader fe:InteractionConceptRoot .
+
+fe:InteractionGuidance a skos:Concept, fe:SocialInteractionType ;
+    skos:prefLabel "Guidage Directif / Leadership"@fr ;
+    skos:definition "Transmission d'ordres clairs et explicites d'un émetteur légitime ou affirmé."@fr ;
+    skos:broader fe:InteractionConceptRoot .
+
+fe:InteractionAggression a skos:Concept, fe:SocialInteractionType ;
+    skos:prefLabel "Bousculade / Compétition Spatiale"@fr ;
+    skos:definition "Friction physique ou comportement agressif d'un agent cherchant à forcer le passage."@fr ;
+    skos:broader fe:InteractionConceptRoot .
+
+fe:InteractionMutualSupport a skos:Concept, fe:SocialInteractionType ;
+    skos:prefLabel "Entraide / Coopération synchrone"@fr ;
+    skos:definition "Action coordonnée entre deux agents pour s'extirper d'une zone de danger."@fr ;
+    skos:broader fe:InteractionConceptRoot .
+
+
+# =================================================================
+# 5. MATRICE DES INTERFÉRENCES CROISÉES ET SÉMANTISÉES
+# =================================================================
+
+# --- Cas 1 : L'Altruiste influence l'Individualiste ---
+fe:Interference_Altruist_Boosts_Individualist a fe:InterferenceRelation ;
+    rdfs:comment "La présence d'un altruiste pousse l'individualiste à être un peu plus coopératif."@fr ;
+    fe:hasAsActeur         fe:ArchetypeAltruist ;
+    fe:hasAsCible          fe:ArchetypeIndividualist ;
+    fe:targetBehavior      fe:BehaviorHelp ;
+    fe:probabilityModifier "0.20"^^xsd:float ;
+    # LE LIEN : Cette interférence matérialise une interaction d'entraide !
+    fe:mediatedByInteraction fe:InteractionMutualSupport .
+
+# --- Cas 2 : L'Individualiste influence le Vulnérable ---
+fe:Interference_Individualist_Freezes_Vulnerable a fe:InterferenceRelation ;
+    rdfs:comment "La bousculade ou l'égoïsme de l'individualiste panique le vulnérable et provoque sa sidération."@fr ;
+    fe:hasAsActeur         fe:ArchetypeIndividualist ;
+    fe:hasAsCible          fe:ArchetypeVulnerable ;
+    fe:targetBehavior      fe:BehaviorFreezing ;
+    fe:probabilityModifier "0.60"^^xsd:float ;
+    # LE LIEN : Cette interférence découle d'une agression/bousculade spatiale
+    fe:mediatedByInteraction fe:InteractionAggression .
+
+# --- Cas 3 : Le Leader influence le Passif Incrédule ---
+fe:Interference_Leader_Activates_Passive a fe:InterferenceRelation ;
+    rdfs:comment "Le leader brise l'incrédulité du passif et le force à évacuer."@fr ;
+    fe:hasAsActeur         fe:ArchetypeLeader ;
+    fe:hasAsCible          fe:ArchetypePassive ;
+    fe:targetBehavior      fe:BehaviorFlight ;
+    fe:probabilityModifier "0.85"^^xsd:float ;
+    # LE LIEN : C'est du guidage directif pur
+    fe:mediatedByInteraction fe:InteractionGuidance .
+
+# --- Cas 4 : Le Vulnérable influence l'Altruiste ---
+fe:Interference_Vulnerable_Triggers_Altruist a fe:InterferenceRelation ;
+    rdfs:comment "La détresse du vulnérable agit comme un déclencheur absolu pour l'altruiste."@fr ;
+    fe:hasAsActeur         fe:ArchetypeVulnerable ;
+    fe:hasAsCible          fe:ArchetypeAltruist ;
+    fe:targetBehavior      fe:BehaviorHelp ;
+    fe:probabilityModifier "0.95"^^xsd:float ;
+    # LE LIEN : Appelle à une dynamique d'entraide
+    fe:mediatedByInteraction fe:InteractionMutualSupport .
+
+# --- Cas 5 : Le Passif influence l'Individualiste (Effet Témoin) ---
+fe:Interference_Passive_Mutes_Individualist a fe:InterferenceRelation ;
+    rdfs:comment "L'effet témoin : la passivité des uns renforce l'inaction altruiste de l'individualiste."@fr ;
+    fe:hasAsActeur         fe:ArchetypePassive ;
+    fe:hasAsCible          fe:ArchetypeIndividualist ;
+    fe:targetBehavior      fe:BehaviorHelp ;
+    fe:probabilityModifier "0.02"^^xsd:float ;
+    # LE LIEN : C'est une absence d'action par contagion de l'inertie
+    fe:mediatedByInteraction fe:InteractionHerding .
+    
+# =================================================================
+# 6. ANCRAGE DE LA SÉMANTIQUE SUR LES ARCHÉTYPES (Source de Vérité UNIQUE)
+# =================================================================
+
+# On attache les relations aux cibles qui les subissent.
+# Ton code Python n'aura qu'à requêter ces lignes pour mapper sa matrice.
+
+fe:ArchetypeIndividualist
+    fe:subitInterference :Interference_Altruist_Boosts_Individualist ;
+    fe:subitInterference :Interference_Passive_Mutes_Individualist .
+
+fe:ArchetypeVulnerable
+    fe:subitInterference :Interference_Individualist_Freezes_Vulnerable .
+
+fe:ArchetypePassive
+    fe:subitInterference :Interference_Leader_Activates_Passive .
+
+fe:ArchetypeAltruist
+    fe:subitInterference :Interference_Vulnerable_Triggers_Altruist .
