@@ -90,3 +90,18 @@ fe:hasTraining a owl:ObjectProperty ;
 fe:hasEducationLevel a owl:ObjectProperty ;
     rdfs:domain fe:Population ;
     rdfs:range fe:EducationLevel .
+
+# =================================================================
+# 4. ARCHÉTYPES HUMAINS (Profils Comportementaux Typés)
+# =================================================================
+
+fe:HumanArchetype a owl:Class ;
+    rdfs:subClassOf crm:E55_Type ;
+    rdfs:label "Archétype Humain"@fr ;
+    rdfs:comment "Profil psychologique et opérationnel type dictant les règles de comportement en cas d'urgence."@fr .
+
+# Lien entre tes statistiques de population et les archétypes réels
+fe:representsArchetype a owl:ObjectProperty ;
+    rdfs:label "représente l'archétype"@fr ;
+    rdfs:domain fe:TypePart ; # Lie une partition statistique à un comportement
+    rdfs:range fe:HumanArchetype .

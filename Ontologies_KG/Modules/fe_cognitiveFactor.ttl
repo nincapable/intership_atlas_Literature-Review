@@ -1,0 +1,139 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/fire_and_evacuation/behavior_and_cognition> a owl:Ontology ;
+    owl:imports <http://example.org/fire_and_evacuation/population> .
+
+# =================================================================
+# 1. PHÉNOMÈNES COGNITIFS ET COMPORTEMENTAUX
+# =================================================================
+
+fe:CognitiveBias a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Biais Cognitif"@fr ;
+    rdfs:comment "Filtre psychologique altérant la perception de la réalité ou l'évaluation du risque."@fr .
+
+fe:HumanBehavior a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Comportement Humain"@fr ;
+    rdfs:comment "Action observable ou état opérationnel adopté par la population (ex: Fuite, Sidération, Recherche)."@fr .
+
+fe:SocialInteractionType a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Type d'Interaction Sociale"@fr ;
+    rdfs:comment "Nature de la dynamique inter-archétypes (ex: Contagion de panique, Guidage directif, Assistance)."@fr .
+
+# =================================================================
+# 2. PROFILAGE DES ARCHÉTYPES (Configuration Initiale)
+# =================================================================
+
+# --- Vulnérabilité d'un Archétype aux Biais ---
+
+fe:ArchetypeBiasSensitivity a owl:Class ;
+    rdfs:label "Sensibilité aux Biais de l'Archétype"@fr ;
+    rdfs:comment "Définit la probabilité qu'un archétype soit sujet à un biais cognitif spécifique."@fr .
+
+fe:hasBiasSensitivity a owl:ObjectProperty ;
+    rdfs:domain fe:HumanArchetype ;
+    rdfs:range fe:ArchetypeBiasSensitivity .
+
+fe:targetBias a owl:ObjectProperty ;
+    rdfs:domain fe:ArchetypeBiasSensitivity ;
+    rdfs:range fe:CognitiveBias .
+
+fe:biasProbability a owl:DatatypeProperty ;
+    rdfs:domain fe:ArchetypeBiasSensitivity ;
+    rdfs:range xsd:float .
+
+# --- Capacité d'activation des Comportements par l'Archétype ---
+
+fe:BehaviorActivationRule a owl:Class ;
+    rdfs:label "Règle d'Activation Comportementale"@fr ;
+    rdfs:comment "Définit le seuil de stress nécessaire pour qu'un archétype bascule dans un comportement."@fr .
+
+fe:hasActivationRule a owl:ObjectProperty ;
+    rdfs:domain fe:HumanArchetype ;
+    rdfs:range fe:BehaviorActivationRule .
+
+fe:targetBehavior a owl:ObjectProperty ;
+    rdfs:domain fe:BehaviorActivationRule ;
+    rdfs:range fe:HumanBehavior .
+
+fe:stressThreshold a owl:DatatypeProperty ;
+    rdfs:label "seuil d'activation"@fr ;
+    rdfs:comment "Niveau de stress cumulé (0.0 à 1.0) déclenchant le comportement pour cet archétype."@fr ;
+    rdfs:domain fe:BehaviorActivationRule ;
+    rdfs:range xsd:float .
+
+# =================================================================
+# 3. MATRICE COMPORTEMENTALE COMBINATOIRE (Interactions)
+# =================================================================
+
+fe:InterArchetypeInfluence a owl:Class ;
+    rdfs:label "Influence et Chimie Inter-Archétypes"@fr ;
+    rdfs:comment "Représente la règle d'émergence sociale lorsqu'un archétype source entre en contact avec un archétype cible."@fr .
+
+fe:hasSourceArchetype a owl:ObjectProperty ;
+    rdfs:label "a pour archétype source"@fr ;
+    rdfs:domain fe:InterArchetypeInfluence ;
+    rdfs:range fe:HumanArchetype .
+
+fe:hasTargetArchetype a owl:ObjectProperty ;
+    rdfs:label "a pour archétype cible"@fr ;
+    rdfs:domain fe:InterArchetypeInfluence ;
+    rdfs:range fe:HumanArchetype .
+
+fe:mediatedByInteraction a owl:ObjectProperty ;
+    rdfs:label "médié par l'interaction"@fr ;
+    rdfs:domain fe:InterArchetypeInfluence ;
+    rdfs:range fe:SocialInteractionType .
+
+fe:producesEffect a owl:ObjectProperty ;
+    rdfs:label "produit l'effet"@fr ;
+    rdfs:comment "Liaison vers les conséquences cognitives ou comportementales de l'interaction."@fr ;
+    rdfs:domain fe:InterArchetypeInfluence ;
+    rdfs:range fe:InfluenceEffect .
+
+# =================================================================
+# 4. TYPOLOGIE DES EFFETS PARAMÉTRÉS VIA THÉSAURUS
+# =================================================================
+
+fe:InfluenceEffect a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Effet d'Influence"@fr ;
+    rdfs:comment "Structure générique qualifiant l'impact d'une interaction via des concepts du thésaurus."@fr .
+
+fe:hasImpactAction a owl:ObjectProperty ;
+    rdfs:label "action d'impact"@fr ;
+    rdfs:comment "La nature mathématique/logique de l'effet (ex: Augmenter, Diminuer, Annuler)."@fr ;
+    rdfs:domain fe:InfluenceEffect ;
+    rdfs:range fe:ImpactActionType . # Point d'ancrage SKOS
+
+fe:hasCognitiveTargetType a owl:ObjectProperty ;
+    rdfs:label "type de cible cognitive"@fr ;
+    rdfs:comment "La catégorie de l'élément impacté (ex: Le Stress, Un Biais, Un Comportement)."@fr ;
+    rdfs:domain fe:InfluenceEffect ;
+    rdfs:range fe:CognitiveTargetCategory . # Point d'ancrage SKOS
+
+# --- Liaison dynamique vers l'entité SKOS ou OWL précise ---
+
+fe:targetEntity a owl:ObjectProperty ;
+    rdfs:label "entité cible spécifique"@fr ;
+    rdfs:comment "Le biais précis (ex: fe:NormalcyBias) ou le comportement précis (ex: fe:PanicFlight) qui subit l'effet."@fr ;
+    rdfs:domain fe:InfluenceEffect ;
+    rdfs:range [ owl:unionOf (fe:CognitiveBias fe:HumanBehavior) ] .
+
+# --- La seule et unique valeur numérique requise ---
+
+fe:effectValue a owl:DatatypeProperty ;
+    rdfs:label "valeur de l'effet"@fr ;
+    rdfs:comment "Le delta, le multiplicateur ou la probabilité à appliquer (ex: 0.25 ou 0.0)."@fr ;
+    rdfs:domain fe:InfluenceEffect ;
+    rdfs:range xsd:float .
+
+# --- Classes de Référentiels pour SKOS ---
+fe:ImpactActionType a owl:Class ; rdfs:subClassOf fe:HumanFactorType .
+fe:CognitiveTargetCategory a owl:Class ; rdfs:subClassOf fe:HumanFactorType .

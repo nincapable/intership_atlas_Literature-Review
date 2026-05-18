@@ -198,3 +198,35 @@ fe:hasBoundingBox a owl:DatatypeProperty ;
 
 # Classe de référentiel pour SKOS
 fe:AcquisitionMethod a owl:Class ; rdfs:subClassOf fe:TechnicalType .
+
+# =================================================================
+# 5. ÉVALUATION DES RISQUES ET INDICES DE PRIORITÉ
+# =================================================================
+
+# --- Indices de Priorité Séparés (Calculés) ---
+
+fe:patrimonialUrgencyIndex a owl:DatatypeProperty ;
+    rdfs:label "Indice d'urgence patrimoniale"@fr ;
+    rdfs:comment "Somme pondérée des scores de priorité des artefacts présents dans la zone."@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range xsd:decimal .
+
+fe:ecologicalUrgencyIndex a owl:DatatypeProperty ;
+    rdfs:label "Indice d'urgence écologique"@fr ;
+    rdfs:comment "Score basé sur la rareté et la protection des espèces vivantes (Flore/Faune) de la zone."@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range xsd:decimal .
+
+fe:structuralDangerIndex a owl:DatatypeProperty ;
+    rdfs:label "Indice de péril structurel"@fr ;
+    rdfs:comment "Indice de danger lié à la fragilité des bâtiments et au risque d'effondrement dans la zone."@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range xsd:decimal .
+
+# --- Métrique Globale (Optionnelle pour le tri rapide) ---
+
+fe:globalEvacuationUrgency a owl:DatatypeProperty ;
+    rdfs:label "Urgence globale d'évacuation"@fr ;
+    rdfs:comment "Valeur agrégée pour le tri général des zones d'intervention."@fr ;
+    rdfs:domain fe:Zone ;
+    rdfs:range xsd:decimal .

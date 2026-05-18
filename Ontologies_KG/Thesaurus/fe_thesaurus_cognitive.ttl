@@ -1,0 +1,26 @@
+# --- Catégories de Cibles Cognitives ---
+fe:TargetStress a skos:Concept, fe:CognitiveTargetCategory ;
+    skos:prefLabel "Jauge de Stress"@fr .
+
+fe:TargetBias a skos:Concept, fe:CognitiveTargetCategory ;
+    skos:prefLabel "Biais Cognitif"@fr .
+
+fe:TargetBehavior a skos:Concept, fe:CognitiveTargetCategory ;
+    skos:prefLabel "Comportement"@fr .
+
+# --- Actions Mathématiques / Logiques ---
+fe:ActionIncrease a skos:Concept, fe:ImpactActionType ;
+    skos:prefLabel "Augmenter (Addition)"@fr ;
+    skos:note "Ajoute la valeur à la variable cible (cible = cible + valeur)"@fr .
+
+fe:ActionDecrease a skos:Concept, fe:ImpactActionType ;
+    skos:prefLabel "Diminuer (Soustraction)"@fr ;
+    skos:note "Soustrait la valeur à la variable cible (cible = cible - valeur)"@fr .
+
+fe:ActionMultiply a skos:Concept, fe:ImpactActionType ;
+    skos:prefLabel "Multiplier"@fr ;
+    skos:note "Multiplie la variable ou la probabilité (cible = cible * valeur)"@fr .
+
+fe:ActionSetTo a skos:Concept, fe:ImpactActionType ;
+    skos:prefLabel "Fixer à"@fr ;
+    skos:note "Écrase la valeur actuelle (cible = valeur). Utile pour forcer à 0 ou 1."@fr .

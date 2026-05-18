@@ -85,6 +85,20 @@ fe:hasEmergencyProcedureDocument a owl:ObjectProperty ;
     rdfs:range crm:E31_Document ;
     rdfs:subPropertyOf crm:P70i_is_documented_in .
 
+fe:PriorityLevel a owl:Class ;
+    rdfs:label "Niveau de priorité de sauvegarde"@fr ;
+    rdfs:subClassOf fe:OperationnalType .
+
+fe:hasProtectionPriority a owl:ObjectProperty ;
+    rdfs:domain fe:Artefact ;
+    rdfs:range fe:PriorityLevel . # Ex: P1 (Vital), P2 (Important), P3 (Accessoire)
+
+fe:priorityScore a owl:DatatypeProperty ;
+    rdfs:label "Score de priorité numérique"@fr ;
+    rdfs:comment "Valeur permettant d'ordonner les objets ayant le même niveau de priorité (ex: entre deux P1)."@fr ;
+    rdfs:domain fe:PriorityLevel ;
+    rdfs:range xsd:integer .
+
 # =================================================================
 # 5. ALIGNEMENTS CRM (RAPPEL DES CHEMINS)
 # =================================================================

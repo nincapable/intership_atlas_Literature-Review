@@ -207,3 +207,36 @@ fe:Robust a skos:Concept, fe:FragilityType ;
     skos:prefLabel "Robuste"@fr ;
     skos:definition "Peu sensible aux agents extérieurs immédiats."@fr ;
     skos:inScheme fe:FragilityScheme .
+
+# =================================================================
+# 4. RÉFÉRENTIEL DES PRIORITÉS DE SAUVEGARDE (PriorityLevel)
+# =================================================================
+
+fe:PriorityScheme a skos:ConceptScheme ;
+    rdfs:label "Référentiel des Priorités de Sauvegarde (PSBC)"@fr ;
+    dct:description "Définit l'ordre chronologique d'évacuation ou de protection in situ des artefacts lors d'un sinistre."@fr ;
+    skos:hasTopConcept fe:PriorityP1, fe:PriorityP2, fe:PriorityP3 .
+
+fe:PriorityP1 a skos:Concept, fe:PriorityLevel ;
+    skos:prefLabel "Priorité 1 : Vital / Inestimable"@fr ;
+    skos:altLabel "P1"@fr ;
+    skos:definition "Objets d'une valeur patrimoniale, historique ou symbolique majeure. Évacuation immédiate requise."@fr ;
+    skos:note "Action : À évacuer en priorité absolue dès le début de l'intervention."@fr ;
+    fe:priorityScore 100;
+    skos:inScheme fe:PriorityScheme .
+
+fe:PriorityP2 a skos:Concept, fe:PriorityLevel ;
+    skos:prefLabel "Priorité 2 : Important"@fr ;
+    skos:altLabel "P2"@fr ;
+    skos:definition "Objets de grande valeur nécessitant une protection si l'évacuation P1 est terminée."@fr ;
+    skos:note "Action : Évacuation ou mise en protection (bâchage) après les objets P1."@fr ;
+    fe:priorityScore 10;
+    skos:inScheme fe:PriorityScheme .
+
+fe:PriorityP3 a skos:Concept, fe:PriorityLevel ;
+    skos:prefLabel "Priorité 3 : Secondaire"@fr ;
+    skos:altLabel "P3"@fr ;
+    skos:definition "Objets contribuant à la collection mais ne présentant pas un caractère d'urgence immédiate."@fr ;
+    skos:note "Action : Sauvegarde effectuée uniquement si les conditions de sécurité le permettent."@fr ;
+    fe:priorityScore 1;
+    skos:inScheme fe:PriorityScheme .
