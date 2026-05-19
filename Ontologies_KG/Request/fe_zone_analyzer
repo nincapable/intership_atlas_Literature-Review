@@ -1,0 +1,41 @@
+PREFIX fe: <http://example.org/fire_and_evacuation#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+INSERT {
+    ?zone fe:patrimonialUrgencyIndex ?artefactIndex ;
+          fe:ecologicalUrgencyIndex ?ecologicalIndex ;
+          fe:structuralDangerIndex ?structuralIndex .
+}
+WHERE {
+    ?zone a fe:Zone . # Remplacer par ta classe exacte si nécessaire
+    
+    # 1. Calcul de l'Indice Patrimonial (Somme des priorités d'artefacts)
+    {
+        SELECT ?zone (COALESCE(SUM(?score), 0.0) AS ?artefactIndex)
+        WHERE {
+            ?zone fe:containsArtefact ?art .
+            ?art fe:hasProtectionPriority/fe:priorityScore ?score .
+        } GROUP BY ?zone
+    }
+    
+    # 2. Calcul de l'Indice Écologique (Pondération des taxons présents)
+    {
+        SELECT ?zone (COALESCE(SUM(?weight * ?share), 0.0) AS ?ecologicalIndex)
+        WHERE {
+            ?zone fe:containsNaturalSpace ?ns .
+            ?ns fe:hasBiomassState/fe:hasComponent ?comp .
+            ?comp fe:refersToTaxon ?taxon ;
+                  fe:percentageShare ?share .
+            ?taxon fe:hasbioFireSensitivity/fe:hasProtectionStatus/fe:protectionPriorityWeight ?weight .
+        } GROUP BY ?zone
+    }
+    
+    # 3. Calcul de l'Indice de Péril Structurel (Fragilité des bâtiments inclus)
+    {
+        SELECT ?zone (COALESCE(SUM(?fragility * 100.0), 0.0) AS ?structuralIndex)
+        WHERE {
+            ?zone fe:containsBuilding ?bld .
+            ?bld fe:hasBuildingFireRisk/fe:structuralFragility ?fragility .
+        } GROUP BY ?zone
+    }
+}

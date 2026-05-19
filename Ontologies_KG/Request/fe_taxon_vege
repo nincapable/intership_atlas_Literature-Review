@@ -1,0 +1,84 @@
+PREFIX fe: <http://example.org/fire_and_evacuation#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+INSERT {
+    ?sensi fe:ReactivityFactor ?reactivityFactor ;
+           fe:calculatedHeatReleasePotential ?finalHRP ;
+           fe:calculatedVerticalTransferPotential ?finalVT ;
+           fe:calculatedHorizontalTransferPotential ?finalHT ;
+           fe:calculatedHorizontalBarrierPotential ?horizontalBarrier ;
+           fe:calculatedVerticalBarrierPotential ?verticalBarrier ;
+           fe:calculatedGeneralFireRisk ?generalRisk .
+}
+WHERE {
+    # 1. On cible uniquement les végétaux ou champignons présents (Plantae, Fungi...)
+    ?taxon rdfs:subClassOf* ?reign .
+    FILTER (?reign IN (fe:Plantae, fe:Fungi, fe:Végétal, fe:Champignon))
+    ?taxon fe:hasFireSensitivity ?sensi .
+    
+    # 2. Récupération du HRP de base (hérité au niveau du Taxon ou de ses classes parentes)
+    ?taxon fe:organicHRPBasis ?hrp_base .
+    
+    # 3. Agrégation des Aiding Traits (Traits aggravants)
+    {
+        SELECT ?sensi 
+               (MIN(?t_eff) AS ?min_threshold) 
+               (MIN(?d_eff) AS ?min_delay)
+               (SUM(?hrp_p_cal) AS ?hrp_p) 
+               (SUM(?vt_p_cal) AS ?vt_p) 
+               (SUM(?ht_p_cal) AS ?ht_p)
+        WHERE {
+            ?taxon fe:hasFireSensitivity ?sensi .
+            ?taxon fe:hasFireAidingTrait ?t .
+            
+            # Paramètres physiques
+            BIND(COALESCE(xsd:decimal(?t/fe:spontaneousIgnitionThreshold), 400.0) AS ?t_physic)
+            BIND(COALESCE(xsd:decimal(?t/fe:ignitionDelay), 600.0) AS ?d_physic)
+            
+            # Gestion de la maintenance (si présente et active)
+            OPTIONAL {
+                ?t fe:hasrecommendedMaintenance ?maint .
+                ?maint fe:isMaintained true .
+                ?maint fe:maintenanceEfficiency ?eff .
+            }
+            BIND(COALESCE(?eff, 0.0) AS ?exposure_reduction)
+            BIND(1.0 - ?exposure_reduction AS ?exposure)
+            
+            # Calcul des valeurs effectives avec maintenance
+            BIND(?t_physic + ((400.0 - ?t_physic) * (1.0 - ?exposure)) AS ?t_eff)
+            BIND(?d_physic + ((600.0 - ?d_physic) * (1.0 - ?exposure)) AS ?d_eff)
+            
+            # Calcul des potentiels de transfert aggravés
+            BIND(COALESCE(xsd:decimal(?t/fe:heatReleasePotential), 0.0) * ?exposure AS ?hrp_p_cal)
+            BIND(COALESCE(xsd:decimal(?t/fe:verticalTransferPotential), 0.0) * ?exposure AS ?vt_p_cal)
+            BIND(COALESCE(xsd:decimal(?t/fe:horizontalTransferPotential), 0.0) * ?exposure AS ?ht_p_cal)
+        } GROUP BY ?sensi
+    }
+    
+    # 4. Agrégation des Resisting Traits (Traits résistants)
+    {
+        SELECT ?sensi 
+               (SUM(COALESCE(xsd:decimal(?r/fe:heatReleasePotential), 0.0)) AS ?hrp_m)
+               (SUM(COALESCE(xsd:decimal(?r/fe:verticalTransferPotential), 0.0)) AS ?vt_m)
+               (SUM(COALESCE(xsd:decimal(?r/fe:horizontalTransferPotential), 0.0)) AS ?ht_m)
+               (SUM(COALESCE(xsd:decimal(?r/fe:fireResistanceDuration), 0.0) * 0.7) AS ?horizontalBarrier)
+               (SUM(COALESCE(xsd:decimal(?r/fe:fireResistanceDuration), 0.0) * 0.3) AS ?verticalBarrier)
+        WHERE {
+            ?taxon fe:hasFireSensitivity ?sensi .
+            ?taxon fe:hasFireResistingTrait ?r .
+        } GROUP BY ?sensi
+    }
+
+    # 5. Calcul des indices finaux (Logique mathématique du script)
+    BIND(400.0 / IF(?min_threshold < 100.0, 100.0, ?min_threshold) AS ?i_seuil)
+    BIND(1.0 + (5.0 / (?min_delay + 5.0)) AS ?i_delai)
+    BIND(xsd:decimal(?i_seuil * ?i_delai) AS ?reactivityFactor)
+    
+    BIND(IF((xsd:decimal(?hrp_base) + ?hrp_p) - ?hrp_m < 0.0, 0.0, (xsd:decimal(?hrp_base) + ?hrp_p) - ?hrp_m) AS ?finalHRP)
+    BIND(IF(?vt_p - ?vt_m < 0.0, 0.0, ?vt_p - ?vt_m) AS ?finalVT)
+    BIND(IF(?ht_p - ?ht_m < 0.0, 0.0, ?ht_p - ?ht_m) AS ?finalHT)
+    
+    BIND((?finalHRP * 0.3) + (?finalVT * 0.5) + (?finalHT * 0.2) AS ?riskCinetique)
+    BIND(?riskCinetique * ?reactivityFactor AS ?generalRisk)
+}

@@ -1,0 +1,65 @@
+PREFIX fe: <http://example.org/fire_and_evacuation#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+INSERT {
+    ?ns fe:globalIgnitionProbability ?globalIgnition ;
+        fe:firePropagationVelocity ?globalVelocity ;
+        fe:structuralFireBarrierEffect ?globalBarrier ;
+        fe:globalEvacuationUrgency ?maxUrgency .
+}
+WHERE {
+    ?ns a fe:NaturalSpace .
+    
+    {
+        SELECT ?ns 
+               (SUM(?ign_impact) AS ?globalIgnition)
+               (SUM(?vel_impact) AS ?globalVelocity)
+               (SUM(?bar_impact) AS ?globalBarrier)
+               (MAX(?prio_weight) AS ?maxUrgency)
+        WHERE {
+            ?ns fe:hasBiomassState ?meas .
+            ?meas fe:hasComponent ?comp .
+            ?comp fe:refersToTaxon ?taxon ;
+                  fe:percentageShare ?percent .
+            BIND(xsd:decimal(?percent) / 100.0 AS ?share)
+            
+            ?taxon fe:hasFireSensitivity ?sensi .
+            ?sensi fe:ReactivityFactor ?f_reac .
+            ?sensi fe:calculatedHorizontalTransferPotential ?ht .
+            ?sensi fe:calculatedVerticalTransferPotential ?vt .
+            ?sensi fe:calculatedHorizontalBarrierPotential ?hb .
+            
+            # Détermination si Animal ou Végétal pour appliquer la bonne formule
+            OPTIONAL {
+                ?taxon rdfs:subClassOf* ?reign .
+                FILTER (?reign IN (fe:Plantae, fe:Fungi, fe:Végétal, fe:Champignon))
+                BIND(true AS ?is_vegetal)
+            }
+            
+            # --- FORMULE LOGIQUE INTERNE ---
+            # Ignition (Uniquement si végétal) : ValetteScore * ReactivityFactor
+            ?sensi fe:ValetteScore ?valette .
+            BIND(IF(BOUND(?is_vegetal), xsd:decimal(?valette) * xsd:decimal(?f_reac) * ?share, 0.0) AS ?ign_impact)
+            
+            # Velocity (Propagation)
+            # Si animal : ht * (1.5 - f_reac)
+            # Si végétal : (vt + ht) / 2.0
+            BIND(IF(BOUND(?is_vegetal), 
+                    ((xsd:decimal(?vt) + xsd:decimal(?ht)) / 2.0) * ?share,
+                    (xsd:decimal(?ht) * (1.5 - xsd:decimal(?f_reac))) * ?share
+                 ) AS ?vel_impact)
+                 
+            # Barrière horizontale
+            BIND(xsd:decimal(?hb) * ?share AS ?bar_impact)
+            
+            # Récupération de l'Urgence d'Évacuation (Statut de protection)
+            OPTIONAL {
+                ?sensi fe:hasProtectionStatus ?status .
+                ?status fe:protectionPriorityWeight ?prio .
+            }
+            BIND(COALESCE(xsd:decimal(?prio), 1.0) AS ?prio_weight)
+            
+        } GROUP BY ?ns
+    }
+}
