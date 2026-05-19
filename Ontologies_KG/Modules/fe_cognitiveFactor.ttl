@@ -42,7 +42,7 @@ fe:representsArchetype a owl:ObjectProperty ;
     rdfs:range fe:HumanArchetype .
 
 fe:ArchetypeBiasSensitivity a owl:Class ;
-    owl:SubClassOf fe:HumanFactorType ;
+    rdfs:subClassOf fe:HumanFactorType ;
     rdfs:label "Sensibilité aux Biais de l'Archétype"@fr ;
     rdfs:comment "Définit la probabilité qu'un archétype soit sujet à un biais cognitif spécifique."@fr .
 
@@ -61,7 +61,7 @@ fe:biasProbability a owl:DatatypeProperty ;
 # --- Capacité d'activation des Comportements par l'Archétype ---
 
 fe:BehaviorActivationRule a owl:Class ;
-    owl:SubClassOf fe:HumanFactorType ;
+    rdfs:subClassOf fe:HumanFactorType ;
     rdfs:label "Règle d'Activation Comportementale"@fr ;
     rdfs:comment "Définit le seuil de stress nécessaire pour qu'un archétype bascule dans un comportement."@fr .
 
@@ -84,7 +84,7 @@ fe:stressThreshold a owl:DatatypeProperty ;
 # =================================================================
 
 fe:InterferenceRelation a owl:Class ;
-    owl:SubClassOf fe:HumanFactorType ;
+    rdfs:subClassOf fe:HumanFactorType ;
     rdfs:label "Relation d'Interférence"@fr ;
     rdfs:comment "La boîte unique qui contient le fait que l'Acteur modifie la probabilité d'un Comportement chez la Cible."@fr .
 

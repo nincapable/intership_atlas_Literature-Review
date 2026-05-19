@@ -12,7 +12,7 @@
     owl:imports <fe_axis_module.ttl> ,
                 <fe_artefact_module.ttl> ,
                 <fe_building_module.ttl> ,
-                <fe_cognitiveFactor.ttl>,
+                <fe_cognitiveFactor.ttl> ,
                 <fe_hazard.ttl> ,
                 <fe_heritageSite.ttl> ,
                 <fe_Impact.ttl> ,
@@ -24,10 +24,9 @@
                 <fe_zone.ttl> ,
 
     # --- IMPORT DES THÉSAURUS (Dossier parent puis /Thesaurus/) ---
-    # Note : Protégé utilisera ces chemins pour localiser les fichiers physiquement.
                 <../Thesaurus/fe_thesaurus_alea.ttl> ,
                 <../Thesaurus/fe_thesaurus_building.ttl> ,
-                <../Thesaurus/fe_thesaurus_cognitive.ttl>,
+                <../Thesaurus/fe_thesaurus_cognitive.ttl> ,
                 <../Thesaurus/fe_thesaurus_heritageSite.ttl> ,
                 <../Thesaurus/fe_thesaurus_safety.ttl> ,
                 <../Thesaurus/fe_thesaurus_zone.ttl> ,
@@ -38,7 +37,11 @@
                 <../Thesaurus/fe_thesaurus_axis.ttl> ,
                 <../Thesaurus/fe_thesaurus_especes.ttl> ,
                 <../Thesaurus/fe_thesaurus_population.ttl> ,
-                <../Thesaurus/fe_thesaurus_weather.ttl> .
+                <../Thesaurus/fe_thesaurus_weather.ttl> . # <-- Correction ici : POINT final pour fermer le triplet de l'ontologie
+
+# =================================================================
+# PROPRIÉTÉS DE CALCUL DES RISQUES GLOBALS
+# =================================================================
 
 fe:riskWeight a owl:DatatypeProperty ;
     rdfs:label "Poids de risque de base"@fr ;
