@@ -1,14 +1,13 @@
-@prefix fe: <http://example.org/fire_and_evacuation#> .
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
 @prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-
 <http://example.org/fire_and_evacuation/axis> a owl:Ontology .
 
 # =================================================================
-# CLASSIFICATION DES AXES (Ontologie Structurelle)
+# 1. CLASSIFICATION DES AXES (Ontologie Structurelle)
 # =================================================================
 
 fe:Axis a owl:Class ; 
@@ -16,7 +15,7 @@ fe:Axis a owl:Class ;
     rdfs:subClassOf crm:E25_Man_Made_Feature .
 
 fe:OperationnalType a owl:Class ;
-    rdfs:label "Types Operationnels"@fr ;
+    rdfs:label "Types Opérationnels"@fr ;
     rdfs:subClassOf crm:E55_Type .
 
 # --- Classes de Référentiel (Conteneurs pour le SKOS) ---
@@ -33,7 +32,12 @@ fe:RescueAccessibilityLevel a owl:Class ;
     rdfs:label "Niveau d'accessibilité Secours"@fr ;
     rdfs:subClassOf fe:OperationnalType .
 
-# --- Propriétés d'Objet ---
+fe:BlockingFactor a owl:Class ;
+    rdfs:label "Facteur de blocage"@fr ;
+    rdfs:subClassOf fe:OperationnalType ;
+    rdfs:comment "Classe OWL servant de référentiel pour les natures de blocages physiques (Éboulement, Effondrement, Chute d'arbre...)"@fr .
+
+# --- Propriétés d'Objet Structurelles ---
 
 fe:hasAxisType a owl:ObjectProperty ; 
     rdfs:label "a pour type d'axe"@fr ;
@@ -54,38 +58,57 @@ fe:isConnectedTo a owl:ObjectProperty, owl:SymmetricProperty ;
     rdfs:domain fe:Axis ; 
     rdfs:range fe:Axis .
 
-# --- Propriétés de Données ---
-fe:width  a owl:DatatypeProperty ; rdfs:range xsd:decimal .
-fe:length a owl:DatatypeProperty ; rdfs:range xsd:decimal .
-fe:slope  a owl:DatatypeProperty ; rdfs:range xsd:decimal .
-fe:isOnLevel a owl:DatatypeProperty ; rdfs:range xsd:integer .
+# --- Propriétés de Données Structurelles ---
 
-# --- Bloc État ---
+fe:width a owl:DatatypeProperty ; 
+    rdfs:label "Largeur de l'axe"@fr ;
+    rdfs:domain fe:Axis ; 
+    rdfs:range xsd:decimal .
+
+fe:length a owl:DatatypeProperty ; 
+    rdfs:label "Longueur de l'axe"@fr ;
+    rdfs:domain fe:Axis ; 
+    rdfs:range xsd:decimal .
+
+fe:slope a owl:DatatypeProperty ; 
+    rdfs:label "Pente de l'axe"@fr ;
+    rdfs:domain fe:Axis ; 
+    rdfs:range xsd:decimal .
+
+fe:isOnLevel a owl:DatatypeProperty ; 
+    rdfs:label "Est à l'étage / niveau"@fr ;
+    rdfs:domain fe:Axis ; 
+    rdfs:range xsd:integer .
+
+# --- Bloc État Éphémère ---
+
 fe:hasCurrentBlockingState a owl:ObjectProperty ; 
+    rdfs:label "a pour état de blocage courant"@fr ;
     rdfs:domain fe:Axis ; 
     rdfs:range crm:E3_Condition_State .
 
-#--- Bloc Vulnérabilité ---
 
-@prefix fe: <http://example.org/fire_and_evacuation#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+# =================================================================
+# 2. BLOC VULNÉRABILITÉ ET RISQUES
+# =================================================================
+# Note : fe:HazardType et fe:RiskDimension sont déclarés ailleurs.
 
 # --- Classes de Liaison ---
 
 fe:AxisVulnerability a owl:Class ;
     rdfs:label "Vulnérabilité de l'axe"@fr ;
     rdfs:subClassOf fe:RiskDimension ;
-    rdfs:comment "Représente l'intersection entre un axe, une menace physique et un aléa spécifique."@fr .
+    rdfs:comment "Représente l'intersection sémantique entre un axe, une menace physique et un aléa spécifique."@fr .
 
 fe:BlockingSource a owl:Class ;
+    owl:SubClassOf fe:TechnicalDimension ;
     rdfs:label "Source de blocage"@fr ;
-    rdfs:comment "Interface regroupant tout objet (Bâtiment, Taxon, Véhicule) pouvant obstruer un axe."@fr .
+    rdfs:comment "Interface regroupant tout objet physique (Bâtiment, Taxon, Véhicule) pouvant obstruer un axe."@fr .
 
-# --- Propriétés d'Objet ---
+# --- Propriétés d'Objet de Risque ---
 
 fe:hasVulnerability a owl:ObjectProperty ;
+    rdfs:label "présente une vulnérabilité"@fr ;
     rdfs:domain fe:Axis ;
     rdfs:range fe:AxisVulnerability .
 
@@ -102,11 +125,12 @@ fe:causedBy a owl:ObjectProperty ;
 fe:blockingNature a owl:ObjectProperty ;
     rdfs:label "nature du blocage"@fr ;
     rdfs:domain fe:AxisVulnerability ;
-    rdfs:range fe:BlockingFactor . # Ex: fe:StructuralCollapse (issu du thésaurus)
+    rdfs:range fe:BlockingFactor . # Ex: fe:StructuralCollapse (issu du thésaurus SKOS via punning) .
 
-# --- Propriétés de Données (Calculées) ---
+# --- Propriétés de Données (Calculées pour la Simulation) ---
 
 fe:blockingProbability a owl:DatatypeProperty ; 
+    rdfs:label "Probabilité de blocage de l'axe"@fr ;
     rdfs:domain fe:AxisVulnerability ; 
     rdfs:range xsd:decimal .
 
@@ -115,9 +139,10 @@ fe:estimatedClearanceTime a owl:DatatypeProperty ;
     rdfs:domain fe:AxisVulnerability ; 
     rdfs:range xsd:integer .
 
-# --- La Propriété de Capacité (Le chaînon manquant) ---
+# --- Propriété de Capacité Gênante ---
+
 fe:isPotentialBlockingFactor a owl:ObjectProperty ;
     rdfs:label "est un facteur de blocage potentiel"@fr ;
     rdfs:domain owl:Thing ;
     rdfs:range fe:BlockingSource ;
-    rdfs:comment "Permet de typer n'importe quel objet comme source de menace pour le système."@fr .
+    rdfs:comment "Permet de typer sémantiquement n'importe quel individu topologique du système comme source de menace."@fr .

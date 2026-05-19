@@ -76,7 +76,7 @@ fe:percentageShare a owl:DatatypeProperty ; rdfs:domain fe:NaturalSpace ; rdfs:r
 # 3. BASE VIVANT FACE AU FEU
 # =================================================================
 
-fe:organicHRPBasis a owl:DataProperty; rdfs:domain fe:BioClass; rdfs:range xsd:decimal.
+fe:organicHRPBasis a owl:DatatypeProperty; rdfs:domain fe:BioClass; rdfs:range xsd:decimal.
 
 fe:BioTrait a owl:Class ; rdfs:subClassOf fe:BioClass .
 fe:FireAidingTrait a owl:Class ; rdfs:subClassOf fe:BioTrait .
@@ -120,7 +120,11 @@ fe:ReactivityFactor a owl:DatatypeProperty ; rdfs:domain fe:BioDivision ; rdfs:r
 # 3. SENSIBILITÉ AU FEU (Traits Végétaux)
 # =================================================================
 
-fe:ValetteScore a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:integer .
+fe:FlammabilityLevel a owl:Class ; rdfs:subClassOf fe:fireSafetyType ; rdfs:label "Niveau d'Inflammabilité"@fr ; rdfs:comment "Représente les différents paliers de l'échelle de Valette (de 0 à 5)."@fr .
+
+fe:ValetteScore a owl:DatatypeProperty ; rdfs:domain fe:FlammabilityLevel ; rdfs:range xsd:integer ; rdfs:label "Score de Valette"@fr .
+
+fe:hasFlammabilityLevel a owl:ObjectProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range fe:FlammabilityLevel ; rdfs:label "a pour niveau d'inflammabilité"@fr .
 
 fe:hasrecommendedMaintenance a owl:ObjectProperty ; rdfs:domain fe:BioTrait ; rdfs:range fe:MaintenanceProtocol .
 fe:maintenanceEfficiency a owl:DatatypeProperty ; rdfs:domain fe:MaintenanceProtocol ; rdfs:range xsd:decimal . # Valeur de 0.0 (aucune) à 1.0 (totale), pour le pouvoir de neutralisation du trait maintenu.
