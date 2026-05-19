@@ -9,9 +9,10 @@
     rdfs:comment "Point d'entrée unique important les modules thématiques et les thésaurus."@fr ;
     
     # --- IMPORT DES MODULES LOGIQUES (Même dossier) ---
-    owl:imports <fe_building_module.ttl> ,
-                <fe_axis_module.ttl> ,
+    owl:imports <fe_axis_module.ttl> ,
                 <fe_artefact_module.ttl> ,
+                <fe_building_module.ttl> ,
+                <fe_cognitiveFactor.ttl>,
                 <fe_hazard.ttl> ,
                 <fe_heritageSite.ttl> ,
                 <fe_Impact.ttl> ,
@@ -26,6 +27,7 @@
     # Note : Protégé utilisera ces chemins pour localiser les fichiers physiquement.
                 <../Thesaurus/fe_thesaurus_alea.ttl> ,
                 <../Thesaurus/fe_thesaurus_building.ttl> ,
+                <../Thesaurus/fe_thesaurus_cognitive.ttl>,
                 <../Thesaurus/fe_thesaurus_heritageSite.ttl> ,
                 <../Thesaurus/fe_thesaurus_safety.ttl> ,
                 <../Thesaurus/fe_thesaurus_zone.ttl> ,
