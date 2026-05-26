@@ -79,6 +79,7 @@ fe:percentageShare a owl:DatatypeProperty ; rdfs:domain fe:NaturalSpace ; rdfs:r
 fe:organicHRPBasis a owl:DatatypeProperty; rdfs:domain fe:BioClass; rdfs:range xsd:decimal.
 
 fe:BioTrait a owl:Class ; rdfs:subClassOf fe:BioClass .
+
 fe:FireAidingTrait a owl:Class ; rdfs:subClassOf fe:BioTrait .
 fe:FireResistingTrait a owl:Class ; rdfs:subClassOf fe:BioTrait .
 fe:FireResponseStrategy a owl:Class ; rdfs:subClassOf fe:BioTrait .

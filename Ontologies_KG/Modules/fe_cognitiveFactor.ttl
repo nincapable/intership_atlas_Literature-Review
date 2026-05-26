@@ -14,17 +14,17 @@
 fe:CognitiveBias a owl:Class ;
     rdfs:subClassOf fe:HumanFactorType ;
     rdfs:label "Biais Cognitif"@fr ;
-    rdfs:comment "Filtre psychologique altérant la perception de la réalité ou l'évaluation du risque."@fr .
+    rdfs:comment "Filtre psychologique altérant la perception de la réalité. [Équivalent BDI : Filtre d'altération des Croyances (Beliefs)]."@fr .
 
 fe:HumanBehavior a owl:Class ;
     rdfs:subClassOf fe:HumanFactorType ;
     rdfs:label "Comportement Humain"@fr ;
-    rdfs:comment "Action observable ou état opérationnel adopté par la population (ex: Fuite, Sidération, Recherche)."@fr .
+    rdfs:comment "Action observable ou état opérationnel adopté par la population (ex: Fuite, Sidération). [Équivalent BDI : Incarne à la fois le Désir/Objectif lorsqu'il est ciblé par une règle, et l'Intention lorsqu'il est actif]."@fr .
 
 fe:SocialInteractionType a owl:Class ;
     rdfs:subClassOf fe:HumanFactorType ;
     rdfs:label "Type d'Interaction Sociale"@fr ;
-    rdfs:comment "Nature de la dynamique inter-archétypes (ex: Contagion de panique, Guidage directif, Assistance)."@fr .
+    rdfs:comment "Nature de la dynamique inter-archétypes (ex: Contagion de panique, Guidage directif)."@fr .
 
 # =================================================================
 # 2. ARCHÉTYPES HUMAINS (Profils Comportementaux Typés)
@@ -35,16 +35,14 @@ fe:HumanArchetype a owl:Class ;
     rdfs:label "Archétype Humain"@fr ;
     rdfs:comment "Profil psychologique et opérationnel type dictant les règles de comportement en cas d'urgence."@fr .
 
-# Lien entre tes statistiques de population et les archétypes réels
 fe:representsArchetype a owl:ObjectProperty ;
     rdfs:label "représente l'archétype"@fr ;
-    rdfs:domain fe:TypePart ; # Lie une partition statistique à un comportement
+    rdfs:domain fe:TypePart ; 
     rdfs:range fe:HumanArchetype .
 
 fe:ArchetypeBiasSensitivity a owl:Class ;
     rdfs:subClassOf fe:HumanFactorType ;
-    rdfs:label "Sensibilité aux Biais de l'Archétype"@fr ;
-    rdfs:comment "Définit la probabilité qu'un archétype soit sujet à un biais cognitif spécifique."@fr .
+    rdfs:label "Sensibilité aux Biais de l'Archétype"@fr .
 
 fe:hasBiasSensitivity a owl:ObjectProperty ;
     rdfs:domain fe:HumanArchetype ;
@@ -63,7 +61,7 @@ fe:biasProbability a owl:DatatypeProperty ;
 fe:BehaviorActivationRule a owl:Class ;
     rdfs:subClassOf fe:HumanFactorType ;
     rdfs:label "Règle d'Activation Comportementale"@fr ;
-    rdfs:comment "Définit le seuil de stress nécessaire pour qu'un archétype bascule dans un comportement."@fr .
+    rdfs:comment "Définit le seuil de stress nécessaire pour qu'un archétype bascule dans un comportement. [Équivalent BDI : Fonction de transition filtrant les Désirs vers des Objectifs cohérents]."@fr .
 
 fe:hasActivationRule a owl:ObjectProperty ;
     rdfs:domain fe:HumanArchetype ;
@@ -80,15 +78,13 @@ fe:stressThreshold a owl:DatatypeProperty ;
     rdfs:range xsd:float .
 
 # =================================================================
-# 3. SYSTÈME D'INTERFÉRENCE RELATIONNEL UNIQUE (CORRIGÉ)
+# 3. SYSTÈME D'INTERFÉRENCE RELATIONNEL UNIQUE
 # =================================================================
 
 fe:InterferenceRelation a owl:Class ;
     rdfs:subClassOf fe:HumanFactorType ;
     rdfs:label "Relation d'Interférence"@fr ;
-    rdfs:comment "La boîte unique qui contient le fait que l'Acteur modifie la probabilité d'un Comportement chez la Cible."@fr .
-
-# --- Propriétés de base de la boîte d'association ---
+    rdfs:comment "La boîte unique qui contient le fait que l'Acteur modifie la probabilité d'un Comportement chez la Cible. [Équivalent BOID : Modélisation des Obligations et Normes sociales]."@fr .
 
 fe:hasAsActeur a owl:ObjectProperty ;
     rdfs:label "a pour acteur (émetteur)"@fr ;
@@ -110,15 +106,28 @@ fe:probabilityModifier a owl:DatatypeProperty ;
     rdfs:domain fe:InterferenceRelation ;
     rdfs:range xsd:float .
 
-# --- Propriétés d'accès direct depuis les Archétypes (Inverses structurels) ---
-
 fe:subitInterference a owl:ObjectProperty ;
     rdfs:label "subit l'interférence"@fr ;
     rdfs:domain fe:HumanArchetype ;
     rdfs:range fe:InterferenceRelation .
 
-# Ici, on crée une propriété inverse propre pour l'acteur sans conflit de Domaine/Range
 fe:estActeurDelInterférence a owl:ObjectProperty ;
     rdfs:label "est acteur de l'interférence"@fr ;
     rdfs:domain fe:HumanArchetype ;
     rdfs:range fe:InterferenceRelation .
+
+# =================================================================
+# 4. VARIABLES DYNAMIQUES POUR L'INSTANCIATION DANS LE SIMULATEUR
+# =================================================================
+
+fe:currentStressLevel a owl:DatatypeProperty ;
+    rdfs:label "niveau de stress actuel perçu"@fr ;
+    rdfs:comment "Valeur mise à jour en cours de simulation."@fr ;
+    rdfs:domain fe:HumanArchetype ;
+    rdfs:range xsd:float .
+
+fe:activeIntention a owl:ObjectProperty ;
+    rdfs:label "comportement actif (intention)"@fr ;
+    rdfs:comment "Le comportement concret actuellement exécuté par l'individu sur le terrain. [Équivalent BDI : L'Intention active ou le Plan d'action engagé]."@fr ;
+    rdfs:domain fe:HumanArchetype ;
+    rdfs:range fe:HumanBehavior .
