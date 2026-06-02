@@ -98,20 +98,6 @@ fe:activeProtocolInSpace owl:propertyChainAxiom (
     fe:definesProtocol
 ) .
 
-# =================================================================
-# 3. BIOTRAITS GÉNÉRAUX
-# =================================================================
-fe:BioTrait a owl:Class ; rdfs:subClassOf fe:BioClass .
-
-fe:hasBioTrait a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:BioTrait .
-# =================================================================
-# 3. BASE VIVANT FACE AUX ALÉAS
-# =================================================================
-
-fe:organicHRPBasis a owl:DatatypeProperty; rdfs:domain fe:BioClass; rdfs:range xsd:decimal.
-fe:FireResponseStrategy a owl:Class ; rdfs:subClassOf fe:hasBioTraitProperty .
-fe:EmberType a owl:Class ; rdfs:subClassOf fe:hasBioTraitProperty .
-fe:FireFunctionalRole a owl:Class ; rdfs:subClassOf fe:hasBioTraitProperty .
 
 # --- Définition de la Dimension de Protection ---
 fe:SpeciesProtectionStatus a owl:Class ;
@@ -120,7 +106,7 @@ fe:SpeciesProtectionStatus a owl:Class ;
 
 # --- Liaison entre la Sensibilité et son Statut ---
 fe:hasProtectionStatus a owl:ObjectProperty, owl:FunctionalProperty ;
-    rdfs:domain fe:bioFireSensitivity ;
+    rdfs:domain fe:BioDivision ;
     rdfs:range fe:SpeciesProtectionStatus .
 
 # --- Valeur numérique mappée (Calculée) ---
@@ -129,24 +115,39 @@ fe:protectionPriorityWeight a owl:DatatypeProperty ;
     rdfs:range xsd:decimal ;
     rdfs:comment "Valeur numérique dérivée du statut UICN pour le calcul du risque."@fr .
 
-fe:bioFireSensitivity a owl:Class ; rdfs:subClassOf fe:EnvironmentalDimension .
+# =================================================================
+# 3. BIOTRAITS GÉNÉRAUX
+# =================================================================
+fe:BioTrait a owl:Class ; rdfs:subClassOf fe:BioClass .
 
-
-fe:hasFireAidingTrait a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:FireAidingTrait .
-fe:hasFireResistingTrait a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:FireResistingTrait .
-fe:hasFireResponseStrategy a owl:ObjectProperty ; rdfs:domain fe:BioDivision  ; rdfs:range fe:FireResponseStrategy .
-fe:hasEmberType a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:EmberType .
-fe:hasFireFunctionalRole a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:FireFunctionalRole .
+fe:hasBioTrait a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:BioTrait .
 
 fe:isExceptionTo a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:BioTrait ; rdfs:label "Exception à un trait hérité"@fr .
 
-fe:ReactivityFactor a owl:DatatypeProperty ; rdfs:domain fe:BioDivision ; rdfs:range xsd:decimal . # Valeur de 0.0 (non réactif) à 1.0 (très réactif), pour le potentiel de contribution au feu.
+fe:hazardSensitivity a owl:Class ; rdfs:subClassOf fe:EnvironmentalDimension ; rdfs:label "Sensibilité face au Risque"@fr .
+
+fe:hazardFunctionnalRole a owl:Class; rdfs:subClassOf fe:Biotype ; rdfs:label "Rôle Fonctionnel face au Risque"@fr .
+fe:hazardResponseStrategy a owl:Class ; rdfs:subClassOf fe:Biotype ; rdfs:label "Stratégie de Réponse face au Risque"@fr .
+fe:hazardReaction a owl:Class ; rdfs:subClassOf fe:Biotype ; rdfs:label "Réaction face au Risque"@fr . #Embertype, etc.
+
+fe:hasHazardSensitivity a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:hazardSensitivity .
+
+fe:hasHazardFunctionalRole a owl:ObjectProperty ; rdfs:domain fe:hazardSensitivity ; rdfs:range fe:hazardFunctionnalRole .
+fe:hasHazardResponseStrategy a owl:ObjectProperty ; rdfs:domain fe:hazardSensitivity ; rdfs:range fe:hazardResponseStrategy .
+fe:hasHazardReaction a owl:ObjectProperty ; rdfs:domain fe:hazardSensitivity ; rdfs:range fe:hazardReaction .
 
 # =================================================================
-# 3. SENSIBILITÉ AU FEU (Traits Végétaux)
+# 3. BASE VIVANT FACE AUX ALÉAS
 # =================================================================
-fe:hasbioFireSensitivity a owl:ObjectProperty ; rdfs:domain fe:Taxon ; rdfs:range fe:bioFireSensitivity .
+fe:bioFireSensitivity a owl:Class ; rdfs:subClassOf fe:hazardSensitivity ; rdfs:label "Sensibilité au Feu"@fr .
 
+fe:FireResponseStrategy a owl:Class ; rdfs:subClassOf fe:hazardResponseStrategy .
+fe:EmberType a owl:Class ; rdfs:subClassOf fe:hazardReaction .
+fe:FireFunctionalRole a owl:Class ; rdfs:subClassOf fe:hazardFunctionnalRole .
+
+
+## Vegetaux et Fungi
+fe:organicHRPBasis a owl:DatatypeProperty; rdfs:domain fe:bioFireSensitivity; rdfs:range xsd:decimal.
 fe:FlammabilityLevel a owl:Class ; rdfs:subClassOf fe:fireSafetyType ; rdfs:label "Niveau d'Inflammabilité"@fr ; rdfs:comment "Représente les différents paliers de l'échelle de Valette (de 0 à 5)."@fr .
 
 fe:ValetteScore a owl:DatatypeProperty ; rdfs:domain fe:FlammabilityLevel ; rdfs:range xsd:integer ; rdfs:label "Score de Valette"@fr .
@@ -157,35 +158,35 @@ fe:verticalTransferPotential a owl:DatatypeProperty ;rdfs:domain fe:bioFireSensi
 fe:horizontalTransferPotential a owl:DatatypeProperty ;rdfs:domain fe:bioFireSensitivity; rdfs:range xsd:decimal .
 fe:fireResistanceDuration a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity; rdfs:range xsd:decimal .
 fe:heatReleasePotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
-# Non encore exploitées mais à garder en réserve pour des calculs plus fins :
-fe:spontaneousIgnitionThreshold a owl:DatatypeProperty ; rdfs:domain [ owl:unionOf (fe:FireAidingTrait fe:FireResistingTrait) ]; rdfs:range xsd:decimal .
-fe:ignitionDelay a owl:DatatypeProperty ; rdfs:domain [ owl:unionOf (fe:FireAidingTrait fe:FireResistingTrait) ]; rdfs:range xsd:decimal .
 
-fe:calculatedHeatReleasePotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
-fe:calculatedHorizontalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
-fe:calculatedVerticalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
-fe:calculatedHorizontalBarrierPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
-fe:calculatedVerticalBarrierPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+fe:spontaneousIgnitionThreshold a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity; rdfs:range xsd:decimal .
+fe:ignitionDelay a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity; rdfs:range xsd:decimal .
 
-fe:calculatedGeneralFireRisk a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+fe:fireReactivityFactor a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal . # Valeur de 0.0 (non réactif) à 1.0 (très réactif), pour le potentiel de contribution au feu.
 
-# =================================================================
-# 4. SENSIBILITÉ AU FEU (Traits Animaux)
-# =================================================================
 
-# --- Propriétés Spécifiques aux Animaux ---
+# fe:calculatedHeatReleasePotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+# fe:calculatedHorizontalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+# fe:calculatedVerticalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+# fe:calculatedHorizontalBarrierPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+# fe:calculatedVerticalBarrierPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+
+# fe:calculatedGeneralFireRisk a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+
+## Animaux
 fe:mobilityScore a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal . # 0 (lent) à 1 (rapide)
 fe:panicThreshold a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal . # Seuil de stress
 fe:evacuationPriority a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:integer .
 
 # Propriétés de transfert (Vecteur de feu)
-fe:isPotentialFireVector a owl:DatatypeProperty ; rdfs:domain fe:BioDivision ; rdfs:range xsd:decimal .
+fe:isPotentialFireVector a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
 
 fe:calculatedGeneralFireRisk a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
 
 # =================================================================
 # 4. EXPOSITION GLOBALE
 # =================================================================
+
 
 fe:globalIgnitionProbability a owl:DatatypeProperty ; rdfs:domain fe:NaturalSpace ; rdfs:range xsd:decimal . #Moyenne Pondéréé score de Valette
 fe:firePropagationVelocity a owl:DatatypeProperty ; rdfs:domain fe:NaturalSpace ; rdfs:range xsd:decimal .

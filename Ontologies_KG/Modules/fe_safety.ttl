@@ -6,8 +6,14 @@
 
 <http://example.org/fire_and_evacuation/safety> a owl:Ontology .
 
+fe:globalHazardExposure a owl:Class ; rdfs:subClassOf fe:TechnicalDimension ; rdfs:label "Exposition Globale au Risque"@fr .
+fe:hasGlobalHazardExposure a owl:ObjectProperty ; rdfs:domain crm:E70_Thing ; rdfs:range fe:globalHazardExposure ; rdfs:label "a pour exposition globale au risque"@fr .
+
+fe:hazardExposure a owl:Class ; rdfs:subClassOf fe:TechnicalDimension ; rdfs:label "Exposition au Risque"@fr .
+fe:hasHazardExposure a owl:ObjectProperty ; rdfs:domain fe:globalHazardExposure ; rdfs:range fe:hazardExposure .
+
 # =================================================================
-# 1. RÉACTION AU FEU (Matériaux)
+# 1. RÉACTION AU FEU (Matériaux) Revoir le Document complet.
 # =================================================================
 
 fe:ReactionToFire a owl:Class ;
