@@ -86,7 +86,7 @@ fe:definesProtocol a owl:ObjectProperty ; rdfs:domain fe:MaintenanceStyle ; rdfs
 ##########################################
 
 fe:isAdaptedToTrait a owl:ObjectProperty ; rdfs:domain fe:MaintenanceAction ; rdfs:range fe:BioTrait .
-fe:isEffectiveForCategory a owl:ObjectProperty ; rdfs:domain fe:MaintenanceAction ; rdfs:range fe:BiotraitCategory .
+fe:isEffectiveForCategory a owl:ObjectProperty ; rdfs:domain fe:MaintenanceAction ; rdfs:range fe:hazardType . ##################################" CAREFUL, ce n'est pas forcément un hazardType, mais plutôt une catégorie de risque (ex: "Risque d'Incendie").
 
 fe:styleIsMaintained a owl:DatatypeProperty ; rdfs:domain fe:MaintenanceStyle ; rdfs:range xsd:boolean . #Indique si le style de maintenance est effectivement appliqué dans l'espace naturel.
 fe:protocoleIsMaintained a owl:DatatypeProperty ; rdfs:domain fe:MaintenanceProtocol ; rdfs:range xsd:boolean . #If true, then actionIsScheduled should be true for all actions in the protocol.
@@ -184,11 +184,11 @@ fe:isPotentialFireVector a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitiv
 fe:calculatedGeneralFireRisk a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
 
 # =================================================================
-# 4. EXPOSITION GLOBALE
+# 4. EXPOSITION GLOBALE Au FEU
 # =================================================================
+fe:naturalSpaceFireRisk a owl:Class ; rdfs:subClassOf fe:riskExposure ; rdfs:label "Risque d'Incendie de l'Espace Naturel"@fr .
 
-
-fe:globalIgnitionProbability a owl:DatatypeProperty ; rdfs:domain fe:NaturalSpace ; rdfs:range xsd:decimal . #Moyenne Pondéréé score de Valette
-fe:firePropagationVelocity a owl:DatatypeProperty ; rdfs:domain fe:NaturalSpace ; rdfs:range xsd:decimal .
-fe:structuralFireBarrierEffect a owl:DatatypeProperty ; rdfs:domain fe:NaturalSpace ; rdfs:range xsd:decimal .
-fe:globalEvacuationUrgency a owl:DatatypeProperty ; rdfs:domain fe:NaturalSpace ; rdfs:range xsd:decimal .
+fe:globalIgnitionProbability a owl:DatatypeProperty ; rdfs:domain fe:naturalSpaceFireRisk ; rdfs:range xsd:decimal . #Moyenne Pondéréé score de Valette
+fe:firePropagationVelocity a owl:DatatypeProperty ; rdfs:domain fe:naturalSpaceFireRisk ; rdfs:range xsd:decimal .
+fe:structuralFireBarrierEffect a owl:DatatypeProperty ; rdfs:domain fe:naturalSpaceFireRisk ; rdfs:range xsd:decimal .
+fe:globalEvacuationUrgency a owl:DatatypeProperty ; rdfs:domain fe:naturalSpaceFireRisk ; rdfs:range xsd:decimal .

@@ -50,28 +50,53 @@ fe:hasArchitectureStyle a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P2_has_type ;
     rdfs:domain fe:Building ; 
     rdfs:range fe:ArchitectureStyle . # Liaison vers SKOS Styles
-
-# =================================================================
-# 3. INDICATEURS DE PERFORMANCE (Calculés)
-# =================================================================
-
-fe:buildingFireRisk a owl:Class ;
-    rdfs:subClassOf fe:RiskDimension .
-
-fe:hasBuildingFireRisk a owl:ObjectProperty ;
-    rdfs:subPropertyOf crm:P43_has_dimension ;
-    rdfs:domain fe:Building ; 
-    rdfs:range fe:buildingFireRisk .
-
+    
 fe:structuralFragilityCoefficient a owl:DatatypeProperty ; rdfs:domain fe:ArchitectureStyle ; rdfs:range xsd:decimal .
 
-# Scores de performance (Datatypes)
-fe:buildingCombustibility a owl:DatatypeProperty ; rdfs:domain fe:buildingFireRisk ; rdfs:range xsd:decimal .
-fe:buildingInflammability a owl:DatatypeProperty ; rdfs:domain fe:buildingFireRisk ; rdfs:range xsd:decimal .
-fe:structuralFragility a owl:DatatypeProperty ; rdfs:domain fe:buildingFireRisk ; rdfs:range xsd:decimal .
-fe:smokePropensity a owl:DatatypeProperty ; rdfs:domain fe:buildingFireRisk ; rdfs:range xsd:decimal .
-fe:thermalInertiaScore a owl:DatatypeProperty ; rdfs:domain fe:buildingFireRisk ; rdfs:range xsd:decimal .
-fe:fireExpansionFactor a owl:DatatypeProperty ; rdfs:domain fe:buildingFireRisk ; rdfs:range xsd:decimal .
+# =================================================================
+# 3. EXPOSITION AU RISQUE (Liaisons vers la classe d'exposition)
+# =================================================================
+# Sous-classe de fiche dédiée au Bâti + Incendie
+fe:BuildingFireExposure a owl:Class ;
+    rdfs:subClassOf fe:hazardExposure ;
+    rdfs:label "Fiche d'Exposition Incendie pour Bâtiment"@fr .
+
+# Les propriétés spécifiques au bâti ont pour domaine UNIQUEMENT cette fiche
+fe:buildingCombustibility a owl:DatatypeProperty ; rdfs:domain fe:BuildingFireExposure ; rdfs:range xsd:decimal .
+fe:buildingInflammability a owl:DatatypeProperty ; rdfs:domain fe:BuildingFireExposure ; rdfs:range xsd:decimal .
+fe:thermalInertiaScore a owl:DatatypeProperty ; rdfs:domain fe:BuildingFireExposure ; rdfs:range xsd:decimal .
+fe:structuralFragility a owl:DatatypeProperty ; rdfs:domain fe:BuildingFireExposure ; rdfs:range xsd:decimal .
+fe:smokePropensity a owl:DatatypeProperty ; rdfs:domain fe:BuildingFireExposure ; rdfs:range xsd:decimal .
+fe:fireExpansionFactor a owl:DatatypeProperty ; rdfs:domain fe:BuildingFireExposure ; rdfs:range xsd:decimal .
+
+# Sous-classe de fiche dédiée au Bâti + Inondation
+fe:BuildingFloodExposure a owl:Class ;
+    rdfs:subClassOf fe:hazardExposure ;
+    rdfs:label "Fiche d'Exposition Inondation pour Bâtiment"@fr .
+
+# --- Propriétés spécifiques de Données (Datatypes pour le Simulateur) ---
+
+fe:waterSubmersionResistance a owl:DatatypeProperty ;
+    rdfs:label "Résistance à la submersion (m)"@fr ;
+    rdfs:comment "Hauteur d'eau maximale tolérée par la structure avant dégâts majeurs."@fr ;
+    rdfs:domain fe:BuildingFloodExposure ;
+    rdfs:range xsd:decimal .
+
+fe:hydrostaticPressureLoad a owl:DatatypeProperty ;
+    rdfs:label "Charge de pression hydrostatique maximale"@fr ;
+    rdfs:domain fe:BuildingFloodExposure ;
+    rdfs:range xsd:decimal .
+
+fe:criticalEquipmentFloor a owl:DatatypeProperty ;
+    rdfs:label "Étage des équipements critiques"@fr ;
+    rdfs:comment "Niveau où se trouvent les serveurs ou tableaux électriques (ex: 0 pour RDC, -1 pour sous-sol)."@fr ;
+    rdfs:domain fe:BuildingFloodExposure ;
+    rdfs:range xsd:integer .
+
+fe:dryingTimeHours a owl:DatatypeProperty ;
+    rdfs:label "Temps de séchage structurel (heures)"@fr ;
+    rdfs:domain fe:BuildingFloodExposure ;
+    rdfs:range xsd:integer .
 
 # =================================================================
 # 4. DOCUMENTATION ET SERVICES
