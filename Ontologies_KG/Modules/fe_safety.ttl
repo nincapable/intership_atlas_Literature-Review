@@ -12,7 +12,7 @@ fe:hasGlobalHazardExposure a owl:ObjectProperty ; rdfs:domain crm:E70_Thing ; rd
 fe:hazardExposure a owl:Class ; rdfs:subClassOf fe:RiskDimension ; rdfs:label "Exposition au Risque"@fr .
 fe:hasHazardExposure a owl:ObjectProperty ; rdfs:domain fe:globalHazardExposure ; rdfs:range fe:hazardExposure .
 
-fe:hazardSafetyType a owl:Class ; rdfs:subClassOf crm:E55_Type .
+fe:hazardSafetyType a owl:Class ; rdfs:subClassOf fe:HazardType .
 
 # =================================================================
 # 1. RÉACTION AU FEU (Matériaux) Revoir le Document complet.

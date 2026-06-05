@@ -43,14 +43,15 @@
 # PROPRIÉTÉS DE CALCUL DES RISQUES GLOBALS
 # =================================================================
 
-fe:riskWeight a owl:DatatypeProperty ;
-    rdfs:label "Poids de risque de base"@fr ;
+fe:vector3 a owl:Class ;
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:label "Vecteur 3D"@fr .
+fe:hasXCoordinate a owl:DatatypeProperty ;
+    rdfs:domain fe:vector3 ;
     rdfs:range xsd:decimal .
-
-fe:hazardMultiplier a owl:DatatypeProperty ;
-    rdfs:label "Multiplicateur de dangerosité"@fr ;
+fe:hasYCoordinate a owl:DatatypeProperty ;
+    rdfs:domain fe:vector3 ;
     rdfs:range xsd:decimal .
-
-fe:vulnerabilityIndex a owl:DatatypeProperty ;
-    rdfs:label "Index de vulnérabilité calculé"@fr ;
+fe:hasZCoordinate a owl:DatatypeProperty ;
+    rdfs:domain fe:vector3 ;
     rdfs:range xsd:decimal .

@@ -1,0 +1,165 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/fire_and_evacuation/hazard> a owl:Ontology ;
+    rdfs:label "Module Événements de Risque et Bilans d'Impact"@fr ;
+    rdfs:comment "Module unifié gérant les phénomènes physiques, leur intensité et les évaluations d'impacts consécutives (humains, bâtis, naturels)."@fr .
+
+# =================================================================
+# 1. CLASSES PRINCIPALES (L'ÉVÉNEMENT ET SON BILAN)
+# =================================================================
+
+fe:HazardEvent a owl:Class ;
+    rdfs:label "Aléa / Événement de Risque"@fr ;
+    rdfs:comment "Instance concrète ou scénario d'aléa se déroulant dans le temps et l'espace au sein du simulateur."@fr ;
+    rdfs:subClassOf crm:E5_Event .
+
+fe:ImpactAssessment a owl:Class ;
+    rdfs:label "Bilan d'Impact"@fr ;
+    rdfs:comment "Évaluation et assignation des dommages provoqués par un événement de risque spécifique."@fr ;
+    rdfs:subClassOf crm:E13_Attribute_Assignment .
+
+# --- Liaison Pivot Aléa -> Bilan ---
+fe:hasImpactAssessment a owl:ObjectProperty ;
+    rdfs:label "génère le bilan d'impact"@fr ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range fe:ImpactAssessment .
+
+
+# =================================================================
+# 2. QUALIFICATION DE L'ALÉA ET CONTEXTE ENVIRONNEMENTAL
+# =================================================================
+
+fe:hasHazardType a owl:ObjectProperty ;
+    rdfs:label "type d'aléa"@fr ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range fe:HazardType . # Géré dans le Core
+
+fe:hasIntensityLevel a owl:ObjectProperty ;
+    rdfs:label "niveau d'intensité"@fr ;
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range fe:IntensityLevel .
+
+fe:hasSeverityLevel a owl:ObjectProperty ;
+    rdfs:label "niveau de gravité théorique"@fr ;
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range fe:SeverityLevel .
+
+fe:hasIntensityDocumentation a owl:ObjectProperty ;
+    rdfs:label "est documenté par"@fr ;
+    rdfs:subPropertyOf crm:P70_documents ;
+    owl:inverseOf crm:P70_documents ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range crm:E31_Document .
+
+fe:hasMeteorologicalObservation a owl:ObjectProperty ;
+    rdfs:label "comprend l'observation météo"@fr ;
+    rdfs:subPropertyOf crm:P9_consists_of ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range fe:WeatherMeasurement . # Classe gérée dans fe_weather.ttl
+
+
+# =================================================================
+# 3. ÉVALUATION DES DÉGATS MATÉRIELS ET SITES (BÂTI / NATUREL)
+# =================================================================
+
+fe:BuildingDamage a owl:Class ;
+    rdfs:label "Constat de Dégât Bâtiment"@fr ;
+    rdfs:subClassOf crm:E13_Attribute_Assignment .
+
+fe:NaturalDamage a owl:Class ;
+    rdfs:label "Constat de Dégât Naturel"@fr ;
+    rdfs:subClassOf crm:E13_Attribute_Assignment .
+
+# --- Liaisons depuis le bilan global ---
+fe:hasBuildingDamage a owl:ObjectProperty ;
+    rdfs:domain fe:ImpactAssessment ;
+    rdfs:range fe:BuildingDamage .
+
+fe:hasNaturalDamage a owl:ObjectProperty ;
+    rdfs:domain fe:ImpactAssessment ;
+    rdfs:range fe:NaturalDamage .
+
+# --- Ciblage des instances physiques impactées ---
+fe:damagedBuilding a owl:ObjectProperty ;
+    rdfs:domain fe:BuildingDamage ;
+    rdfs:range fe:Building . # Classe du module fe_building_module.ttl
+
+fe:damagedNaturalSpace a owl:ObjectProperty ;
+    rdfs:domain fe:NaturalDamage ;
+    rdfs:range fe:NaturalSpace . # Classe du module fe_natural_space.ttl
+
+# --- Niveaux de sévérité des dégâts constatés ---
+fe:buildingDamageLevel a owl:ObjectProperty ;
+    rdfs:domain fe:BuildingDamage ;
+    rdfs:range fe:ImpactSeverityLevel .
+
+fe:naturalDamageLevel a owl:ObjectProperty ;
+    rdfs:domain fe:NaturalDamage ;
+    rdfs:range fe:ImpactSeverityLevel .
+
+
+# =================================================================
+# 4. BILAN HUMAIN (COMPTAGE ET TRIAGE MEDEVAC)
+# =================================================================
+
+fe:HumanToll a owl:Class ;
+    rdfs:label "Bilan Humain Global"@fr ;
+    rdfs:comment "Regroupe l'ensemble des victimes et les statistiques de triage pour un événement."@fr ;
+    rdfs:subClassOf crm:E13_Attribute_Assignment .
+
+fe:TriageCount a owl:Class ;
+    rdfs:label "Ligne de Triage"@fr ;
+    rdfs:comment "Entité comptable associant une catégorie Urgence Absolue / Urgence Relative à un effectif d'agents."@fr ;
+    rdfs:subClassOf crm:HumanDimension .
+
+# --- Liaisons du bilan humain ---
+fe:hasHumanToll a owl:ObjectProperty ;
+    rdfs:domain fe:ImpactAssessment ;
+    rdfs:range fe:HumanToll .
+
+fe:hasTriageCount a owl:ObjectProperty ;
+    rdfs:label "n individus de la catégorie C"@fr ;
+    rdfs:domain fe:HumanToll ;
+    rdfs:range fe:TriageCount .
+
+fe:hasVictimTypeCount a owl:ObjectProperty ;
+    rdfs:label "concerne la catégorie de triage"@fr ;
+    rdfs:domain fe:TriageCount ;
+    rdfs:range fe:TriageCategory . # Classe du module fe_victim.ttl ou thésaurus
+
+fe:quantity a owl:DatatypeProperty ;
+    rdfs:label "nombre d'individus"@fr ;
+    rdfs:domain fe:TriageCount ;
+    rdfs:range xsd:integer .
+
+# --- Liaison nominative/directe si des agents-victimes sont instanciés ---
+fe:hasVictim a owl:ObjectProperty ;
+    rdfs:label "inclut la victime identifiée"@fr ;
+    rdfs:domain fe:HumanToll ;
+    rdfs:range fe:Victim . # Classe du module fe_victim.ttl
+
+
+# =================================================================
+# 5. CLASSES DE RÉFÉRENTIELS OPÉRATIONNELS (Ranges de typage)
+# =================================================================
+
+fe:IntensityLevel a owl:Class ;
+    rdfs:label "Classe des Niveaux d'Intensité d'Aléa"@fr ;
+    rdfs:subClassOf fe:OperationnalType .
+
+fe:someSeverityLevel a owl:Class ; # Servira de range générique
+    rdfs:subClassOf fe:OperationnalType .
+
+fe:SeverityLevel a owl:Class ;
+    rdfs:label "Classe des Niveaux de Gravité de l'Aléa"@fr ;
+    rdfs:subClassOf fe:someSeverityLevel .
+
+fe:ImpactSeverityLevel a owl:Class ;
+    rdfs:label "Niveau de Sévérité de l'Impact Constaté"@fr ;
+    rdfs:subClassOf fe:someSeverityLevel .

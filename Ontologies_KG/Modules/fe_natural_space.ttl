@@ -7,22 +7,25 @@
 <http://example.org/fire_and_evacuation/natural_space> a owl:Ontology .
 
 # =================================================================
-# 1. STRUCTURE DE L'ESPACE NATUREL
+# 1. STRUCTURE DE L'ESPACE NATUREL ET LE PIVOT DU VIVANT (BIOTYPES)
 # =================================================================
 
 fe:NaturalSpace a owl:Class ;
     rdfs:subClassOf crm:E27_Site ;
-    rdfs:label "Espace Naturel"@fr.
+    rdfs:label "Espace Naturel"@fr .
 
-fe:Biotype a owl:Class;
-    rdfs:label "Biotype"@fr ;
+# --- L'Ancêtre Sémantique Racine du Vivant ---
+fe:Biotype a owl:Class ;
+    rdfs:label "Biotype / Concept Racine du Vivant"@fr ;
+    rdfs:comment "Ancêtre sémantique de toutes les classifications et caractéristiques qualitatives du vivant, sous-classe de crm:E55_Type."@fr ;
     rdfs:subClassOf crm:E55_Type .
+fe:BioTaxonomyType a owl:Class ; rdfs:subClassOf fe:Biotype ; rdfs:label "Type de Taxonomie Biologique"@fr .
 
 fe:BioFireType a owl:Class ;
     rdfs:label "Type de Biotype à Risque Incendie"@fr ;
     rdfs:subClassOf fe:Biotype .
 
-fe:EnvironmentalType a owl:Class;
+fe:EnvironmentalType a owl:Class ;
     rdfs:label "Type Environnemental"@fr ;
     rdfs:subClassOf crm:E55_Type .
 
@@ -30,28 +33,36 @@ fe:EnvironmentalDimension a owl:Class ;
     rdfs:label "Dimension Environnementale"@fr ;
     rdfs:subClassOf crm:E54_Dimension .
 
-# --- Classes de Référentiel ---
 fe:NaturalType a owl:Class ; rdfs:subClassOf fe:EnvironmentalType .
-
-#Vive la Taxonomie
-fe:Taxon a owl:Class ; rdfs:subClassOf fe:BioGenre .
-fe:BioGenre a owl:Class ; rdfs:subClassOf fe:BioFamily .
-fe:BioFamily a owl:Class ; rdfs:subClassOf fe:BioOrder .
-fe:BioOrder a owl:Class ; rdfs:subClassOf fe:BioClass .
-fe:BioClass a owl:Class ; rdfs:subClassOf fe:BioSubDivision .
-fe:BioSubDivision a owl:Class ; rdfs:subClassOf fe:BioDivision .
-fe:BioDivision a owl:Class ; rdfs:subClassOf fe:BioReign .
-fe:BioReign a owl:Class ; rdfs:subClassOf fe:Biotype .
-
-fe:IUCNCategory a owl:Class ; rdfs:subClassOf fe:Biotype .
 fe:RepartitionType a owl:Class ; rdfs:subClassOf fe:EnvironmentalType .
+fe:IUCNCategory a owl:Class ; rdfs:subClassOf fe:Biotype . # Devient un sous-type du vivant
 
-# --- Propriétés ---
+# --- LA TAXONOMIE ASSAINIE (Chaque niveau hérite directement de fe:Biotype) ---
+fe:Taxon a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType ; rdfs:label "Taxon (Espèce)"@fr .
+fe:BioGenre a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType ; rdfs:label "Genre Biologique"@fr .
+fe:BioFamily a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType ; rdfs:label "Famille Biologique"@fr .
+fe:BioOrder a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType .
+fe:BioClass a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType .
+fe:BioSubDivision a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType .
+fe:BioDivision a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType .
+fe:BioReign a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType .
+
+# --- Liens d'Emboîtement de la Chaîne Taxonomique (Propriétés d'Objet) ---
+fe:belongsToGenre a owl:ObjectProperty ; rdfs:domain fe:Taxon ; rdfs:range fe:BioGenre .
+fe:belongsToFamily a owl:ObjectProperty ; rdfs:domain fe:BioGenre ; rdfs:range fe:BioFamily .
+fe:belongsToOrder a owl:ObjectProperty ; rdfs:domain fe:BioFamily ; rdfs:range fe:BioOrder .
+fe:belongsToClass a owl:ObjectProperty ; rdfs:domain fe:BioOrder ; rdfs:range fe:BioClass .
+fe:belongsToSubDivision a owl:ObjectProperty ; rdfs:domain fe:BioClass ; rdfs:range fe:BioSubDivision .
+fe:belongsToDivision a owl:ObjectProperty ; rdfs:domain fe:BioSubDivision ; rdfs:range fe:BioDivision .
+fe:belongsToReign a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:BioReign .
+
+# --- Propriétés de l'Espace ---
 fe:hasNaturalType a owl:ObjectProperty ;
     rdfs:domain fe:NaturalSpace ;
     rdfs:range fe:NaturalType .
+
 # =================================================================
-# 2. BIOMASSE ET TAXONS
+# 2. BIOMASSE ET TAXONS (Liaisons dynamiques pour la scène)
 # =================================================================
 
 fe:BiomassMeasurement a owl:Class ; rdfs:subClassOf crm:E16_Measurement .
@@ -68,127 +79,142 @@ fe:percentageShare a owl:DatatypeProperty ; rdfs:domain fe:NaturalSpace ; rdfs:r
 # =================================================================
 # 3. MAINTENANCE ET PRATIQUES DE GESTION
 # =================================================================
+
 fe:MaintenanceProtocol a owl:Class ; rdfs:subClassOf fe:EnvironmentalType .
-fe:MaintenanceStyle a owl:Class ; rdfs:subClassOf fe:EnvironmentalType . # Exemple : "Jardin à la Française", "Prairie Naturelle", "Forêt Gérée", etc.
+fe:MaintenanceStyle a owl:Class ; rdfs:subClassOf fe:EnvironmentalType . 
 fe:MaintenanceAction a owl:Class ; rdfs:subClassOf crm:E29_DesignOrProcedure .
 
-# 1) Les taxons ont des protocoles (par défaut)
-fe:hasDefaultProtocol a owl:ObjectProperty ; rdfs:domain fe:Taxon ; rdfs:range fe:MaintenanceProtocol .
+# 1. La propriété racine : elle n'est plus bloquée sur fe:Taxon
+fe:hasDefaultProtocol a owl:ObjectProperty ;
+    rdfs:range fe:MaintenanceProtocol ;
+    rdfs:label "a pour protocole par défaut"@fr .
 
-# 2) Les protocoles sont composés d'actions
+# 2. La règle d'héritage du Genre vers le Taxon
+fe:hasInheritedProtocolFromGenre a owl:ObjectProperty ;
+    rdfs:subPropertyOf fe:hasDefaultProtocol ;
+    rdfs:label "Protocole hérité du genre"@fr ;
+    owl:propertyChainAxiom ( 
+        fe:belongsToGenre 
+        fe:hasDefaultProtocol 
+    ) .
+
+# 3. La règle d'héritage de la Famille vers le Taxon
+fe:hasInheritedProtocolFromFamily a owl:ObjectProperty ;
+    rdfs:subPropertyOf fe:hasDefaultProtocol ;
+    rdfs:label "Protocole hérité de la famille"@fr ;
+    owl:propertyChainAxiom ( 
+        fe:belongsToGenre 
+        fe:belongsToFamily 
+        fe:hasDefaultProtocol 
+    ) .
+
 fe:hasMaintenanceAction a owl:ObjectProperty ; rdfs:domain fe:MaintenanceProtocol ; rdfs:range fe:MaintenanceAction .
-
-# 3) Les espaces naturels PEUVENT avoir un style
 fe:hasMaintenanceStyle a owl:ObjectProperty ; rdfs:domain fe:NaturalSpace ; rdfs:range fe:MaintenanceStyle .
-
-# 4) Le style de maintenance définit les protocoles du milieu
 fe:definesProtocol a owl:ObjectProperty ; rdfs:domain fe:MaintenanceStyle ; rdfs:range fe:MaintenanceProtocol .
-##########################################
 
 fe:isAdaptedToTrait a owl:ObjectProperty ; rdfs:domain fe:MaintenanceAction ; rdfs:range fe:BioTrait .
-fe:isEffectiveForCategory a owl:ObjectProperty ; rdfs:domain fe:MaintenanceAction ; rdfs:range fe:hazardType . ##################################" CAREFUL, ce n'est pas forcément un hazardType, mais plutôt une catégorie de risque (ex: "Risque d'Incendie").
+fe:isEffectiveForHazard a owl:ObjectProperty ; rdfs:domain fe:MaintenanceAction ; rdfs:range crm:E55_Type .
 
-fe:styleIsMaintained a owl:DatatypeProperty ; rdfs:domain fe:MaintenanceStyle ; rdfs:range xsd:boolean . #Indique si le style de maintenance est effectivement appliqué dans l'espace naturel.
-fe:protocoleIsMaintained a owl:DatatypeProperty ; rdfs:domain fe:MaintenanceProtocol ; rdfs:range xsd:boolean . #If true, then actionIsScheduled should be true for all actions in the protocol.
+fe:styleIsMaintained a owl:DatatypeProperty ; rdfs:domain fe:MaintenanceStyle ; rdfs:range xsd:boolean .
+fe:protocoleIsMaintained a owl:DatatypeProperty ; rdfs:domain fe:MaintenanceProtocol ; rdfs:range xsd:boolean .
 fe:actionIsScheduled a owl:DatatypeProperty ; rdfs:domain fe:MaintenanceAction ; rdfs:range xsd:boolean .
-fe:maintenanceEfficiencyOnTrait a owl:DatatypeProperty ; rdfs:domain fe:MaintenanceAction ; rdfs:range xsd:decimal . # Valeur de 0.0 (aucune) à 1.0 (totale), pour le pouvoir de neutralisation du trait maintenu.
+fe:maintenanceEfficiencyOnTrait a owl:DatatypeProperty ; rdfs:domain fe:MaintenanceAction ; rdfs:range xsd:decimal .
 
-fe:activeProtocolInSpace owl:propertyChainAxiom (
-    fe:hasMaintenanceStyle 
-    fe:definesProtocol
-) .
+fe:activeProtocolInSpace owl:propertyChainAxiom ( fe:hasMaintenanceStyle fe:definesProtocol ) .
 
-
-# --- Définition de la Dimension de Protection ---
+# --- Protection ---
 fe:SpeciesProtectionStatus a owl:Class ;
-    rdfs:subClassOf fe:TechnicalDimension ;
+    rdfs:subClassOf crm:E54_Dimension ;
     rdfs:label "Statut de Protection de l'Espèce"@fr .
 
-# --- Liaison entre la Sensibilité et son Statut ---
 fe:hasProtectionStatus a owl:ObjectProperty, owl:FunctionalProperty ;
-    rdfs:domain fe:BioDivision ;
+    rdfs:domain fe:Taxon ; 
     rdfs:range fe:SpeciesProtectionStatus .
 
-# --- Valeur numérique mappée (Calculée) ---
 fe:protectionPriorityWeight a owl:DatatypeProperty ;
     rdfs:domain fe:SpeciesProtectionStatus ;
-    rdfs:range xsd:decimal ;
-    rdfs:comment "Valeur numérique dérivée du statut UICN pour le calcul du risque."@fr .
+    rdfs:range xsd:decimal .
 
 # =================================================================
-# 3. BIOTRAITS GÉNÉRAUX
+# 4. BIOTRAITS ET GESTION DE L'HÉRITAGE (Intégrés sous fe:Biotype)
 # =================================================================
-fe:BioTrait a owl:Class ; rdfs:subClassOf fe:BioClass .
 
-fe:hasBioTrait a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:BioTrait .
+# Le trait biologique est un type qualitatif du vivant, donc sous-classe de fe:Biotype
+fe:BioTrait a owl:Class ; 
+    rdfs:subClassOf fe:Biotype ;
+    rdfs:label "Trait Biologique (Feature)"@fr .
 
-fe:isExceptionTo a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:BioTrait ; rdfs:label "Exception à un trait hérité"@fr .
+# Propriété pour lier un trait à n'importe quel échelon taxonomique
+fe:hasBioTrait a owl:ObjectProperty ; 
+    rdfs:range fe:BioTrait .
 
-fe:hazardSensitivity a owl:Class ; rdfs:subClassOf fe:EnvironmentalDimension ; rdfs:label "Sensibilité face au Risque"@fr .
+fe:isExceptionTo a owl:ObjectProperty ; rdfs:domain fe:Taxon ; rdfs:range fe:BioTrait .
 
-fe:hazardFunctionnalRole a owl:Class; rdfs:subClassOf fe:Biotype ; rdfs:label "Rôle Fonctionnel face au Risque"@fr .
-fe:hazardResponseStrategy a owl:Class ; rdfs:subClassOf fe:Biotype ; rdfs:label "Stratégie de Réponse face au Risque"@fr .
-fe:hazardReaction a owl:Class ; rdfs:subClassOf fe:Biotype ; rdfs:label "Réaction face au Risque"@fr . #Embertype, etc.
+# --- Mécanique sémantique de l'héritage ---
+fe:hasInheritedTraitFromGenre a owl:ObjectProperty ;
+    rdfs:subPropertyOf fe:hasBioTrait ;
+    owl:propertyChainAxiom ( fe:belongsToGenre fe:hasBioTrait ) .
 
-fe:hasHazardSensitivity a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:hazardSensitivity .
+fe:hasInheritedTraitFromFamily a owl:ObjectProperty ;
+    rdfs:subPropertyOf fe:hasBioTrait ;
+    owl:propertyChainAxiom ( fe:belongsToGenre fe:belongsToFamily fe:hasBioTrait ) .
 
-fe:hasHazardFunctionalRole a owl:ObjectProperty ; rdfs:domain fe:hazardSensitivity ; rdfs:range fe:hazardFunctionnalRole .
+# --- Profils de Vulnérabilité (Catégories qualitatives sous fe:Biotype) ---
+fe:hazardSensitivity a owl:Class ; 
+    rdfs:subClassOf crm:E54_Dimension ; 
+    rdfs:label "Fiche de Sensibilité face au Risque"@fr .
+
+fe:hazardFunctionalRole a owl:Class ; rdfs:subClassOf fe:Biotype .
+fe:hazardResponseStrategy a owl:Class ; rdfs:subClassOf fe:Biotype .
+fe:hazardReaction a owl:Class ; rdfs:subClassOf fe:Biotype .
+
+fe:hasHazardSensitivity a owl:ObjectProperty ; rdfs:domain fe:Taxon ; rdfs:range fe:hazardSensitivity .
+fe:hasHazardFunctionalRole a owl:ObjectProperty ; rdfs:domain fe:hazardSensitivity ; rdfs:range fe:hazardFunctionalRole .
 fe:hasHazardResponseStrategy a owl:ObjectProperty ; rdfs:domain fe:hazardSensitivity ; rdfs:range fe:hazardResponseStrategy .
 fe:hasHazardReaction a owl:ObjectProperty ; rdfs:domain fe:hazardSensitivity ; rdfs:range fe:hazardReaction .
 
 # =================================================================
-# 3. BASE VIVANT FACE AUX ALÉAS
+# 5. CONFIGURATION PHYSIQUE DES AGENTS (Métriques Incendie)
 # =================================================================
-fe:bioFireSensitivity a owl:Class ; rdfs:subClassOf fe:hazardSensitivity ; rdfs:label "Sensibilité au Feu"@fr .
+
+fe:bioFireSensitivity a owl:Class ; 
+    rdfs:subClassOf fe:hazardSensitivity ; 
+    rdfs:label "Sensibilité Spécifique au Feu"@fr .
 
 fe:FireResponseStrategy a owl:Class ; rdfs:subClassOf fe:hazardResponseStrategy .
 fe:EmberType a owl:Class ; rdfs:subClassOf fe:hazardReaction .
-fe:FireFunctionalRole a owl:Class ; rdfs:subClassOf fe:hazardFunctionnalRole .
+fe:FireFunctionalRole a owl:Class ; rdfs:subClassOf fe:hazardFunctionalRole .
 
+# --- Datatypes numériques pour la simulation ---
+fe:organicHRPBasis a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
 
-## Vegetaux et Fungi
-fe:organicHRPBasis a owl:DatatypeProperty; rdfs:domain fe:bioFireSensitivity; rdfs:range xsd:decimal.
-fe:FlammabilityLevel a owl:Class ; rdfs:subClassOf fe:fireSafetyType ; rdfs:label "Niveau d'Inflammabilité"@fr ; rdfs:comment "Représente les différents paliers de l'échelle de Valette (de 0 à 5)."@fr .
+fe:FlammabilityLevel a owl:Class ; rdfs:subClassOf fe:Biotype ; rdfs:label "Niveau d'Inflammabilité"@fr .
+fe:ValetteScore a owl:DatatypeProperty ; rdfs:domain fe:FlammabilityLevel ; rdfs:range xsd:integer .
+fe:hasFlammabilityLevel a owl:ObjectProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range fe:FlammabilityLevel .
 
-fe:ValetteScore a owl:DatatypeProperty ; rdfs:domain fe:FlammabilityLevel ; rdfs:range xsd:integer ; rdfs:label "Score de Valette"@fr .
-
-fe:hasFlammabilityLevel a owl:ObjectProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range fe:FlammabilityLevel ; rdfs:label "a pour niveau d'inflammabilité"@fr .
-
-fe:verticalTransferPotential a owl:DatatypeProperty ;rdfs:domain fe:bioFireSensitivity; rdfs:range xsd:decimal .
-fe:horizontalTransferPotential a owl:DatatypeProperty ;rdfs:domain fe:bioFireSensitivity; rdfs:range xsd:decimal .
-fe:fireResistanceDuration a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity; rdfs:range xsd:decimal .
+fe:verticalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+fe:horizontalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+fe:fireResistanceDuration a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
 fe:heatReleasePotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+fe:spontaneousIgnitionThreshold a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+fe:ignitionDelay a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+fe:fireReactivityFactor a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
 
-fe:spontaneousIgnitionThreshold a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity; rdfs:range xsd:decimal .
-fe:ignitionDelay a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity; rdfs:range xsd:decimal .
-
-fe:fireReactivityFactor a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal . # Valeur de 0.0 (non réactif) à 1.0 (très réactif), pour le potentiel de contribution au feu.
-
-
-# fe:calculatedHeatReleasePotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
-# fe:calculatedHorizontalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
-# fe:calculatedVerticalTransferPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
-# fe:calculatedHorizontalBarrierPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
-# fe:calculatedVerticalBarrierPotential a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
-
-# fe:calculatedGeneralFireRisk a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
-
-## Animaux
-fe:mobilityScore a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal . # 0 (lent) à 1 (rapide)
-fe:panicThreshold a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal . # Seuil de stress
-fe:evacuationPriority a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:integer .
-
-# Propriétés de transfert (Vecteur de feu)
+fe:mobilityScore a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+fe:panicThreshold a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
+fe:evacuationPriority a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
 fe:isPotentialFireVector a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
-
 fe:calculatedGeneralFireRisk a owl:DatatypeProperty ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal .
 
 # =================================================================
-# 4. EXPOSITION GLOBALE Au FEU
+# 6. FACETTE D'EXPOSITION DU HUB
 # =================================================================
-fe:naturalSpaceFireRisk a owl:Class ; rdfs:subClassOf fe:riskExposure ; rdfs:label "Risque d'Incendie de l'Espace Naturel"@fr .
 
-fe:globalIgnitionProbability a owl:DatatypeProperty ; rdfs:domain fe:naturalSpaceFireRisk ; rdfs:range xsd:decimal . #Moyenne Pondéréé score de Valette
-fe:firePropagationVelocity a owl:DatatypeProperty ; rdfs:domain fe:naturalSpaceFireRisk ; rdfs:range xsd:decimal .
-fe:structuralFireBarrierEffect a owl:DatatypeProperty ; rdfs:domain fe:naturalSpaceFireRisk ; rdfs:range xsd:decimal .
-fe:globalEvacuationUrgency a owl:DatatypeProperty ; rdfs:domain fe:naturalSpaceFireRisk ; rdfs:range xsd:decimal .
+fe:NaturalSpaceFireExposure a owl:Class ; 
+    rdfs:subClassOf fe:hazardExposure ; 
+    rdfs:label "Fiche d'Exposition Incendie de l'Espace Naturel"@fr .
+
+fe:globalIgnitionProbability a owl:DatatypeProperty ; rdfs:domain fe:NaturalSpaceFireExposure ; rdfs:range xsd:decimal .
+fe:firePropagationVelocity a owl:DatatypeProperty ; rdfs:domain fe:NaturalSpaceFireExposure ; rdfs:range xsd:decimal .
+fe:structuralFireBarrierEffect a owl:DatatypeProperty ; rdfs:domain fe:NaturalSpaceFireExposure ; rdfs:range xsd:decimal .
+fe:globalEvacuationUrgency a owl:DatatypeProperty ; rdfs:domain fe:NaturalSpaceFireExposure ; rdfs:range xsd:decimal .

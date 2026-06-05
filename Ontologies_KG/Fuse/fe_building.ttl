@@ -1,0 +1,159 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/fire_and_evacuation/building> a owl:Ontology ;
+    rdfs:label "Module Bâtiment et Structures Patrimoniales"@fr ;
+    rdfs:comment "Module épuré exploitant les super-classes et thésaurus gérés globalement par le Core."@fr .
+
+# =================================================================
+# 1. CLASSES GÉNÉRIQUES DU BÂTIMENT
+# =================================================================
+
+fe:Building a owl:Class ; 
+    rdfs:label "Bâtiment"@fr ;
+    rdfs:subClassOf crm:E25_Man_Made_Feature .
+
+fe:MaterialInstance a owl:Class ; 
+    rdfs:label "Classe des Matériaux"@fr ;
+    rdfs:subClassOf crm:E57_Material .
+
+fe:ArchitectureStyle a owl:Class ; 
+    rdfs:label "Classe des Styles Architecturaux"@fr ;
+    rdfs:subClassOf fe:TechnicalDimension . # Utilisation directe, résolue à la compilation globale
+
+# =================================================================
+# 2. COMPOSITION ET CARACTÉRISTIQUES STRUCTURELLES
+# =================================================================
+
+fe:MaterialComposition a owl:Class ;
+    rdfs:label "Composition de Matériau"@fr ;
+    rdfs:subClassOf fe:TechnicalDimension .
+
+fe:hasMaterialComposition a owl:ObjectProperty ;
+    rdfs:domain fe:Building ;
+    rdfs:range fe:MaterialComposition .
+
+fe:constituentMaterial a owl:ObjectProperty ;
+    rdfs:domain fe:MaterialComposition ;
+    rdfs:range fe:MaterialInstance .
+
+fe:materialPercentage a owl:DatatypeProperty ;
+    rdfs:domain fe:MaterialComposition ;
+    rdfs:range xsd:decimal .
+
+# --- Propriétés directes du Bâtiment ---
+fe:hasArchitectureStyle a owl:ObjectProperty ;
+    rdfs:label "style architectural"@fr ;
+    rdfs:domain fe:Building ;
+    rdfs:range fe:ArchitectureStyle .
+
+fe:structuralFragilityCoefficient a owl:DatatypeProperty ; rdfs:domain fe:ArchitectureStyle ; rdfs:range xsd:decimal .
+
+fe:hasFloorArea a owl:DatatypeProperty ;
+    rdfs:label "surface de plancher (m²)"@fr ;
+    rdfs:domain fe:Building ;
+    rdfs:range xsd:decimal .
+
+fe:hasNumberOfFloors a owl:DatatypeProperty ;
+    rdfs:label "nombre d'étages"@fr ;
+    rdfs:domain fe:Building ;
+    rdfs:range xsd:integer .
+
+# =================================================================
+# 3. EXPOSITION SPÉCIFIQUE : INONDATION / SUBMERSION
+# =================================================================
+
+fe:BuildingFloodExposure a owl:Class ;
+    rdfs:subClassOf fe:hazardExposure ; # Utilisation directe de la racine du bloc Hazard & Safety
+    rdfs:label "Fiche d'Exposition Inondation du Bâtiment"@fr .
+
+fe:hasFloodExposure a owl:ObjectProperty ;
+    rdfs:domain fe:Building ;
+    rdfs:range fe:BuildingFloodExposure .
+
+# --- Métriques de simulation pour l'inondation ---
+fe:waterSubmersionResistance a owl:DatatypeProperty ;
+    rdfs:label "Résistance à la submersion (m)"@fr ;
+    rdfs:comment "Hauteur d'eau maximale tolérée par la structure avant dégâts majeurs."@fr ;
+    rdfs:domain fe:BuildingFloodExposure ;
+    rdfs:range xsd:decimal .
+
+fe:hydrostaticPressureLoad a owl:DatatypeProperty ;
+    rdfs:label "Charge de pression hydrostatique maximale"@fr ;
+    rdfs:domain fe:BuildingFloodExposure ;
+    rdfs:range xsd:decimal .
+
+fe:criticalEquipmentFloor a owl:DatatypeProperty ;
+    rdfs:label "Étage des équipements critiques"@fr ;
+    rdfs:comment "Niveau où se trouvent les serveurs ou tableaux électriques (ex: 0 pour RDC, -1 pour sous-sol)."@fr ;
+    rdfs:domain fe:BuildingFloodExposure ;
+    rdfs:range xsd:integer .
+
+fe:dryingTimeHours a owl:DatatypeProperty ;
+    rdfs:label "Temps de séchage structurel (heures)"@fr ;
+    rdfs:domain fe:BuildingFloodExposure ;
+    rdfs:range xsd:integer .
+
+# =================================================================
+# 4. EXPOSITION SPÉCIFIQUE : INCENDIE
+# =================================================================
+
+fe:BuildingFireExposure a owl:Class ;
+    rdfs:subClassOf fe:hazardExposure ; # Branchement direct sous la racine d'exposition commune
+    rdfs:label "Fiche d'Exposition Incendie pour Bâtiment"@fr ;
+    rdfs:comment "Regroupe les paramètres physiques de comportement et de propagation du feu propres à la structure de ce bâtiment."@fr .
+
+fe:hasFireExposure a owl:ObjectProperty ;
+    rdfs:label "a pour fiche d'exposition incendie"@fr ;
+    rdfs:domain fe:Building ;
+    rdfs:range fe:BuildingFireExposure .
+
+# --- Métriques physiques de simulation pour l'incendie ---
+fe:buildingCombustibility a owl:DatatypeProperty ; 
+    rdfs:label "combustibilité du bâtiment"@fr ;
+    rdfs:domain fe:BuildingFireExposure ; 
+    rdfs:range xsd:decimal .
+
+fe:buildingInflammability a owl:DatatypeProperty ; 
+    rdfs:label "inflammabilité du bâtiment"@fr ;
+    rdfs:domain fe:BuildingFireExposure ; 
+    rdfs:range xsd:decimal .
+
+fe:thermalInertiaScore a owl:DatatypeProperty ; 
+    rdfs:label "score d'inertie thermique"@fr ;
+    rdfs:domain fe:BuildingFireExposure ; 
+    rdfs:range xsd:decimal .
+
+fe:structuralFragility a owl:DatatypeProperty ; 
+    rdfs:label "fragilité structurelle face au feu"@fr ;
+    rdfs:domain fe:BuildingFireExposure ; 
+    rdfs:range xsd:decimal .
+
+fe:smokePropensity a owl:DatatypeProperty ; 
+    rdfs:label "propension à générer des fumées"@fr ;
+    rdfs:domain fe:BuildingFireExposure ; 
+    rdfs:range xsd:decimal .
+
+fe:fireExpansionFactor a owl:ObjectProperty ; # Modifié en ObjectProperty car pointe vers une classe/structure complexe (Vector3)
+    rdfs:label "facteur d'expansion du feu (3D)"@fr ;
+    rdfs:domain fe:BuildingFireExposure ; 
+    rdfs:range fe:vector3 . # Aligné sur la casse exacte définie dans le fichier fe_core.ttl
+
+# =================================================================
+# 5. DOCUMENTATION ET SERVICES D'URGENCE
+# =================================================================
+
+fe:hasEmergencyEvacuationDocument a owl:ObjectProperty ;
+    rdfs:label "a un document d'évacuation d'urgence"@fr ;
+    rdfs:subPropertyOf crm:P70i_is_documented_in ;
+    rdfs:domain fe:Building ;
+    rdfs:range crm:E31_Document .
+
+fe:hasEmergencyInterventionDocument a owl:ObjectProperty ;
+    rdfs:label "a un document d'intervention d'urgence"@fr ;
+    rdfs:subPropertyOf crm:P70i_is_documented_in ;
+    rdfs:domain fe:Building ;
+    rdfs:range crm:E31_Document .

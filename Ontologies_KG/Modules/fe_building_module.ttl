@@ -67,7 +67,7 @@ fe:buildingInflammability a owl:DatatypeProperty ; rdfs:domain fe:BuildingFireEx
 fe:thermalInertiaScore a owl:DatatypeProperty ; rdfs:domain fe:BuildingFireExposure ; rdfs:range xsd:decimal .
 fe:structuralFragility a owl:DatatypeProperty ; rdfs:domain fe:BuildingFireExposure ; rdfs:range xsd:decimal .
 fe:smokePropensity a owl:DatatypeProperty ; rdfs:domain fe:BuildingFireExposure ; rdfs:range xsd:decimal .
-fe:fireExpansionFactor a owl:DatatypeProperty ; rdfs:domain fe:BuildingFireExposure ; rdfs:range xsd:decimal .
+fe:fireExpansionFactor a owl:DatatypeProperty ; rdfs:domain fe:BuildingFireExposure ; rdfs:range fe:Vector3 .
 
 # Sous-classe de fiche dédiée au Bâti + Inondation
 fe:BuildingFloodExposure a owl:Class ;

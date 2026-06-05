@@ -1,0 +1,87 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/fire_and_evacuation/weather> a owl:Ontology ;
+    rdfs:label "Module Météo : Climat et Observations"@fr ;
+    rdfs:comment "Module gérant le profil climatique de zone et les relevés dynamiques."@fr .
+
+# =================================================================
+# 1. PARTIE CLIMAT (Statistiques de zone - Normales)
+# =================================================================
+
+fe:Climate a owl:Class ;
+    rdfs:label "Climat Statistique"@fr ;
+    rdfs:comment "Données structurelles de la zone (moyennes, extrêmes, type de climat)."@fr ;
+    rdfs:subClassOf fe:EnvironmentalDimension .
+
+# --- LE POINT DE REPLI SÉMANTIQUE ---
+fe:hasClimateType a owl:ObjectProperty ;
+    rdfs:label "a pour type de climat"@fr ;
+    rdfs:comment "Permet d'inférer des caractéristiques par défaut si les données numériques sont lacunaires."@fr ;
+    rdfs:domain fe:Climate ;
+    rdfs:range fe:ClimateClassification .
+
+fe:ClimateClassification a owl:Class ; 
+    rdfs:subClassOf fe:OperationnalType . # Référence au thésaurus SKOS via le Core
+
+# --- Données Statistiques (Normales) ---
+fe:hasAvgTemp             a owl:DatatypeProperty ; rdfs:domain fe:Climate ; rdfs:range xsd:decimal .
+fe:hasMinAvgTemp          a owl:DatatypeProperty ; rdfs:domain fe:Climate ; rdfs:range xsd:decimal .
+fe:hasMaxAvgTemp          a owl:DatatypeProperty ; rdfs:domain fe:Climate ; rdfs:range xsd:decimal .
+fe:hasAvgWindSpeed        a owl:DatatypeProperty ; rdfs:domain fe:Climate ; rdfs:range xsd:decimal .
+fe:hasAvgWindDirection    a owl:DatatypeProperty ; rdfs:domain fe:Climate ; rdfs:range xsd:decimal .
+fe:hasAvgPrecipitation    a owl:DatatypeProperty ; rdfs:domain fe:Climate ; rdfs:range xsd:decimal .
+fe:hasAvgHumidity         a owl:DatatypeProperty ; rdfs:domain fe:Climate ; rdfs:range xsd:decimal .
+fe:hasAvgSunshineDuration a owl:DatatypeProperty ; rdfs:domain fe:Climate ; rdfs:range xsd:decimal .
+
+# =================================================================
+# 2. PARTIE OBSERVATIONS (Snapshot à l'instant T)
+# =================================================================
+
+fe:WeatherCondition a owl:Class ;
+    rdfs:label "Condition Météo (Snapshot)"@fr ;
+    rdfs:comment "Conteneur regroupant toutes les dimensions mesurées à un instant précis."@fr ;
+    rdfs:subClassOf crm:E16_Measurement .
+
+fe:hasTimestamp a owl:DatatypeProperty ;
+    rdfs:label "horodatage"@fr ;
+    rdfs:domain fe:WeatherCondition ;
+    rdfs:range xsd:dateTime .
+
+# Propriété pivot : rattache chaque mesure à son conteneur temporel
+fe:hasMeasurement a owl:ObjectProperty ;
+    rdfs:label "inclut la mesure"@fr ;
+    rdfs:domain fe:WeatherCondition ;
+    rdfs:range fe:WeatherDimension .
+
+# =================================================================
+# 3. DIMENSIONS MÉTÉOROLOGIQUES (Les mesures valuées)
+# =================================================================
+
+# 1. On définit la Condition comme l'objet pivot
+fe:WeatherCondition a owl:Class ;
+    rdfs:label "État Météo à l'instant T"@fr ;
+    rdfs:subClassOf crm:E16_Measurement .
+
+# 2. Les propriétés directes (Les DatatypeProperties pour la performance)
+fe:hasTemperature    a owl:DatatypeProperty ; rdfs:domain fe:WeatherCondition ; rdfs:range xsd:decimal .
+fe:hasWindSpeed      a owl:DatatypeProperty ; rdfs:domain fe:WeatherCondition ; rdfs:range xsd:decimal .
+fe:hasWindDirection  a owl:DatatypeProperty ; rdfs:domain fe:WeatherCondition ; rdfs:range xsd:decimal .
+fe:hasPrecipitation  a owl:DatatypeProperty ; rdfs:domain fe:WeatherCondition ; rdfs:range xsd:decimal .
+fe:hasHumidity       a owl:DatatypeProperty ; rdfs:domain fe:WeatherCondition ; rdfs:range xsd:decimal .
+fe:hasSunshine       a owl:DatatypeProperty ; rdfs:domain fe:WeatherCondition ; rdfs:range xsd:decimal .
+
+# 3. ET POUR L'EXTENSIBILITÉ (si tu as besoin d'ajouter une dimension complexe)
+# On garde une propriété "générique" pour les dimensions futures non prévues
+fe:hasOtherDimension a owl:ObjectProperty ;
+    rdfs:domain fe:WeatherCondition ;
+    rdfs:range fe:WeatherDimension .
+
+# La valeur est portée directement par la dimension
+fe:hasValue a owl:DatatypeProperty ;
+    rdfs:label "valeur numérique"@fr ;
+    rdfs:domain fe:WeatherDimension ;
+    rdfs:range xsd:decimal .

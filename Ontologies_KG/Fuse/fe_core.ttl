@@ -1,0 +1,83 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/fire_and_evacuation/core> a owl:Ontology ;
+    rdfs:label "Fire and Evacuation Ontology - Core Entry Point"@fr ;
+    rdfs:comment "Point d'entrée unique centralisant les abstractions du domaine, les outils mathématiques et les imports de modules."@fr .
+    
+    # =================================================================
+    # INTERFACE ET IMPORTS DES MODULES LOGIQUES (Même dossier)
+    # =================================================================
+
+    # =================================================================
+    # INTERFACE ET IMPORTS DES THÉSAURUS (Dossier parent /Thesaurus/)
+    # =================================================================
+ 
+
+# =================================================================
+# 1. ABSTRACTIONS ET RACINES DU DOMAINE (Extensions CIDOC-CRM)
+# =================================================================
+
+# --- Les branches de crm:E54_Dimension (Valeurs quantitatives) ---
+fe:RiskDimension a owl:Class ;
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:label "Dimension de Risque"@fr ;
+    rdfs:comment "Super-classe pour toutes les valeurs quantitatives d'exposition, d'intensité de danger ou de calcul d'impact."@fr .
+
+fe:TechnicalDimension a owl:Class ;
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:label "Dimension Technique"@fr ;
+    rdfs:comment "Super-classe pour les mesures physiques de résistance structurelle et les capacités géométriques."@fr .
+
+fe:HumanDimension a owl:Class ;
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:label "Dimension Humaine"@fr ;
+    rdfs:comment "Super-classe pour toutes les valeurs quantitatives, segmentations, partitions ou métriques liées aux facteurs humains et aux populations."@fr .
+
+fe:WeatherDimension a owl:Class ;
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:label "Dimension Météorologique"@fr .
+
+# --- Les branches de crm:E55_Type (Vocabulaires et Classifications) ---
+fe:OperationnalType a owl:Class ; 
+    rdfs:subClassOf crm:E55_Type ;
+    rdfs:label "Type Opérationnel"@fr ;
+    rdfs:comment "Super-classe pour les classifications et typologies métier requises par le simulateur (ex: types d'axes, priorités)."@fr .
+
+fe:HazardAndSafetyType a owl:Class ;
+    rdfs:subClassOf crm:E55_Type ;
+    rdfs:label "Type d'Aléa et de Sécurité"@fr ;
+    rdfs:comment "Racine sémantique commune pour classer les natures de dangers et les dispositifs de protection."@fr .
+
+fe:HazardType a owl:Class ;
+    rdfs:subClassOf fe:HazardAndSafetyType ;
+    rdfs:label "Type d'Aléa"@fr ;
+    rdfs:comment "Ancrage pour le thésaurus des menaces physiques (Feu, Inondation, Effondrement)."@fr .
+
+
+# =================================================================
+# 2. OUTILS DE CALCULS ET COORDONNÉES POUR LE SIMULATEUR (3D)
+# =================================================================
+
+fe:vector3 a owl:Class ;
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:label "Vecteur 3D"@fr ;
+    rdfs:comment "Structure mathématique pour encapsuler les coordonnées ou les vecteurs d'expansion (incendie, fumée) dans le simulateur."@fr .
+
+fe:hasXCoordinate a owl:DatatypeProperty ;
+    rdfs:label "coordonnée X"@fr ;
+    rdfs:domain fe:vector3 ;
+    rdfs:range xsd:decimal .
+
+fe:hasYCoordinate a owl:DatatypeProperty ;
+    rdfs:label "coordonnée Y"@fr ;
+    rdfs:domain fe:vector3 ;
+    rdfs:range xsd:decimal .
+
+fe:hasZCoordinate a owl:DatatypeProperty ;
+    rdfs:label "coordonnée Z"@fr ;
+    rdfs:domain fe:vector3 ;
+    rdfs:range xsd:decimal .

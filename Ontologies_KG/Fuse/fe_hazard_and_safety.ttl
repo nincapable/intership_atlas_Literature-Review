@@ -1,0 +1,160 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/fire_and_evacuation/hazard_and_safety> a owl:Ontology ;
+    rdfs:label "Module Aléas, Risques et Sécurité Incendie (Version Fusionnée)"@fr ;
+    rdfs:comment "Fusion parfaite et assainie des anciens modules fe_hazard et fe_safety."@fr .
+
+# =================================================================
+# 1. RACINES ANCRÉES AU CIDOC-CRM
+# =================================================================
+
+# --- Classes de ort (Thésaurus SKOS) ---
+
+fe:IntensityLevel a owl:Class ;
+    rdfs:subClassOf fe:HazardAndSafetyType ;
+    rdfs:label "Niveau d'intensité"@fr .
+
+fe:SeverityLevel a owl:Class ;
+    rdfs:subClassOf fe:HazardAndSafetyType ;
+    rdfs:label "Niveau de gravité"@fr .
+
+fe:SafetyType a owl:Class ;
+    rdfs:subClassOf fe:HazardAndSafetyType ;
+    rdfs:label "Type de Sécurité"@fr .
+
+fe:fireSafetyType a owl:Class ;
+    rdfs:subClassOf fe:SafetyType ;
+    rdfs:label "Type de Sécurité Incendie"@fr .
+
+fe:floodSafetyType a owl:Class ;
+    rdfs:subClassOf fe:SafetyType ;
+    rdfs:label "Type de Sécurité Inondation"@fr .
+
+# =================================================================
+# 2. LES ÉVÉNEMENTS D'ALÉAS (HAZARDS)
+# =================================================================
+
+fe:HazardEvent a owl:Class ;
+    rdfs:subClassOf crm:E5_Event ;
+    rdfs:label "Aléa / Événement de Risque"@fr .
+
+# --- Propriétés de l'événement ---
+fe:hasHazardType a owl:ObjectProperty ;
+    rdfs:label "type d'aléa"@fr ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range fe:HazardType .
+
+fe:hasIntensityLevel a owl:ObjectProperty ;
+    rdfs:label "niveau d'intensité"@fr ;
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range fe:IntensityLevel .
+
+fe:hasSeverityLevel a owl:ObjectProperty ;
+    rdfs:label "niveau de gravité"@fr ;
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range fe:SeverityLevel .
+
+fe:hasIntensityDocumentation a owl:ObjectProperty ;
+    rdfs:label "est documenté par"@fr ;
+    rdfs:subPropertyOf crm:P70_documents ;
+    owl:inverseOf crm:P70_documents ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range crm:E31_Document .
+
+fe:hasMeteorologicalObservation a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P9_consists_of ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range fe:WeatherMeasurement .
+
+fe:hasImpact a owl:ObjectProperty ;
+    rdfs:label "a pour impact"@fr ;
+    rdfs:subPropertyOf crm:P9_consists_of ;
+    rdfs:domain fe:HazardEvent ;
+    rdfs:range fe:ImpactAssessment .
+
+# =================================================================
+# 3. EXPOSITION AUX RISQUES (EXPOSURE)
+# =================================================================
+
+fe:globalHazardExposure a owl:Class ; 
+    rdfs:subClassOf fe:RiskDimension ;
+    rdfs:label "Exposition Globale au Risque d'Aléa"@fr .
+
+fe:hasGlobalHazardExposure a owl:ObjectProperty ; 
+    rdfs:label "a pour exposition globale au risque d'Aléa"@fr ;
+    rdfs:domain crm:E70_Thing ;
+    rdfs:range fe:globalHazardExposure .
+
+fe:hazardExposure a owl:Class ; 
+    rdfs:subClassOf fe:RiskDimension ;
+    rdfs:label "Exposition au Risque d'Aléa"@fr .
+
+fe:hasHazardExposure a owl:ObjectProperty ; 
+    rdfs:domain fe:globalHazardExposure ;
+    rdfs:range fe:hazardExposure .
+
+# =================================================================
+# 4. RÉACTION AU FEU (MATÉRIAUX) EUROCLASSES
+# =================================================================
+
+fe:ReactionToFire a owl:Class ;
+    rdfs:subClassOf fe:RiskDimension ;
+    rdfs:label "Propriétés de Réaction au Feu"@fr .
+
+# --- Classes du référentiel Euroclasses ---
+fe:ReactionToFireClass a owl:Class ; rdfs:subClassOf fe:fireSafetyType .
+fe:SmokeProductionClass a owl:Class ; rdfs:subClassOf fe:fireSafetyType .
+fe:FlamingDropletsClass a owl:Class ; rdfs:subClassOf fe:fireSafetyType .
+
+fe:hasReactionClass a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain fe:ReactionToFire ;
+    rdfs:range fe:ReactionToFireClass .
+
+fe:hasSmokeProductionClass a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain fe:ReactionToFire ;
+    rdfs:range fe:SmokeProductionClass .
+
+fe:hasFlamingDropletClass a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain fe:ReactionToFire ;
+    rdfs:range fe:FlamingDropletsClass .
+
+# --- Attachement au modèle de construction ---
+fe:hasReactionToFire a owl:ObjectProperty ;
+    rdfs:domain fe:MaterialInstance ;
+    rdfs:range fe:ReactionToFire ;
+    rdfs:label "a pour réaction matérielle au feu"@fr .
+
+# =================================================================
+# 5. RÉSISTANCE AU FEU (STRUCTURES) EUROCLASSES
+# =================================================================
+
+fe:FireResistanceRating a owl:Class ;
+    rdfs:subClassOf fe:TechnicalDimension ;
+    rdfs:label "Classe de Résistance au Feu"@fr .
+
+fe:FireResistanceComponent a owl:Class ; rdfs:subClassOf fe:fireSafetyType ;
+    rdfs:label "Composant REI"@fr .
+
+fe:resistanceComponents a owl:ObjectProperty ;
+    rdfs:domain fe:FireResistanceRating ;
+    rdfs:range fe:FireResistanceComponent .
+
+fe:resistanceDuration a owl:DatatypeProperty ;
+    rdfs:label "durée de résistance (min)"@fr ;
+    rdfs:domain fe:FireResistanceRating ;
+    rdfs:range xsd:integer .
+
+# --- Attachement multi-domaines corrigé pour le simulateur ---
+fe:hasResistance a owl:ObjectProperty ;
+    rdfs:label "a pour résistance structurelle au feu"@fr ;
+    rdfs:domain [ 
+        a owl:Class ;
+        owl:unionOf (fe:Building fe:Axis)
+    ] ;
+    rdfs:range fe:FireResistanceRating .

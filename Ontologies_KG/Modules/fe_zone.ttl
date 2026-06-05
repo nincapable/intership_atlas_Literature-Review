@@ -75,35 +75,7 @@ fe:hasCommunicationNode a owl:ObjectProperty ;
     rdfs:range fe:CommunicationType .
 
 # =================================================================
-# 5. ÉVALUATION DES RISQUES
-# =================================================================
-
-fe:FireRiskScore a owl:Class ;
-    rdfs:subClassOf fe:RiskDimension ;
-    rdfs:label "Score de Risque Incendie"@fr .
-
-fe:isExposedTo a owl:ObjectProperty ;
-    rdfs:label "exposition au risque"@fr ;
-    rdfs:domain fe:Zone ;
-    rdfs:range fe:HazardType .
-
-fe:hasFireRiskEvaluation a owl:ObjectProperty ;
-    rdfs:label "évaluation du risque incendie"@fr ;
-    rdfs:domain fe:Zone ;
-    rdfs:range fe:FireRiskScore .
-
-fe:hasFireRiskBuildingFactors a owl:ObjectProperty ;
-    rdfs:label "facteurs de risque liés au bâti"@fr ;
-    rdfs:domain fe:FireRiskScore ;
-    rdfs:range fe:Building . 
-
-fe:hasFireRiskNaturalFactors a owl:ObjectProperty ;
-    rdfs:label "facteurs de risque liés à l'environnement naturel"@fr ;
-    rdfs:domain fe:FireRiskScore ;
-    rdfs:range fe:NaturalSpace .
-
-# =================================================================
-# 6.STRUCTURE TOPOGRAPHIQUE (LIDAR TILES)
+# 5.STRUCTURE TOPOGRAPHIQUE (LIDAR TILES)
 # =================================================================
 
 fe:hasTopographyMeasurement a owl:ObjectProperty ;

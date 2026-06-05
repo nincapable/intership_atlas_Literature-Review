@@ -1,0 +1,124 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/fire_and_evacuation/axis> a owl:Ontology ;
+    rdfs:label "Module Axes de Circulation et Chemins d'Évacuation"@fr ;
+    rdfs:comment "Module épuré exploitant les super-classes globales pour la simulation des flux et des blocages."@fr .
+
+# =================================================================
+# 1. STRUCTURES ET CLASSIFICATIONS DES AXES
+# =================================================================
+
+fe:Axis a owl:Class ; 
+    rdfs:label "Axe de circulation"@fr ;
+    rdfs:subClassOf crm:E25_Man_Made_Feature .
+
+# --- Typologies opérationnelles (Utilisation directe des super-classes du Core) ---
+fe:AxisType a owl:Class ;
+    rdfs:label "Type d'axe"@fr ;
+    rdfs:subClassOf fe:OperationnalType . # Géré par le thésaurus / core
+
+fe:AccessibilityLevel a owl:Class ;
+    rdfs:label "Niveau d'accessibilité PMR"@fr ;
+    rdfs:subClassOf fe:OperationnalType .
+
+fe:RescueAccessibilityLevel a owl:Class ;
+    rdfs:label "Niveau d'accessibilité des secours engins"@fr ;
+    rdfs:subClassOf fe:OperationnalType .
+
+# --- Propriétés de qualification de l'axe ---
+fe:hasAxisType a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ;
+    rdfs:range fe:AxisType .
+
+fe:hasAccessibilityLevel a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ;
+    rdfs:range fe:AccessibilityLevel .
+
+fe:hasRescueAccessibilityLevel a owl:ObjectProperty ;
+    rdfs:domain fe:Axis ;
+    rdfs:range fe:RescueAccessibilityLevel .
+
+fe:hasBlockingState a owl:ObjectProperty ; 
+    rdfs:label "a pour état de blocage"@fr ;
+    rdfs:domain fe:Axis ; 
+    rdfs:range crm:E3_Condition_State .
+
+# =================================================================
+# 2. PROPRIÉTÉS GÉOMÉTRIQUES ET CAPACITÉS (Pour la Micro-Simulation)
+# =================================================================
+
+fe:hasWidth a owl:DatatypeProperty ;
+    rdfs:label "largeur utile (m)"@fr ;
+    rdfs:domain fe:Axis ;
+    rdfs:range xsd:decimal .
+
+fe:hasLength a owl:DatatypeProperty ;
+    rdfs:label "longueur de l'axe (m)"@fr ;
+    rdfs:domain fe:Axis ;
+    rdfs:range xsd:decimal .
+
+fe:hasSlope a owl:DatatypeProperty ;
+    rdfs:label "pente de l'axe (%)"@fr ;
+    rdfs:domain fe:Axis ;
+    rdfs:range xsd:decimal .
+
+fe:maxFlowCapacity a owl:DatatypeProperty ;
+    rdfs:label "capacité de flux maximale (pers/min)"@fr ;
+    rdfs:comment "Débit de saturation théorique de la voie calculé pour les algorithmes de routage."@fr ;
+    rdfs:domain fe:Axis ;
+    rdfs:range xsd:decimal .
+
+fe:isOnLevel a owl:DatatypeProperty ; 
+    rdfs:label "Est à l'étage / niveau"@fr ;
+    rdfs:domain fe:Axis ; 
+    rdfs:range xsd:integer .
+
+fe:isConnectedTo a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:label "est connecté à"@fr ;
+    rdfs:comment "Propriété topologique réflexive permettant de lier deux entités spatiales anthropiques (Axe à Axe, Axe à Bâtiment, ou Bâtiment à Bâtiment) pour la simulation de graphes de circulation."@fr ;
+    rdfs:domain crm:E25_Man_Made_Feature ;
+    rdfs:range crm:E25_Man_Made_Feature .
+
+# =================================================================
+# 3. VULNÉRABILITÉ ET BLOCAGE DES VOIES (HAZARD EXPOSURE)
+# =================================================================
+
+fe:AxisVulnerability a owl:Class ;
+    rdfs:label "Fiche de Vulnérabilité et d'Exposition de l'Axe"@fr ;
+    rdfs:subClassOf fe:hazardExposure . # Aligné sur la racine commune des fiches d'exposition
+
+fe:hasVulnerability a owl:ObjectProperty ;
+    rdfs:label "présente une vulnérabilité opérationnelle"@fr ;
+    rdfs:domain fe:Axis ;
+    rdfs:range fe:AxisVulnerability .
+
+# --- Liaisons sémantiques de causalité ---
+fe:triggeredBy a owl:ObjectProperty ;
+    rdfs:label "déclenché par l'aléa"@fr ;
+    rdfs:domain fe:AxisVulnerability ;
+    rdfs:range fe:HazardType . # Point vers le thésaurus des aléas (ex: fe:Fire, fe:Flood)
+
+fe:causedBy a owl:ObjectProperty ;
+    rdfs:label "causé par la structure"@fr ;
+    rdfs:domain fe:AxisVulnerability ;
+    rdfs:range crm:E70_Thing. #Cible une instance concrète (ex: Bâtiment_A, arbre...) plutôt qu'une classe générique pour permettre la liaison directe dans les scénarios de simulation.
+
+fe:blockingNature a owl:ObjectProperty ;
+    rdfs:label "nature physique du blocage"@fr ;
+    rdfs:domain fe:AxisVulnerability ;
+    rdfs:range fe:BlockingFactor . # Ex: Instance du thésaurus (fe:StructuralCollapse, fe:SmokeAccumulation)
+
+# --- Métriques dynamiques calculées pour le Simulateur Multi-Agent ---
+fe:blockingProbability a owl:DatatypeProperty ; 
+    rdfs:label "probabilité de blocage de l'axe"@fr ;
+    rdfs:domain fe:AxisVulnerability ; 
+    rdfs:range xsd:decimal .
+
+fe:estimatedClearanceTime a owl:DatatypeProperty ; 
+    rdfs:label "temps de dégagement estimé (min)"@fr ;
+    rdfs:domain fe:AxisVulnerability ; 
+    rdfs:range xsd:integer .
