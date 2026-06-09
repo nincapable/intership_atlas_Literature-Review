@@ -1,0 +1,105 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/fire_and_evacuation/population> a owl:Ontology ;
+    rdfs:label "Module de Gestion de la Population"@fr ;
+    rdfs:comment "Modélise les groupes d'agents, leur comportement statistique et leur dynamique au sein des zones."@fr .
+
+# =================================================================
+# 1. CLASSE PRINCIPALE ET COMPOSITION
+# =================================================================
+
+fe:Population a owl:Class ; 
+    rdfs:subClassOf crm:E74_Group ;
+    rdfs:label "Population"@fr ;
+    rdfs:comment "Regroupement d'individus ou d'agents simulés."@fr .
+
+# =================================================================
+# 2. PARTITIONS (Segmentation pour la simulation)
+# =================================================================
+
+fe:PopulationPartition a owl:Class ;
+    rdfs:subClassOf fe:HumanDimension ;
+    rdfs:label "Partition de Population"@fr ;
+    rdfs:comment "Segment de la population défini par un ensemble de critères spécifiques (ex: PMR, groupe scolaire)."@fr .
+
+# Propriété d'attachement au groupe
+fe:hasPartition a owl:ObjectProperty ;
+    rdfs:domain fe:Population ;
+    rdfs:range fe:PopulationPartition .
+
+fe:proportionValue a owl:DatatypeProperty ;
+    rdfs:domain fe:PopulationPartition ;
+    rdfs:range xsd:float ;
+    rdfs:label "proportion"@fr ;
+    rdfs:comment "Proportion de la population appartenant à cette partition. "@fr .
+
+# --- Spécialisations des partitions ---
+
+
+
+# =================================================================
+# 3. FACTEURS HUMAINS (Capacités d'évacuation)
+# =================================================================
+
+# Attributs comportementaux (utilisés par le moteur de simulation pour le pathfinding)
+fe:hasRiskPerception a owl:ObjectProperty ; rdfs:domain fe:PopulationPartition ; rdfs:range fe:populationPartitionRiskPerceptionLevel .
+fe:hasAwareness      a owl:ObjectProperty ; rdfs:domain fe:PopulationPartition ; rdfs:range fe:populationPartitionAwarenessLevel .
+fe:hasTraining       a owl:ObjectProperty ; rdfs:domain fe:PopulationPartition ; rdfs:range fe:populationPartitionTrainingLevel .
+fe:hasEducation      a owl:ObjectProperty ; rdfs:domain fe:PopulationPartition ; rdfs:range fe:populationPartitionEducationLevel .
+fe:hasMobilityClass  a owl:ObjectProperty ; rdfs:domain fe:PopulationPartition ; rdfs:range fe:populationPartitionMobilityClass .
+fe:hasFunctionnalGroup a owl:ObjectProperty ; rdfs:domain fe:PopulationPartition ; rdfs:range fe:populationPartitionFunctionalGroup .
+fe:hasStatus a owl:ObjectProperty ; rdfs:domain fe:PopulationPartition ; rdfs:range fe:populationPartitionStatus .
+
+# =================================================================
+# 4. RÉFÉRENTIELS (SKOS ancrés)
+# =================================================================
+
+fe:populationPartitionMobilityClass a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Classe de Mobilité"@fr ;
+    rdfs:comment "Catégorisation des capacités physiques de déplacement (ex: valide, mobilité réduite, assistance requise)."@fr .
+
+fe:populationPartitionFunctionalGroup a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label " Groupe Fonctionnel de la partition"@fr ;
+    rdfs:comment "Définit la structure sociale ou l'affiliation du groupe (ex: secours, medical, victime, civil, ...)."@fr .
+
+fe:populationPartitionStatus a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Statut de la partition"@fr ;
+    rdfs:comment "Définit l'attribut de statut des individus d'une partition (ex: touriste, habitant, personnel, encadrant, ...)."@fr .
+
+fe:populationPartitionRiskPerceptionLevel a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Niveau de perception du risque"@fr ;
+    rdfs:comment "Évalue la conscience de l'individu face aux dangers potentiels (ex: faible, normale, élevée)."@fr .
+
+fe:populationPartitionAwarenessLevel a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Niveau de vigilance"@fr ;
+    rdfs:comment "Niveau d'attention de l'individu par rapport à l'environnement et aux signaux d'alerte (ex: distrait, alerte, focalisé)."@fr .
+
+fe:populationPartitionTrainingLevel a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Niveau de formation"@fr ;
+    rdfs:comment "Indique le degré de préparation de l'individu aux procédures de sécurité et d'évacuation (ex: expert, formé, novice)."@fr .
+
+fe:populationPartitionEducationLevel a owl:Class ; rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Niveau d'éducation"@fr ;
+    rdfs:comment "Indique le niveau d'instruction générale de l'individu, pouvant influencer la compréhension des consignes (ex: élevé, moyen, faible)."@fr .
+
+# =================================================================
+# 5. LIAISON AU CONTEXTE SPATIAL
+# =================================================================
+
+# La population est reliée à la zone par le module zone : 
+# fe:Zone fe:hasPopulation fe:Population .
+
+fe:populationPartitionVelocity a owl:DatatypeProperty ;
+    rdfs:label "vitesse de déplacement moyenne (m/s)"@fr ;
+    rdfs:domain fe:PopulationPartitionMobilityClass ;
+    rdfs:range xsd:decimal .

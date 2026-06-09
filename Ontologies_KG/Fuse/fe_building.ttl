@@ -141,19 +141,3 @@ fe:fireExpansionFactor a owl:ObjectProperty ; # Modifié en ObjectProperty car p
     rdfs:label "facteur d'expansion du feu (3D)"@fr ;
     rdfs:domain fe:BuildingFireExposure ; 
     rdfs:range fe:vector3 . # Aligné sur la casse exacte définie dans le fichier fe_core.ttl
-
-# =================================================================
-# 5. DOCUMENTATION ET SERVICES D'URGENCE
-# =================================================================
-
-fe:hasEmergencyEvacuationDocument a owl:ObjectProperty ;
-    rdfs:label "a un document d'évacuation d'urgence"@fr ;
-    rdfs:subPropertyOf crm:P70i_is_documented_in ;
-    rdfs:domain fe:Building ;
-    rdfs:range crm:E31_Document .
-
-fe:hasEmergencyInterventionDocument a owl:ObjectProperty ;
-    rdfs:label "a un document d'intervention d'urgence"@fr ;
-    rdfs:subPropertyOf crm:P70i_is_documented_in ;
-    rdfs:domain fe:Building ;
-    rdfs:range crm:E31_Document .

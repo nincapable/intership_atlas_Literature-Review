@@ -1,0 +1,101 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/fire_and_evacuation/site> a owl:Ontology ;
+    rdfs:label "Module Site Patrimonial"@fr ;
+    rdfs:comment "Racine structurelle du graphe de simulation liant espace, météo, risques et population."@fr .
+
+# =================================================================
+# 1. CLASSE PRINCIPALE ET RELATIONS STRUCTURELLES
+# =================================================================
+
+fe:HeritageSite a owl:Class ;
+    rdfs:subClassOf crm:E27_Site ;
+    rdfs:label "Site Patrimonial"@fr ;
+    rdfs:comment "Entité globale regroupant les aspects spatiaux, humains et de sécurité."@fr .
+
+# Navigation descendante et ascendante entre Site et Zones
+fe:hasZone a owl:ObjectProperty ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:Zone ;
+    owl:inverseOf fe:isZoneOf .
+
+fe:isZoneOf a owl:ObjectProperty ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:HeritageSite .
+
+# =================================================================
+# 2. CONTEXTE GLOBAL (Météo/Climat)
+# =================================================================
+
+fe:hasWeatherCondition a owl:ObjectProperty ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:WeatherCondition ;
+    rdfs:comment "Conditions météo actuelles du site."@fr .
+
+fe:hasClimate a owl:ObjectProperty ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:Climate ;
+    rdfs:comment "Profil climatique de référence pour la zone du site."@fr .
+
+# =================================================================
+# 3. POPULATION ET DYNAMIQUE HUMAINE
+# =================================================================
+
+fe:hasInferredPopulation a owl:ObjectProperty ;
+    rdfs:label "population totale déduite"@fr ;
+    rdfs:comment "Calcule automatiquement la population du site par agrégation de ses zones."@fr ;
+    owl:propertyChainAxiom (fe:hasZone fe:hasPopulation).
+
+# =================================================================
+# 4. SÉCURITÉ ET PROTECTION
+# =================================================================
+
+fe:ProtectionLevel a owl:Class ;
+    rdfs:subClassOf fe:OperationnalType ;
+    rdfs:label "Niveau de Protection du Site"@fr .
+
+fe:hasProtectionStatus a owl:ObjectProperty ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:ProtectionLevel .
+
+# Documentation de sécurité
+
+fe:hasCulturalAssetPlan a owl:ObjectProperty ; 
+    rdfs:subPropertyOf crm:P70i_is_documented_in ;
+    rdfs:domain fe:HeritageSite ; 
+    rdfs:range crm:E31_Document .
+
+# =================================================================
+# 5. FRÉQUENTATION (Modélisation du pic)
+# =================================================================
+
+fe:AttendancePlan a owl:Class ;
+    rdfs:subClassOf crm:E29_Design_or_Procedure ;
+    rdfs:label "Plan de fréquentation"@fr ;
+    rdfs:comment "Modélise les flux et l'occupation attendue du site sur différentes périodes."@fr .
+
+# Liaison vers le site
+fe:hasAttendancePlan a owl:ObjectProperty ;
+    rdfs:label "a pour plan de fréquentation"@fr ;
+    rdfs:domain fe:HeritageSite ;
+    rdfs:range fe:AttendancePlan .
+
+fe:hasMaximumCapacity a owl:DatatypeProperty ;
+    rdfs:domain fe:AttendancePlan ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Capacité d'accueil maximale (jauge de sécurité)."@fr .
+
+fe:hasAverageDailyFlow a owl:DatatypeProperty ;
+    rdfs:domain fe:AttendancePlan ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Flux moyen quotidien attendu."@fr .
+
+# Utilisation d'un profil temporel (Ex: Lundi-Dimanche, Saisonnalité)
+fe:hasTimeProfile a owl:DatatypeProperty ;
+    rdfs:domain fe:AttendancePlan ;
+    rdfs:range xsd:string ;
+    rdfs:comment "Description du profil temporel (ex: 'Saison touristique', 'Horaires été')."@fr .

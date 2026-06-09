@@ -1,0 +1,83 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/fire_and_evacuation/artos> a owl:Ontology ;
+    rdfs:label "Module de Gestion des Artefacts Patrimoniaux"@fr ;
+    rdfs:comment "Gère l'inventaire, la typologie, la fragilité et l'exposition aux risques des objets patrimoniaux."@fr .
+
+# =================================================================
+# 1. CLASSE PRINCIPALE ET TYPOLOGIE
+# =================================================================
+
+fe:Artefact a owl:Class ; 
+    rdfs:label "Artefact Patrimonial"@fr ;
+    rdfs:subClassOf crm:E22_Man_Made_Object ;
+    rdfs:comment "Objet physique d'intérêt patrimonial nécessitant une protection ou une évacuation."@fr .
+
+fe:ArtifactTypes a owl:Class ;
+    rdfs:label "Type pour la nomenclature des artefacts"@fr ;
+    rdfs:subClassOf crm:E55_Type ;
+    rdfs:comment "Classe racine pour la catégorisation des artefacts."@fr .
+
+fe:ArtifactType a owl:Class ;
+    rdfs:label "Type d'Artefact"@fr ;
+    rdfs:subClassOf fe:ArtifactType ;
+    rdfs:comment "Classification des artefacts patrimoniaux."@fr .
+
+fe:ArtifactSubType a owl:Class ;
+    rdfs:label "Sous-Type d'Artefact"@fr ;
+    rdfs:subClassOf fe:ArtifactType ;
+    rdfs:comment "Classification fine permettant de préciser la nature de l'objet (ex: iconographie, orfèvrerie)."@fr .
+
+fe:ArtifactsMobilityType a owl:Class ;
+    rdfs:label "Type de Mobilité des artefacts"@fr ;
+    rdfs:subClassOf fe:ArtifactType ;
+    rdfs:comment "Définit la capacité de déplacement de l'artefact (ex: Fixe, Mobile, Semi-mobile)."@fr .
+
+fe:ArtifactsFragilityType a owl:Class ;
+    rdfs:label "Type de Fragilité des artefacts"@fr ;
+    rdfs:subClassOf fe:ArtifactType ;
+    rdfs:comment "Indicateur de la vulnérabilité physique de l'objet face aux conditions ambiantes."@fr .
+
+# Propriétés de classification
+fe:hasArtefactType     a owl:ObjectProperty ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactType .
+fe:hasArtefactSubType  a owl:ObjectProperty ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactSubType .    
+fe:hasArtifactsMobilityType     a owl:ObjectProperty ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactsMobilityType .
+fe:hasArtifactsFragilityType    a owl:ObjectProperty ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactsFragilityType .
+
+# =================================================================
+# 2. EXPOSITION AUX RISQUES (ALIGNEMENT AVEC HAZARD_AND_SAFETY)
+# =================================================================
+
+fe:ArtifactsFireExposure a owl:Class ;
+    rdfs:subClassOf fe:hazardExposure ;
+    rdfs:label "Exposition au Feu"@fr .
+
+fe:ArtifactsFloodExposure a owl:Class ;
+    rdfs:subClassOf fe:hazardExposure ;
+    rdfs:label "Exposition à l'Inondation"@fr .
+
+# Métriques spécifiques pour la simulation (ex: résistance à la température, humidité)
+fe:thermalToleranceLimit a owl:DatatypeProperty ;
+    rdfs:label "seuil de tolérance thermique (°C)"@fr ;
+    rdfs:domain fe:ArtifactsFireExposure ;
+    rdfs:range xsd:decimal .
+
+fe:humiditySensitivityIndex a owl:DatatypeProperty ;
+    rdfs:label "indice de sensibilité à l'humidité"@fr ;
+    rdfs:domain fe:ArtifactsFloodExposure ;
+    rdfs:range xsd:decimal .
+
+fe:smokeSensitivityIndex a owl:DatatypeProperty ;
+    rdfs:label "indice de sensibilité aux fumées"@fr ;
+    rdfs:domain fe:ArtifactsFireExposure ;
+    rdfs:range xsd:decimal .
+
+# =================================================================
+# 4. ALIGNEMENTS MÉTIERS (Rappel CRM)
+# =================================================================
+# Les artefacts sont reliés aux zones par :
+# fe:containsArtefact a owl:ObjectProperty ; rdfs:domain fe:Zone ; rdfs:range fe:Artefact .

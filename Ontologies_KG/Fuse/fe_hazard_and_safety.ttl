@@ -99,6 +99,12 @@ fe:hasHazardExposure a owl:ObjectProperty ;
     rdfs:domain fe:globalHazardExposure ;
     rdfs:range fe:hazardExposure .
 
+fe:hasHazardHistory a owl:ObjectProperty ;
+    rdfs:label "a pour historique d'aléas"@fr ;
+    rdfs:comment "Permet de lister tous les HazardEvent liés à un site pour analyse rétrospective."@fr ;
+    rdfs:domain fe:E70_Thing ;
+    rdfs:range fe:HazardEvent .
+
 # =================================================================
 # 4. RÉACTION AU FEU (MATÉRIAUX) EUROCLASSES
 # =================================================================
@@ -158,3 +164,53 @@ fe:hasResistance a owl:ObjectProperty ;
         owl:unionOf (fe:Building fe:Axis)
     ] ;
     rdfs:range fe:FireResistanceRating .
+
+# =================================================================
+# GÉNÉRALISATION DES PROCÉDURES DE SÉCURITÉ
+# =================================================================
+
+# Propriété racine (Générique)
+fe:hasSafetyProcedure a owl:ObjectProperty ;
+    rdfs:label "a pour procédure de sécurité"@fr ;
+    rdfs:comment "Relie tout type de lieu ou d'objet à une procédure de sécurité (évacuation, intervention, confinement)."@fr ;
+    rdfs:subPropertyOf crm:P70i_is_documented_in ;
+    rdfs:domain [ 
+        a owl:Class ;
+        owl:unionOf (fe:HeritageSite fe:Zone fe:Building fe:NaturalSpace) 
+    ] ;
+    rdfs:range crm:E31_Document  .
+
+# Sous-propriétés pour la précision métier (optionnel mais recommandé)
+fe:hasEvacuationPlan a owl:ObjectProperty ;
+    rdfs:subPropertyOf fe:hasSafetyProcedure ;
+    rdfs:label "a pour plan d'évacuation"@fr .
+
+fe:hasInterventionPlan a owl:ObjectProperty ;
+    rdfs:subPropertyOf fe:hasSafetyProcedure ;
+    rdfs:label "a pour plan d'intervention"@fr .
+
+#=================================================================
+# PRIORITE DE SAUVEGARDE
+#=================================================================
+fe:PriorityLevel a owl:Class ;
+    rdfs:subClassOf fe:OperationnalType ;
+    rdfs:label "Niveau de priorité de sauvegarde"@fr .
+
+# Propriété générique de priorité
+fe:hasProtectionPriority a owl:ObjectProperty ;
+    rdfs:label "a pour priorité de protection"@fr ;
+    rdfs:domain crm:E70_Thing ;
+    rdfs:range fe:PriorityLevel .
+
+# DatatypeProperty de score
+fe:priorityScore a owl:DatatypeProperty ;
+    rdfs:label "Score de priorité numérique"@fr ;
+    rdfs:comment "Valeur permettant d'ordonner les objets (ex: 1 à 100)."@fr ;
+    rdfs:domain fe:PriorityLevel ;
+    rdfs:range xsd:integer .
+
+fe:hasSavingProcedureDocument a owl:ObjectProperty ;
+    rdfs:label "a une procédure de sauvegarde"@fr ;
+    rdfs:subPropertyOf fe:hasSafetyProcedure ; # Alignement avec la propriété racine de safety
+    rdfs:domain crm:E70_Thing ; 
+    rdfs:range crm:E31_Document .

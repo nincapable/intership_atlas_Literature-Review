@@ -57,6 +57,12 @@ fe:HazardType a owl:Class ;
     rdfs:label "Type d'Aléa"@fr ;
     rdfs:comment "Ancrage pour le thésaurus des menaces physiques (Feu, Inondation, Effondrement)."@fr .
 
+fe:TechnicalType a owl:Class ; rdfs:subClassOf crm:E55_Type ;
+    rdfs:label "Type Technique"@fr ;
+    rdfs:comment "Racine sémantique commune pour classer les caractéristiques techniques et les systèmes de protection."@fr .
+
+fe:HumanFactorType a owl:Class ; rdfs:subClassOf crm:E55_Type ; rdfs:label "Type de Facteur Humain"@fr ;
+    rdfs:comment "Racine sémantique commune pour classer les facteurs humains (ex: perception du risque, niveau de conscience, formation)."@fr .
 
 # =================================================================
 # 2. OUTILS DE CALCULS ET COORDONNÉES POUR LE SIMULATEUR (3D)
