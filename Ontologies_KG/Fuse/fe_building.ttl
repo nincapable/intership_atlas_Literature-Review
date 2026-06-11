@@ -14,7 +14,8 @@
 
 fe:Building a owl:Class ; 
     rdfs:label "Bâtiment"@fr ;
-    rdfs:subClassOf crm:E25_Man_Made_Feature .
+    rdfs:subClassOf crm:E25_Man_Made_Feature ;
+    rdfs:comment "Structure bâtie d'intérêt patrimonial."@fr .
 
 fe:MaterialInstance a owl:Class ; 
     rdfs:label "Classe des Matériaux"@fr ;
@@ -22,7 +23,7 @@ fe:MaterialInstance a owl:Class ;
 
 fe:ArchitectureStyle a owl:Class ; 
     rdfs:label "Classe des Styles Architecturaux"@fr ;
-    rdfs:subClassOf fe:TechnicalDimension . # Utilisation directe, résolue à la compilation globale
+    rdfs:subClassOf fe:TechnicalDimension .
 
 # =================================================================
 # 2. COMPOSITION ET CARACTÉRISTIQUES STRUCTURELLES
@@ -33,31 +34,39 @@ fe:MaterialComposition a owl:Class ;
     rdfs:subClassOf fe:TechnicalDimension .
 
 fe:hasMaterialComposition a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P46_is_composed_of ;
     rdfs:domain fe:Building ;
     rdfs:range fe:MaterialComposition .
 
 fe:constituentMaterial a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P45_consists_of ;
     rdfs:domain fe:MaterialComposition ;
     rdfs:range fe:MaterialInstance .
 
 fe:materialPercentage a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:domain fe:MaterialComposition ;
     rdfs:range xsd:decimal .
 
-# --- Propriétés directes du Bâtiment ---
 fe:hasArchitectureStyle a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P2_has_type ;
     rdfs:label "style architectural"@fr ;
     rdfs:domain fe:Building ;
     rdfs:range fe:ArchitectureStyle .
 
-fe:structuralFragilityCoefficient a owl:DatatypeProperty ; rdfs:domain fe:ArchitectureStyle ; rdfs:range xsd:decimal .
+fe:structuralFragilityCoefficient a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:domain fe:ArchitectureStyle ; 
+    rdfs:range xsd:decimal .
 
 fe:hasFloorArea a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "surface de plancher (m²)"@fr ;
     rdfs:domain fe:Building ;
     rdfs:range xsd:decimal .
 
 fe:hasNumberOfFloors a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "nombre d'étages"@fr ;
     rdfs:domain fe:Building ;
     rdfs:range xsd:integer .
@@ -67,32 +76,29 @@ fe:hasNumberOfFloors a owl:DatatypeProperty ;
 # =================================================================
 
 fe:BuildingFloodExposure a owl:Class ;
-    rdfs:subClassOf fe:hazardExposure ; # Utilisation directe de la racine du bloc Hazard & Safety
+    rdfs:subClassOf fe:hazardExposure ;
     rdfs:label "Fiche d'Exposition Inondation du Bâtiment"@fr .
 
-fe:hasFloodExposure a owl:ObjectProperty ;
-    rdfs:domain fe:Building ;
-    rdfs:range fe:BuildingFloodExposure .
-
-# --- Métriques de simulation pour l'inondation ---
 fe:waterSubmersionResistance a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "Résistance à la submersion (m)"@fr ;
-    rdfs:comment "Hauteur d'eau maximale tolérée par la structure avant dégâts majeurs."@fr ;
     rdfs:domain fe:BuildingFloodExposure ;
     rdfs:range xsd:decimal .
 
 fe:hydrostaticPressureLoad a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "Charge de pression hydrostatique maximale"@fr ;
     rdfs:domain fe:BuildingFloodExposure ;
     rdfs:range xsd:decimal .
 
 fe:criticalEquipmentFloor a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "Étage des équipements critiques"@fr ;
-    rdfs:comment "Niveau où se trouvent les serveurs ou tableaux électriques (ex: 0 pour RDC, -1 pour sous-sol)."@fr ;
     rdfs:domain fe:BuildingFloodExposure ;
     rdfs:range xsd:integer .
 
 fe:dryingTimeHours a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "Temps de séchage structurel (heures)"@fr ;
     rdfs:domain fe:BuildingFloodExposure ;
     rdfs:range xsd:integer .
@@ -102,42 +108,43 @@ fe:dryingTimeHours a owl:DatatypeProperty ;
 # =================================================================
 
 fe:BuildingFireExposure a owl:Class ;
-    rdfs:subClassOf fe:hazardExposure ; # Branchement direct sous la racine d'exposition commune
+    rdfs:subClassOf fe:hazardExposure ;
     rdfs:label "Fiche d'Exposition Incendie pour Bâtiment"@fr ;
-    rdfs:comment "Regroupe les paramètres physiques de comportement et de propagation du feu propres à la structure de ce bâtiment."@fr .
+    rdfs:comment "Regroupe les paramètres physiques de comportement et de propagation du feu propres à la structure."@fr .
 
-fe:hasFireExposure a owl:ObjectProperty ;
-    rdfs:label "a pour fiche d'exposition incendie"@fr ;
-    rdfs:domain fe:Building ;
-    rdfs:range fe:BuildingFireExposure .
 
-# --- Métriques physiques de simulation pour l'incendie ---
 fe:buildingCombustibility a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "combustibilité du bâtiment"@fr ;
     rdfs:domain fe:BuildingFireExposure ; 
     rdfs:range xsd:decimal .
 
 fe:buildingInflammability a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "inflammabilité du bâtiment"@fr ;
     rdfs:domain fe:BuildingFireExposure ; 
     rdfs:range xsd:decimal .
 
 fe:thermalInertiaScore a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "score d'inertie thermique"@fr ;
     rdfs:domain fe:BuildingFireExposure ; 
     rdfs:range xsd:decimal .
 
 fe:structuralFragility a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "fragilité structurelle face au feu"@fr ;
     rdfs:domain fe:BuildingFireExposure ; 
     rdfs:range xsd:decimal .
 
 fe:smokePropensity a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "propension à générer des fumées"@fr ;
     rdfs:domain fe:BuildingFireExposure ; 
     rdfs:range xsd:decimal .
 
-fe:fireExpansionFactor a owl:ObjectProperty ; # Modifié en ObjectProperty car pointe vers une classe/structure complexe (Vector3)
+fe:fireExpansionFactor a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
     rdfs:label "facteur d'expansion du feu (3D)"@fr ;
     rdfs:domain fe:BuildingFireExposure ; 
-    rdfs:range fe:vector3 . # Aligné sur la casse exacte définie dans le fichier fe_core.ttl
+    rdfs:range fe:vector3 .

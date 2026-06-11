@@ -6,7 +6,7 @@
 
 <http://example.org/fire_and_evacuation/site> a owl:Ontology ;
     rdfs:label "Module Site Patrimonial"@fr ;
-    rdfs:comment "Racine structurelle du graphe de simulation liant espace, météo, risques et population."@fr .
+    rdfs:comment "Racine structurelle liant espace, météo, risques et population."@fr .
 
 # =================================================================
 # 1. CLASSE PRINCIPALE ET RELATIONS STRUCTURELLES
@@ -17,13 +17,16 @@ fe:HeritageSite a owl:Class ;
     rdfs:label "Site Patrimonial"@fr ;
     rdfs:comment "Entité globale regroupant les aspects spatiaux, humains et de sécurité."@fr .
 
-# Navigation descendante et ascendante entre Site et Zones
 fe:hasZone a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P89_falls_within ;
+    rdfs:label "a pour zone"@fr ;
     rdfs:domain fe:HeritageSite ;
     rdfs:range fe:Zone ;
     owl:inverseOf fe:isZoneOf .
 
 fe:isZoneOf a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P89i_contains ;
+    rdfs:label "est une zone de"@fr ;
     rdfs:domain fe:Zone ;
     rdfs:range fe:HeritageSite .
 
@@ -32,11 +35,13 @@ fe:isZoneOf a owl:ObjectProperty ;
 # =================================================================
 
 fe:hasWeatherCondition a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
     rdfs:domain fe:HeritageSite ;
     rdfs:range fe:WeatherCondition ;
     rdfs:comment "Conditions météo actuelles du site."@fr .
 
 fe:hasClimate a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
     rdfs:domain fe:HeritageSite ;
     rdfs:range fe:Climate ;
     rdfs:comment "Profil climatique de référence pour la zone du site."@fr .
@@ -46,9 +51,10 @@ fe:hasClimate a owl:ObjectProperty ;
 # =================================================================
 
 fe:hasInferredPopulation a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P9_consists_of ;
     rdfs:label "population totale déduite"@fr ;
-    rdfs:comment "Calcule automatiquement la population du site par agrégation de ses zones."@fr ;
-    owl:propertyChainAxiom (fe:hasZone fe:hasPopulation).
+    rdfs:comment "Calcule automatiquement la population par agrégation."@fr ;
+    owl:propertyChainAxiom (fe:hasZone fe:hasPopulation) .
 
 # =================================================================
 # 4. SÉCURITÉ ET PROTECTION
@@ -59,10 +65,9 @@ fe:ProtectionLevel a owl:Class ;
     rdfs:label "Niveau de Protection du Site"@fr .
 
 fe:hasProtectionStatus a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P2_has_type ;
     rdfs:domain fe:HeritageSite ;
     rdfs:range fe:ProtectionLevel .
-
-# Documentation de sécurité
 
 fe:hasCulturalAssetPlan a owl:ObjectProperty ; 
     rdfs:subPropertyOf crm:P70i_is_documented_in ;
@@ -78,24 +83,26 @@ fe:AttendancePlan a owl:Class ;
     rdfs:label "Plan de fréquentation"@fr ;
     rdfs:comment "Modélise les flux et l'occupation attendue du site sur différentes périodes."@fr .
 
-# Liaison vers le site
 fe:hasAttendancePlan a owl:ObjectProperty ;
-    rdfs:label "a pour plan de fréquentation"@fr ;
+    rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
+    rdfs:label "a pour plan de fréquentation"@fr ; 
     rdfs:domain fe:HeritageSite ;
     rdfs:range fe:AttendancePlan .
 
 fe:hasMaximumCapacity a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:domain fe:AttendancePlan ;
     rdfs:range xsd:integer ;
     rdfs:comment "Capacité d'accueil maximale (jauge de sécurité)."@fr .
 
 fe:hasAverageDailyFlow a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:domain fe:AttendancePlan ;
     rdfs:range xsd:integer ;
-    rdfs:comment "Flux moyen quotidien attendu."@fr .
+    rdfs:comment "Flux moyen quotidien attendu."@fr . 
 
-# Utilisation d'un profil temporel (Ex: Lundi-Dimanche, Saisonnalité)
 fe:hasTimeProfile a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:domain fe:AttendancePlan ;
     rdfs:range xsd:string ;
-    rdfs:comment "Description du profil temporel (ex: 'Saison touristique', 'Horaires été')."@fr .
+    rdfs:comment "Description du profil temporel (ex: 'Saison touristique', 'Horaires été')."@fr . 

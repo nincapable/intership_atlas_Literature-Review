@@ -22,6 +22,11 @@
 # =================================================================
 
 # --- Les branches de crm:E54_Dimension (Valeurs quantitatives) ---
+fe:EnvironmentalDimension a owl:Class ;
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:label "Dimension Environnementale"@fr ;
+    rdfs:comment "Super-classe pour les mesures biotopiques et biologiques."@fr .
+
 fe:RiskDimension a owl:Class ;
     rdfs:subClassOf crm:E54_Dimension ;
     rdfs:label "Dimension de Risque"@fr ;
@@ -64,6 +69,13 @@ fe:TechnicalType a owl:Class ; rdfs:subClassOf crm:E55_Type ;
 fe:HumanFactorType a owl:Class ; rdfs:subClassOf crm:E55_Type ; rdfs:label "Type de Facteur Humain"@fr ;
     rdfs:comment "Racine sémantique commune pour classer les facteurs humains (ex: perception du risque, niveau de conscience, formation)."@fr .
 
+fe:Biotype a owl:Class ;
+    rdfs:subClassOf crm:E55_Type ;
+    rdfs:label "Biotype / Concept Racine du Vivant"@fr ;
+    rdfs:comment "Racine pour classer les biotypes, les taxons et les traits biologiques."@fr .
+
+fe:EnvironmentalType a owl:Class ; rdfs:subClassOf crm:E55_Type ; rdfs:label "Type Environnemental"@fr ;
+    rdfs:comment "Racine pour classer les types d'espaces naturels, les biotopes et les catégories de répartition."@fr .
 # =================================================================
 # 2. OUTILS DE CALCULS ET COORDONNÉES POUR LE SIMULATEUR (3D)
 # =================================================================

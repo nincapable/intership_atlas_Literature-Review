@@ -1,0 +1,325 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/fire_and_evacuation/natural_space> a owl:Ontology ;
+    rdfs:label "Module Espace Naturel et Biotype"@fr ;
+    rdfs:comment "Gestion des espaces naturels, biotypes et métriques environnementales alignés CRM."@fr .
+
+# =================================================================
+# 1. STRUCTURE DE L'ESPACE NATUREL
+# =================================================================
+
+fe:NaturalSpace a owl:Class ;
+    rdfs:subClassOf crm:E27_Site ;
+    rdfs:label "Espace Naturel"@fr ;
+    rdfs:comment "Zone géographique à caractère naturel faisant l'objet d'une analyse environnementale."@fr .
+
+# =================================================================
+# 2. TAXONOMIE ET BIOTYPES (Alignement E55_Type)
+# =================================================================
+
+fe:Biotype a owl:Class ; 
+    rdfs:subClassOf crm:E55_Type ; 
+    rdfs:label "Biotype"@fr ;
+    rdfs:comment "Concept racine pour classifier les entités vivantes."@fr .
+
+fe:BioTaxonomyType a owl:Class ; 
+    rdfs:subClassOf fe:Biotype ; 
+    rdfs:label "Type de Taxonomie"@fr ;
+    rdfs:comment "Classification biologique structurée."@fr .
+
+fe:BioTrait a owl:Class ; 
+    rdfs:subClassOf fe:Biotype ; 
+    rdfs:label "Trait Biologique"@fr ;
+    rdfs:comment "Caractéristique spécifique biologique d'un taxon."@fr .
+
+fe:BioFireType a owl:Class ; 
+    rdfs:subClassOf fe:Biotype ; 
+    rdfs:label "Type de Biotype à Risque Incendie"@fr ;
+    rdfs:comment "Catégorisation des biotypes selon leur comportement face au feu."@fr .
+
+fe:EnvironmentalType a owl:Class ; 
+    rdfs:subClassOf crm:E55_Type ; 
+    rdfs:label "Type Environnemental"@fr ;
+    rdfs:comment "Classification des paramètres environnementaux."@fr .
+
+fe:NaturalType a owl:Class ; 
+    rdfs:subClassOf fe:EnvironmentalType ;
+    rdfs:label "Type Naturel"@fr ;
+    rdfs:comment "Type de milieu naturel."@fr .
+
+fe:RepartitionType a owl:Class ; 
+    rdfs:subClassOf fe:EnvironmentalType ;
+    rdfs:label "Type de Répartition"@fr ;
+    rdfs:comment "Mode de distribution spatiale."@fr .
+
+fe:IUCNCategory a owl:Class ; 
+    rdfs:subClassOf fe:Biotype ; 
+    rdfs:label "Catégorie UICN"@fr ;
+    rdfs:comment "Statut de conservation selon l'UICN."@fr .
+
+# Niveaux taxonomiques
+fe:Taxon a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType ; rdfs:label "Taxon (Espèce)"@fr .
+fe:BioGenre a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType ; rdfs:label "Genre Biologique"@fr .
+fe:BioFamily a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType ; rdfs:label "Famille Biologique"@fr .
+fe:BioOrder a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType ; rdfs:label "Ordre Biologique"@fr .
+fe:BioClass a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType ; rdfs:label "Classe Biologique"@fr .
+fe:BioSubDivision a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType ; rdfs:label "Sous-Division Biologique"@fr .
+fe:BioDivision a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType ; rdfs:label "Division Biologique"@fr .
+fe:BioReign a owl:Class ; rdfs:subClassOf fe:BioTaxonomyType ; rdfs:label "Règne Biologique"@fr .
+
+# Liens d'emboîtement (Propriétés d'objet alignées CRM)
+fe:belongsToGenre a owl:ObjectProperty ; rdfs:domain fe:Taxon ; rdfs:range fe:BioGenre ; rdfs:label "appartient au genre"@fr .
+fe:belongsToFamily a owl:ObjectProperty ; rdfs:domain fe:BioGenre ; rdfs:range fe:BioFamily ; rdfs:label "appartient à la famille"@fr .
+fe:belongsToOrder a owl:ObjectProperty ; rdfs:domain fe:BioFamily ; rdfs:range fe:BioOrder ; rdfs:label "appartient à l'ordre"@fr .
+fe:belongsToClass a owl:ObjectProperty ; rdfs:domain fe:BioOrder ; rdfs:range fe:BioClass ; rdfs:label "appartient à la classe"@fr .
+fe:belongsToSubDivision a owl:ObjectProperty ; rdfs:domain fe:BioClass ; rdfs:range fe:BioSubDivision ; rdfs:label "appartient à la sous-division"@fr .
+fe:belongsToDivision a owl:ObjectProperty ; rdfs:domain fe:BioSubDivision ; rdfs:range fe:BioDivision ; rdfs:label "appartient à la division"@fr .
+fe:belongsToReign a owl:ObjectProperty ; rdfs:domain fe:BioDivision ; rdfs:range fe:BioReign ; rdfs:label "appartient au règne"@fr .
+
+fe:hasNaturalType a owl:ObjectProperty ; rdfs:domain fe:NaturalSpace ; rdfs:range fe:NaturalType ; rdfs:label "a pour type naturel"@fr .
+
+# =================================================================
+# 3. DIMENSIONS ENVIRONNEMENTALES (Alignement E54_Dimension)
+# =================================================================
+
+fe:EnvironmentalDimension a owl:Class ; 
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:label "Dimension Environnementale"@fr .
+
+fe:BiomassMeasurement a owl:Class ; 
+    rdfs:subClassOf fe:EnvironmentalDimension, crm:E16_Measurement ;
+    rdfs:label "Mesure de biomasse"@fr .
+
+fe:hasBiomassState a owl:ObjectProperty ; rdfs:domain fe:NaturalSpace ; rdfs:range fe:BiomassMeasurement ; rdfs:label "a pour état de biomasse"@fr .
+fe:totalValue a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:BiomassMeasurement ; rdfs:range xsd:decimal ; rdfs:label "valeur totale"@fr .
+fe:hasComponent a owl:ObjectProperty ; rdfs:domain fe:BiomassMeasurement ; rdfs:range fe:BiomassComponent ; rdfs:label "a pour composant"@fr .
+
+fe:BiomassComponent a owl:Class ; rdfs:subClassOf fe:EnvironmentalDimension ; rdfs:label "Composant de biomasse"@fr .
+fe:refersToTaxon a owl:ObjectProperty ; rdfs:domain fe:BiomassComponent ; rdfs:range fe:Taxon ; rdfs:label "réfère au taxon"@fr .
+fe:hasRepartitionType a owl:ObjectProperty ; rdfs:domain fe:BiomassComponent ; rdfs:range fe:RepartitionType ; rdfs:label "a pour type de répartition"@fr .
+fe:hasProportion a owl:DatatypeProperty ; rdfs:domain fe:BiomassComponent ; rdfs:range xsd:decimal ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "proportion de biomasse"@fr ;
+    rdfs:comment "Proportion de la biomasse totale représentée par ce composant."@fr .
+fe:isNIndividual a owl:DatatypeProperty ; rdfs:domain fe:BiomassComponent ; rdfs:range xsd:integer ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "nombre d'individus"@fr ;
+    rdfs:comment "Nombre d'individus de ce taxon dans le composant de biomasse."@fr .
+
+# =================================================================
+# 4. MAINTENANCE ET PROTECTION
+# =================================================================
+
+fe:MaintenanceProtocol a owl:Class ; 
+    rdfs:subClassOf fe:EnvironmentalType ;
+    rdfs:label "Protocole de maintenance"@fr ;
+    rdfs:comment "Ensemble des directives et procédures appliquées pour l'entretien d'un espace naturel."@fr .
+
+fe:MaintenanceStyle a owl:Class ; 
+    rdfs:subClassOf fe:EnvironmentalType ;
+    rdfs:label "Style de maintenance"@fr ;
+    rdfs:comment "Approche globale ou philosophie de gestion (ex: gestion différenciée, conservatoire)."@fr .
+
+fe:MaintenanceAction a owl:Class ; 
+    rdfs:subClassOf crm:E29_Design_or_Procedure ;
+    rdfs:label "Action de maintenance"@fr ;
+    rdfs:comment "Opération spécifique réalisée sur le terrain (ex: élagage, débroussaillage)."@fr .
+
+fe:hasDefaultProtocol a owl:ObjectProperty ; 
+    rdfs:range fe:MaintenanceProtocol ;
+    rdfs:label "a pour protocole par défaut"@fr ;
+    rdfs:comment "Lien vers le protocole standard associé à une entité."@fr .
+
+fe:hasInheritedProtocolFromGenre a owl:ObjectProperty ; 
+    rdfs:subPropertyOf fe:hasDefaultProtocol ; 
+    owl:propertyChainAxiom ( fe:belongsToGenre fe:hasDefaultProtocol ) ;
+    rdfs:label "protocole hérité du genre"@fr ;
+    rdfs:comment "Permet d'hériter du protocole de maintenance défini au niveau du genre biologique."@fr .
+
+fe:hasInheritedProtocolFromFamily a owl:ObjectProperty ; 
+    rdfs:subPropertyOf fe:hasDefaultProtocol ; 
+    owl:propertyChainAxiom ( fe:belongsToGenre fe:belongsToFamily fe:hasDefaultProtocol ) ;
+    rdfs:label "protocole hérité de la famille"@fr ;
+    rdfs:comment "Permet d'hériter du protocole de maintenance défini au niveau de la famille biologique."@fr .
+
+fe:hasMaintenanceAction a owl:ObjectProperty ; 
+    rdfs:domain fe:MaintenanceProtocol ; 
+    rdfs:range fe:MaintenanceAction ;
+    rdfs:label "a pour action de maintenance"@fr ;
+    rdfs:comment "Lien entre un protocole et les actions concrètes qu'il contient."@fr .
+
+fe:hasMaintenanceStyle a owl:ObjectProperty ; 
+    rdfs:domain fe:NaturalSpace ; 
+    rdfs:range fe:MaintenanceStyle ;
+    rdfs:label "a pour style de maintenance"@fr ;
+    rdfs:comment "Définit le style de gestion appliqué à un espace naturel."@fr .
+
+fe:definesProtocol a owl:ObjectProperty ; 
+    rdfs:domain fe:MaintenanceStyle ; 
+    rdfs:range fe:MaintenanceProtocol ;
+    rdfs:label "définit le protocole"@fr ;
+    rdfs:comment "Indique quel protocole est dicté par un style de maintenance donné."@fr .
+
+# Protection
+fe:SpeciesProtectionStatus a owl:Class ; 
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:label "Statut de protection de l'espèce"@fr ;
+    rdfs:comment "Mesure de la fragilité ou du degré de protection légale d'un taxon."@fr .
+
+fe:hasProtectionStatus a owl:ObjectProperty, owl:FunctionalProperty ; 
+    rdfs:domain fe:Taxon ; 
+    rdfs:range fe:SpeciesProtectionStatus ;
+    rdfs:label "a pour statut de protection"@fr ;
+    rdfs:comment "Lien entre un taxon et son niveau de protection."@fr .
+
+fe:protectionPriorityWeight a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ; 
+    rdfs:domain fe:SpeciesProtectionStatus ; 
+    rdfs:range xsd:decimal ;
+    rdfs:label "poids de priorité de protection"@fr ;
+    rdfs:comment "Valeur numérique pondérant l'importance de la sauvegarde de cette espèce."@fr .
+
+# =================================================================
+# 5. BIOTRAITS ET VULNÉRABILITÉ
+# =================================================================
+
+fe:BioTrait a owl:Class ; 
+    rdfs:subClassOf fe:Biotype ;
+    rdfs:label "Trait biologique"@fr ;
+    rdfs:comment "Caractéristique biologique (physiologique ou comportementale) d'un taxon."@fr .
+
+fe:hasBioTrait a owl:ObjectProperty ; 
+    rdfs:range fe:BioTrait ;
+    rdfs:label "possède le trait biologique"@fr ;
+    rdfs:comment "Lien vers une caractéristique possédée par une entité."@fr .
+
+fe:isExceptionTo a owl:ObjectProperty ; 
+    rdfs:domain fe:Taxon ; 
+    rdfs:range fe:BioTrait ;
+    rdfs:label "est une exception au trait"@fr ;
+    rdfs:comment "Indique qu'un taxon ne suit pas la règle générale du trait."@fr .
+
+fe:hasInheritedTraitFromGenre a owl:ObjectProperty ; 
+    rdfs:subPropertyOf fe:hasBioTrait ; 
+    owl:propertyChainAxiom ( fe:belongsToGenre fe:hasBioTrait ) ;
+    rdfs:label "trait hérité du genre"@fr .
+
+fe:hasInheritedTraitFromFamily a owl:ObjectProperty ; 
+    rdfs:subPropertyOf fe:hasBioTrait ; 
+    owl:propertyChainAxiom ( fe:belongsToGenre fe:belongsToFamily fe:hasBioTrait ) ;
+    rdfs:label "trait hérité de la famille"@fr .
+
+fe:hazardSensitivity a owl:Class ; 
+    rdfs:subClassOf crm:E54_Dimension ;
+    rdfs:label "Sensibilité au risque"@fr ;
+    rdfs:comment "Dimension mesurant la vulnérabilité d'un taxon face à un aléa."@fr .
+
+fe:hazardFunctionalRole a owl:Class ; 
+    rdfs:subClassOf fe:Biotype ;
+    rdfs:label "Rôle fonctionnel face au risque"@fr ;
+    rdfs:comment "Classification du rôle joué par le taxon lors d'un événement de risque."@fr .
+
+fe:hazardResponseStrategy a owl:Class ; 
+    rdfs:subClassOf fe:Biotype ;
+    rdfs:label "Stratégie de réponse au risque"@fr ;
+    rdfs:comment "Mode de réaction adaptative de l'espèce face au danger."@fr .
+
+fe:hazardReaction a owl:Class ; 
+    rdfs:subClassOf fe:Biotype ;
+    rdfs:label "Réaction au risque"@fr ;
+    rdfs:comment "Type de manifestation ou comportement face à l'aléa."@fr .
+
+fe:hasHazardSensitivity a owl:ObjectProperty ; 
+    rdfs:domain fe:Taxon ; 
+    rdfs:range fe:hazardSensitivity ;
+    rdfs:label "a pour sensibilité au risque"@fr ;
+    rdfs:comment "Lien reliant un taxon à sa mesure de sensibilité."@fr .
+
+fe:hasHazardFunctionalRole a owl:ObjectProperty ; 
+    rdfs:domain fe:hazardSensitivity ; 
+    rdfs:range fe:hazardFunctionalRole ;
+    rdfs:label "a pour rôle fonctionnel face au risque"@fr .
+
+fe:hasHazardResponseStrategy a owl:ObjectProperty ; 
+    rdfs:domain fe:hazardSensitivity ; 
+    rdfs:range fe:hazardResponseStrategy ;
+    rdfs:label "a pour stratégie de réponse au risque"@fr .
+
+fe:hasHazardReaction a owl:ObjectProperty ; 
+    rdfs:domain fe:hazardSensitivity ; 
+    rdfs:range fe:hazardReaction ;
+    rdfs:label "a pour réaction au risque"@fr .
+
+# =================================================================
+# 6. CONFIGURATION PHYSIQUE (MÉTRIQUES INCENDIE)
+# =================================================================
+
+fe:bioFireSensitivity a owl:Class ; 
+    rdfs:subClassOf fe:hazardSensitivity ;
+    rdfs:label "Sensibilité biologique au feu"@fr ;
+    rdfs:comment "Dimension mesurant la vulnérabilité intrinsèque d'un taxon face à un incendie."@fr .
+
+fe:FireResponseStrategy a owl:Class ; 
+    rdfs:subClassOf fe:hazardResponseStrategy ;
+    rdfs:label "Stratégie de réponse au feu"@fr ;
+    rdfs:comment "Mécanisme de survie ou de réaction adaptative de l'espèce face au passage du feu."@fr .
+
+fe:EmberType a owl:Class ; 
+    rdfs:subClassOf fe:hazardReaction ;
+    rdfs:label "Type d'escarbille"@fr ;
+    rdfs:comment "Nature des particules incandescentes produites par le taxon lors de sa combustion."@fr .
+
+fe:FireFunctionalRole a owl:Class ; 
+    rdfs:subClassOf fe:hazardFunctionalRole ;
+    rdfs:label "Rôle fonctionnel incendie"@fr ;
+    rdfs:comment "Rôle du taxon dans la dynamique du feu (ex: combustible, coupe-feu, vecteur)."@fr .
+
+fe:FlammabilityLevel a owl:Class ; 
+    rdfs:subClassOf fe:Biotype ;
+    rdfs:label "Niveau d'inflammabilité"@fr ;
+    rdfs:comment "Classement du potentiel d'inflammation du biotype."@fr .
+
+fe:ValetteScore a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ; 
+    rdfs:domain fe:FlammabilityLevel ; 
+    rdfs:range xsd:integer ;
+    rdfs:label "Score de Valette"@fr ;
+    rdfs:comment "Indice numérique de l'inflammabilité selon la méthode de Valette."@fr .
+
+fe:hasFlammabilityLevel a owl:ObjectProperty ; 
+    rdfs:domain fe:bioFireSensitivity ; 
+    rdfs:range fe:FlammabilityLevel ;
+    rdfs:label "a pour niveau d'inflammabilité"@fr .
+
+# Propriétés numériques (DatatypeProperty)
+fe:organicHRPBasis a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal ; rdfs:label "Base du potentiel de chaleur organique"@fr .
+fe:verticalTransferPotential a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal ; rdfs:label "Potentiel de transfert vertical (feu de cime)"@fr .
+fe:horizontalTransferPotential a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal ; rdfs:label "Potentiel de transfert horizontal (propagation)"@fr .
+fe:fireResistanceDuration a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal ; rdfs:label "Durée de résistance au feu"@fr .
+fe:heatReleasePotential a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal ; rdfs:label "Potentiel de dégagement de chaleur"@fr .
+fe:spontaneousIgnitionThreshold a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal ; rdfs:label "Seuil d'auto-inflammation"@fr .
+fe:ignitionDelay a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal ; rdfs:label "Délai d'inflammation"@fr .
+fe:fireReactivityFactor a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal ; rdfs:label "Facteur de réactivité au feu"@fr .
+fe:mobilityScore a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal ; rdfs:label "Score de mobilité"@fr .
+fe:panicThreshold a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal ; rdfs:label "Seuil de panique"@fr .
+fe:evacuationPriority a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal ; rdfs:label "Priorité d'évacuation"@fr .
+fe:isPotentialFireVector a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal ; rdfs:label "Est un vecteur potentiel de feu"@fr .
+fe:calculatedGeneralFireRisk a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:bioFireSensitivity ; rdfs:range xsd:decimal ; rdfs:label "Risque incendie général calculé"@fr .
+
+# =================================================================
+# 7. FACETTE D'EXPOSITION DU HUB
+# =================================================================
+
+fe:NaturalSpaceFireExposure a owl:Class ; 
+    rdfs:subClassOf fe:hazardExposure ;
+    rdfs:label "Exposition incendie espace naturel"@fr ;
+    rdfs:comment "Paramètres mesurant l'exposition globale d'un espace naturel au risque incendie."@fr .
+
+fe:globalIgnitionProbability a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:NaturalSpaceFireExposure ; rdfs:range xsd:decimal ; rdfs:label "Probabilité globale d'ignition"@fr .
+fe:firePropagationVelocity a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:NaturalSpaceFireExposure ; rdfs:range xsd:decimal ; rdfs:label "Vitesse de propagation du feu"@fr .
+fe:structuralFireBarrierEffect a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:NaturalSpaceFireExposure ; rdfs:range xsd:decimal ; rdfs:label "Effet barrière coupe-feu structurel"@fr .
+fe:globalEvacuationUrgency a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:NaturalSpaceFireExposure ; rdfs:range xsd:decimal ; rdfs:label "Urgence globale d'évacuation"@fr .

@@ -1,124 +1,134 @@
 @prefix fe:   <http://example.org/fire_and_evacuation#> .
 @prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 <http://example.org/fire_and_evacuation/axis> a owl:Ontology ;
     rdfs:label "Module Axes de Circulation et Chemins d'Évacuation"@fr ;
-    rdfs:comment "Module épuré exploitant les super-classes globales pour la simulation des flux et des blocages."@fr .
+    rdfs:comment "Module aligné CRM pour la simulation des flux et blocages, documenté pour l'interopérabilité."@fr .
 
 # =================================================================
-# 1. STRUCTURES ET CLASSIFICATIONS DES AXES
+# 1. STRUCTURES ET CLASSIFICATIONS (Alignement P2_has_type)
 # =================================================================
 
 fe:Axis a owl:Class ; 
     rdfs:label "Axe de circulation"@fr ;
-    rdfs:subClassOf crm:E25_Man_Made_Feature .
+    rdfs:subClassOf crm:E25_Man_Made_Feature ;
+    rdfs:comment "Voie physique (couloir, escalier, porte) utilisée pour le déplacement des agents."@fr .
 
-# --- Typologies opérationnelles (Utilisation directe des super-classes du Core) ---
-fe:AxisType a owl:Class ;
+fe:AxisType a owl:Class ; rdfs:subClassOf fe:OperationnalType ; 
     rdfs:label "Type d'axe"@fr ;
-    rdfs:subClassOf fe:OperationnalType . # Géré par le thésaurus / core
+    rdfs:comment "Classification fonctionnelle de l'axe (ex: dégagement, accès secours)."@fr .
 
-fe:AccessibilityLevel a owl:Class ;
-    rdfs:label "Niveau d'accessibilité PMR"@fr ;
-    rdfs:subClassOf fe:OperationnalType .
+fe:AccessibilityLevel a owl:Class ; rdfs:subClassOf fe:OperationnalType ; 
+    rdfs:label "Accessibilité PMR"@fr ;
+    rdfs:comment "Niveau d'aptitude de l'axe pour les personnes à mobilité réduite."@fr .
 
-fe:RescueAccessibilityLevel a owl:Class ;
-    rdfs:label "Niveau d'accessibilité des secours engins"@fr ;
-    rdfs:subClassOf fe:OperationnalType .
+fe:RescueAccessibilityLevel a owl:Class ; rdfs:subClassOf fe:OperationnalType ; 
+    rdfs:label "Accessibilité secours"@fr ;
+    rdfs:comment "Capacité de passage pour les équipements ou personnels de secours."@fr .
 
-# --- Propriétés de qualification de l'axe ---
 fe:hasAxisType a owl:ObjectProperty ;
-    rdfs:domain fe:Axis ;
-    rdfs:range fe:AxisType .
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:label "a pour type d'axe"@fr ;
+    rdfs:domain fe:Axis ; rdfs:range fe:AxisType .
 
 fe:hasAccessibilityLevel a owl:ObjectProperty ;
-    rdfs:domain fe:Axis ;
-    rdfs:range fe:AccessibilityLevel .
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:label "a pour niveau d'accessibilité"@fr ;
+    rdfs:domain fe:Axis ; rdfs:range fe:AccessibilityLevel .
 
 fe:hasRescueAccessibilityLevel a owl:ObjectProperty ;
-    rdfs:domain fe:Axis ;
-    rdfs:range fe:RescueAccessibilityLevel .
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:label "a pour accessibilité secours"@fr ;
+    rdfs:domain fe:Axis ; rdfs:range fe:RescueAccessibilityLevel .
 
 fe:hasBlockingState a owl:ObjectProperty ; 
+    rdfs:subPropertyOf crm:P2_has_type ;
     rdfs:label "a pour état de blocage"@fr ;
     rdfs:domain fe:Axis ; 
-    rdfs:range crm:E3_Condition_State .
+    rdfs:range crm:E3_Condition_State ;
+    rdfs:comment "État physique actuel de l'axe (ex: obstrué, libre)."@fr .
 
 # =================================================================
-# 2. PROPRIÉTÉS GÉOMÉTRIQUES ET CAPACITÉS (Pour la Micro-Simulation)
+# 2. PROPRIÉTÉS GÉOMÉTRIQUES (Alignement P43_has_dimension)
 # =================================================================
 
 fe:hasWidth a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "largeur utile (m)"@fr ;
-    rdfs:domain fe:Axis ;
-    rdfs:range xsd:decimal .
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal .
 
 fe:hasLength a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "longueur de l'axe (m)"@fr ;
-    rdfs:domain fe:Axis ;
-    rdfs:range xsd:decimal .
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal .
 
 fe:hasSlope a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "pente de l'axe (%)"@fr ;
-    rdfs:domain fe:Axis ;
-    rdfs:range xsd:decimal .
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal .
 
 fe:maxFlowCapacity a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "capacité de flux maximale (pers/min)"@fr ;
-    rdfs:comment "Débit de saturation théorique de la voie calculé pour les algorithmes de routage."@fr ;
-    rdfs:domain fe:Axis ;
-    rdfs:range xsd:decimal .
+    rdfs:comment "Débit de saturation théorique calculé pour les algorithmes de routage."@fr ;
+    rdfs:domain fe:Axis ; rdfs:range xsd:decimal .
 
 fe:isOnLevel a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "Est à l'étage / niveau"@fr ;
-    rdfs:domain fe:Axis ; 
-    rdfs:range xsd:integer .
+    rdfs:domain fe:Axis ; rdfs:range xsd:integer .
 
 fe:isConnectedTo a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:subPropertyOf crm:P132_spatially_overlaps ;
     rdfs:label "est connecté à"@fr ;
-    rdfs:comment "Propriété topologique réflexive permettant de lier deux entités spatiales anthropiques (Axe à Axe, Axe à Bâtiment, ou Bâtiment à Bâtiment) pour la simulation de graphes de circulation."@fr ;
+    rdfs:comment "Topologie : relie deux entités pour la simulation de graphes de circulation."@fr ;
     rdfs:domain crm:E25_Man_Made_Feature ;
     rdfs:range crm:E25_Man_Made_Feature .
 
 # =================================================================
-# 3. VULNÉRABILITÉ ET BLOCAGE DES VOIES (HAZARD EXPOSURE)
+# 3. VULNÉRABILITÉ (Alignement P140_assigned_attribute_to)
 # =================================================================
 
 fe:AxisVulnerability a owl:Class ;
-    rdfs:label "Fiche de Vulnérabilité et d'Exposition de l'Axe"@fr ;
-    rdfs:subClassOf fe:hazardExposure . # Aligné sur la racine commune des fiches d'exposition
+    rdfs:label "Fiche de Vulnérabilité"@fr ;
+    rdfs:subClassOf fe:hazardExposure ;
+    rdfs:comment "Évaluation de l'exposition d'un axe à un aléa spécifique."@fr .
 
 fe:hasVulnerability a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
     rdfs:label "présente une vulnérabilité opérationnelle"@fr ;
     rdfs:domain fe:Axis ;
     rdfs:range fe:AxisVulnerability .
 
-# --- Liaisons sémantiques de causalité ---
 fe:triggeredBy a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P17_was_motivated_by ;
     rdfs:label "déclenché par l'aléa"@fr ;
     rdfs:domain fe:AxisVulnerability ;
-    rdfs:range fe:HazardType . # Point vers le thésaurus des aléas (ex: fe:Fire, fe:Flood)
+    rdfs:range fe:HazardType .
 
 fe:causedBy a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P10_falls_within ;
     rdfs:label "causé par la structure"@fr ;
     rdfs:domain fe:AxisVulnerability ;
-    rdfs:range crm:E70_Thing. #Cible une instance concrète (ex: Bâtiment_A, arbre...) plutôt qu'une classe générique pour permettre la liaison directe dans les scénarios de simulation.
+    rdfs:range crm:E70_Thing .
 
 fe:blockingNature a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P2_has_type ;
     rdfs:label "nature physique du blocage"@fr ;
     rdfs:domain fe:AxisVulnerability ;
-    rdfs:range fe:BlockingFactor . # Ex: Instance du thésaurus (fe:StructuralCollapse, fe:SmokeAccumulation)
+    rdfs:range fe:BlockingFactor .
 
-# --- Métriques dynamiques calculées pour le Simulateur Multi-Agent ---
 fe:blockingProbability a owl:DatatypeProperty ; 
-    rdfs:label "probabilité de blocage de l'axe"@fr ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "probabilité de blocage"@fr ;
     rdfs:domain fe:AxisVulnerability ; 
     rdfs:range xsd:decimal .
 
 fe:estimatedClearanceTime a owl:DatatypeProperty ; 
-    rdfs:label "temps de dégagement estimé (min)"@fr ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "temps de dégagement (min)"@fr ;
     rdfs:domain fe:AxisVulnerability ; 
     rdfs:range xsd:integer .

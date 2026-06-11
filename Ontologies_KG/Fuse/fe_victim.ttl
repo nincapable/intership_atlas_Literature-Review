@@ -1,0 +1,71 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/fire_and_evacuation/victim> a owl:Ontology ;
+    rdfs:label "Module de Gestion des Victimes"@fr ;
+    rdfs:comment "Modélise les individus impliqués dans un événement avec alignement CRM."@fr .
+
+# =================================================================
+# 1. CLASSE VICTIME
+# =================================================================
+
+fe:Victim a owl:Class ;
+    rdfs:subClassOf crm:E21_Person ;
+    rdfs:label "Victime / Personne Impliquée"@fr .
+
+# =================================================================
+# 2. PROPRIÉTÉS ET ALIGNEMENTS CRM
+# =================================================================
+
+# --- Triage (Classification médicale) ---
+fe:victimTriageCategory a owl:Class ; rdfs:subClassOf fe:HumanFactorType ; rdfs:label "Catégorie de triage"@fr .
+
+fe:hasvictimTriageCategory a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:label "catégorie de triage"@fr ;
+    rdfs:domain fe:Victim ;
+    rdfs:range fe:victimTriageCategory .
+
+# --- Genre ---
+fe:hasGender a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:domain fe:Victim ;
+    rdfs:range fe:GenderType .
+
+# --- Âge (Dimension) ---
+# Note : crm:P43_has_dimension attend un E54_Dimension, donc on préfère 
+# définir une classe fille de E54 plutôt qu'un xsd:decimal direct.
+fe:AgeDimension a owl:Class ; rdfs:subClassOf crm:E54_Dimension ; rdfs:label "Dimension d'âge"@fr ;
+    rdfs:comment "Permet de modéliser l'âge de la victime avec toutes les incertitudes associées aux situation d'urgences."@fr .
+
+fe:hasAge a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:domain fe:Victim ;
+    rdfs:range fe:AgeDimension .
+
+# --- Groupe Fonctionnel (Alignement Population) ---
+fe:hasVictimFunctionalGroup a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:label "groupe fonctionnel de la victime"@fr ;
+    rdfs:domain fe:Victim ;
+    rdfs:range fe:populationPartitionFunctionalGroup ;
+    rdfs:comment "Permet d'analyser le RETEX par groupe (Civil, Secours, etc.)."@fr .
+
+# =================================================================
+# 3. LOCALISATION ET DOCUMENTATION
+# =================================================================
+
+fe:foundAtLocation a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P53_has_former_or_current_location ;
+    rdfs:label "lieu de découverte"@fr ;
+    rdfs:domain fe:Victim ;
+    rdfs:range crm:E53_Place .
+
+fe:hasInterventionForm a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P70i_is_documented_in ;
+    rdfs:label "fiche d'intervention associée"@fr ;
+    rdfs:domain fe:Victim ;
+    rdfs:range crm:E31_Document .

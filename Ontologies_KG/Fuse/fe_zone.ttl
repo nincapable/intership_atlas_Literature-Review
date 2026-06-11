@@ -9,7 +9,7 @@
     rdfs:comment "Définit les zones d'intérêt, leur contenu patrimonial/naturel, et le contexte topographique (LiDAR)."@fr .
 
 # =================================================================
-# 1. LA CLASSE ZONE (Secteur d'intervention)
+# 1. LA CLASSE ZONE
 # =================================================================
 
 fe:Zone a owl:Class ;
@@ -17,6 +17,7 @@ fe:Zone a owl:Class ;
     rdfs:label "Zone d'intérêt / Secteur d'intervention"@fr .
 
 fe:hasTopographicContext a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
     rdfs:label "contexte topographique"@fr ;
     rdfs:domain fe:Zone ;
     rdfs:range fe:TopographicDataset .
@@ -24,6 +25,7 @@ fe:hasTopographicContext a owl:ObjectProperty ;
 fe:ZoneUsageType a owl:Class ; rdfs:subClassOf fe:OperationnalType .
 
 fe:hasZoneUsage a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P2_has_type ;
     rdfs:label "usage de la zone"@fr ;
     rdfs:domain fe:Zone ;
     rdfs:range fe:ZoneUsageType .
@@ -31,75 +33,102 @@ fe:hasZoneUsage a owl:ObjectProperty ;
 fe:CommunicationType a owl:Class ; rdfs:subClassOf fe:OperationnalType .
 
 fe:hasCommunicationNode a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P2_has_type ;
     rdfs:label "Type de nœud de communication"@fr ;
     rdfs:domain fe:Zone ;
     rdfs:range fe:CommunicationType .
 
 # =================================================================
-# 2. TOPOGRAPHIE ET DATASETS (Contexte d'acquisition)
+# 2. TOPOGRAPHIE ET DATASETS
 # =================================================================
 
 fe:TopographicDataset a owl:Class ;
     rdfs:subClassOf crm:E73_Information_Object ;
     rdfs:label "Jeu de données topographiques"@fr .
 
-# Référentiels Skos pour les méthodes d'acquisition et les types de données
 fe:AcquisitionMethod a owl:Class ; rdfs:subClassOf fe:TechnicalType ;
     rdfs:label "Méthode d'acquisition"@fr ;
     rdfs:comment "Classification des méthodes de collecte de données topographiques (ex: LiDAR, photogrammétrie)."@fr .
 
-fe:hasAcquisitionDate   a owl:DatatypeProperty ; rdfs:label "date d'acquisition"@fr ;
+fe:hasAcquisitionDate a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "date d'acquisition"@fr ;
     rdfs:domain fe:TopographicDataset ; rdfs:range xsd:dateTime .
-fe:hasResolution        a owl:DatatypeProperty ; rdfs:label "résolution"@fr ;
+
+fe:hasResolution a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "résolution"@fr ;
     rdfs:domain fe:TopographicDataset ; rdfs:range xsd:string .
-fe:hasAcquisitionMethod a owl:ObjectProperty  ; rdfs:label "méthode d'acquisition"@fr ;
+
+fe:hasAcquisitionMethod a owl:ObjectProperty  ;
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:label "méthode d'acquisition"@fr ;
     rdfs:domain fe:TopographicDataset ; rdfs:range fe:AcquisitionMethod .
 
 # =================================================================
-# 3. TUILES LIDAR (Structure de reconstruction 3D)
+# 3. TUILES LIDAR
 # =================================================================
 
 fe:LidarTile a owl:Class ;
     rdfs:subClassOf crm:E73_Information_Object ;
     rdfs:label "Tuile LiDAR"@fr .
 
-# --- Métadonnées de tuile ---
-fe:hasTileIndex     a owl:DatatypeProperty ; rdfs:label "index de tuile"@fr ;
+fe:hasTileIndex a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "index de tuile"@fr ;
     rdfs:domain fe:LidarTile ; rdfs:range xsd:string .
-fe:hasSourceFile    a owl:DatatypeProperty ; rdfs:label "fichier source"@fr ;
+
+fe:hasSourceFile a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P1_is_identified_by ;
+    rdfs:label "fichier source"@fr ;
     rdfs:domain fe:LidarTile ; rdfs:range xsd:anyURI .
-fe:hasBoundingBox   a owl:DatatypeProperty ; rdfs:label "emprise spatiale (BBOX)"@fr ;
+
+fe:hasBoundingBox a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "emprise spatiale (BBOX)"@fr ;
     rdfs:comment "Format WKT: POLYGON((...))"@fr ; rdfs:domain fe:LidarTile ; rdfs:range xsd:string .
-fe:hasAverageSlope  a owl:DatatypeProperty ; rdfs:label "pente moyenne"@fr ;
-    rdfs:domain fe:LidarTile ; rdfs:range xsd:decimal .
-fe:hasMaxElevation  a owl:DatatypeProperty ; rdfs:label "élévation maximale"@fr ;
-    rdfs:domain fe:LidarTile ; rdfs:range xsd:decimal .
-fe:hasMinElevation  a owl:DatatypeProperty ; rdfs:label "élévation minimale"@fr ;
+
+fe:hasAverageSlope a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "pente moyenne"@fr ;
     rdfs:domain fe:LidarTile ; rdfs:range xsd:decimal .
 
-# --- Topologie 3D avancée pour reconstruction (Tunnels/Superpositions) ---
+fe:hasMaxElevation a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "élévation maximale"@fr ;
+    rdfs:domain fe:LidarTile ; rdfs:range xsd:decimal .
+
+fe:hasMinElevation a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "élévation minimale"@fr ;
+    rdfs:domain fe:LidarTile ; rdfs:range xsd:decimal .
+
 fe:adjacentTo a owl:SymmetricProperty, owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P132_spatially_overlaps ;
     rdfs:label "est géométriquement connecté à"@fr ;
     rdfs:domain fe:LidarTile ;
     rdfs:range fe:LidarTile .
 
 fe:connectsTo a owl:SymmetricProperty, owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P132_spatially_overlaps ;
     rdfs:label "est fonctionnellement connecté à"@fr ;
     rdfs:domain fe:LidarTile ;
     rdfs:range fe:LidarTile .
 
 fe:isVerticallyStackedWith a owl:SymmetricProperty, owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P132_spatially_overlaps ;
     rdfs:label "superposé verticalement"@fr ;
     rdfs:domain fe:LidarTile ;
     rdfs:range fe:LidarTile .
 
 fe:hasOverlapWith a owl:SymmetricProperty, owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P132_spatially_overlaps ;
     rdfs:label "recouvrement avec"@fr ;
     rdfs:domain fe:LidarTile ;
     rdfs:range fe:LidarTile .
 
 # =================================================================
-# 4. ÉVALUATION DES RISQUES (Indices de zone)
+# 4. ÉVALUATION DES RISQUES
 # =================================================================
 
 fe:UrgencyAssessment a owl:Class ;
@@ -108,53 +137,68 @@ fe:UrgencyAssessment a owl:Class ;
     rdfs:subClassOf crm:E13_Attribute_Assignment .
 
 fe:hasUrgencyProfile a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
     rdfs:domain fe:Zone ;
     rdfs:range fe:UrgencyAssessment .
 
-fe:patrimonialUrgencyIndex a owl:DatatypeProperty ; 
+fe:patrimonialUrgencyIndex a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "Indice d'urgence patrimoniale"@fr ;
-    rdfs:comment "Score de 0 à 1 reflétant la valeur historique et la fragilité des artefacts dans la zone."@fr ;
     rdfs:domain fe:UrgencyAssessment ; rdfs:range xsd:decimal .
 
-fe:ecologicalUrgencyIndex  a owl:DatatypeProperty ; 
+fe:ecologicalUrgencyIndex a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "Indice d'urgence écologique"@fr ;
-    rdfs:comment "Score reflétant la vulnérabilité des écosystèmes et espèces protégées présents."@fr ;
     rdfs:domain fe:UrgencyAssessment ; rdfs:range xsd:decimal .
 
-fe:structuralDangerIndex   a owl:DatatypeProperty ; 
+fe:structuralDangerIndex a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "Indice de péril structurel"@fr ;
-    rdfs:comment "Indice d'instabilité des bâtiments ou structures (risque d'effondrement)."@fr ;
     rdfs:domain fe:UrgencyAssessment ; rdfs:range xsd:decimal .
 
-fe:globalEvacuationUrgency a owl:DatatypeProperty ; 
+fe:globalEvacuationUrgency a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "Urgence globale d'évacuation"@fr ;
-    rdfs:comment "Agrégat pondéré servant de priorité pour la décision d'évacuation."@fr ;
     rdfs:domain fe:UrgencyAssessment ; rdfs:range xsd:decimal .
 
 # =================================================================
-# 5. CONTENU DE LA ZONE (Composition)
+# 5. CONTENU DE LA ZONE
 # =================================================================
 
-fe:containsBuilding      a owl:ObjectProperty ; rdfs:domain fe:Zone ; rdfs:range fe:Building .
-fe:containsNaturalSpace  a owl:ObjectProperty ; rdfs:domain fe:Zone ; rdfs:range fe:NaturalSpace .
-fe:containsArtefact      a owl:ObjectProperty ; rdfs:domain fe:Zone ; rdfs:range fe:Artefact .
+fe:containsBuilding a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P46_is_composed_of ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:Building .
+
+fe:containsNaturalSpace a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P46_is_composed_of ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:NaturalSpace .
+
+fe:containsArtefact a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P46_is_composed_of ;
+    rdfs:domain fe:Zone ;
+    rdfs:range fe:Artefact .
 
 # =================================================================
-# 6. POPULATION ET DYNAMIQUE HUMAINE (LIENS VERS fe_population.ttl)
+# 6. POPULATION ET DYNAMIQUE HUMAINE
 # =================================================================
 
 fe:hasPopulation a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P9_consists_of ;
     rdfs:label "population présente"@fr ;
     rdfs:domain fe:Zone ;
     rdfs:range fe:Population ;
     rdfs:comment "Lien vers le groupe d'agents ou les statistiques de population."@fr .
 
 fe:hasEstimatedCount a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:domain fe:Population ;
     rdfs:range xsd:integer ;
     rdfs:comment "Effectif théorique ou simulé de la population."@fr .
 
 fe:hasMaximumOccupancy a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "capacité maximale d'occupation"@fr ;
     rdfs:domain fe:Zone ;
     rdfs:range xsd:integer ;

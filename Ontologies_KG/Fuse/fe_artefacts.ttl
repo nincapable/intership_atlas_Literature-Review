@@ -80,4 +80,68 @@ fe:smokeSensitivityIndex a owl:DatatypeProperty ;
 # 4. ALIGNEMENTS MÉTIERS (Rappel CRM)
 # =================================================================
 # Les artefacts sont reliés aux zones par :
+# fe:containsArtefact a owl:ObjectProperty ; rdfs:domain fe:Zone ; rdfs:range fe:Artefact .@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/fire_and_evacuation/artos> a owl:Ontology ;
+    rdfs:label "Module de Gestion des Artefacts Patrimoniaux"@fr ;
+    rdfs:comment "Gestion de l'inventaire et de la fragilité avec alignement CRM complet."@fr .
+
+# =================================================================
+# 1. CLASSE PRINCIPALE ET TYPOLOGIE
+# =================================================================
+
+fe:Artefact a owl:Class ; 
+    rdfs:label "Artefact Patrimonial"@fr ;
+    rdfs:subClassOf crm:E22_Man_Made_Object ;
+    rdfs:comment "Objet physique patrimonial nécessitant une protection."@fr .
+
+fe:ArtifactTypes a owl:Class ; rdfs:subClassOf crm:E55_Type ; rdfs:label "Racine des nomenclatures"@fr .
+fe:ArtifactType a owl:Class ; rdfs:subClassOf fe:ArtifactTypes ; rdfs:label "Type d'Artefact"@fr .
+fe:ArtifactSubType a owl:Class ; rdfs:subClassOf fe:ArtifactType ; rdfs:label "Sous-Type d'Artefact"@fr .
+
+fe:ArtifactsMobilityType a owl:Class ; rdfs:subClassOf fe:ArtifactTypes ; rdfs:label "Type de Mobilité"@fr .
+fe:ArtifactsFragilityType a owl:Class ; rdfs:subClassOf fe:ArtifactTypes ; rdfs:label "Type de Fragilité"@fr .
+
+# Alignement : P2_has_type est la propriété standard pour classer un objet
+fe:hasArtefactType     a owl:ObjectProperty ; rdfs:subPropertyOf crm:P2_has_type ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactType .
+fe:hasArtefactSubType  a owl:ObjectProperty ; rdfs:subPropertyOf crm:P2_has_type ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactSubType .    
+fe:hasArtifactsMobilityType     a owl:ObjectProperty ; rdfs:subPropertyOf crm:P2_has_type ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactsMobilityType .
+fe:hasArtifactsFragilityType    a owl:ObjectProperty ; rdfs:subPropertyOf crm:P2_has_type ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactsFragilityType .
+
+# =================================================================
+# 2. EXPOSITION AUX RISQUES (ALIGNEMENT AVEC HAZARD_AND_SAFETY)
+# =================================================================
+
+fe:ArtifactsFireExposure a owl:Class ;
+    rdfs:subClassOf fe:hazardExposure ;
+    rdfs:label "Exposition au Feu"@fr .
+
+fe:ArtifactsFloodExposure a owl:Class ;
+    rdfs:subClassOf fe:hazardExposure ;
+    rdfs:label "Exposition à l'Inondation"@fr .
+
+# Alignement : P43_has_dimension permet de relier l'artefact à ses mesures de fragilité
+fe:thermalToleranceLimit a owl:DatatypeProperty ;
+    rdfs:label "seuil de tolérance thermique (°C)"@fr ;
+    rdfs:domain fe:ArtifactsFireExposure ;
+    rdfs:range xsd:decimal .
+
+fe:humiditySensitivityIndex a owl:DatatypeProperty ;
+    rdfs:label "indice de sensibilité à l'humidité"@fr ;
+    rdfs:domain fe:ArtifactsFloodExposure ;
+    rdfs:range xsd:decimal .
+
+fe:smokeSensitivityIndex a owl:DatatypeProperty ;
+    rdfs:label "indice de sensibilité aux fumées"@fr ;
+    rdfs:domain fe:ArtifactsFireExposure ;
+    rdfs:range xsd:decimal .
+
+ # =================================================================
+# 4. ALIGNEMENTS MÉTIERS (Rappel CRM)
+# =================================================================
+# Les artefacts sont reliés aux zones par :
 # fe:containsArtefact a owl:ObjectProperty ; rdfs:domain fe:Zone ; rdfs:range fe:Artefact .
