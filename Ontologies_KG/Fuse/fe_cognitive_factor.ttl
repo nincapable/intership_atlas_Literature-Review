@@ -1,0 +1,139 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/fire_and_evacuation/behavior_and_cognition> a owl:Ontology ;
+    owl:imports <http://example.org/fire_and_evacuation/population> ;
+    rdfs:label "Module Comportement et Cognition"@fr ;
+    rdfs:comment "Modélisation des biais cognitifs, archétypes humains, règles d'activation et interactions sociales alignée sur le CIDOC-CRM."@fr .
+
+# =================================================================
+# 1. PHÉNOMÈNES COGNITIFS ET COMPORTEMENTAUX (Types)
+# =================================================================
+
+fe:CognitiveBias a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Biais Cognitif"@fr ;
+    rdfs:comment "Filtre psychologique altérant la perception de la réalité et la prise de décision."@fr .
+
+fe:HumanBehavior a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Comportement Humain"@fr ;
+    rdfs:comment "Action observable ou état opérationnel adopté par un individu ou un groupe (ex: fuite, sidération)."@fr .
+
+fe:SocialInteractionType a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Type d'Interaction Sociale"@fr ;
+    rdfs:comment "Classification des dynamiques inter-individuelles (ex: influence, contagion)."@fr .
+
+# =================================================================
+# 2. ARCHÉTYPES HUMAINS ET DIMENSIONS
+# =================================================================
+
+fe:HumanArchetype a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Archétype Humain"@fr ;
+    rdfs:comment "Profil psychologique et opérationnel type servant de base aux agents du simulateur."@fr .
+
+fe:ArchetypeRepresentation a owl:Class ;
+    rdfs:subClassOf fe:HumanDimension ;
+    rdfs:label "Représentation d'Archétype"@fr ;
+    rdfs:comment "Classe de liaison permettant d'assigner un archétype à une partition de population avec un poids de représentativité."@fr .
+
+fe:hasArchetypeRepresentation a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
+    rdfs:label "a pour représentation d'archétype"@fr ;
+    rdfs:domain fe:PopulationPartition ;
+    rdfs:range fe:ArchetypeRepresentation .
+
+fe:representsArchetype a owl:ObjectProperty ;
+    rdfs:label "représente l'archétype"@fr ;
+    rdfs:domain fe:ArchetypeRepresentation ;
+    rdfs:range fe:HumanArchetype .
+
+fe:representationWeight a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "poids de représentativité"@fr ;
+    rdfs:comment "Valeur (0.0 à 1.0) du degré de correspondance de la partition à cet archétype."@fr ;
+    rdfs:domain fe:ArchetypeRepresentation ;
+    rdfs:range xsd:decimal .
+
+fe:biasProbability a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "probabilité de biais"@fr ;
+    rdfs:comment "Probabilité qu'un agent de cet archétype soit affecté par un biais cognitif."@fr ;
+    rdfs:domain fe:HumanArchetype ;
+    rdfs:range xsd:decimal .
+
+fe:hasBiasSensitivity a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
+    rdfs:label "a pour sensibilité à un biais"@fr ;
+    rdfs:domain fe:HumanArchetype ;
+    rdfs:range fe:CognitiveBias .
+
+# =================================================================
+# 3. RÈGLES ET INTERFÉRENCES (Procédures alignées)
+# =================================================================
+
+fe:BehaviorActivationRule a owl:Class ;
+    rdfs:subClassOf crm:E29_Design_or_Procedure ;
+    rdfs:label "Règle d'Activation Comportementale"@fr ;
+    rdfs:comment "Définit les conditions de transition d'un archétype vers un comportement donné."@fr .
+
+fe:targetBehavior a owl:ObjectProperty ;
+    rdfs:label "comportement visé"@fr ;
+    rdfs:domain fe:BehaviorActivationRule ;
+    rdfs:range fe:HumanBehavior .
+
+fe:stressThreshold a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "seuil de stress"@fr ;
+    rdfs:comment "Seuil de stress cumulé déclenchant la règle."@fr ;
+    rdfs:domain fe:BehaviorActivationRule ;
+    rdfs:range xsd:decimal .
+
+fe:InterferenceRelation a owl:Class ;
+    rdfs:subClassOf crm:E29_Design_or_Procedure ;
+    rdfs:label "Relation d'Interférence"@fr ;
+    rdfs:comment "Modélise l'influence d'un agent sur la probabilité de comportement d'un autre agent."@fr .
+
+fe:hasAsAuthor a owl:ObjectProperty ;
+    rdfs:label "a pour auteur (émetteur)"@fr ;
+    rdfs:domain fe:InterferenceRelation ;
+    rdfs:range fe:HumanArchetype .
+
+fe:hasAsTarget a owl:ObjectProperty ;
+    rdfs:label "a pour cible (récepteur)"@fr ;
+    rdfs:domain fe:InterferenceRelation ;
+    rdfs:range fe:HumanArchetype .
+
+fe:targetedBehavior a owl:ObjectProperty ;
+    rdfs:label "comportement concerné par l'interférence"@fr ;
+    rdfs:domain fe:InterferenceRelation ;
+    rdfs:range fe:HumanBehavior .
+
+fe:probabilityBiasTriggerModifier a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "modificateur de probabilité"@fr ;
+    rdfs:domain fe:InterferenceRelation ;
+    rdfs:range xsd:decimal .
+
+# =================================================================
+# 4. VARIABLES DYNAMIQUES (Dimensions)
+# =================================================================
+
+fe:currentStressLevel a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "niveau de stress actuel perçu"@fr ;
+    rdfs:comment "Variable dynamique mise à jour en cours de simulation."@fr ;
+    rdfs:domain fe:HumanArchetype ;
+    rdfs:range xsd:decimal .
+
+fe:activeIntention a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:label "comportement actif (intention)"@fr ;
+    rdfs:comment "Comportement actuellement exécuté par l'individu."@fr ;
+    rdfs:domain fe:HumanArchetype ;
+    rdfs:range fe:HumanBehavior .
