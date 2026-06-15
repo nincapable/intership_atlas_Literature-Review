@@ -25,6 +25,51 @@ fe:ArchitectureStyle a owl:Class ;
     rdfs:label "Classe des Styles Architecturaux"@fr ;
     rdfs:subClassOf fe:TechnicalDimension .
 
+fe:DefaultArchitecturalVulnerability a owl:Class ;
+    rdfs:label "Vulnérabilité Architecturale par Défaut"@fr ;
+    rdfs:comment "Conteneur pour les profils de vulnérabilité standards liés aux styles."@fr .
+
+fe:hasDefaultVulnerabilityProfile a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
+    rdfs:label "a pour profil de vulnérabilité par défaut"@fr ;
+    rdfs:domain fe:ArchitectureStyle ; 
+    rdfs:range fe:DefaultArchitecturalVulnerability .
+
+# Sous-classe spécifique pour l'incendie
+fe:DefaultFireArchitecturalVulnerability a owl:Class ;
+    rdfs:subClassOf fe:DefaultArchitecturalVulnerability ;
+    rdfs:label "Vulnérabilité Incendie par Défaut"@fr .
+
+fe:defaultFireStructuralFragility a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:domain fe:DefaultFireArchitecturalVulnerability ; 
+    rdfs:range xsd:decimal .
+
+fe:defaultFireExpansionFactor a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:domain fe:DefaultFireArchitecturalVulnerability ; 
+    rdfs:range xsd:decimal .
+
+fe:defaultThermalInertiaScore a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:domain fe:DefaultFireArchitecturalVulnerability ; 
+    rdfs:range xsd:decimal .
+
+# Idem pour l'inondation
+fe:DefaultFloodArchitecturalVulnerability a owl:Class ;
+    rdfs:subClassOf fe:DefaultArchitecturalVulnerability ;
+    rdfs:label "Vulnérabilité Inondation par Défaut"@fr .
+
+fe:defaultWaterSubmersionResistance a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:domain fe:DefaultFloodArchitecturalVulnerability ; 
+    rdfs:range xsd:decimal .
+
+fe:defaulHydrostaticPressureLoad a owl:DatatypeProperty ; 
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:domain fe:DefaultFloodArchitecturalVulnerability ; 
+    rdfs:range xsd:decimal .
+
 # =================================================================
 # 2. COMPOSITION ET CARACTÉRISTIQUES STRUCTURELLES
 # =================================================================

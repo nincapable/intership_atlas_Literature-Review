@@ -6,11 +6,21 @@
 
 <http://example.org/fire_and_evacuation/core> a owl:Ontology ;
     rdfs:label "Fire and Evacuation Ontology - Core Entry Point"@fr ;
-    rdfs:comment "Point d'entrée unique centralisant les abstractions du domaine, les outils mathématiques et les imports de modules."@fr .
+    rdfs:comment "Point d'entrée unique centralisant les abstractions du domaine, les outils mathématiques et les imports de modules."@fr ;
     
-    # =================================================================
-    # INTERFACE ET IMPORTS DES MODULES LOGIQUES (Même dossier)
-    # =================================================================
+    # Imports des modules logiques
+    owl:imports <http://example.org/fire_and_evacuation/site> ;
+    owl:imports <http://example.org/fire_and_evacuation/zone> ;
+    owl:imports <http://example.org/fire_and_evacuation/building> ;
+    owl:imports <http://example.org/fire_and_evacuation/population> ;
+    owl:imports <http://example.org/fire_and_evacuation/behavior_and_cognition> ;
+    owl:imports <http://example.org/fire_and_evacuation/hazard_and_safety> ;
+    owl:imports <http://example.org/fire_and_evacuation/hazard_and_impact> ;
+    owl:imports <http://example.org/fire_and_evacuation/axis> ;
+    owl:imports <http://example.org/fire_and_evacuation/artos> ;
+    owl:imports <http://example.org/fire_and_evacuation/victim> ;
+    owl:imports <http://example.org/fire_and_evacuation/weather> ;
+    owl:imports <http://example.org/fire_and_evacuation/natural_space>.
 
     # =================================================================
     # INTERFACE ET IMPORTS DES THÉSAURUS (Dossier parent /Thesaurus/)

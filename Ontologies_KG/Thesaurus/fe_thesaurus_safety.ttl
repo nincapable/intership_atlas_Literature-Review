@@ -101,7 +101,13 @@ fe:Convection a skos:Concept, fe:PropagationType ;
     skos:prefLabel "Convection"@fr ;
     skos:definition "Transfert par déplacement de gaz ou liquides chauds (air brûlant, fumées)."@fr ;
     skos:note "Impact : Cause principale des feux de cimes (vertical) et de l'emprisonnement des fumées en intérieur."@fr ;
-    skos:inScheme fe:PropagationScheme .
+    skos:inScheme fe:PropagationScheme ;
+    fe:hasPropagationVector [
+        a fe:vector3 ;
+        fe:hasXCoordinate 1.5 ;
+        fe:hasYCoordinate 1.5 ;
+        fe:hasZCoordinate 0.8 
+    ] .
 
 fe:Radiation a skos:Concept, fe:PropagationType ;
     skos:prefLabel "Rayonnement (Radiation)"@fr ;

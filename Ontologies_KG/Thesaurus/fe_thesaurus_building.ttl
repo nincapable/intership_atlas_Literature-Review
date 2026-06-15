@@ -29,74 +29,74 @@ fe:StyleAntique a skos:Concept, fe:ArchitectureStyle ;
     skos:prefLabel "Architecture Antique"@fr ;
     skos:broader fe:ArchitectureStyleRoot ;
     skos:inScheme fe:BuildingTaxonomy ;
-    fe:structuralFragility 0.5 ;
-    fe:fireExpansionFactor 0.8 ;
-    fe:thermalInertiaScore 0.9 .
+    fe:defaultStructuralFragility 0.5 ;
+    fe:defaultFireExpansionFactor 0.8 ;
+    fe:defaultThermalInertiaScore 0.9 .
 
     fe:StyleGalloRomain a skos:Concept, fe:ArchitectureStyle ;
         skos:prefLabel "Gallo-Romain"@fr ;
         skos:definition "Maçonnerie de pierre et mortier de chaux (opus caementicium)."@fr ;
         skos:broader fe:StyleAntique ;
         skos:inScheme fe:BuildingTaxonomy ;
-        fe:structuralFragility 0.4 ; #[cite: 1]
-        fe:fireExpansionFactor 0.5 ; #[cite: 1]
-        fe:thermalInertiaScore 0.95 . #[cite: 1]
+        fe:defaultStructuralFragility 0.4 ; #[cite: 1]
+        fe:defaultFireExpansionFactor 0.5 ; #[cite: 1]
+        fe:defaultThermalInertiaScore 0.95 . #[cite: 1]
 
 # --- MÉDIÉVAL (Vides Sanitaires et Structures Sensibles) ---
 fe:StyleMedieval a skos:Concept, fe:ArchitectureStyle ;
     skos:prefLabel "Architecture Médiévale"@fr ;
     skos:broader fe:ArchitectureStyleRoot ;
     skos:inScheme fe:BuildingTaxonomy ;
-    fe:structuralFragility 1.2 .
+    fe:defaultStructuralFragility 1.2 .
 
     fe:StyleRoman a skos:Concept, fe:ArchitectureStyle ;
         skos:prefLabel "Roman"@fr ;
         skos:broader fe:StyleMedieval ;
         skos:inScheme fe:BuildingTaxonomy ;
-        fe:structuralFragility 0.8 ; #[cite: 1]
-        fe:fireExpansionFactor 1.0 ; #[cite: 1]
-        fe:thermalInertiaScore 0.8 . #[cite: 1]
+        fe:defaultStructuralFragility 0.8 ; #[cite: 1]
+        fe:defaultFireExpansionFactor 1.0 ; #[cite: 1]
+        fe:defaultThermalInertiaScore 0.8 . #[cite: 1]
 
     fe:StyleGothique a skos:Concept, fe:ArchitectureStyle ;
         skos:prefLabel "Gothique"@fr ;
         skos:broader fe:StyleMedieval ;
         skos:inScheme fe:BuildingTaxonomy ;
-        fe:structuralFragility 1.5 ; # Finesse des voûtes[cite: 1]
-        fe:fireExpansionFactor 2.0 ; # Grands volumes/Convection[cite: 1, 4]
-        fe:thermalInertiaScore 0.6 . #[cite: 1]
+        fe:defaultStructuralFragility 1.5 ; # Finesse des voûtes[cite: 1]
+        fe:defaultFireExpansionFactor 2.0 ; # Grands volumes/Convection[cite: 1, 4]
+        fe:defaultThermalInertiaScore 0.6 . #[cite: 1]
 
     fe:StylePanDeBois a skos:Concept, fe:ArchitectureStyle ;
         skos:prefLabel "Maison à Pan de Bois / Colombage"@fr ;
         skos:definition "Structure porteuse en bois avec remplissage (torchis, brique)."@fr ;
         skos:broader fe:StyleMedieval ;
         skos:inScheme fe:BuildingTaxonomy ;
-        fe:structuralFragility 1.8 ; #[cite: 1]
-        fe:fireExpansionFactor 2.2 ; # Propagation rapide par le bois[cite: 1, 4]
-        fe:thermalInertiaScore 0.3 . #[cite: 1]
+        fe:defaultStructuralFragility 1.8 ; #[cite: 1]
+        fe:defaultFireExpansionFactor 2.2 ; # Propagation rapide par le bois[cite: 1, 4]
+        fe:defaultThermalInertiaScore 0.3 . #[cite: 1]
 
 # --- INDUSTRIEL & MODERNE ---
 fe:StyleIndustriel a skos:Concept, fe:ArchitectureStyle ;
     skos:prefLabel "Architecture Industrielle & XIXe"@fr ;
     skos:broader fe:ArchitectureStyleRoot ;
     skos:inScheme fe:BuildingTaxonomy ;
-    fe:fireExpansionFactor 1.5 .
+    fe:defaultFireExpansionFactor 1.5 .
 
     fe:Haussmannien a skos:Concept, fe:ArchitectureStyle ;
         skos:prefLabel "Haussmannien"@fr ;
         skos:definition "Pierre de taille, murs porteurs épais, combles en zinc."@fr ;
         skos:broader fe:StyleIndustriel ;
         skos:inScheme fe:BuildingTaxonomy ;
-        fe:structuralFragility 1.0 ; #[cite: 1]
-        fe:fireExpansionFactor 2.5 ; # Effet cheminée des conduits/vides[cite: 1, 4]
-        fe:thermalInertiaScore 0.7 . #[cite: 1]
+        fe:defaultStructuralFragility 1.0 ; #[cite: 1]
+        fe:defaultFireExpansionFactor 2.5 ; # Effet cheminée des conduits/vides[cite: 1, 4]
+        fe:defaultThermalInertiaScore 0.7 . #[cite: 1]
 
     fe:StyleEiffel a skos:Concept, fe:ArchitectureStyle ;
         skos:prefLabel "Style Eiffel"@fr ;
         skos:broader fe:StyleIndustriel ;
         skos:inScheme fe:BuildingTaxonomy ;
-        fe:structuralFragility 2.0 ; # Sensibilité thermique de l'acier
-        fe:fireExpansionFactor 1.2 ; #[cite: 1]
-        fe:thermalInertiaScore 0.2 . #[cite: 1]
+        fe:defaultStructuralFragility 2.0 ; # Sensibilité thermique de l'acier
+        fe:defaultFireExpansionFactor 1.2 ; #[cite: 1]
+        fe:defaultThermalInertiaScore 0.2 . #[cite: 1]
 
 fe:StyleModerne a skos:Concept, fe:ArchitectureStyle ;
     skos:prefLabel "Architecture Moderne & XXe"@fr ;
@@ -107,9 +107,9 @@ fe:StyleModerne a skos:Concept, fe:ArchitectureStyle ;
         skos:prefLabel "Brutalisme"@fr ;
         skos:broader fe:StyleModerne ;
         skos:inScheme fe:BuildingTaxonomy ;
-        fe:structuralFragility 0.5 ; # Béton massif[cite: 1]
-        fe:fireExpansionFactor 0.8 ; # Compartimentage[cite: 1, 4]
-        fe:thermalInertiaScore 0.9 . #[cite: 1]
+        fe:defaultStructuralFragility 0.5 ; # Béton massif[cite: 1]
+        fe:defaultFireExpansionFactor 0.8 ; # Compartimentage[cite: 1, 4]
+        fe:defaultThermalInertiaScore 0.9 . #[cite: 1]
 
 # =================================================================
 # 2. THÉSAURUS DES MATÉRIAUX (fe:MaterialInstance)

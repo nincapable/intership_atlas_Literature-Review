@@ -148,25 +148,25 @@ fe:HazardIntensityScheme a skos:ConceptScheme ;
     rdfs:label "Référentiel des Niveaux d'Intensité"@fr ;
     skos:hasTopConcept fe:Intensity_Low, fe:Intensity_Moderate, fe:Intensity_High, fe:Intensity_Extreme .
 
-fe:Intensity_Low a skos:Concept, fe:IntensityLevel ;
+fe:Intensity_Low a skos:Concept, fe:hazardIntensityLevel ;
     skos:prefLabel "Faible"@fr ;
     skos:definition "Incident mineur sans cinétique majeure."@fr ;
     skos:inScheme fe:HazardIntensityScheme ;
     skos:topConceptOf fe:HazardIntensityScheme .
 
-fe:Intensity_Moderate a skos:Concept, fe:IntensityLevel ;
+fe:Intensity_Moderate a skos:Concept, fe:hazardIntensityLevel ;
     skos:prefLabel "Modérée"@fr ;
     skos:definition "Risque notable, surveillance active."@fr ;
     skos:inScheme fe:HazardIntensityScheme ;
     skos:topConceptOf fe:HazardIntensityScheme .
 
-fe:Intensity_High a skos:Concept, fe:IntensityLevel ;
+fe:Intensity_High a skos:Concept, fe:hazardIntensityLevel ;
     skos:prefLabel "Forte"@fr ;
     skos:definition "Danger immédiat, moyens spécifiques requis."@fr ;
     skos:inScheme fe:HazardIntensityScheme ;
     skos:topConceptOf fe:HazardIntensityScheme .
 
-fe:Intensity_Extreme a skos:Concept, fe:IntensityLevel ;
+fe:Intensity_Extreme a skos:Concept, fe:hazardIntensityLevel ;
     skos:prefLabel "Hors-Norme"@fr ;
     skos:definition "Scénario catastrophe, dépassement des seuils."@fr ;
     skos:inScheme fe:HazardIntensityScheme ;
@@ -176,29 +176,29 @@ fe:Intensity_Extreme a skos:Concept, fe:IntensityLevel ;
 # 3. RÉFÉRENTIEL DE SÉVÉRITÉ DES IMPACTS (ImpactSeverityLevel)
 # =================================================================
 
-fe:ImpactSeverityScheme a skos:ConceptScheme, fe:SeverityLevel ;
+fe:ImpactSeverityScheme a skos:ConceptScheme, fe:hazardSeverityLevel ;
     rdfs:label "Référentiel de Sévérité des Impacts"@fr ;
     skos:hasTopConcept fe:Severity_Low, fe:Severity_Moderate, fe:Severity_Heavy, fe:Severity_Extreme .
 
-fe:Severity_Low a skos:Concept, fe:ImpactSeverityLevel ;
+fe:Severity_Low a skos:Concept, fe:hazardSeverityLevel ;
     skos:prefLabel "Sévérité Faible"@fr ;
     skos:definition "Dommages superficiels ou mineurs, sans remise en cause de l'intégrité."@fr ;
     skos:inScheme fe:ImpactSeverityScheme ;
     skos:topConceptOf fe:ImpactSeverityScheme .
 
-fe:Severity_Moderate a skos:Concept, fe:ImpactSeverityLevel ;
+fe:Severity_Moderate a skos:Concept, fe:hazardSeverityLevel ;
     skos:prefLabel "Sévérité Modérée"@fr ;
     skos:definition "Dommages partiels nécessitant des réparations, fonction altérée."@fr ;
     skos:inScheme fe:ImpactSeverityScheme ;
     skos:topConceptOf fe:ImpactSeverityScheme .
 
-fe:Severity_Heavy a skos:Concept, fe:ImpactSeverityLevel ;
+fe:Severity_Heavy a skos:Concept, fe:hazardSeverityLevel ;
     skos:prefLabel "Sévérité Lourde"@fr ;
     skos:definition "Dommages structurels majeurs, risque d'effondrement ou perte de fonction."@fr ;
     skos:inScheme fe:ImpactSeverityScheme ;
     skos:topConceptOf fe:ImpactSeverityScheme .
 
-fe:Severity_Extreme a skos:Concept, fe:ImpactSeverityLevel ;
+fe:Severity_Extreme a skos:Concept, fe:hazardSeverityLevel ;
     skos:prefLabel "Sévérité Extrême"@fr ;
     skos:definition "Destruction totale, perte irréversible de l'artefact ou du bâtiment."@fr ;
     skos:inScheme fe:ImpactSeverityScheme ;

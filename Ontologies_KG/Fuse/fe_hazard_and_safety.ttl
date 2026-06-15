@@ -14,11 +14,11 @@
 
 # --- Classes de ort (Thésaurus SKOS) ---
 
-fe:IntensityLevel a owl:Class ;
+fe:hazardIntensityLevel a owl:Class ;
     rdfs:subClassOf fe:HazardAndSafetyType ;
     rdfs:label "Niveau d'intensité"@fr .
 
-fe:SeverityLevel a owl:Class ;
+fe:hazardSeverityLevel a owl:Class ;
     rdfs:subClassOf fe:HazardAndSafetyType ;
     rdfs:label "Niveau de gravité"@fr .
 
@@ -48,17 +48,17 @@ fe:hasHazardType a owl:ObjectProperty ;
     rdfs:domain fe:HazardEvent ;
     rdfs:range fe:HazardType .
 
-fe:hasIntensityLevel a owl:ObjectProperty ;
+fe:hasHazardIntensityLevel a owl:ObjectProperty ;
     rdfs:label "niveau d'intensité"@fr ;
     rdfs:subPropertyOf crm:P2_has_type ;
     rdfs:domain fe:HazardEvent ;
-    rdfs:range fe:IntensityLevel .
+    rdfs:range fe:hazardIntensityLevel .
 
-fe:hasSeverityLevel a owl:ObjectProperty ;
+fe:hasHazardSeverityLevel a owl:ObjectProperty ;
     rdfs:label "niveau de gravité"@fr ;
     rdfs:subPropertyOf crm:P2_has_type ;
     rdfs:domain fe:HazardEvent ;
-    rdfs:range fe:SeverityLevel .
+    rdfs:range fe:hazardSeverityLevel .
 
 fe:hasIntensityDocumentation a owl:ObjectProperty ;
     rdfs:label "est documenté par"@fr ;
@@ -157,13 +157,30 @@ fe:resistanceDuration a owl:DatatypeProperty ;
     rdfs:range xsd:integer .
 
 # --- Attachement multi-domaines corrigé pour le simulateur ---
-fe:hasResistance a owl:ObjectProperty ;
+fe:hasFireResistance a owl:ObjectProperty ;
     rdfs:label "a pour résistance structurelle au feu"@fr ;
     rdfs:domain [ 
         a owl:Class ;
         owl:unionOf (fe:Building fe:Axis)
     ] ;
     rdfs:range fe:FireResistanceRating .
+
+# =================================================================
+# COMBUSTIBILITÉ - RÉFÉRENTIEL PERSONNALISÉ
+# =================================================================
+
+fe:CombustibilityType a owl:Class ; rdfs:subClassOf fe:fireSafetyType ;
+    rdfs:label "Type de Combustibilité"@fr ;
+    rdfs:comment "Classification personnalisée de la combustibilité (ex: Pyrophile, Non-combustible)."@fr .
+
+fe:PropagationType a owl:Class ; rdfs:subClassOf fe:fireSafetyType ;
+    rdfs:label "Type de Propagation du Feu"@fr ;
+    rdfs:comment "Classification personnalisée de la capacité de propagation du feu (ex: Faible, Modérée, Rapide)."@fr .
+
+fe:hasPropagationVector a owl:ObjectProperty ;
+    rdfs:label "a pour vecteur de propagation"@fr ;
+    rdfs:domain fe:PropagationType ;
+    rdfs:range fe:vector3 .
 
 # =================================================================
 # GÉNÉRALISATION DES PROCÉDURES DE SÉCURITÉ

@@ -31,11 +31,6 @@ fe:BioTaxonomyType a owl:Class ;
     rdfs:label "Type de Taxonomie"@fr ;
     rdfs:comment "Classification biologique structurée."@fr .
 
-fe:BioTrait a owl:Class ; 
-    rdfs:subClassOf fe:Biotype ; 
-    rdfs:label "Trait Biologique"@fr ;
-    rdfs:comment "Caractéristique spécifique biologique d'un taxon."@fr .
-
 fe:BioFireType a owl:Class ; 
     rdfs:subClassOf fe:Biotype ; 
     rdfs:label "Type de Biotype à Risque Incendie"@fr ;
@@ -188,11 +183,13 @@ fe:protectionPriorityWeight a owl:DatatypeProperty ;
 # =================================================================
 
 fe:BioTrait a owl:Class ; 
-    rdfs:subClassOf fe:Biotype ;
-    rdfs:label "Trait biologique"@fr ;
-    rdfs:comment "Caractéristique biologique (physiologique ou comportementale) d'un taxon."@fr .
+    rdfs:subClassOf crm:E13_Attribute_Assignment ; 
+    rdfs:label "Trait Biologique"@fr ;
+    rdfs:comment "Caractéristique spécifique biologique d'un taxon."@fr .
 
 fe:hasBioTrait a owl:ObjectProperty ; 
+    rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
+    rdfs:domain fe:Taxon;
     rdfs:range fe:BioTrait ;
     rdfs:label "possède le trait biologique"@fr ;
     rdfs:comment "Lien vers une caractéristique possédée par une entité."@fr .

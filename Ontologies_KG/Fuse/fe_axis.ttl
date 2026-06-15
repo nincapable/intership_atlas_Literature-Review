@@ -97,6 +97,11 @@ fe:AxisVulnerability a owl:Class ;
     rdfs:subClassOf fe:hazardExposure ;
     rdfs:comment "Évaluation de l'exposition d'un axe à un aléa spécifique."@fr .
 
+fe:blockingType a owl:Class ;
+    rdfs:label "Type de blocage"@fr ;
+    rdfs:subClassOf fe:HazardAndSafetyType ;
+    rdfs:comment "Classification des types de blocage physique (ex: débris, incendie, effondrement)."@fr .
+
 fe:hasVulnerability a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
     rdfs:label "présente une vulnérabilité opérationnelle"@fr ;
@@ -119,7 +124,7 @@ fe:blockingNature a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P2_has_type ;
     rdfs:label "nature physique du blocage"@fr ;
     rdfs:domain fe:AxisVulnerability ;
-    rdfs:range fe:BlockingFactor .
+    rdfs:range fe:BlockingType .
 
 fe:blockingProbability a owl:DatatypeProperty ; 
     rdfs:subPropertyOf crm:P43_has_dimension ;
