@@ -1,0 +1,68 @@
+# Règle 1 : Inférence de la fragilité structurelle par héritage du style
+# Si le bâtiment possède une fiche d'exposition, il hérite de la fragilité du style 
+# sauf si une valeur est déjà renseignée manuellement sur cette fiche.
+
+Id: infer_structural_fragility_from_style
+Antecedents:
+    ?b <http://example.org/fire_and_evacuation#hasArchitectureStyle> ?style .
+    ?style <http://example.org/fire_and_evacuation#hasDefaultVulnerabilityProfile> ?vulc .
+    ?vulc <http://example.org/fire_and_evacuation#defaultFireStructuralFragility> ?val .
+    ?b <http://example.org/fire_and_evacuation#hasHazardExposure> ?exposure .
+    ?exposure a <http://example.org/fire_and_evacuation#BuildingFireExposure> .
+    NOT ?exposure <http://example.org/fire_and_evacuation#structuralFragility> ?val_override .
+Consequents:
+    ?exposure <http://example.org/fire_and_evacuation#structuralFragility> ?val .
+
+# Si > 30% des matériaux ont une sévérité > 7, le bâtiment est inflammable.
+Id: infer_building_inflammability
+Antecedents:
+    ?b <http://example.org/fire_and_evacuation#hasMaterialComposition> ?comp .
+    ?comp <http://example.org/fire_and_evacuation#constituentMaterial> ?mat .
+    ?comp <http://example.org/fire_and_evacuation#materialPercentage> ?pct .
+    ?mat <http://example.org/fire_and_evacuation#hasReactionToFire> ?reaction .
+    ?reaction <http://example.org/fire_and_evacuation#hasReactionClass> ?class .
+    ?class <http://example.org/fire_and_evacuation#materialFlammabilityScore> ?s .
+    Filter: ?s > 7
+    Filter: ?pct > 30
+    ?b <http://example.org/fire_and_evacuation#hasHazardExposure> ?exposure .
+    ?exposure a <http://example.org/fire_and_evacuation#BuildingFireExposure> .
+Consequents:
+    ?exposure <http://example.org/fire_and_evacuation#buildingInflammability> "1.0"^^<http://www.w3.org/2001/XMLSchema#decimal> .
+
+# Si des matériaux à forte production de fumée (ex: S3) sont présents à > 20%
+Id: infer_smoke_propensity
+Antecedents:
+    ?b <http://example.org/fire_and_evacuation#hasMaterialComposition> ?comp .
+    ?comp <http://example.org/fire_and_evacuation#constituentMaterial> ?mat .
+    ?comp <http://example.org/fire_and_evacuation#materialPercentage> ?pct .
+    ?mat <http://example.org/fire_and_evacuation#hasReactionToFire> ?reaction .
+    ?reaction <http://example.org/fire_and_evacuation#hasSmokeProductionClass> <http://example.org/fire_and_evacuation#S3> .
+    Filter: ?pct > 20
+    ?b <http://example.org/fire_and_evacuation#hasHazardExposure> ?exposure .
+    ?exposure a <http://example.org/fire_and_evacuation#BuildingFireExposure> .
+Consequents:
+    ?exposure <http://example.org/fire_and_evacuation#smokePropensity> "1.0"^^<http://www.w3.org/2001/XMLSchema#decimal> .
+
+# Règle : Si E+I sont présents, score de confinement à 1.0
+Id: infer_confinement_score
+Antecedents:
+    ?b <http://example.org/fire_and_evacuation#hasHazardExposure> ?exposure .
+    ?exposure a <http://example.org/fire_and_evacuation#BuildingFireExposure> .
+    ?b <http://example.org/fire_and_evacuation#hasFireResistance> ?rating .
+    ?rating <http://example.org/fire_and_evacuation#resistanceComponents> <http://example.org/fire_and_evacuation#E> .
+    ?rating <http://example.org/fire_and_evacuation#resistanceComponents> <http://example.org/fire_and_evacuation#I> .
+Consequents:
+    ?exposure <http://example.org/fire_and_evacuation#confinementScore> "1.0"^^<http://www.w3.org/2001/XMLSchema#decimal> .
+
+
+# Inférence de l'inertie thermique via le style architectural
+Id: infer_thermal_inertia_from_style
+Antecedents:
+    ?b <http://example.org/fire_and_evacuation#hasArchitectureStyle> ?style .
+    ?style <http://example.org/fire_and_evacuation#hasDefaultVulnerabilityProfile> ?vulc .
+    ?vulc <http://example.org/fire_and_evacuation#defaultThermalInertiaScore> ?val .
+    ?b <http://example.org/fire_and_evacuation#hasHazardExposure> ?exposure .
+    ?exposure a <http://example.org/fire_and_evacuation#BuildingFireExposure> .
+    NOT ?exposure <http://example.org/fire_and_evacuation#thermalInertiaScore> ?val_override .
+Consequents:
+    ?exposure <http://example.org/fire_and_evacuation#thermalInertiaScore> ?val .

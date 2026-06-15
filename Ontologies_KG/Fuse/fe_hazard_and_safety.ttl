@@ -118,6 +118,11 @@ fe:ReactionToFireClass a owl:Class ; rdfs:subClassOf fe:fireSafetyType .
 fe:SmokeProductionClass a owl:Class ; rdfs:subClassOf fe:fireSafetyType .
 fe:FlamingDropletsClass a owl:Class ; rdfs:subClassOf fe:fireSafetyType .
 
+fe:materialFlammabilityScore a owl:DatatypeProperty ;
+    rdfs:label "Score de sévérité incendie"@fr ;
+    rdfs:domain fe:ReactionToFireClass ;
+    rdfs:range xsd:integer .
+
 fe:hasReactionClass a owl:ObjectProperty, owl:FunctionalProperty ;
     rdfs:domain fe:ReactionToFire ;
     rdfs:range fe:ReactionToFireClass .

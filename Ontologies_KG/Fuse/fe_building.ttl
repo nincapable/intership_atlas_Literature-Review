@@ -182,6 +182,12 @@ fe:structuralFragility a owl:DatatypeProperty ;
     rdfs:domain fe:BuildingFireExposure ; 
     rdfs:range xsd:decimal .
 
+fe:confinementScore a owl:DatatypeProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "Score de confinement"@fr ;
+    rdfs:domain fe:BuildingFireExposure ;
+    rdfs:range xsd:decimal .
+
 fe:smokePropensity a owl:DatatypeProperty ; 
     rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "propension à générer des fumées"@fr ;

@@ -14,13 +14,13 @@ fe:EuroclassScheme a skos:ConceptScheme ;
     rdfs:label "Référentiel des Euroclasses de Réaction au Feu"@fr .
 
 # -- Classes principales (A1 à F) --
-fe:A1 a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "A1 (Incombustible)"@fr ; skos:inScheme fe:EuroclassScheme .
-fe:A2 a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "A2"@fr ; skos:inScheme fe:EuroclassScheme .
-fe:B  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "B"@fr ; skos:inScheme fe:EuroclassScheme .
-fe:C  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "C"@fr ; skos:inScheme fe:EuroclassScheme .
-fe:D  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "D"@fr ; skos:inScheme fe:EuroclassScheme .
-fe:E  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "E"@fr ; skos:inScheme fe:EuroclassScheme .
-fe:F  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "F (Non classé/Facilement inflammable)"@fr ; skos:inScheme fe:EuroclassScheme .
+fe:A1 a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "A1 (Incombustible)"@fr ; skos:inScheme fe:EuroclassScheme ; fe:fireSeverityScore 1 .
+fe:A2 a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "A2"@fr ; skos:inScheme fe:EuroclassScheme ; fe:fireSeverityScore 2 .
+fe:B  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "B"@fr ; skos:inScheme fe:EuroclassScheme ; fe:fireSeverityScore 3 .
+fe:C  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "C"@fr ; skos:inScheme fe:EuroclassScheme ; fe:fireSeverityScore 5 .
+fe:D  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "D"@fr ; skos:inScheme fe:EuroclassScheme ; fe:fireSeverityScore 7 .
+fe:E  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "E"@fr ; skos:inScheme fe:EuroclassScheme ; fe:fireSeverityScore 9 .
+fe:F  a skos:Concept, fe:ReactionToFireClass ; skos:prefLabel "F (Non classé/Facilement inflammable)"@fr ; skos:inScheme fe:EuroclassScheme ; fe:fireSeverityScore 10 .
 
 # -- Fumées (s) --
 fe:s1 a skos:Concept, fe:SmokeProductionClass ; skos:prefLabel "s1 (Faible fumée)"@fr ; skos:inScheme fe:EuroclassScheme .
