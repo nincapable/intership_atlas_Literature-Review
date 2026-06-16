@@ -48,6 +48,18 @@ fe:hasArtefactSubType  a owl:ObjectProperty ; rdfs:domain fe:Artefact ; rdfs:ran
 fe:hasArtifactsMobilityType     a owl:ObjectProperty ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactsMobilityType .
 fe:hasArtifactsFragilityType    a owl:ObjectProperty ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactsFragilityType .
 
+# Déduire que si un artefact a un type, il appartient au schéma de taxonomie
+fe:hasArtefactType owl:propertyChainAxiom (fe:hasArtefactType skos:inScheme) .
+
+# Permettre la remontée de hiérarchie (si c'est une Arme, c'est de l'Usage Martial)
+fe:isSubtypeOf a owl:TransitiveProperty ;
+    owl:equivalentProperty skos:broaderTransitive .
+
+# Règle pour lier l'artefact au concept SKOS correspondant
+fe:hasConcept a owl:ObjectProperty ;
+    rdfs:domain fe:Artefact ;
+    rdfs:range skos:Concept .
+
 # =================================================================
 # 2. EXPOSITION AUX RISQUES (ALIGNEMENT AVEC HAZARD_AND_SAFETY)
 # =================================================================
@@ -121,10 +133,20 @@ fe:hasPriorityLevel a owl:ObjectProperty ; rdfs:subPropertyOf crm:P2_has_type ; 
 fe:ArtifactsFireExposure a owl:Class ;
     rdfs:subClassOf fe:hazardExposure ;
     rdfs:label "Exposition au Feu"@fr .
-
+    
 fe:ArtifactsFloodExposure a owl:Class ;
     rdfs:subClassOf fe:hazardExposure ;
     rdfs:label "Exposition à l'Inondation"@fr .
+
+fe:hasArtifactFireExposure a owl:ObjectProperty ;
+    rdfs:subPropertyOf fe:hasHazardExposure ;
+    rdfs:domain fe:Artefact ;
+    rdfs:range fe:ArtifactsFireExposure .
+
+fe:hasArtifactFloodExposure a owl:ObjectProperty ;
+    rdfs:subPropertyOf fe:hasHazardExposure ;
+    rdfs:domain fe:Artefact ;
+    rdfs:range fe:ArtifactsFloodExposure .
 
 # Alignement : P43_has_dimension permet de relier l'artefact à ses mesures de fragilité
 fe:thermalToleranceLimit a owl:DatatypeProperty ;

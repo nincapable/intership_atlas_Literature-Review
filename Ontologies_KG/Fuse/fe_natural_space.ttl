@@ -316,6 +316,12 @@ fe:NaturalSpaceFireExposure a owl:Class ;
     rdfs:label "Exposition incendie espace naturel"@fr ;
     rdfs:comment "Paramètres mesurant l'exposition globale d'un espace naturel au risque incendie."@fr .
 
+fe:hasNaturalSpaceFireExposure a owl:ObjectProperty ; 
+    rdfs:subPropertyOf fe:hasHazardExposure ;
+    rdfs:domain fe:NaturalSpace ;
+    rdfs:range fe:NaturalSpaceFireExposure ;
+    rdfs:label "a pour exposition incendie"@fr .
+
 fe:globalIgnitionProbability a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:NaturalSpaceFireExposure ; rdfs:range xsd:decimal ; rdfs:label "Probabilité globale d'ignition"@fr .
 fe:firePropagationVelocity a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:NaturalSpaceFireExposure ; rdfs:range xsd:decimal ; rdfs:label "Vitesse de propagation du feu"@fr .
 fe:structuralFireBarrierEffect a owl:DatatypeProperty ; rdfs:subPropertyOf crm:P43_has_dimension ; rdfs:domain fe:NaturalSpaceFireExposure ; rdfs:range xsd:decimal ; rdfs:label "Effet barrière coupe-feu structurel"@fr .

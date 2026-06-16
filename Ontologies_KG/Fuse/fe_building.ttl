@@ -91,6 +91,7 @@ fe:constituentMaterial a owl:ObjectProperty ;
 fe:materialPercentage a owl:DatatypeProperty ;
     rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:domain fe:MaterialComposition ;
+    rdfs:comment "Pourcentage de composition du matériau dans l'élément."@fr ;
     rdfs:range xsd:decimal .
 
 fe:hasArchitectureStyle a owl:ObjectProperty ;
@@ -98,11 +99,6 @@ fe:hasArchitectureStyle a owl:ObjectProperty ;
     rdfs:label "style architectural"@fr ;
     rdfs:domain fe:Building ;
     rdfs:range fe:ArchitectureStyle .
-
-fe:structuralFragilityCoefficient a owl:DatatypeProperty ; 
-    rdfs:subPropertyOf crm:P43_has_dimension ;
-    rdfs:domain fe:ArchitectureStyle ; 
-    rdfs:range xsd:decimal .
 
 fe:hasFloorArea a owl:DatatypeProperty ;
     rdfs:subPropertyOf crm:P43_has_dimension ;
@@ -116,6 +112,13 @@ fe:hasNumberOfFloors a owl:DatatypeProperty ;
     rdfs:domain fe:Building ;
     rdfs:range xsd:integer .
 
+fe:hasBuildingPriority a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:domain fe:Building ;
+    rdfs:range fe:PriorityLevel .
+
+fe:hasBuildingPriority owl:propertyChainAxiom (fe:containsArtefact fe:hasProtectionPriority) .
+
 # =================================================================
 # 3. EXPOSITION SPÉCIFIQUE : INONDATION / SUBMERSION
 # =================================================================
@@ -123,6 +126,11 @@ fe:hasNumberOfFloors a owl:DatatypeProperty ;
 fe:BuildingFloodExposure a owl:Class ;
     rdfs:subClassOf fe:hazardExposure ;
     rdfs:label "Fiche d'Exposition Inondation du Bâtiment"@fr .
+
+fe:hasFloodExposure a owl:ObjectProperty ;
+    rdfs:subPropertyOf fe:hasHazardExposure ;
+    rdfs:domain fe:Building ;
+    rdfs:range fe:BuildingFloodExposure .
 
 fe:waterSubmersionResistance a owl:DatatypeProperty ;
     rdfs:subPropertyOf crm:P43_has_dimension ;
@@ -157,6 +165,10 @@ fe:BuildingFireExposure a owl:Class ;
     rdfs:label "Fiche d'Exposition Incendie pour Bâtiment"@fr ;
     rdfs:comment "Regroupe les paramètres physiques de comportement et de propagation du feu propres à la structure."@fr .
 
+fe:hasFireExposure a owl:ObjectProperty ;
+    rdfs:subPropertyOf fe:hasHazardExposure ;
+    rdfs:domain fe:Building ;
+    rdfs:range fe:BuildingFireExposure .
 
 fe:buildingCombustibility a owl:DatatypeProperty ; 
     rdfs:subPropertyOf crm:P43_has_dimension ;

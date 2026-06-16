@@ -1,0 +1,75 @@
+PREFIX fe: <http://example.org/fire_and_evacuation#>
+
+DELETE { 
+    ?exposure fe:buildingInflammability ?old 
+}
+INSERT { 
+    ?exposure fe:buildingInflammability ?score 
+}
+WHERE {
+    {
+        SELECT ?exposure (SUM((?pct / 100.0) * (?s / 10.0)) AS ?score) 
+        WHERE {
+            ?b fe:hasMaterialComposition ?comp .
+            ?comp fe:constituentMaterial ?mat ;
+                fe:materialPercentage ?pct .
+            ?mat fe:hasReactionToFire ?r . 
+            ?r fe:hasReactionClass ?class .
+            ?class fe:materialFlammabilityScore ?s . 
+            ?b fe:hasGlobalHazardExposure ?g . 
+            ?g fe:hasHazardExposure ?exposure .
+        } 
+        GROUP BY ?exposure
+    }
+    OPTIONAL { ?exposure fe:buildingInflammability ?old }
+}
+
+PREFIX fe: <http://example.org/fire_and_evacuation#>
+
+DELETE { 
+    ?exposure fe:buildingCombustibility ?old 
+}
+INSERT { 
+    ?exposure fe:buildingCombustibility ?score 
+}
+WHERE {
+    {
+        SELECT ?exposure (SUM(IF(?s > 2, ?pct / 100.0, 0)) AS ?score) 
+        WHERE {
+            ?b fe:hasMaterialComposition ?comp .
+            ?comp fe:constituentMaterial ?mat ;
+                fe:materialPercentage ?pct .
+            ?mat fe:hasReactionToFire ?r . 
+            ?r fe:hasReactionClass ?class .
+            ?class fe:materialFlammabilityScore ?s . 
+            ?b fe:hasGlobalHazardExposure ?g . 
+            ?g fe:hasHazardExposure ?exposure .
+        } 
+        GROUP BY ?exposure
+    }
+    OPTIONAL { ?exposure fe:buildingCombustibility ?old }
+}
+
+PREFIX fe: <http://example.org/fire_and_evacuation#>
+
+DELETE { 
+    ?exposure fe:thermalInertiaScore ?old 
+}
+INSERT { 
+    ?exposure fe:thermalInertiaScore ?score 
+}
+WHERE {
+    {
+        SELECT ?exposure (SUM((?pct / 100.0) * ?inertieMateriau) AS ?score) 
+        WHERE {
+            ?b fe:hasMaterialComposition ?comp .
+            ?comp fe:constituentMaterial ?mat ;
+                fe:materialPercentage ?pct .
+            ?mat fe:hasMaterialInertiaValue ?inertieMateriau .
+            ?b fe:hasGlobalHazardExposure ?g . 
+            ?g fe:hasHazardExposure ?exposure .
+        } 
+        GROUP BY ?exposure
+    }
+    OPTIONAL { ?exposure fe:thermalInertiaScore ?old }
+}

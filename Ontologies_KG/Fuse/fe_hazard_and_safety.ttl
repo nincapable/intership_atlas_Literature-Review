@@ -81,22 +81,12 @@ fe:hasImpact a owl:ObjectProperty ;
 # =================================================================
 # 3. EXPOSITION AUX RISQUES (EXPOSURE)
 # =================================================================
-
-fe:globalHazardExposure a owl:Class ; 
-    rdfs:subClassOf fe:RiskDimension ;
-    rdfs:label "Exposition Globale au Risque d'Aléa"@fr .
-
-fe:hasGlobalHazardExposure a owl:ObjectProperty ; 
-    rdfs:label "a pour exposition globale au risque d'Aléa"@fr ;
-    rdfs:domain crm:E70_Thing ;
-    rdfs:range fe:globalHazardExposure .
-
 fe:hazardExposure a owl:Class ; 
     rdfs:subClassOf fe:RiskDimension ;
     rdfs:label "Exposition au Risque d'Aléa"@fr .
 
 fe:hasHazardExposure a owl:ObjectProperty ; 
-    rdfs:domain fe:globalHazardExposure ;
+    rdfs:domain fe:crm:E70_Thing ;
     rdfs:range fe:hazardExposure .
 
 fe:hasHazardHistory a owl:ObjectProperty ;

@@ -180,9 +180,39 @@ fe:containsArtefact a owl:ObjectProperty ;
     rdfs:domain fe:Zone ;
     rdfs:range fe:Artefact .
 
+
+fe:hasZonePriority a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P2_has_type ;
+    rdfs:domain fe:Building ;
+    rdfs:range fe:PriorityLevel .
+
+fe:hasZonePriority owl:propertyChainAxiom (fe:containsArtefact fe:hasProtectionPriority) .
+fe:hasZonePriority owl:propertyChainAxiom (fe:containsBuilding fe:hasBuildingPriority) .
+
+# Remontée des risques des Bâtiments
+fe:hasHazardExposure owl:propertyChainAxiom (fe:containsBuilding fe:hasBuildingFireExposure) .
+fe:hasHazardExposure owl:propertyChainAxiom (fe:containsBuilding fe:hasBuildingFloodExposure) .
+
+# Remontée des risques des Espaces Naturels
+fe:hasHazardExposure owl:propertyChainAxiom (fe:containsNaturalSpace fe:hasNaturalSpaceFireExposure) .
+fe:hasHazardExposure owl:propertyChainAxiom (fe:containsNaturalSpace fe:hasNaturalSpaceFloodExposure) .
+
+# Remontée des risques des Artefacts (si ils sont isolés dans la zone)
+fe:hasHazardExposure owl:propertyChainAxiom (fe:containsArtefact fe:hasArtifactFireExposure) .
+fe:hasHazardExposure owl:propertyChainAxiom (fe:containsArtefact fe:hasArtifactFloodExposure) .
+# La priorité de la Zone est héritée de ses Bâtiments ET de ses Artefacts isolés
+fe:hasZonePriority owl:propertyChainAxiom (fe:containsBuilding fe:hasBuildingPriority) .
+fe:hasZonePriority owl:propertyChainAxiom (fe:containsArtefact fe:hasProtectionPriority) .
+
 # =================================================================
 # 6. POPULATION ET DYNAMIQUE HUMAINE
 # =================================================================
+
+fe:hasPopulationAtRisk a owl:ObjectProperty ;
+    rdfs:label "population à risque"@fr ;
+    rdfs:domain fe:Population ;
+    rdfs:range fe:hazardExposure ;
+    rdfs:comment "Lien vers le groupe d'agents ou les statistiques de population exposée à un danger."@fr .
 
 fe:hasPopulation a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P9_consists_of ;
@@ -203,3 +233,5 @@ fe:hasMaximumOccupancy a owl:DatatypeProperty ;
     rdfs:domain fe:Zone ;
     rdfs:range xsd:integer ;
     rdfs:comment "Nombre maximum de personnes que la zone peut accueillir en toute sécurité."@fr .
+
+    fe:hasPopulationAtRisk owl:propertyChainAxiom (fe:hasPopulation fe:hasHazardExposure) .
