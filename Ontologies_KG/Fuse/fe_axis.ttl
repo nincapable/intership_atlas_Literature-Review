@@ -88,6 +88,8 @@ fe:isConnectedTo a owl:ObjectProperty, owl:SymmetricProperty ;
     rdfs:domain crm:E25_Man_Made_Feature ;
     rdfs:range crm:E25_Man_Made_Feature .
 
+fe:isConnectedTo owl:propertyChainAxiom (fe:isConnectedTo fe:isConnectedTo) .
+
 # =================================================================
 # 3. VULNÉRABILITÉ (Alignement P140_assigned_attribute_to)
 # =================================================================
@@ -107,6 +109,8 @@ fe:hasVulnerability a owl:ObjectProperty ;
     rdfs:label "présente une vulnérabilité opérationnelle"@fr ;
     rdfs:domain fe:Axis ;
     rdfs:range fe:AxisVulnerability .
+
+fe:hasVulnerability owl:propertyChainAxiom (fe:isConnectedTo fe:hasVulnerability) .
 
 fe:triggeredBy a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P17_was_motivated_by ;

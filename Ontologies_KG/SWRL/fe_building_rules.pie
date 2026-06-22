@@ -69,7 +69,7 @@ Antecedents:
     ?rating <http://example.org/fire_and_evacuation#resistanceComponents> <http://example.org/fire_and_evacuation#E> .
     ?rating <http://example.org/fire_and_evacuation#resistanceComponents> <http://example.org/fire_and_evacuation#I> .
     ?rating <http://example.org/fire_and_evacuation#resistanceDuration> ?d .
-    Filter: 30 < ?d < 60
+    Filter: ?d >= 30 && ?d < 60
 Consequents:
     ?exposure <http://example.org/fire_and_evacuation#confinementScore> "0.6"^^<http://www.w3.org/2001/XMLSchema#decimal> .
 
@@ -84,3 +84,8 @@ Antecedents:
 Consequents:
     ?exposure <http://example.org/fire_and_evacuation#confinementScore> "0.3"^^<http://www.w3.org/2001/XMLSchema#decimal> .
 
+# Si une priorité intrinsèque est définie, elle est prioritaire
+Building(?b) ^ fe:hasBuildingIntrinsicPriority(?b, ?p_int) -> fe:hasEffectivePriority(?b, ?p_int)
+
+# Sinon, on utilise la priorité héritée la plus élevée
+Building(?b) ^ fe:hasInheritedArtefactPriority(?b, ?p_high) ^ not(hasBuildingIntrinsicPriority(?b, ?any)) -> fe:hasEffectivePriority(?b, ?p_high)

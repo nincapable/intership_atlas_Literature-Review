@@ -109,3 +109,9 @@ fe:hasZCoordinate a owl:DatatypeProperty ;
     rdfs:label "coordonnée Z"@fr ;
     rdfs:domain fe:vector3 ;
     rdfs:range xsd:decimal .
+
+fe:NormalizedValue a rdfs:Datatype ;
+    owl:equivalentClass [
+        a rdfs:Datatype ;
+        xsd:restriction [ xsd:minInclusive "0.0"^^xsd:decimal ; xsd:maxInclusive "1.0"^^xsd:decimal ]
+    ] .

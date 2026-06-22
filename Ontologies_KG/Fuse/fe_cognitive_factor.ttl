@@ -73,6 +73,10 @@ fe:hasBiasSensitivity a owl:ObjectProperty ;
     rdfs:domain fe:HumanArchetype ;
     rdfs:range fe:CognitiveBias .
 
+fe:hasPopulationBiasSensitivity a owl:ObjectProperty ;
+    rdfs:label "a pour sensibilité au biais de population (inféré)"@fr ;
+    owl:propertyChainAxiom ( fe:hasArchetypeRepresentation fe:representsArchetype fe:hasBiasSensitivity ) .
+
 # =================================================================
 # 3. RÈGLES ET INTERFÉRENCES (Procédures alignées)
 # =================================================================
@@ -119,6 +123,11 @@ fe:probabilityBiasTriggerModifier a owl:DatatypeProperty ;
     rdfs:label "modificateur de probabilité"@fr ;
     rdfs:domain fe:InterferenceRelation ;
     rdfs:range xsd:decimal .
+
+# 2. Inférence de modification comportementale
+fe:isInfluencingBehaviorOf a owl:ObjectProperty ;
+    rdfs:label "influence le comportement de"@fr ;
+    owl:propertyChainAxiom ( fe:hasAsAuthor fe:hasAsTarget fe:targetedBehavior ) .
 
 # =================================================================
 # 4. VARIABLES DYNAMIQUES (Dimensions)

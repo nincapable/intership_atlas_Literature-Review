@@ -112,12 +112,20 @@ fe:hasNumberOfFloors a owl:DatatypeProperty ;
     rdfs:domain fe:Building ;
     rdfs:range xsd:integer .
 
-fe:hasBuildingPriority a owl:ObjectProperty ;
-    rdfs:subPropertyOf crm:P2_has_type ;
+# Priorité propre au bâtiment (définie manuellement)
+fe:hasBuildingIntrinsicPriority a owl:ObjectProperty ;
+    rdfs:label "Priorité intrinsèque du bâtiment"@fr ;
     rdfs:domain fe:Building ;
     rdfs:range fe:PriorityLevel .
 
-fe:hasBuildingPriority owl:propertyChainAxiom (fe:containsArtefact fe:hasProtectionPriority) .
+# Priorité agrégée héritée des artefacts (remontée automatique)
+fe:hasInheritedArtefactPriority a owl:ObjectProperty ;
+    rdfs:label "Priorité héritée des artefacts"@fr ;
+    rdfs:domain fe:Building ;
+    rdfs:range fe:PriorityLevel .
+
+# La chaîne de propriété pour l'agrégation
+fe:hasInheritedArtefactPriority owl:propertyChainAxiom (fe:containsArtefact fe:hasProtectionPriority) .
 
 # =================================================================
 # 3. EXPOSITION SPÉCIFIQUE : INONDATION / SUBMERSION
