@@ -35,12 +35,21 @@ fe:SocialInteractionType a owl:Class ;
 fe:HumanArchetype a owl:Class ;
     rdfs:subClassOf fe:HumanFactorType ;
     rdfs:label "Archétype Humain"@fr ;
-    rdfs:comment "Profil psychologique et opérationnel type servant de base aux agents du simulateur."@fr .
+    rdfs:comment "Profil psychologique et opérationnel type servant de base aux agents du simulateur."@fr ;
+    # --- Contraintes sur les 7 propriétés liées ---
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:currentStressLevel ; owl:cardinality 1 ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:activeIntention ; owl:maxCardinality 1 ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:hasArchetypeBiasSensitivity ; owl:cardinality 1 ] ;
+    # Relations d'interférence (rôle d'émetteur ou récepteur)
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:hasAsAuthor ; owl:minCardinality 0 ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:hasAsTarget ; owl:minCardinality 0 ] .
 
 fe:ArchetypeRepresentation a owl:Class ;
     rdfs:subClassOf fe:HumanDimension ;
     rdfs:label "Représentation d'Archétype"@fr ;
-    rdfs:comment "Classe de liaison permettant d'assigner un archétype à une partition de population avec un poids de représentativité."@fr .
+    rdfs:comment "Classe de liaison permettant d'assigner un archétype à une partition de population avec un poids de représentativité."@fr ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:representationWeight ; owl:cardinality 1 ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:representsArchetype ; owl:cardinality 1 ] .
 
 fe:hasArchetypeRepresentation a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
@@ -58,19 +67,34 @@ fe:representationWeight a owl:DatatypeProperty ;
     rdfs:label "poids de représentativité"@fr ;
     rdfs:comment "Valeur (0.0 à 1.0) du degré de correspondance de la partition à cet archétype."@fr ;
     rdfs:domain fe:ArchetypeRepresentation ;
-    rdfs:range xsd:decimal .
+    rdfs:range fe:NormalizedValue .
+
+############################################""
+fe:ArchetypeBiasSensitivity a owl:Class ;
+    rdfs:subClassOf fe:HumanDimension ;
+    rdfs:label "Biais Cognitif Affectant l'archétype"@fr ;
+    rdfs:comment "Classe de liaison permettant d'assigner un biais cognitif à un archétype avec une probabilité de déclenchement."@fr ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:biasProbability ; owl:cardinality 1 ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:refersToBias ; owl:cardinality 1 ] .
+
+fe:hasArchetypeBiasSensitivity a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P43_has_dimension ;
+    rdfs:label "a pour probabilité de déclenchement du biais"@fr ;
+    rdfs:comment "Sensibilité d'un agent de cet archétype à un biais cognitif."@fr ;
+    rdfs:domain fe:HumanArchetype ;
+    rdfs:range fe:ArchetypeBiasSensitivity .
 
 fe:biasProbability a owl:DatatypeProperty ;
     rdfs:subPropertyOf crm:P43_has_dimension ;
-    rdfs:label "probabilité de biais"@fr ;
+    rdfs:label "probabilité de déclenchement du biais"@fr ;
     rdfs:comment "Probabilité qu'un agent de cet archétype soit affecté par un biais cognitif."@fr ;
-    rdfs:domain fe:HumanArchetype ;
-    rdfs:range xsd:decimal .
+    rdfs:domain fe:ArchetypeBiasSensitivity ;
+    rdfs:range fe:NormalizedValue .
 
-fe:hasBiasSensitivity a owl:ObjectProperty ;
+fe:refersToBias a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
-    rdfs:label "a pour sensibilité à un biais"@fr ;
-    rdfs:domain fe:HumanArchetype ;
+    rdfs:label "fait référence au biais cognitif"@fr ;
+    rdfs:domain fe:ArchetypeBiasSensitivity ;
     rdfs:range fe:CognitiveBias .
 
 fe:hasPopulationBiasSensitivity a owl:ObjectProperty ;
@@ -84,7 +108,9 @@ fe:hasPopulationBiasSensitivity a owl:ObjectProperty ;
 fe:BehaviorActivationRule a owl:Class ;
     rdfs:subClassOf crm:E29_Design_or_Procedure ;
     rdfs:label "Règle d'Activation Comportementale"@fr ;
-    rdfs:comment "Définit les conditions de transition d'un archétype vers un comportement donné."@fr .
+    rdfs:comment "Définit les conditions de transition d'un archétype vers un comportement donné."@fr ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:targetBehavior ; owl:minCardinality 1 ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:stressThreshold ; owl:cardinality 1 ] .
 
 fe:targetBehavior a owl:ObjectProperty ;
     rdfs:label "comportement visé"@fr ;
@@ -96,12 +122,15 @@ fe:stressThreshold a owl:DatatypeProperty ;
     rdfs:label "seuil de stress"@fr ;
     rdfs:comment "Seuil de stress cumulé déclenchant la règle."@fr ;
     rdfs:domain fe:BehaviorActivationRule ;
-    rdfs:range xsd:decimal .
+    rdfs:range fe:NormalizedValue .
 
 fe:InterferenceRelation a owl:Class ;
     rdfs:subClassOf crm:E29_Design_or_Procedure ;
     rdfs:label "Relation d'Interférence"@fr ;
-    rdfs:comment "Modélise l'influence d'un agent sur la probabilité de comportement d'un autre agent."@fr .
+    rdfs:comment "Modélise l'influence d'un agent sur la probabilité de comportement d'un autre agent."@fr ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:hasAsAuthor ; owl:cardinality 1 ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:hasAsTarget ; owl:cardinality 1 ] ;
+    rdfs:subClassOf [ a owl:Restriction ; owl:onProperty fe:targetedBehavior ; owl:cardinality 1 ] .
 
 fe:hasAsAuthor a owl:ObjectProperty ;
     rdfs:label "a pour auteur (émetteur)"@fr ;
@@ -122,7 +151,7 @@ fe:probabilityBiasTriggerModifier a owl:DatatypeProperty ;
     rdfs:subPropertyOf crm:P43_has_dimension ;
     rdfs:label "modificateur de probabilité"@fr ;
     rdfs:domain fe:InterferenceRelation ;
-    rdfs:range xsd:decimal .
+    rdfs:range fe:NormalizedValue .
 
 # 2. Inférence de modification comportementale
 fe:isInfluencingBehaviorOf a owl:ObjectProperty ;
@@ -138,7 +167,7 @@ fe:currentStressLevel a owl:DatatypeProperty ;
     rdfs:label "niveau de stress actuel perçu"@fr ;
     rdfs:comment "Variable dynamique mise à jour en cours de simulation."@fr ;
     rdfs:domain fe:HumanArchetype ;
-    rdfs:range xsd:decimal .
+    rdfs:range fe:NormalizedValue .
 
 fe:activeIntention a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P2_has_type ;
