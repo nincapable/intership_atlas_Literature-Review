@@ -1,0 +1,145 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix fe: <http://example.org/fire_and_evacuation#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+
+# 1. Validation du bâtiment : Identification et dimensions de base
+fe:BuildingShape a sh:NodeShape ;
+    sh:targetClass fe:Building ;
+    sh:property [
+        sh:path fe:hasFloorArea ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:message "Un bâtiment doit avoir une surface de plancher définie."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hasNumberOfFloors ;
+        sh:datatype xsd:integer ;
+        sh:minCount 1 ;
+        sh:message "Le nombre d'étages est requis pour les calculs de propagation."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hasArchitectureStyle ;
+        sh:class fe:ArchitectureStyle ;
+        sh:maxCount 1 ;
+        sh:message "Un bâtiment doit avoir un style architectural défini."@fr
+    ] ;
+    sh:property [
+        sh:path crm:P43_has_dimension ;
+        sh:class crm:E54_Dimension ;
+        sh:count 1 ;
+        sh:message "Un bâtiment doit avoir au moins des dimensions définies."@fr
+    ].
+
+# 2. Validation de l'exposition Incendie : Paramètres physiques critiques
+fe:BuildingFireExposureShape a sh:NodeShape ;
+    sh:targetClass fe:BuildingFireExposure ;
+    sh:property [
+        sh:path fe:structuralFragility ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "La fragilité structurelle doit être une valeur normalisée entre 0 et 1."@fr
+    ] ;
+    sh:property [
+        sh:path fe:buildingCombustibility ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "La combustibilité est obligatoire pour le calcul de risque incendie."@fr
+    ] ;
+    sh:property [
+        sh:path fe:buildingInflammability ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "L'inflammabilité est obligatoire pour le calcul de risque incendie."@fr
+    ] ;
+    sh:property [
+        sh:path fe:thermalInertiaScore ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "L'inflammabilité est obligatoire pour le calcul de risque incendie."@fr
+    ] ;
+    sh:property [
+        sh:path fe:thermalInertiaScore ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Le score d'inertie thermique est requis pour la simulation incendie."@fr
+    ] ;
+    sh:property [
+        sh:path fe:confinementScore ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Le score de confinement est nécessaire pour la modélisation de propagation du feu."@fr
+    ] ;
+    sh:property [
+        sh:path fe:confinementScore ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Le score de confinement est nécessaire pour la modélisation de propagation du feu."@fr
+    ] ;
+    sh:property [
+        sh:path fe:smokePropensity ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "La propension à la fumée est obligatoire pour l'évaluation du risque incendie."@fr
+    ] .
+
+# 3. Validation de l'exposition Inondation
+fe:BuildingFloodExposureShape a sh:NodeShape ;
+    sh:targetClass fe:BuildingFloodExposure ;
+    sh:property [
+        sh:path fe:waterSubmersionResistance ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "La résistance à la submersion est nécessaire pour simuler le risque inondation."@fr
+    ] ;
+    sh:property [
+        sh:path fe:criticalEquipmentFloor ;
+        sh:datatype xsd:integer ;
+        sh:message "L'étage des équipements critiques doit être un entier."@fr
+    ] ;
+    sh:property [
+        sh:path fe:dryingTimeHours ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "Le temps de séchage structurel doit être un entier positif."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hydrostaticPressureLoad ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:message "La charge hydrostatique doit être une valeur positive."@fr
+    ].
+
+# 4. Cohérence de la Composition
+fe:MaterialCompositionShape a sh:NodeShape ;
+    sh:targetClass fe:MaterialConstituent ;
+    sh:property [
+        sh:path fe:materialPercentage ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Le pourcentage de matériau doit être compris entre 0 et 100."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hasMaterial ;
+        sh:datatype fe:MaterialInstance;
+        sh:message "Matériaux du constituant"@fr
+    ] .

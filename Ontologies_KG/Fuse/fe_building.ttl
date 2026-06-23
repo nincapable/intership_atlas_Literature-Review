@@ -73,26 +73,40 @@ fe:defaulHydrostaticPressureLoad a owl:DatatypeProperty ;
 # =================================================================
 # 2. COMPOSITION ET CARACTÉRISTIQUES STRUCTURELLES
 # =================================================================
-
+# 1. Classe d'association
 fe:MaterialComposition a owl:Class ;
     rdfs:label "Composition de Matériau"@fr ;
-    rdfs:subClassOf fe:TechnicalDimension .
+    rdfs:subClassOf crm:E89_Propositional_Object . # Mieux adapté pour une agrégation
 
+# 2. Lien Bâtiment -> Composition
 fe:hasMaterialComposition a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P46_is_composed_of ;
     rdfs:domain fe:Building ;
     rdfs:range fe:MaterialComposition .
 
-fe:constituentMaterial a owl:ObjectProperty ;
-    rdfs:subPropertyOf crm:P45_consists_of ;
+# 3. La classe qui porte le détail (Matériau + Pourcentage)
+fe:MaterialConstituent a owl:Class ;
+    rdfs:label "Constituant de Matériau"@fr ;
+    rdfs:comment "Détail d'un matériau avec son taux de présence."@fr .
+
+# 4. Agrégation : La composition contient des constituants
+fe:hasConstituent a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P46_is_composed_of ;
     rdfs:domain fe:MaterialComposition ;
-    rdfs:range fe:MaterialInstance .
+    rdfs:range fe:MaterialConstituent .
+
+# 5. Propriétés du constituant
+fe:hasMaterial a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P45_consists_of ;
+    rdfs:domain fe:MaterialConstituent ;
+    rdfs:range fe:MaterialInstance ;
+    rdfs:label "matériau constitutif"@fr .
 
 fe:materialPercentage a owl:DatatypeProperty ;
     rdfs:subPropertyOf crm:P43_has_dimension ;
-    rdfs:domain fe:MaterialComposition ;
-    rdfs:comment "Pourcentage de composition du matériau dans l'élément."@fr ;
-    rdfs:range xsd:decimal .
+    rdfs:domain fe:MaterialConstituent ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "pourcentage de présence"@fr .
 
 fe:hasArchitectureStyle a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P2_has_type ;
