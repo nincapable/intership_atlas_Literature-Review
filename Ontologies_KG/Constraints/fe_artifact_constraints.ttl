@@ -1,0 +1,21 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix fe: <http://example.org/fire_and_evacuation#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+fe:ArtefactShape a sh:NodeShape ;
+    sh:targetClass fe:Artefact ;
+    sh:property [
+        sh:path fe:hasPriorityLevel ;
+        sh:minCount 1 ;
+        sh:message "Chaque artefact doit avoir un niveau de priorité défini pour la sauvegarde."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hasArtifactsFragilityType ;
+        sh:minCount 1 ;
+        sh:message "La classification de fragilité est obligatoire."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hasArtifactFireExposure ;
+        sh:minCount 1 ;
+        sh:message "L'exposition au feu doit être renseignée pour l'analyse de risque."@fr
+    ] .

@@ -73,3 +73,66 @@ WHERE {
     }
     OPTIONAL { ?exposure fe:thermalInertiaScore ?old }
 }
+
+
+INSERT {
+    ?building ?property ?value .
+}
+WHERE {
+    # Quantification sur la classe Building
+    ?building a fe:Building .
+    
+    # Paramètres à injecter (via le driver ou l'interface)
+    BIND(<PREDICAT_PROPERTY> AS ?property)
+    BIND(<VALEUR_NUMERIQUE> AS ?value)
+
+    FILTER NOT EXISTS {
+        ?building ?property ?value .
+    }
+}
+
+INSERT {
+    ?building fe:hasFireExposure ?exposureInstance .
+    ?exposureInstance a fe:BuildingFireExposure ;
+        fe:structuralFragility ?fragility .
+}
+WHERE {
+    ?building a fe:Building .
+    
+    # Génération d'un URI unique pour l'instance d'exposition
+    # En supposant une fonction BNODE() ou URI concaténée
+    BIND(IRI(CONCAT(STR(?building), "_fire_exp")) AS ?exposureInstance)
+    
+    # Paramètres injectés
+    BIND(<VALEUR_FRAGILITE> AS ?fragility)
+
+    FILTER NOT EXISTS {
+        ?building fe:hasFireExposure ?exposureInstance .
+    }
+}
+
+INSERT {
+    ?building fe:hasMaterialComposition ?comp .
+    ?comp a fe:MaterialComposition ;
+        fe:hasConstituent ?constituent .
+    ?constituent a fe:MaterialConstituent ;
+        fe:hasMaterial ?material ;
+        fe:materialPercentage ?percentage .
+}
+WHERE {
+    ?building a fe:Building .
+    
+    # Paramètres injectés
+    BIND(<URI_MATERIAU> AS ?material) # ex: fe:Stone
+    BIND(<POURCENTAGE> AS ?percentage)
+    
+    # Génération d'identifiants uniques pour les nœuds d'association
+    BIND(BNODE() AS ?comp)
+    BIND(BNODE() AS ?constituent)
+
+    FILTER NOT EXISTS {
+        ?building fe:hasMaterialComposition ?comp .
+        ?comp fe:hasConstituent ?constituent .
+        ?constituent fe:hasMaterial ?material .
+    }
+}

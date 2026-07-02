@@ -142,4 +142,16 @@ fe:MaterialCompositionShape a sh:NodeShape ;
         sh:path fe:hasMaterial ;
         sh:datatype fe:MaterialInstance;
         sh:message "Matériaux du constituant"@fr
-    ] .
+    ] ;
+    sh:property [
+    sh:path fe:hasConstituent ;
+    sh:sparql [
+        sh:message "La somme des pourcentages des matériaux doit être égale à 100."@fr ;
+        sh:select """
+            SELECT $this WHERE {
+                $this fe:hasConstituent ?c .
+                ?c fe:materialPercentage ?p .
+            } GROUP BY $this HAVING (SUM(?p) != 100)
+        """
+    ]
+].
