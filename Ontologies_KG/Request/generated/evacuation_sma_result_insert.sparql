@@ -1,0 +1,37 @@
+# Generated from a fe:SimulationProfile.
+# The SMA/runtime replaces the __PLACEHOLDERS__ before execution.
+PREFIX fe:   <http://example.org/fire_and_evacuation#>
+PREFIX crm:  <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+
+INSERT DATA {
+  GRAPH <http://example.org/fire_and_evacuation/simulation/results> {
+    __RUN_URI__ a fe:SimulationRun ;
+        fe:usesScenario __SCENARIO_URI__ ;
+        fe:consumesInput __INPUT_URI__ ;
+        fe:producesOutput __OUTPUT_URI__ .
+
+    __OUTPUT_URI__ a fe:SimulationOutput ;
+        fe:hasFinalState __FINAL_STATE_URI__ ;
+        fe:producedByRun __RUN_URI__ .
+
+    __FINAL_STATE_URI__ a fe:FinalState ;
+        fe:stateOfEntity __ENTITY_URI__ ;
+        fe:hasSimulationStep __STEP__ ;
+        fe:hasSimulationTime __TIME__ ;
+        fe:producedByRun __RUN_URI__ .
+
+    # Example result hooks allowed by this profile:
+    # - fe:producesOutput
+    # - fe:hasFinalState
+    # - fe:hasStateSnapshot
+    # - fe:stateOfEntity
+    # - fe:updatesEntity
+    # - fe:producesAssessment
+    # - fe:hasSimulationTime
+    # - fe:hasSimulationStep
+  }
+}

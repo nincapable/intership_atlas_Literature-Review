@@ -1,0 +1,215 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/fire_and_evacuation/simulation> a owl:Ontology ;
+    rdfs:label "Module d'interopérabilité SMA"@fr ;
+    rdfs:comment "Noyau minimal pour charger un système multi-agents depuis le graphe de connaissances et réinjecter les résultats de simulation sans écraser l'état initial."@fr .
+
+# =================================================================
+# 1. EXECUTION DE SIMULATION
+# =================================================================
+
+fe:SimulationScenario a owl:Class ;
+    rdfs:subClassOf crm:E29_Design_or_Procedure ;
+    rdfs:label "Scénario de simulation"@fr ;
+    rdfs:comment "Configuration déclarative d'une simulation : périmètre, données d'entrée, hypothèse d'aléa et objectifs du SMA."@fr .
+
+fe:SimulationRun a owl:Class ;
+    rdfs:subClassOf crm:E7_Activity ;
+    rdfs:label "Exécution de simulation"@fr ;
+    rdfs:comment "Exécution concrète d'un scénario par un SMA donné. Porte les liens entre entrées, états et sorties."@fr .
+
+fe:SimulationAgent a owl:Class ;
+    rdfs:subClassOf crm:E39_Actor ;
+    rdfs:label "Agent de simulation"@fr ;
+    rdfs:comment "Agent logiciel ou rôle agentif participant à une simulation. Cette classe sert d'interface commune, sans imposer l'architecture interne du SMA."@fr .
+
+fe:usesScenario a owl:ObjectProperty ;
+    rdfs:label "utilise le scénario"@fr ;
+    rdfs:domain fe:SimulationRun ;
+    rdfs:range fe:SimulationScenario .
+
+fe:hasSimulationAgent a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P14_carried_out_by ;
+    rdfs:label "a pour agent de simulation"@fr ;
+    rdfs:domain fe:SimulationRun ;
+    rdfs:range fe:SimulationAgent .
+
+# =================================================================
+# 2. ENTREES ET SORTIES
+# =================================================================
+
+fe:SimulationInput a owl:Class ;
+    rdfs:subClassOf crm:E73_Information_Object ;
+    rdfs:label "Entrée de simulation"@fr ;
+    rdfs:comment "Lot de données sélectionné pour initialiser un SMA : entités observées, état initial, paramètres et vocabulaires utiles."@fr .
+
+fe:SimulationOutput a owl:Class ;
+    rdfs:subClassOf crm:E73_Information_Object ;
+    rdfs:label "Sortie de simulation"@fr ;
+    rdfs:comment "Lot de résultats produit par un SMA : états calculés, évaluations, modifications proposées et bilans."@fr .
+
+fe:hasSimulationInput a owl:ObjectProperty ;
+    rdfs:label "a pour entrée de simulation"@fr ;
+    rdfs:domain fe:SimulationScenario ;
+    rdfs:range fe:SimulationInput .
+
+fe:consumesInput a owl:ObjectProperty ;
+    rdfs:label "consomme l'entrée"@fr ;
+    rdfs:domain fe:SimulationRun ;
+    rdfs:range fe:SimulationInput .
+
+fe:producesOutput a owl:ObjectProperty ;
+    rdfs:label "produit la sortie"@fr ;
+    rdfs:domain fe:SimulationRun ;
+    rdfs:range fe:SimulationOutput .
+
+fe:describesEntity a owl:ObjectProperty ;
+    rdfs:label "décrit l'entité"@fr ;
+    rdfs:domain crm:E73_Information_Object ;
+    rdfs:range crm:E70_Thing ;
+    rdfs:comment "Relie un paquet d'entrée ou de sortie aux entités du graphe concernées par la simulation."@fr .
+
+# =================================================================
+# 3. ETATS ET INSTANTS DE SIMULATION
+# =================================================================
+
+fe:StateSnapshot a owl:Class ;
+    rdfs:subClassOf crm:E13_Attribute_Assignment ;
+    rdfs:label "Instantané d'état"@fr ;
+    rdfs:comment "Description d'un état d'une ou plusieurs entités à un instant ou une étape de simulation."@fr .
+
+fe:InitialState a owl:Class ;
+    rdfs:subClassOf fe:StateSnapshot ;
+    rdfs:label "État initial"@fr ;
+    rdfs:comment "État transmis au SMA pour initialiser la simulation."@fr .
+
+fe:FinalState a owl:Class ;
+    rdfs:subClassOf fe:StateSnapshot ;
+    rdfs:label "État final"@fr ;
+    rdfs:comment "État obtenu à la fin d'une exécution de simulation."@fr .
+
+fe:hasInitialState a owl:ObjectProperty ;
+    rdfs:label "a pour état initial"@fr ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (fe:SimulationInput fe:SimulationRun) ] ;
+    rdfs:range fe:InitialState .
+
+fe:hasFinalState a owl:ObjectProperty ;
+    rdfs:label "a pour état final"@fr ;
+    rdfs:domain fe:SimulationOutput ;
+    rdfs:range fe:FinalState .
+
+fe:hasStateSnapshot a owl:ObjectProperty ;
+    rdfs:label "a pour instantané d'état"@fr ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (fe:SimulationInput fe:SimulationOutput fe:SimulationRun) ] ;
+    rdfs:range fe:StateSnapshot .
+
+fe:stateOfEntity a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P140_assigned_attribute_to ;
+    rdfs:label "état de l'entité"@fr ;
+    rdfs:domain fe:StateSnapshot ;
+    rdfs:range crm:E70_Thing .
+
+fe:hasSimulationTime a owl:DatatypeProperty ;
+    rdfs:label "temps de simulation"@fr ;
+    rdfs:comment "Temps logique de la simulation. L'unité est définie par le profil SMA ou la contrainte SHACL associée."@fr ;
+    rdfs:domain fe:StateSnapshot ;
+    rdfs:range xsd:decimal .
+
+fe:hasSimulationStep a owl:DatatypeProperty ;
+    rdfs:label "étape de simulation"@fr ;
+    rdfs:domain fe:StateSnapshot ;
+    rdfs:range xsd:integer .
+
+# =================================================================
+# 4. INTERACTION AGENT - GRAPHE
+# =================================================================
+
+fe:observesEntity a owl:ObjectProperty ;
+    rdfs:label "observe l'entité"@fr ;
+    rdfs:domain fe:SimulationAgent ;
+    rdfs:range crm:E70_Thing ;
+    rdfs:comment "Indique qu'un agent du SMA lit ou surveille une entité du graphe pendant une exécution."@fr .
+
+fe:updatesEntity a owl:ObjectProperty ;
+    rdfs:label "met à jour l'entité"@fr ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (fe:SimulationAgent fe:SimulationOutput fe:StateSnapshot) ] ;
+    rdfs:range crm:E70_Thing ;
+    rdfs:comment "Indique qu'un agent, un état ou une sortie de simulation propose une mise à jour portant sur une entité du graphe."@fr .
+
+fe:producesAssessment a owl:ObjectProperty ;
+    rdfs:label "produit l'évaluation"@fr ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (fe:SimulationAgent fe:SimulationRun fe:SimulationOutput) ] ;
+    rdfs:range crm:E13_Attribute_Assignment ;
+    rdfs:comment "Relie un agent, une exécution ou une sortie aux évaluations produites, par exemple ImpactAssessment ou UrgencyAssessment."@fr .
+
+fe:usesInputEntity a owl:ObjectProperty ;
+    rdfs:label "utilise l'entité d'entrée"@fr ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (fe:SimulationAgent fe:SimulationInput fe:SimulationRun) ] ;
+    rdfs:range crm:E70_Thing ;
+    rdfs:comment "Relie explicitement un SMA, une entrée ou une exécution aux entités chargées pour l'initialisation."@fr .
+
+fe:producedByRun a owl:ObjectProperty ;
+    rdfs:label "produit par l'exécution"@fr ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (fe:SimulationOutput fe:StateSnapshot crm:E13_Attribute_Assignment) ] ;
+    rdfs:range fe:SimulationRun .
+
+
+# =================================================================
+# 5. PROFILS D'INITIALISATION ET DE SORTIE SMA
+# =================================================================
+
+fe:SimulationProfile a owl:Class ;
+    rdfs:subClassOf crm:E29_Design_or_Procedure ;
+    rdfs:label "Profil de simulation SMA"@fr ;
+    rdfs:comment "Contrat declaratif indiquant quelles classes et proprietes un SMA consomme en initialisation et quelles classes/proprietes il produit en sortie."@fr .
+
+fe:profileIdentifier a owl:DatatypeProperty ;
+    rdfs:label "identifiant du profil"@fr ;
+    rdfs:domain fe:SimulationProfile ;
+    rdfs:range xsd:string .
+
+fe:hasRootClass a owl:ObjectProperty ;
+    rdfs:label "a pour classe racine"@fr ;
+    rdfs:domain fe:SimulationProfile ;
+    rdfs:range owl:Class ;
+    rdfs:comment "Classe principale a partir de laquelle le sous-graphe d'initialisation est extrait."@fr .
+
+fe:requiresClass a owl:ObjectProperty ;
+    rdfs:label "requiert la classe"@fr ;
+    rdfs:domain fe:SimulationProfile ;
+    rdfs:range owl:Class .
+
+fe:requiresProperty a owl:ObjectProperty ;
+    rdfs:label "requiert la propriete"@fr ;
+    rdfs:domain fe:SimulationProfile ;
+    rdfs:range rdf:Property .
+
+fe:optionalProperty a owl:ObjectProperty ;
+    rdfs:label "propriete optionnelle"@fr ;
+    rdfs:domain fe:SimulationProfile ;
+    rdfs:range rdf:Property .
+
+fe:producesClass a owl:ObjectProperty ;
+    rdfs:label "produit la classe"@fr ;
+    rdfs:domain fe:SimulationProfile ;
+    rdfs:range owl:Class .
+
+fe:producesProperty a owl:ObjectProperty ;
+    rdfs:label "produit la propriete"@fr ;
+    rdfs:domain fe:SimulationProfile ;
+    rdfs:range rdf:Property .
+
+fe:hasExtractionQuery a owl:ObjectProperty ;
+    rdfs:label "a pour requete d'extraction"@fr ;
+    rdfs:domain fe:SimulationProfile ;
+    rdfs:range crm:E73_Information_Object .
+
+fe:hasResultInsertionQuery a owl:ObjectProperty ;
+    rdfs:label "a pour requete d'insertion des resultats"@fr ;
+    rdfs:domain fe:SimulationProfile ;
+    rdfs:range crm:E73_Information_Object .

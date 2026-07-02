@@ -1,0 +1,43 @@
+# Generated from a fe:SimulationProfile.
+# Extracts a typed subgraph for SMA initialization.
+PREFIX fe:   <http://example.org/fire_and_evacuation#>
+PREFIX crm:  <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+
+CONSTRUCT {
+  ?entity a ?class .
+  ?entity ?property ?value .
+  fe:Input_evacuation_sma a fe:SimulationInput ;
+      fe:describesEntity ?entity .
+}
+WHERE {
+  VALUES ?class {
+    fe:Zone
+    fe:Axis
+    fe:Population
+    fe:HazardEvent
+  }
+
+  VALUES ?property {
+    fe:hasPopulation
+    fe:isConnectedTo
+    fe:maxFlowCapacity
+    fe:hasWidth
+    fe:hasLength
+    fe:hasHazardExposure
+    fe:containsBuilding
+    fe:containsNaturalSpace
+    fe:containsArtefact
+    fe:hasWeatherCondition
+    fe:hasBlockingState
+    fe:hasAccessibilityLevel
+    fe:hasRescueAccessibilityLevel
+    fe:hasProtectionPriority
+  }
+
+  ?entity a ?class .
+  OPTIONAL { ?entity ?property ?value . }
+}

@@ -1,0 +1,22 @@
+# Generated from a fe:SimulationProfile.
+# Extracts a typed subgraph for SMA initialization.
+{PREFIXES}
+
+CONSTRUCT {{
+  ?entity a ?class .
+  ?entity ?property ?value .
+  {INPUT_IRI} a fe:SimulationInput ;
+      fe:describesEntity ?entity .
+}}
+WHERE {{
+  VALUES ?class {{
+{CLASS_VALUES}
+  }}
+
+  VALUES ?property {{
+{PROPERTY_VALUES}
+  }}
+
+  ?entity a ?class .
+  OPTIONAL {{ ?entity ?property ?value . }}
+}}

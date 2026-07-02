@@ -1,0 +1,18 @@
+# Generated from a fe:SimulationProfile.
+# Tabular view of the initialization subgraph, useful for JSON/CSV payload builders.
+{PREFIXES}
+
+SELECT ?entity ?class ?property ?value
+WHERE {{
+  VALUES ?class {{
+{CLASS_VALUES}
+  }}
+
+  VALUES ?property {{
+{PROPERTY_VALUES}
+  }}
+
+  ?entity a ?class .
+  OPTIONAL {{ ?entity ?property ?value . }}
+}}
+ORDER BY ?class ?entity ?property

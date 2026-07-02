@@ -1,0 +1,46 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+fe:EvacuationSMAZoneInputShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'entree SMA evacuation - Zone"@fr ;
+    sh:targetClass fe:Zone ;
+    sh:property [
+        sh:path fe:hasPopulation ;
+        sh:minCount 1 ;
+        sh:class fe:Population ;
+        sh:message "Une zone chargee pour le SMA d'evacuation doit indiquer sa population presente."@fr
+    ] .
+
+fe:EvacuationSMAAxisInputShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'entree SMA evacuation - Axe"@fr ;
+    sh:targetClass fe:Axis ;
+    sh:property [
+        sh:path fe:maxFlowCapacity ;
+        sh:minCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:message "Un axe d'evacuation doit fournir une capacite de flux maximale."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hasWidth ;
+        sh:minCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:message "Un axe d'evacuation doit fournir une largeur utile."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hasLength ;
+        sh:minCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:message "Un axe d'evacuation doit fournir une longueur."@fr
+    ] .
+
+fe:EvacuationSMAOutputShape a sh:NodeShape ;
+    rdfs:label "Contraintes de sortie SMA evacuation"@fr ;
+    sh:targetClass fe:SimulationOutput ;
+    sh:property [
+        sh:path fe:hasFinalState ;
+        sh:minCount 1 ;
+        sh:class fe:FinalState ;
+        sh:message "Une sortie de simulation doit pointer vers au moins un etat final."@fr
+    ] .

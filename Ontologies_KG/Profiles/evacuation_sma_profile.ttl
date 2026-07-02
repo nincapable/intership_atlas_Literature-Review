@@ -1,0 +1,38 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+fe:EvacuationSMAProfile a fe:SimulationProfile ;
+    rdfs:label "Profil d'initialisation SMA evacuation"@fr ;
+    rdfs:comment "Profil minimal pour extraire le sous-graphe utile a un SMA d'evacuation : zones, axes, population, aleas et etats operationnels."@fr ;
+    fe:profileIdentifier "evacuation_sma" ;
+    fe:hasRootClass fe:Zone ;
+    fe:requiresClass fe:Zone, fe:Axis, fe:Population, fe:HazardEvent ;
+    fe:requiresProperty fe:hasPopulation,
+        fe:isConnectedTo,
+        fe:maxFlowCapacity,
+        fe:hasWidth,
+        fe:hasLength,
+        fe:hasHazardExposure ;
+    fe:optionalProperty fe:containsBuilding,
+        fe:containsNaturalSpace,
+        fe:containsArtefact,
+        fe:hasWeatherCondition,
+        fe:hasBlockingState,
+        fe:hasAccessibilityLevel,
+        fe:hasRescueAccessibilityLevel,
+        fe:hasProtectionPriority ;
+    fe:producesClass fe:SimulationOutput,
+        fe:FinalState,
+        fe:StateSnapshot,
+        fe:ImpactAssessment,
+        fe:UrgencyAssessment ;
+    fe:producesProperty fe:producesOutput,
+        fe:hasFinalState,
+        fe:hasStateSnapshot,
+        fe:stateOfEntity,
+        fe:updatesEntity,
+        fe:producesAssessment,
+        fe:hasSimulationTime,
+        fe:hasSimulationStep .

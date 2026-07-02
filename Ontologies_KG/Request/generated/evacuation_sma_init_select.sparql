@@ -1,0 +1,39 @@
+# Generated from a fe:SimulationProfile.
+# Tabular view of the initialization subgraph, useful for JSON/CSV payload builders.
+PREFIX fe:   <http://example.org/fire_and_evacuation#>
+PREFIX crm:  <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?entity ?class ?property ?value
+WHERE {
+  VALUES ?class {
+    fe:Zone
+    fe:Axis
+    fe:Population
+    fe:HazardEvent
+  }
+
+  VALUES ?property {
+    fe:hasPopulation
+    fe:isConnectedTo
+    fe:maxFlowCapacity
+    fe:hasWidth
+    fe:hasLength
+    fe:hasHazardExposure
+    fe:containsBuilding
+    fe:containsNaturalSpace
+    fe:containsArtefact
+    fe:hasWeatherCondition
+    fe:hasBlockingState
+    fe:hasAccessibilityLevel
+    fe:hasRescueAccessibilityLevel
+    fe:hasProtectionPriority
+  }
+
+  ?entity a ?class .
+  OPTIONAL { ?entity ?property ?value . }
+}
+ORDER BY ?class ?entity ?property
