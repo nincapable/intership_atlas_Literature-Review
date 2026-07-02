@@ -22,14 +22,12 @@ fe:ArtifactSubType a owl:Class ; rdfs:subClassOf fe:ArtifactType ; rdfs:label "S
 
 fe:ArtifactsMobilityType a owl:Class ; rdfs:subClassOf fe:ArtifactTypes ; rdfs:label "Type de Mobilité"@fr .
 fe:ArtifactsFragilityType a owl:Class ; rdfs:subClassOf fe:ArtifactTypes ; rdfs:label "Type de Fragilité"@fr .
-fe:ArtifactPriorityLevel a owl:Class ; rdfs:subClassOf fe:ArtifactTypes ; rdfs:label "Niveau de Priorité"@fr .
 
 # Alignement : P2_has_type est la propriété standard pour classer un objet
 fe:hasArtefactType     a owl:ObjectProperty ; rdfs:subPropertyOf crm:P2_has_type ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactType .
 fe:hasArtefactSubType  a owl:ObjectProperty ; rdfs:subPropertyOf fe:hasArtefactType ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactSubType .    
 fe:hasArtifactsMobilityType     a owl:ObjectProperty ; rdfs:subPropertyOf crm:P2_has_type ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactsMobilityType .
 fe:hasArtifactsFragilityType    a owl:ObjectProperty ; rdfs:subPropertyOf crm:P2_has_type ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactsFragilityType .
-fe:hasPriorityLevel a owl:ObjectProperty ; rdfs:subPropertyOf crm:P2_has_type ; rdfs:domain fe:Artefact ; rdfs:range fe:ArtifactPriorityLevel .
 
 fe:hasArtefactType owl:propertyChainAxiom (fe:hasArtefactSubType skos:broader) .
 # =================================================================

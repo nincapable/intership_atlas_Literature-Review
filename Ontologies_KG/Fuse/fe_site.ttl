@@ -18,14 +18,14 @@ fe:HeritageSite a owl:Class ;
     rdfs:comment "Entité globale regroupant les aspects spatiaux, humains et de sécurité."@fr .
 
 fe:hasZone a owl:ObjectProperty ;
-    rdfs:subPropertyOf crm:P89_falls_within ;
+    rdfs:subPropertyOf crm:P89i_contains ;
     rdfs:label "a pour zone"@fr ;
     rdfs:domain fe:HeritageSite ;
     rdfs:range fe:Zone ;
     owl:inverseOf fe:isZoneOf .
 
 fe:isZoneOf a owl:ObjectProperty ;
-    rdfs:subPropertyOf crm:P89i_contains ;
+    rdfs:subPropertyOf crm:P89_falls_within;
     rdfs:label "est une zone de"@fr ;
     rdfs:domain fe:Zone ;
     rdfs:range fe:HeritageSite .

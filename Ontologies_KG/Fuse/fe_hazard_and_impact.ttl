@@ -33,6 +33,14 @@ fe:hasImpactAssessment a owl:ObjectProperty ;
 # 2. QUALIFICATION DE L'ALÉA
 # =================================================================
 
+fe:IntensityLevel a owl:Class ;
+    rdfs:subClassOf fe:HazardAndSafetyType ;
+    rdfs:label "Niveau d'intensité"@fr .
+
+fe:SeverityLevel a owl:Class ;
+    rdfs:subClassOf fe:HazardAndSafetyType ;
+    rdfs:label "Niveau de gravité"@fr .
+
 fe:hasHazardType a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P2_has_type ;
     rdfs:label "type d'aléa"@fr ;
@@ -67,6 +75,10 @@ fe:hasMeteorologicalObservation a owl:ObjectProperty ;
 # 3. ÉVALUATION DES DÉGATS MATÉRIELS
 # =================================================================
 
+fe:ImpactSeverityLevel a owl:Class ;
+    rdfs:subClassOf fe:HazardAndSafetyType ;
+    rdfs:label "Niveau de sévérité des dommages"@fr .
+
 fe:AssessmentItem a owl:Class ;
     rdfs:label "Élément de bilan"@fr ;
     rdfs:subClassOf crm:E13_Attribute_Assignment ;
@@ -97,6 +109,11 @@ fe:isDamageTo a owl:ObjectProperty ;
 # =================================================================
 # 4. BILAN HUMAIN
 # =================================================================
+
+fe:TriageCount a owl:Class ;
+    rdfs:label "Comptage par catégorie de triage"@fr ;
+    rdfs:subClassOf fe:AssessmentItem ;
+    rdfs:comment "Nombre d'individus par catégorie de gravité (A, B, C, D) pour le bilan humain."@fr .
 
 fe:hasHumanToll a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P140_assigned_attribute_to ;

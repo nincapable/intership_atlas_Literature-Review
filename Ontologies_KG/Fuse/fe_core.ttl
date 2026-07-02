@@ -20,7 +20,8 @@
     owl:imports <http://example.org/fire_and_evacuation/artos> ;
     owl:imports <http://example.org/fire_and_evacuation/victim> ;
     owl:imports <http://example.org/fire_and_evacuation/weather> ;
-    owl:imports <http://example.org/fire_and_evacuation/natural_space>.
+    owl:imports <http://example.org/fire_and_evacuation/natural_space> ;
+    owl:imports <http://example.org/fire_and_evacuation/simulation>.
 
     # =================================================================
     # INTERFACE ET IMPORTS DES THÉSAURUS (Dossier parent /Thesaurus/)

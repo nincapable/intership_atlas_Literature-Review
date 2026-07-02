@@ -183,11 +183,8 @@ fe:containsArtefact a owl:ObjectProperty ;
 
 fe:hasZonePriority a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P2_has_type ;
-    rdfs:domain fe:Building ;
+    rdfs:domain fe:Zone ;
     rdfs:range fe:PriorityLevel .
-
-fe:hasZonePriority owl:propertyChainAxiom (fe:containsArtefact fe:hasProtectionPriority) .
-fe:hasZonePriority owl:propertyChainAxiom (fe:containsBuilding fe:hasBuildingPriority) .
 
 # Remontée des risques des Bâtiments
 fe:hasHazardExposure owl:propertyChainAxiom (fe:containsBuilding fe:hasBuildingFireExposure) .
@@ -201,7 +198,7 @@ fe:hasHazardExposure owl:propertyChainAxiom (fe:containsNaturalSpace fe:hasNatur
 fe:hasHazardExposure owl:propertyChainAxiom (fe:containsArtefact fe:hasArtifactFireExposure) .
 fe:hasHazardExposure owl:propertyChainAxiom (fe:containsArtefact fe:hasArtifactFloodExposure) .
 # La priorité de la Zone est héritée de ses Bâtiments ET de ses Artefacts isolés
-fe:hasZonePriority owl:propertyChainAxiom (fe:containsBuilding fe:hasBuildingPriority) .
+fe:hasZonePriority owl:propertyChainAxiom (fe:containsBuilding fe:hasProtectionPriority) .
 fe:hasZonePriority owl:propertyChainAxiom (fe:containsArtefact fe:hasProtectionPriority) .
 
 # =================================================================

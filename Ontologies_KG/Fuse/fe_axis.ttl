@@ -88,7 +88,12 @@ fe:isConnectedTo a owl:ObjectProperty, owl:SymmetricProperty ;
     rdfs:domain crm:E25_Man_Made_Feature ;
     rdfs:range crm:E25_Man_Made_Feature .
 
-fe:isConnectedTo owl:propertyChainAxiom (fe:isConnectedTo fe:isConnectedTo) .
+fe:isReachableFrom a owl:ObjectProperty ;
+    rdfs:subPropertyOf crm:P9_consists_of ;
+    rdfs:label "est atteignable depuis"@fr ;
+    rdfs:comment "Topologie : relie deux entités pour la simulation de graphes de circulation."@fr ;
+    rdfs:domain crm:E25_Man_Made_Feature ;
+    rdfs:range crm:E25_Man_Made_Feature .
 
 # =================================================================
 # 3. VULNÉRABILITÉ (Alignement P140_assigned_attribute_to)
@@ -99,7 +104,7 @@ fe:AxisVulnerability a owl:Class ;
     rdfs:subClassOf fe:hazardExposure ;
     rdfs:comment "Évaluation de l'exposition d'un axe à un aléa spécifique."@fr .
 
-fe:blockingType a owl:Class ;
+fe:BlockingType a owl:Class ;
     rdfs:label "Type de blocage"@fr ;
     rdfs:subClassOf fe:HazardAndSafetyType ;
     rdfs:comment "Classification des types de blocage physique (ex: débris, incendie, effondrement)."@fr .
@@ -109,8 +114,6 @@ fe:hasVulnerability a owl:ObjectProperty ;
     rdfs:label "présente une vulnérabilité opérationnelle"@fr ;
     rdfs:domain fe:Axis ;
     rdfs:range fe:AxisVulnerability .
-
-fe:hasVulnerability owl:propertyChainAxiom (fe:isConnectedTo fe:hasVulnerability) .
 
 fe:triggeredBy a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P17_was_motivated_by ;
