@@ -69,3 +69,20 @@ fe:hasInterventionForm a owl:ObjectProperty ;
     rdfs:label "fiche d'intervention associée"@fr ;
     rdfs:domain fe:Victim ;
     rdfs:range crm:E31_Document .
+
+
+# =================================================================
+# THESAURUS ALIGNMENT - victim vocabularies
+# =================================================================
+
+fe:TriageCategory a owl:Class ;
+    rdfs:subClassOf fe:victimTriageCategory ;
+    rdfs:label "Catégorie de triage (alignement thésaurus)"@fr .
+
+fe:GenderType a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType ;
+    rdfs:label "Genre (alignement thésaurus)"@fr .
+
+fe:VictimGroup a owl:Class ;
+    rdfs:subClassOf fe:populationPartitionFunctionalGroup ;
+    rdfs:label "Groupe de victime (alignement thésaurus)"@fr .

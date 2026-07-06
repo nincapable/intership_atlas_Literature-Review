@@ -24,6 +24,10 @@ fe:hasTopographicContext a owl:ObjectProperty ;
 
 fe:ZoneUsageType a owl:Class ; rdfs:subClassOf fe:OperationnalType .
 
+fe:TransitType a owl:Class ;
+    rdfs:subClassOf fe:OperationnalType ;
+    rdfs:label "Régime de transit"@fr .
+
 fe:hasZoneUsage a owl:ObjectProperty ;
     rdfs:subPropertyOf crm:P2_has_type ;
     rdfs:label "usage de la zone"@fr ;

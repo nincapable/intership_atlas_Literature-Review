@@ -2,6 +2,7 @@
 @prefix fe: <http://example.org/fire_and_evacuation#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
 <http://example.org/fire_and_evacuation/thesaurus_weather> a owl:Ontology ;
     owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS
@@ -67,3 +68,23 @@ fe:Celsius a skos:Concept ; skos:prefLabel "Degré Celsius"@fr ; skos:notation "
 fe:Kmh a skos:Concept ; skos:prefLabel "Kilomètre par heure"@fr ; skos:notation "km/h" ; skos:inScheme fe:UnitScheme .
 fe:Percentage a skos:Concept ; skos:prefLabel "Pourcentage"@fr ; skos:notation "%" ; skos:inScheme fe:UnitScheme .
 fe:Millimeter a skos:Concept ; skos:prefLabel "Millimètre"@fr ; skos:notation "mm" ; skos:inScheme fe:UnitScheme .
+
+
+# =================================================================
+# THESAURUS ALIGNMENT - Fuse weather classes
+# =================================================================
+
+fe:weatherQualifier a owl:Class ;
+    rdfs:subClassOf fe:OperationnalType .
+
+fe:ClimateScheme skos:hasTopConcept fe:Climate_Mediterranean, fe:Climate_Oceanic, fe:Climate_Continental, fe:Climate_Mountain .
+fe:BeaufortScheme skos:hasTopConcept fe:Beaufort_0, fe:Beaufort_5, fe:Beaufort_9 .
+fe:UnitScheme skos:hasTopConcept fe:Celsius, fe:Kmh, fe:Percentage, fe:Millimeter .
+
+fe:Climate_Mediterranean skos:topConceptOf fe:ClimateScheme .
+fe:Climate_Oceanic skos:topConceptOf fe:ClimateScheme .
+fe:Climate_Continental skos:topConceptOf fe:ClimateScheme .
+fe:Climate_Mountain skos:topConceptOf fe:ClimateScheme .
+fe:Beaufort_0 skos:topConceptOf fe:BeaufortScheme .
+fe:Beaufort_5 skos:topConceptOf fe:BeaufortScheme .
+fe:Beaufort_9 skos:topConceptOf fe:BeaufortScheme .

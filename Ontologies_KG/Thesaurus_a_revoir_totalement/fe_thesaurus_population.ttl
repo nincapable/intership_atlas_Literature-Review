@@ -108,3 +108,11 @@ fe:hasAverageVelocity a owl:DatatypeProperty ;
     rdfs:comment "Valeur décimale utilisée par le moteur de pathfinding de SocSIM-K."@fr ;
     rdfs:domain fe:populationPartitionMobilityClass ;
     rdfs:range xsd:decimal .
+
+
+# =================================================================
+# THESAURUS ALIGNMENT - Fuse population schemes
+# =================================================================
+
+fe:PopulationTaxonomy skos:hasTopConcept fe:Mobility_Valid, fe:Mobility_Invalid, fe:Mobility_Elderly, fe:Mobility_Child, fe:Group_Civilian, fe:Group_Rescue, fe:Status_Resident, fe:Status_Tourist .
+fe:HumanFactorsTaxonomy skos:hasTopConcept fe:Perception_None, fe:Perception_High, fe:Awareness_None, fe:Awareness_Trained, fe:Training_None, fe:Training_Professional, fe:Edu_Primary, fe:Edu_Higher .

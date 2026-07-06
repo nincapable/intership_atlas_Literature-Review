@@ -2,6 +2,7 @@
 @prefix fe: <http://example.org/fire_and_evacuation#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
 <http://example.org/fire_and_evacuation/thesaurus_victim> a owl:Ontology ;
     owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS
@@ -98,3 +99,30 @@ fe:Male a skos:Concept, fe:GenderType ;
 fe:Female a skos:Concept, fe:GenderType ;
     skos:prefLabel "Femme"@fr ;
     skos:inScheme fe:GenderScheme .
+
+
+# =================================================================
+# THESAURUS ALIGNMENT - Fuse victim classes
+# =================================================================
+
+fe:TriageCategory a owl:Class ;
+    rdfs:subClassOf fe:victimTriageCategory .
+
+fe:VictimGroup a owl:Class ;
+    rdfs:subClassOf fe:populationPartitionFunctionalGroup .
+
+fe:GenderType a owl:Class ;
+    rdfs:subClassOf fe:HumanFactorType .
+
+fe:TriageCategoryScheme skos:hasTopConcept fe:Green, fe:Yellow, fe:Red, fe:Black, fe:Violet, fe:White .
+fe:VictimGroupScheme skos:hasTopConcept fe:Group_Civilian, fe:Group_Rescuer, fe:Group_Medical, fe:Group_LawEnforcement, fe:Group_Other .
+fe:GenderScheme skos:hasTopConcept fe:Male, fe:Female .
+
+fe:Green skos:topConceptOf fe:TriageCategoryScheme .
+fe:Yellow skos:topConceptOf fe:TriageCategoryScheme .
+fe:Red skos:topConceptOf fe:TriageCategoryScheme .
+fe:Black skos:topConceptOf fe:TriageCategoryScheme .
+fe:Violet skos:topConceptOf fe:TriageCategoryScheme .
+fe:White skos:topConceptOf fe:TriageCategoryScheme .
+fe:Male skos:topConceptOf fe:GenderScheme .
+fe:Female skos:topConceptOf fe:GenderScheme .

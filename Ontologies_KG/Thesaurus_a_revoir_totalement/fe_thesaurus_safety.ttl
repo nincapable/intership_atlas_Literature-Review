@@ -1,6 +1,7 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix fe: <http://example.org/fire_and_evacuation#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
 <http://example.org/fire_and_evacuation/thesaurus_safety> a owl:Ontology ;
     owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS
@@ -120,3 +121,17 @@ fe:Projection a skos:Concept, fe:PropagationType ;
     skos:definition "Transport de particules enflammées (escarbilles, brindilles) par convection et vent."@fr ;
     skos:note "Impact : Création de nouveaux foyers secondaires à distance (spotting), franchissement de coupures de combustible."@fr ;
     skos:inScheme fe:PropagationScheme .
+
+
+# =================================================================
+# THESAURUS ALIGNMENT - Fuse safety properties
+# =================================================================
+
+fe:fireSeverityScore a owl:DatatypeProperty ;
+    rdfs:subPropertyOf fe:materialFlammabilityScore ;
+    rdfs:label "Score de sévérité incendie (alias thésaurus)"@fr .
+
+fe:EuroclassScheme skos:hasTopConcept fe:A1, fe:A2, fe:B, fe:C, fe:D, fe:E, fe:F, fe:s1, fe:s2, fe:s3, fe:d0, fe:d1, fe:d2 .
+fe:ResistanceScheme skos:hasTopConcept fe:R, fe:E, fe:I, fe:W .
+fe:CombustibilityScheme skos:hasTopConcept fe:PyrophileHigh, fe:FlashFuel, fe:DelayedIgnition .
+fe:PropagationScheme skos:hasTopConcept fe:Conduction, fe:Convection, fe:Radiation, fe:Projection .

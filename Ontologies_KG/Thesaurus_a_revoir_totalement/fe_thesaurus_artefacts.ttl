@@ -2,6 +2,7 @@
 @prefix fe: <http://example.org/fire_and_evacuation#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
 <http://example.org/fire_and_evacuation/thesaurus_artefacts> a owl:Ontology ;
     owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS
@@ -240,3 +241,30 @@ fe:PriorityP3 a skos:Concept, fe:ArtifactPriorityLevel ;
     skos:note "Action : Sauvegarde effectuée uniquement si les conditions de sécurité le permettent."@fr ;
     fe:priorityScore 1;
     skos:inScheme fe:PriorityScheme .
+
+
+# =================================================================
+# THESAURUS ALIGNMENT - Fuse artifact classes
+# =================================================================
+
+fe:ArtifactPriorityLevel a owl:Class ;
+    rdfs:subClassOf fe:PriorityLevel ;
+    rdfs:label "Niveau de priorité d'artefact (spécialisation de PriorityLevel)"@fr .
+
+fe:PriorityP1 a fe:PriorityLevel ; skos:topConceptOf fe:PriorityScheme .
+fe:PriorityP2 a fe:PriorityLevel ; skos:topConceptOf fe:PriorityScheme .
+fe:PriorityP3 a fe:PriorityLevel ; skos:topConceptOf fe:PriorityScheme .
+
+fe:Domestique skos:topConceptOf fe:ArtefactTaxonomyScheme .
+fe:Martiale skos:topConceptOf fe:ArtefactTaxonomyScheme .
+fe:Culturelle skos:topConceptOf fe:ArtefactTaxonomyScheme .
+fe:Spirituelle skos:topConceptOf fe:ArtefactTaxonomyScheme .
+fe:Scientifique skos:topConceptOf fe:ArtefactTaxonomyScheme .
+fe:Structurelle skos:topConceptOf fe:ArtefactTaxonomyScheme .
+fe:Mobile skos:topConceptOf fe:MobilityScheme .
+fe:SemiMobile skos:topConceptOf fe:MobilityScheme .
+fe:Fixe skos:topConceptOf fe:MobilityScheme .
+fe:Thermosensible skos:topConceptOf fe:FragilityScheme .
+fe:Hydrosensible skos:topConceptOf fe:FragilityScheme .
+fe:ShockSensitive skos:topConceptOf fe:FragilityScheme .
+fe:Robust skos:topConceptOf fe:FragilityScheme .

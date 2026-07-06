@@ -21,7 +21,21 @@
     owl:imports <http://example.org/fire_and_evacuation/victim> ;
     owl:imports <http://example.org/fire_and_evacuation/weather> ;
     owl:imports <http://example.org/fire_and_evacuation/natural_space> ;
-    owl:imports <http://example.org/fire_and_evacuation/simulation>.
+    owl:imports <http://example.org/fire_and_evacuation/simulation> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_alea> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_axis> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_espaces_nat> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_especes> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_heritageSite> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_victim> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_zone> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_safety> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_artefacts> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_building> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_impact> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_population> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_weather> ;
+    owl:imports <http://example.org/fire_and_evacuation/thesaurus_cognitive>.
 
     # =================================================================
     # INTERFACE ET IMPORTS DES THÉSAURUS (Dossier parent /Thesaurus/)

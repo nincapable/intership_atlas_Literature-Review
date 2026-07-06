@@ -2,6 +2,11 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/fire_and_evacuation/thesaurus_cognitive> a owl:Ontology ;
+    owl:imports <http://www.w3.org/2004/02/skos/core> ;
+    rdfs:label "Thésaurus des facteurs humains et cognitifs"@fr .
 
 # =================================================================
 # DÉFINITION DU SCHÉMA DE CONCEPT GLOBALE
@@ -194,14 +199,54 @@ fe:Interference_Passive_Mutes_Individualist a fe:InterferenceRelation ;
 # Ton code Python n'aura qu'à requêter ces lignes pour mapper sa matrice.
 
 fe:ArchetypeIndividualist
-    fe:subitInterference :Interference_Altruist_Boosts_Individualist ;
-    fe:subitInterference :Interference_Passive_Mutes_Individualist .
+    fe:subitInterference fe:Interference_Altruist_Boosts_Individualist ;
+    fe:subitInterference fe:Interference_Passive_Mutes_Individualist .
 
 fe:ArchetypeVulnerable
-    fe:subitInterference :Interference_Individualist_Freezes_Vulnerable .
+    fe:subitInterference fe:Interference_Individualist_Freezes_Vulnerable .
 
 fe:ArchetypePassive
-    fe:subitInterference :Interference_Leader_Activates_Passive .
+    fe:subitInterference fe:Interference_Leader_Activates_Passive .
 
 fe:ArchetypeAltruist
-    fe:subitInterference :Interference_Vulnerable_Triggers_Altruist .
+    fe:subitInterference fe:Interference_Vulnerable_Triggers_Altruist .
+
+
+# =================================================================
+# THESAURUS ALIGNMENT - Fuse cognitive properties
+# =================================================================
+
+fe:hasAsActeur a owl:ObjectProperty ;
+    rdfs:subPropertyOf fe:hasAsAuthor ;
+    rdfs:label "a pour acteur (alias thésaurus)"@fr .
+
+fe:hasAsCible a owl:ObjectProperty ;
+    rdfs:subPropertyOf fe:hasAsTarget ;
+    rdfs:label "a pour cible (alias thésaurus)"@fr .
+
+fe:probabilityModifier a owl:DatatypeProperty ;
+    rdfs:subPropertyOf fe:probabilityBiasTriggerModifier ;
+    rdfs:label "modificateur de probabilité (alias thésaurus)"@fr .
+
+fe:mediatedByInteraction a owl:ObjectProperty ;
+    rdfs:domain fe:InterferenceRelation ;
+    rdfs:range fe:SocialInteractionType .
+
+fe:subitInterference a owl:ObjectProperty ;
+    rdfs:domain fe:HumanArchetype ;
+    rdfs:range fe:InterferenceRelation .
+
+fe:CognitiveBehaviorThesaurus skos:hasTopConcept fe:BehaviorConceptRoot, fe:BiasConceptRoot, fe:InteractionConceptRoot .
+fe:BehaviorFlight skos:inScheme fe:CognitiveBehaviorThesaurus .
+fe:BehaviorFreezing skos:inScheme fe:CognitiveBehaviorThesaurus .
+fe:BehaviorInformationSeeking skos:inScheme fe:CognitiveBehaviorThesaurus .
+fe:BehaviorHelp skos:inScheme fe:CognitiveBehaviorThesaurus .
+fe:BehaviorSheltering skos:inScheme fe:CognitiveBehaviorThesaurus .
+fe:NormalcyBias skos:inScheme fe:CognitiveBehaviorThesaurus .
+fe:AnchoringBias skos:inScheme fe:CognitiveBehaviorThesaurus .
+fe:SocialAnhedoniaCrisis skos:inScheme fe:CognitiveBehaviorThesaurus .
+fe:AffiliativeBias skos:inScheme fe:CognitiveBehaviorThesaurus .
+fe:InteractionHerding skos:inScheme fe:CognitiveBehaviorThesaurus .
+fe:InteractionGuidance skos:inScheme fe:CognitiveBehaviorThesaurus .
+fe:InteractionAggression skos:inScheme fe:CognitiveBehaviorThesaurus .
+fe:InteractionMutualSupport skos:inScheme fe:CognitiveBehaviorThesaurus .

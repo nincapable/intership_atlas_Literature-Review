@@ -2,6 +2,7 @@
 @prefix fe: <http://example.org/fire_and_evacuation#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
 <http://example.org/fire_and_evacuation/thesaurus_heritageSite> a owl:Ontology ;
     owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS

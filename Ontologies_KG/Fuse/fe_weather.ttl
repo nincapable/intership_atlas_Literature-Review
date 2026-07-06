@@ -79,3 +79,12 @@ fe:hasValue a owl:DatatypeProperty ;
     rdfs:label "valeur numérique"@fr ;
     rdfs:domain fe:WeatherDimension ;
     rdfs:range xsd:decimal .
+
+
+# =================================================================
+# THESAURUS ALIGNMENT - weather vocabularies
+# =================================================================
+
+fe:weatherQualifier a owl:Class ;
+    rdfs:subClassOf fe:OperationnalType ;
+    rdfs:label "Qualificatif météorologique"@fr .

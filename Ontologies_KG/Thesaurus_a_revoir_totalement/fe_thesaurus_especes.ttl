@@ -1,6 +1,8 @@
 @prefix fe:   <http://example.org/fire_and_evacuation#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 <http://example.org/fire_and_evacuation/thesaurus_especes> a owl:Ontology ;
     owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS
@@ -289,3 +291,47 @@ fe:StatusLC a skos:Concept, fe:SpeciesProtectionStatus ;
     skos:prefLabel "LC - Préoccupation mineure"@fr ;
     fe:protectionPriorityWeight 1.0 ;
     skos:inScheme fe:UICNStatusScheme .
+
+
+# =================================================================
+# THESAURUS ALIGNMENT - Fuse natural-space classes
+# =================================================================
+
+fe:UICNStatusScheme skos:hasTopConcept fe:StatusEX, fe:StatusCR, fe:StatusEN, fe:StatusVU, fe:StatusNT, fe:StatusLC .
+fe:StatusEX skos:topConceptOf fe:UICNStatusScheme ; skos:closeMatch fe:IUCN_EX .
+fe:StatusCR skos:topConceptOf fe:UICNStatusScheme ; skos:closeMatch fe:IUCN_CR .
+fe:StatusEN skos:topConceptOf fe:UICNStatusScheme ; skos:closeMatch fe:IUCN_EN .
+fe:StatusVU skos:topConceptOf fe:UICNStatusScheme ; skos:closeMatch fe:IUCN_VU .
+fe:StatusNT skos:topConceptOf fe:UICNStatusScheme ; skos:closeMatch fe:IUCN_NT .
+fe:StatusLC skos:topConceptOf fe:UICNStatusScheme ; skos:closeMatch fe:IUCN_LC .
+
+
+fe:Fungus_Reign a skos:Concept, fe:BioReign ;
+    skos:prefLabel "Champignon (alias historique)"@fr ;
+    skos:exactMatch fe:Fungus ;
+    skos:inScheme fe:TaxonomyScheme .
+
+fe:FireAidingTrait a owl:Class ;
+    rdfs:subClassOf fe:BioTrait .
+
+fe:FireResistingTrait a owl:Class ;
+    rdfs:subClassOf fe:BioTrait .
+
+fe:Animal skos:topConceptOf fe:TaxonomyScheme .
+fe:Plant skos:topConceptOf fe:TaxonomyScheme .
+fe:Fungus skos:topConceptOf fe:TaxonomyScheme .
+fe:FlammabilityScale skos:topConceptOf fe:FireTraitScheme .
+fe:FireAidingTrait skos:topConceptOf fe:FireTraitScheme .
+fe:FireResistingTrait skos:topConceptOf fe:FireTraitScheme .
+fe:EmberTypeRoot skos:topConceptOf fe:FireTraitScheme .
+fe:FireResponseStrategyRoot skos:topConceptOf fe:PlantFireStrategyScheme .
+fe:FireFunctionalRoleRoot skos:topConceptOf fe:PlantFireStrategyScheme .
+fe:IUCN_EX skos:topConceptOf fe:IUCScheme .
+fe:IUCN_EW skos:topConceptOf fe:IUCScheme .
+fe:IUCN_CR skos:topConceptOf fe:IUCScheme .
+fe:IUCN_EN skos:topConceptOf fe:IUCScheme .
+fe:IUCN_VU skos:topConceptOf fe:IUCScheme .
+fe:IUCN_NT skos:topConceptOf fe:IUCScheme .
+fe:IUCN_LC skos:topConceptOf fe:IUCScheme .
+fe:IUCN_DD skos:topConceptOf fe:IUCScheme .
+fe:IUCN_NE skos:topConceptOf fe:IUCScheme .

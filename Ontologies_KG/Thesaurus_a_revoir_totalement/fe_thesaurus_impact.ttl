@@ -1,6 +1,7 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix fe: <http://example.org/fire_and_evacuation#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
 <http://example.org/fire_and_evacuation/thesaurus_impact> a owl:Ontology ;
     owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS
@@ -71,3 +72,20 @@ fe:Triage_Impliqué a skos:Concept, fe:TriageCategory ;
     skos:altLabel "Gris"@fr ;
     skos:definition "Personne présente sur les lieux, non blessée physiquement mais nécessitant un soutien psychologique ou un recensement."@fr ;
     skos:inScheme fe:TriageScheme .
+
+
+# =================================================================
+# THESAURUS ALIGNMENT - Fuse impact classes
+# =================================================================
+
+fe:TriageCategory a owl:Class ;
+    rdfs:subClassOf fe:victimTriageCategory .
+
+fe:SeverityScheme skos:hasTopConcept fe:Severity_None, fe:Severity_Light, fe:Severity_Moderate, fe:Severity_Severe, fe:Severity_Total .
+fe:TriageScheme skos:hasTopConcept fe:Triage_UrgenceAbsolue, fe:Triage_UrgenceRelative, fe:Triage_BlesséLéger, fe:Triage_Décédé, fe:Triage_Impliqué .
+
+fe:Severity_None skos:topConceptOf fe:SeverityScheme .
+fe:Severity_Light skos:topConceptOf fe:SeverityScheme .
+fe:Severity_Moderate skos:topConceptOf fe:SeverityScheme .
+fe:Severity_Severe skos:topConceptOf fe:SeverityScheme .
+fe:Severity_Total skos:topConceptOf fe:SeverityScheme .

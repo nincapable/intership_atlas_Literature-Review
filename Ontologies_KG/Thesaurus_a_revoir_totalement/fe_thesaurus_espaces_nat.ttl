@@ -2,6 +2,7 @@
 @prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
 <http://example.org/fire_and_evacuation/thesaurus_espaces_nat> a owl:Ontology ;
     owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS
@@ -149,3 +150,15 @@ fe:RepartitionRandom a skos:Concept, fe:RepartitionType ;
     skos:definition "Biomasse répartie de manière irrégulière sans motif discernable."@fr ;
     skos:inScheme fe:NaturalSpaceThesaurus ;
     crm:P3_has_note "Risque : Variable."@fr .
+
+
+# =================================================================
+# THESAURUS ALIGNMENT - Fuse natural space schemes
+# =================================================================
+
+fe:Forest skos:topConceptOf fe:NaturalSpaceThesaurus .
+fe:Shrubland skos:topConceptOf fe:NaturalSpaceThesaurus .
+fe:Grassland skos:topConceptOf fe:NaturalSpaceThesaurus .
+fe:Crop skos:topConceptOf fe:NaturalSpaceThesaurus .
+fe:Wetland skos:topConceptOf fe:NaturalSpaceThesaurus .
+fe:Parc skos:topConceptOf fe:NaturalSpaceThesaurus .

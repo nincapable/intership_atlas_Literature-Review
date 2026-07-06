@@ -1,6 +1,7 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix fe: <http://example.org/fire_and_evacuation#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
 <http://example.org/fire_and_evacuation/thesaurus_axis> a owl:Ontology ;
     owl:imports <http://www.w3.org/2004/02/skos/core> ; # Optionnel : importe les définitions SKOS
@@ -166,3 +167,24 @@ fe:SocialObstruction a skos:Concept, fe:blockingType ;
     skos:prefLabel "Obstruction humaine"@fr ;
     skos:inScheme fe:BlockingNatureScheme ;
     skos:narrower fe:CrowdCrush .
+
+
+# =================================================================
+# THESAURUS ALIGNMENT - Fuse axis classes
+# =================================================================
+
+fe:blockingType a owl:Class ;
+    owl:equivalentClass fe:BlockingType ;
+    rdfs:label "Type de blocage (alias historique du thésaurus)"@fr .
+
+fe:AxisTaxonomy skos:hasTopConcept fe:AxisTypeConcept, fe:PMR_AccessibilityConcept, fe:Rescue_AccessibilityConcept .
+fe:BlockingNatureScheme skos:hasTopConcept fe:DebrisObstruction, fe:AtmosphericObstruction, fe:FluidObstruction, fe:SocialObstruction .
+
+fe:AxisTypeConcept skos:closeMatch fe:AxisType .
+fe:PMR_AccessibilityConcept skos:closeMatch fe:AccessibilityLevel .
+fe:Rescue_AccessibilityConcept skos:closeMatch fe:RescueAccessibilityLevel .
+
+fe:DebrisObstruction skos:topConceptOf fe:BlockingNatureScheme .
+fe:AtmosphericObstruction skos:topConceptOf fe:BlockingNatureScheme .
+fe:FluidObstruction skos:topConceptOf fe:BlockingNatureScheme .
+fe:SocialObstruction skos:topConceptOf fe:BlockingNatureScheme .
