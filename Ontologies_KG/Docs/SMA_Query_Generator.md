@@ -231,7 +231,7 @@ python3 Scripts/generate_sma_queries.py PROFILE.ttl \
 
 ## Fonctionnement interne du générateur
 
-Le script est volontairement léger et ne dépend pas de `rdflib`. Il lit le fichier TTL comme du texte et extrait les valeurs des prédicats suivants :
+Le script utilise maintenant `rdflib` pour parser le fichier TTL comme un vrai graphe RDF. Le profil reste simple pour le chercheur, mais l'extraction interne lit les valeurs RDF des prédicats suivants :
 
 ```text
 fe:profileIdentifier
@@ -244,20 +244,22 @@ fe:producesProperty
 Les fonctions principales sont :
 
 ```python
-strip_comments(text)
-values_for(clean_text, predicate)
-literal_for(clean_text, predicate, default)
+load_profile(profile_path)
+SimulationProfile
+generate_deep_construct(profile)
 format_values(values)
 generated_name(profile_path, profile_id)
 ```
 
-### `strip_comments`
+`load_profile` charge le TTL avec `Graph().parse(..., format="turtle")`, identifie la ressource `fe:SimulationProfile`, puis convertit les URI en QNames lisibles avec le gestionnaire de namespaces de `rdflib`.
 
-Supprime les commentaires `# ...` avant extraction. Cela évite qu'un commentaire contenant un QName soit interprété comme une valeur.
+### `load_profile`
 
-### `values_for`
+Charge le profil comme graphe RDF, trouve l'unique ressource `fe:SimulationProfile`, puis remplit une structure `SimulationProfile`.
 
-Cherche les valeurs RDF associées à un prédicat donné.
+### Lecture des valeurs RDF
+
+Les valeurs associées aux prédicats du profil sont lues depuis le graphe RDF, puis normalisées en QNames.
 
 Exemple :
 
@@ -271,11 +273,11 @@ devient :
 ["fe:Zone", "fe:Axis", "fe:Population"]
 ```
 
-Le parseur attend un style simple : valeurs séparées par des virgules, terminées par `;` ou `.`.
+Le profil peut donc rester écrit dans le style Turtle simple existant, mais la lecture n'est plus dépendante d'expressions régulières.
 
-### `literal_for`
+### Littéraux
 
-Lit un littéral simple entre guillemets, utilisé actuellement pour `fe:profileIdentifier`.
+`fe:profileIdentifier` et les futurs littéraux simples comme `fe:maxDepth` sont lus comme valeurs RDF, pas comme texte brut.
 
 ### `generated_name`
 
@@ -535,8 +537,7 @@ python3 Scripts/generate_sma_queries.py Profiles/artefact_saving_sma_profile.ttl
 
 Le générateur est volontairement simple. Il ne fait pas encore :
 
-- parsing RDF complet ;
-- résolution des imports OWL ;
+- résolution complète des imports OWL et des graphes nommés ;
 - validation automatique du profil ;
 - génération de requêtes centrées sur un scénario ou une zone donnée ;
 - génération de payload JSON ;
@@ -544,7 +545,7 @@ Le générateur est volontairement simple. Il ne fait pas encore :
 - remplacement automatique des placeholders de sortie ;
 - production automatique de shapes SHACL depuis le profil.
 
-Ces limites sont acceptables pour mesurer le principe. Pour une version de production, il faudra probablement utiliser un vrai parseur RDF (`rdflib`, Jena, RDF4J) et générer les requêtes à partir du graphe RDF du profil plutôt qu'à partir de texte.
+Ces limites sont acceptables pour mesurer le principe. Le prototype utilise déjà `rdflib` pour lire le profil comme graphe RDF ; pour une version de production plus complète, il faudra probablement enrichir cette couche avec validation SHACL, résolution contrôlée des imports, nettoyage RDF et éventuellement Jena/RDF4J côté serveur.
 
 ## Évolutions naturelles
 
