@@ -1,0 +1,3 @@
+run_id,scenario_id,input_id,output_id,entity,step,time,property,value,value_type
+SimulationRun_001,Scenario_001,Input_evacuation_sma,Output_001,Zone_A,120,600.0,fe:hasFinalStatus,evacuated,xsd:string
+SimulationRun_001,Scenario_001,Input_evacuation_sma,Output_001,Zone_A,120,600.0,fe:hasEvacuationTime,540.0,xsd:double

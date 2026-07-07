@@ -1,0 +1,61 @@
+{
+  "profile": "evacuation_sma",
+  "input_csv": "evacuation_sma_input.csv",
+  "columns": [
+    {
+      "name": "entity",
+      "role": "subject",
+      "type": "uri"
+    },
+    {
+      "name": "class",
+      "role": "rdf_class",
+      "type": "uri"
+    },
+    {
+      "name": "property",
+      "role": "predicate",
+      "type": "uri"
+    },
+    {
+      "name": "value",
+      "role": "object",
+      "type": "mixed"
+    },
+    {
+      "name": "value_type",
+      "role": "datatype_or_uri",
+      "type": "string"
+    },
+    {
+      "name": "value_lang",
+      "role": "language",
+      "type": "string"
+    }
+  ],
+  "required_classes": [
+    "fe:Zone",
+    "fe:Axis",
+    "fe:Population",
+    "fe:HazardEvent"
+  ],
+  "required_properties": [
+    "fe:hasPopulation",
+    "fe:isConnectedTo",
+    "fe:maxFlowCapacity",
+    "fe:hasWidth",
+    "fe:hasLength",
+    "fe:hasHazardExposure"
+  ],
+  "optional_properties": [
+    "fe:containsBuilding",
+    "fe:containsNaturalSpace",
+    "fe:containsArtefact",
+    "fe:hasWeatherCondition",
+    "fe:hasBlockingState",
+    "fe:hasAccessibilityLevel",
+    "fe:hasRescueAccessibilityLevel",
+    "fe:hasProtectionPriority"
+  ],
+  "notes": "CSV is the simulator-facing input table; RDF typing is preserved through value_type and value_lang."
+}

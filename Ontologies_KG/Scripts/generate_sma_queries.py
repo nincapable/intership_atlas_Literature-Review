@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
-"""Generate SPARQL initialization/result templates from fe:SimulationProfile RDF files.
+"""Generate SPARQL and CSV mapping artifacts from fe:SimulationProfile RDF files.
 
 The user-facing contract stays intentionally simple: a researcher declares what a
 SMA reads and writes in a Turtle profile. Internally, this script uses rdflib so
-that profiles are parsed as RDF graphs instead of fragile text snippets.
+that profiles are parsed as RDF graphs instead of fragile text snippets. CSV is
+then used as the external exchange format with simulators.
 """
 from __future__ import annotations
 
 import argparse
+import csv
+import json
 import re
 from dataclasses import dataclass, field
+from io import StringIO
 from pathlib import Path
 
 from rdflib import Graph, Literal, Namespace, URIRef
@@ -25,6 +29,9 @@ DEFAULT_NAMESPACES: tuple[tuple[str, str], ...] = (
     ('owl', 'http://www.w3.org/2002/07/owl#'),
     ('xsd', 'http://www.w3.org/2001/XMLSchema#'),
 )
+
+INPUT_CSV_COLUMNS = ['entity', 'class', 'property', 'value', 'value_type', 'value_lang']
+RESULT_CSV_COLUMNS = ['run_id', 'scenario_id', 'input_id', 'output_id', 'entity', 'step', 'time', 'property', 'value', 'value_type']
 
 
 @dataclass(frozen=True)
@@ -54,6 +61,16 @@ class GeneratedQueries:
     init_construct: str
     init_select: str
     result_insert: str
+
+
+@dataclass(frozen=True)
+class GeneratedArtifacts:
+    init_construct: Path
+    init_select: Path
+    result_insert: Path
+    input_mapping: Path
+    output_mapping: Path
+    result_example_csv: Path
 
 
 def unique_preserve_order(values: list[str]) -> list[str]:
@@ -274,7 +291,100 @@ def generate_queries(profile: SimulationProfile, template_dir: Path, input_iri: 
     return GeneratedQueries(init_query, select_query, result_query)
 
 
-def write_queries(profile_path: Path, out_dir: Path, template_dir: Path) -> tuple[Path, Path, Path]:
+def input_mapping(profile: SimulationProfile, input_csv_name: str) -> dict[str, object]:
+    return {
+        'profile': profile.identifier,
+        'input_csv': input_csv_name,
+        'columns': [
+            {'name': 'entity', 'role': 'subject', 'type': 'uri'},
+            {'name': 'class', 'role': 'rdf_class', 'type': 'uri'},
+            {'name': 'property', 'role': 'predicate', 'type': 'uri'},
+            {'name': 'value', 'role': 'object', 'type': 'mixed'},
+            {'name': 'value_type', 'role': 'datatype_or_uri', 'type': 'string'},
+            {'name': 'value_lang', 'role': 'language', 'type': 'string'},
+        ],
+        'required_classes': profile.required_classes,
+        'required_properties': profile.required_properties,
+        'optional_properties': profile.optional_properties,
+        'notes': 'CSV is the simulator-facing input table; RDF typing is preserved through value_type and value_lang.',
+    }
+
+
+def output_mapping(profile: SimulationProfile, result_csv_name: str) -> dict[str, object]:
+    return {
+        'profile': profile.identifier,
+        'result_csv': result_csv_name,
+        'columns': [
+            {'name': 'run_id', 'role': 'simulation_run_identifier', 'type': 'uri_or_local_id'},
+            {'name': 'scenario_id', 'role': 'scenario_identifier', 'type': 'uri_or_local_id'},
+            {'name': 'input_id', 'role': 'simulation_input_identifier', 'type': 'uri_or_local_id'},
+            {'name': 'output_id', 'role': 'simulation_output_identifier', 'type': 'uri_or_local_id'},
+            {'name': 'entity', 'role': 'updated_entity', 'type': 'uri_or_local_id'},
+            {'name': 'step', 'role': 'simulation_step', 'type': 'integer'},
+            {'name': 'time', 'role': 'simulation_time', 'type': 'decimal'},
+            {'name': 'property', 'role': 'produced_predicate', 'type': 'uri'},
+            {'name': 'value', 'role': 'produced_value', 'type': 'mixed'},
+            {'name': 'value_type', 'role': 'datatype_or_uri', 'type': 'string'},
+        ],
+        'produced_classes': profile.produced_classes,
+        'produced_properties': profile.produced_properties,
+        'allowed_value_types': ['uri', 'xsd:string', 'xsd:integer', 'xsd:decimal', 'xsd:double', 'xsd:boolean'],
+        'uri_rules': {
+            'qname': 'Values like fe:Zone_A are emitted as QNames.',
+            'absolute_uri': 'Values beginning with http:// or https:// are emitted as bracketed IRIs.',
+            'local_id': 'Bare identifiers are minted in the fe: namespace after conservative sanitization.',
+        },
+        'example_row': {
+            'run_id': 'SimulationRun_001',
+            'scenario_id': 'Scenario_001',
+            'input_id': f'Input_{profile.identifier}',
+            'output_id': 'Output_001',
+            'entity': 'Zone_A',
+            'step': '120',
+            'time': '600.0',
+            'property': 'fe:hasEvacuationTime',
+            'value': '540.0',
+            'value_type': 'xsd:double',
+        },
+    }
+
+
+def result_example_csv(profile: SimulationProfile) -> str:
+    output = StringIO()
+    writer = csv.DictWriter(output, fieldnames=RESULT_CSV_COLUMNS, lineterminator='\n')
+    writer.writeheader()
+    writer.writerow({
+        'run_id': 'SimulationRun_001',
+        'scenario_id': 'Scenario_001',
+        'input_id': f'Input_{profile.identifier}',
+        'output_id': 'Output_001',
+        'entity': 'Zone_A',
+        'step': '120',
+        'time': '600.0',
+        'property': 'fe:hasFinalStatus',
+        'value': 'evacuated',
+        'value_type': 'xsd:string',
+    })
+    writer.writerow({
+        'run_id': 'SimulationRun_001',
+        'scenario_id': 'Scenario_001',
+        'input_id': f'Input_{profile.identifier}',
+        'output_id': 'Output_001',
+        'entity': 'Zone_A',
+        'step': '120',
+        'time': '600.0',
+        'property': 'fe:hasEvacuationTime',
+        'value': '540.0',
+        'value_type': 'xsd:double',
+    })
+    return output.getvalue()
+
+
+def write_json(path: Path, content: dict[str, object]) -> None:
+    path.write_text(json.dumps(content, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+
+def write_queries(profile_path: Path, out_dir: Path, template_dir: Path) -> GeneratedArtifacts:
     profile = load_profile(profile_path)
     name = generated_name(profile_path, profile.identifier)
     input_iri = f'fe:Input_{name}'
@@ -284,25 +394,40 @@ def write_queries(profile_path: Path, out_dir: Path, template_dir: Path) -> tupl
     init_path = out_dir / f'{name}_init_construct.sparql'
     select_path = out_dir / f'{name}_init_select.sparql'
     result_path = out_dir / f'{name}_result_insert.sparql'
+    input_mapping_path = out_dir / f'{name}_input_mapping.json'
+    output_mapping_path = out_dir / f'{name}_output_mapping.json'
+    result_example_path = out_dir / f'{name}_results_example.csv'
+
     init_path.write_text(queries.init_construct, encoding='utf-8')
     select_path.write_text(queries.init_select, encoding='utf-8')
     result_path.write_text(queries.result_insert, encoding='utf-8')
-    return init_path, select_path, result_path
+    write_json(input_mapping_path, input_mapping(profile, f'{name}_input.csv'))
+    write_json(output_mapping_path, output_mapping(profile, f'{name}_results.csv'))
+    result_example_path.write_text(result_example_csv(profile), encoding='utf-8')
+
+    return GeneratedArtifacts(
+        init_construct=init_path,
+        init_select=select_path,
+        result_insert=result_path,
+        input_mapping=input_mapping_path,
+        output_mapping=output_mapping_path,
+        result_example_csv=result_example_path,
+    )
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description='Generate SPARQL queries from a fe:SimulationProfile TTL file.')
+    parser = argparse.ArgumentParser(description='Generate SPARQL queries and CSV mappings from a fe:SimulationProfile TTL file.')
     parser.add_argument('profile', type=Path, help='Path to a profile TTL file')
     parser.add_argument('--out-dir', type=Path, default=Path('Request/generated'), help='Output directory')
     parser.add_argument('--template-dir', type=Path, default=Path('Request/Templates'), help='Template directory')
     args = parser.parse_args()
 
     try:
-        paths = write_queries(args.profile, args.out_dir, args.template_dir)
+        artifacts = write_queries(args.profile, args.out_dir, args.template_dir)
     except Exception as exc:
         raise SystemExit(str(exc)) from exc
 
-    for path in paths:
+    for path in artifacts.__dict__.values():
         print(f'Generated {path}')
 
 

@@ -8,13 +8,14 @@ Le flux visé est le suivant :
 
 ```text
 Profil SMA RDF
-    -> générateur de requêtes
-        -> requête CONSTRUCT d'initialisation
-        -> requête SELECT tabulaire d'initialisation
-        -> template INSERT de résultats
-            -> SMA initialise ses agents
-            -> SMA exécute la simulation
-            -> SMA réinjecte les résultats dans le KG
+    -> rdflib
+        -> génération de requêtes CONSTRUCT / SELECT
+            -> CSV d'entrée SMA
+                -> SMA exécute la simulation
+                    -> CSV de résultats SMA
+                        -> mapping CSV vers RDF
+                            -> SPARQL INSERT / RDF output
+                                -> Knowledge Graph
 ```
 
 Les fichiers principaux sont :
@@ -29,6 +30,11 @@ Request/Templates/sma_result_insert_template.sparql
 Request/generated/evacuation_sma_init_construct.sparql
 Request/generated/evacuation_sma_init_select.sparql
 Request/generated/evacuation_sma_result_insert.sparql
+Request/generated/evacuation_sma_input_mapping.json
+Request/generated/evacuation_sma_output_mapping.json
+Request/generated/evacuation_sma_results_example.csv
+Scripts/export_sma_input_csv.py
+Scripts/import_sma_results_csv.py
 Constraints/evacuation_sma_input_shape.ttl
 ```
 
@@ -215,6 +221,9 @@ Sorties générées :
 Request/generated/evacuation_sma_init_construct.sparql
 Request/generated/evacuation_sma_init_select.sparql
 Request/generated/evacuation_sma_result_insert.sparql
+Request/generated/evacuation_sma_input_mapping.json
+Request/generated/evacuation_sma_output_mapping.json
+Request/generated/evacuation_sma_results_example.csv
 ```
 
 Options disponibles :
@@ -401,6 +410,116 @@ Utilisation recommandée :
 - export CSV pour inspecter rapidement les données chargées ;
 - debug du profil d'initialisation.
 
+## CSV comme format pivot SMA
+
+Le SMA ne consomme pas directement RDF ou SPARQL. RDF reste le format interne du KG et `rdflib` sert à parser, typer et convertir. Le format d'échange externe avec les simulateurs est CSV.
+
+### Exporter le CSV d'entrée
+
+Commande :
+
+```sh
+python3 Scripts/export_sma_input_csv.py \
+  --profile Profiles/evacuation_sma_profile.ttl \
+  --data data/kg.ttl \
+  --out exports/evacuation_sma_input.csv
+```
+
+Le CSV contient les colonnes :
+
+```csv
+entity,class,property,value,value_type,value_lang
+```
+
+Rôle des colonnes :
+
+- `entity` : URI ou QName de l'entité extraite.
+- `class` : classe RDF de l'entité.
+- `property` : propriété RDF exportée.
+- `value` : valeur textuelle.
+- `value_type` : datatype RDF si littéral, `uri` si ressource, `bnode` si noeud blanc.
+- `value_lang` : langue du littéral si présente.
+
+Exemple :
+
+```csv
+entity,class,property,value,value_type,value_lang
+fe:Axis_12,fe:Axis,fe:maxFlowCapacity,150,xsd:integer,
+fe:Axis_12,fe:Axis,fe:hasWidth,3.5,xsd:double,
+fe:Axis_12,fe:Axis,fe:isConnectedTo,fe:Axis_13,uri,
+```
+
+Le script utilise le profil RDF pour savoir quelles classes et propriétés exporter. Les types RDF ne sont pas écrasés en chaînes brutes : les littéraux conservent leur datatype et leur langue.
+
+### Mapping d'entrée
+
+Le générateur produit aussi :
+
+```text
+Request/generated/evacuation_sma_input_mapping.json
+```
+
+Ce fichier décrit les colonnes du CSV d'entrée et reprend :
+
+```text
+required_classes
+required_properties
+optional_properties
+```
+
+Il sert de contrat lisible pour l'adaptateur SMA, sans obliger le simulateur à comprendre RDF.
+
+### CSV de résultats SMA
+
+Le SMA doit produire un CSV de résultats avec les colonnes :
+
+```csv
+run_id,scenario_id,input_id,output_id,entity,step,time,property,value,value_type
+```
+
+Exemple :
+
+```csv
+run_id,scenario_id,input_id,output_id,entity,step,time,property,value,value_type
+SimulationRun_001,Scenario_001,Input_evacuation_sma,Output_001,Zone_A,120,600.0,fe:hasFinalStatus,evacuated,xsd:string
+SimulationRun_001,Scenario_001,Input_evacuation_sma,Output_001,Zone_A,120,600.0,fe:hasEvacuationTime,540.0,xsd:double
+```
+
+Un exemple est généré automatiquement dans :
+
+```text
+Request/generated/evacuation_sma_results_example.csv
+```
+
+### Importer les résultats CSV vers SPARQL INSERT
+
+Commande :
+
+```sh
+python3 Scripts/import_sma_results_csv.py \
+  --profile Profiles/evacuation_sma_profile.ttl \
+  --csv exports/evacuation_sma_results.csv \
+  --out Request/generated/evacuation_sma_results_insert.sparql \
+  --result-graph http://example.org/fire_and_evacuation/simulation/results
+```
+
+Le script reconstruit :
+
+- les URI stables de `fe:SimulationRun`, `fe:SimulationOutput` et `fe:FinalState` ;
+- les liens vers le scénario, l'entrée et l'entité mise à jour ;
+- les littéraux typés selon `value_type` ;
+- une requête `INSERT DATA` vers un graphe de résultats, sans écraser le graphe source.
+
+### Mapping de sortie
+
+Le générateur produit :
+
+```text
+Request/generated/evacuation_sma_output_mapping.json
+```
+
+Ce fichier décrit les colonnes attendues du CSV de résultats, les propriétés produites par le profil, les datatypes usuels et les règles de génération d'URI.
+
 ## Template `sma_result_insert_template.sparql`
 
 Ce template produit une base de requête `INSERT DATA`.
@@ -486,12 +605,13 @@ Cela permet aussi de faire du diagnostic : on peut extraire un graphe incomplet,
 python3 Scripts/generate_sma_queries.py Profiles/evacuation_sma_profile.ttl
 ```
 
-3. Exécuter la requête `*_init_construct.sparql` sur le KG pour obtenir un sous-graphe RDF.
-4. Valider ce sous-graphe avec la shape SHACL correspondante.
-5. Si le graphe est valide, transmettre le sous-graphe ou le résultat `SELECT` au SMA.
-6. Le SMA exécute la simulation.
-7. L'adaptateur SMA remplit `*_result_insert.sparql` avec les URI et valeurs produites.
-8. Exécuter l'`INSERT DATA` dans un graphe de résultats, sans écraser le graphe initial.
+3. Exécuter la requête `*_init_construct.sparql` sur le KG pour conserver un sous-graphe RDF de référence.
+4. Exécuter la requête `*_init_select.sparql`, ou utiliser `Scripts/export_sma_input_csv.py`, pour produire le CSV d'entrée SMA.
+5. Valider le sous-graphe ou le CSV d'entrée avec la shape SHACL correspondante.
+6. Transmettre le CSV d'entrée au SMA.
+7. Le SMA exécute la simulation et produit un CSV de résultats.
+8. Convertir ce CSV avec `Scripts/import_sma_results_csv.py`.
+9. Exécuter l'`INSERT DATA` dans un graphe de résultats, sans écraser le graphe initial.
 
 ## Créer un nouveau profil pour un autre SMA
 
@@ -555,7 +675,7 @@ Les prochaines évolutions utiles seraient :
 2. Ajouter des filtres de contexte : scénario, site, zone, événement d'aléa.
 3. Produire un export JSON structuré pour les SMA qui ne consomment pas RDF.
 4. Séparer les requêtes par classe : zones, axes, populations, artefacts.
-5. Ajouter un adaptateur de déchargement qui transforme les résultats SMA en `INSERT DATA` complet.
+5. Enrichir l'adaptateur de déchargement CSV pour couvrir des sorties multi-entités plus complexes.
 6. Déclarer dans le profil les graphes source et destination.
 7. Ajouter des templates spécialisés par domaine lorsque le template générique devient trop plat.
 

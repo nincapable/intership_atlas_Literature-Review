@@ -1,0 +1,98 @@
+{
+  "profile": "evacuation_sma",
+  "result_csv": "evacuation_sma_results.csv",
+  "columns": [
+    {
+      "name": "run_id",
+      "role": "simulation_run_identifier",
+      "type": "uri_or_local_id"
+    },
+    {
+      "name": "scenario_id",
+      "role": "scenario_identifier",
+      "type": "uri_or_local_id"
+    },
+    {
+      "name": "input_id",
+      "role": "simulation_input_identifier",
+      "type": "uri_or_local_id"
+    },
+    {
+      "name": "output_id",
+      "role": "simulation_output_identifier",
+      "type": "uri_or_local_id"
+    },
+    {
+      "name": "entity",
+      "role": "updated_entity",
+      "type": "uri_or_local_id"
+    },
+    {
+      "name": "step",
+      "role": "simulation_step",
+      "type": "integer"
+    },
+    {
+      "name": "time",
+      "role": "simulation_time",
+      "type": "decimal"
+    },
+    {
+      "name": "property",
+      "role": "produced_predicate",
+      "type": "uri"
+    },
+    {
+      "name": "value",
+      "role": "produced_value",
+      "type": "mixed"
+    },
+    {
+      "name": "value_type",
+      "role": "datatype_or_uri",
+      "type": "string"
+    }
+  ],
+  "produced_classes": [
+    "fe:SimulationOutput",
+    "fe:FinalState",
+    "fe:StateSnapshot",
+    "fe:ImpactAssessment",
+    "fe:UrgencyAssessment"
+  ],
+  "produced_properties": [
+    "fe:producesOutput",
+    "fe:hasFinalState",
+    "fe:hasStateSnapshot",
+    "fe:stateOfEntity",
+    "fe:updatesEntity",
+    "fe:producesAssessment",
+    "fe:hasSimulationTime",
+    "fe:hasSimulationStep"
+  ],
+  "allowed_value_types": [
+    "uri",
+    "xsd:string",
+    "xsd:integer",
+    "xsd:decimal",
+    "xsd:double",
+    "xsd:boolean"
+  ],
+  "uri_rules": {
+    "qname": "Values like fe:Zone_A are emitted as QNames.",
+    "absolute_uri": "Values beginning with http:// or https:// are emitted as bracketed IRIs.",
+    "local_id": "Bare identifiers are minted in the fe: namespace after conservative sanitization."
+  },
+  "example_row": {
+    "run_id": "SimulationRun_001",
+    "scenario_id": "Scenario_001",
+    "input_id": "Input_evacuation_sma",
+    "output_id": "Output_001",
+    "entity": "Zone_A",
+    "step": "120",
+    "time": "600.0",
+    "property": "fe:hasEvacuationTime",
+    "value": "540.0",
+    "value_type": "xsd:double"
+  }
+}
