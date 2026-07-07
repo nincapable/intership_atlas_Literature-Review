@@ -1,0 +1,99 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+fe:NaturalSpaceShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Espace naturel"@fr ;
+    sh:targetClass fe:NaturalSpace ;
+    sh:property [ sh:path fe:hasNaturalType ; sh:class fe:NaturalType ; sh:maxCount 1 ; sh:message "Le type naturel doit etre un fe:NaturalType."@fr ] ;
+    sh:property [ sh:path fe:hasBiomassState ; sh:class fe:BiomassMeasurement ; sh:message "L'etat de biomasse doit etre un fe:BiomassMeasurement."@fr ] ;
+    sh:property [ sh:path fe:hasMaintenanceStyle ; sh:class fe:MaintenanceStyle ; sh:maxCount 1 ; sh:message "Le style de maintenance doit etre un fe:MaintenanceStyle."@fr ] ;
+    sh:property [ sh:path fe:hasNaturalSpaceFireExposure ; sh:class fe:NaturalSpaceFireExposure ; sh:maxCount 1 ; sh:message "L'exposition incendie d'un espace naturel doit etre un fe:NaturalSpaceFireExposure."@fr ] .
+
+fe:TaxonShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Taxon"@fr ;
+    sh:targetClass fe:Taxon ;
+    sh:property [ sh:path fe:belongsToGenre ; sh:class fe:BioGenre ; sh:maxCount 1 ; sh:message "Le genre d'un taxon doit etre un fe:BioGenre."@fr ] ;
+    sh:property [ sh:path fe:hasProtectionStatus ; sh:class fe:SpeciesProtectionStatus ; sh:maxCount 1 ; sh:message "Le statut de protection d'un taxon doit etre un fe:SpeciesProtectionStatus."@fr ] ;
+    sh:property [ sh:path fe:hasBioTrait ; sh:class fe:BioTrait ; sh:message "Les traits biologiques d'un taxon doivent etre des fe:BioTrait."@fr ] ;
+    sh:property [ sh:path fe:isExceptionTo ; sh:class fe:BioTrait ; sh:message "Les exceptions de trait doivent pointer vers fe:BioTrait."@fr ] ;
+    sh:property [ sh:path fe:hasHazardSensitivity ; sh:class fe:hazardSensitivity ; sh:message "Les sensibilites aux aleas doivent etre des fe:hazardSensitivity."@fr ] .
+
+fe:BiologicalTaxonomyShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Taxonomie biologique"@fr ;
+    sh:targetClass fe:BioTaxonomyType ;
+    sh:property [ sh:path fe:belongsToFamily ; sh:class fe:BioFamily ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:belongsToOrder ; sh:class fe:BioOrder ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:belongsToClass ; sh:class fe:BioClass ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:belongsToSubDivision ; sh:class fe:BioSubDivision ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:belongsToDivision ; sh:class fe:BioDivision ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:belongsToReign ; sh:class fe:BioReign ; sh:maxCount 1 ] .
+
+fe:BiomassMeasurementShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Mesure de biomasse"@fr ;
+    sh:targetClass fe:BiomassMeasurement ;
+    sh:property [ sh:path fe:totalValue ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "La biomasse totale doit etre numerique et positive."@fr ] ;
+    sh:property [ sh:path fe:hasComponent ; sh:class fe:BiomassComponent ; sh:message "Les composants de biomasse doivent etre des fe:BiomassComponent."@fr ] .
+
+fe:BiomassComponentShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Composant de biomasse"@fr ;
+    sh:targetClass fe:BiomassComponent ;
+    sh:property [ sh:path fe:refersToTaxon ; sh:class fe:Taxon ; sh:maxCount 1 ; sh:message "Un composant de biomasse doit referer a au plus un fe:Taxon."@fr ] ;
+    sh:property [ sh:path fe:hasRepartitionType ; sh:class fe:RepartitionType ; sh:maxCount 1 ; sh:message "Le type de repartition doit etre un fe:RepartitionType."@fr ] ;
+    sh:property [ sh:path fe:hasProportion ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:maxCount 1 ; sh:message "La proportion de biomasse doit etre comprise entre 0 et 1."@fr ] ;
+    sh:property [ sh:path fe:isNIndividual ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "Le nombre d'individus doit etre un entier positif."@fr ] .
+
+fe:SpeciesProtectionStatusShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Statut de protection espece"@fr ;
+    sh:targetClass fe:SpeciesProtectionStatus ;
+    sh:property [ sh:path fe:protectionPriorityWeight ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "Le poids de priorite de protection doit etre numerique et positif."@fr ] .
+
+fe:MaintenanceStyleShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Style de maintenance"@fr ;
+    sh:targetClass fe:MaintenanceStyle ;
+    sh:property [ sh:path fe:definesProtocol ; sh:class fe:MaintenanceProtocol ; sh:message "Un style de maintenance doit definir des protocoles de maintenance."@fr ] .
+
+fe:MaintenanceProtocolShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Protocole de maintenance"@fr ;
+    sh:targetClass fe:MaintenanceProtocol ;
+    sh:property [ sh:path fe:hasMaintenanceAction ; sh:class fe:MaintenanceAction ; sh:message "Les actions de maintenance doivent etre des fe:MaintenanceAction."@fr ] .
+
+fe:HazardSensitivityShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Sensibilite aux aleas"@fr ;
+    sh:targetClass fe:hazardSensitivity ;
+    sh:property [ sh:path fe:hasHazardFunctionalRole ; sh:class fe:hazardFunctionalRole ; sh:maxCount 1 ; sh:message "Le role fonctionnel face au risque doit etre un fe:hazardFunctionalRole."@fr ] ;
+    sh:property [ sh:path fe:hasHazardResponseStrategy ; sh:class fe:hazardResponseStrategy ; sh:maxCount 1 ; sh:message "La strategie de reponse doit etre un fe:hazardResponseStrategy."@fr ] ;
+    sh:property [ sh:path fe:hasHazardReaction ; sh:class fe:hazardReaction ; sh:maxCount 1 ; sh:message "La reaction face au risque doit etre une fe:hazardReaction."@fr ] .
+
+fe:BioFireSensitivityShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Sensibilite biologique au feu"@fr ;
+    sh:targetClass fe:bioFireSensitivity ;
+    sh:property [ sh:path fe:hasFlammabilityLevel ; sh:class fe:FlammabilityLevel ; sh:maxCount 1 ; sh:message "Le niveau d'inflammabilite doit etre un fe:FlammabilityLevel."@fr ] ;
+    sh:property [ sh:path fe:organicHRPBasis ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:verticalTransferPotential ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:horizontalTransferPotential ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:fireResistanceDuration ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:heatReleasePotential ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:spontaneousIgnitionThreshold ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:ignitionDelay ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:fireReactivityFactor ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:mobilityScore ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:panicThreshold ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:evacuationPriority ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:isPotentialFireVector ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:calculatedGeneralFireRisk ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] .
+
+fe:FlammabilityLevelShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Niveau d'inflammabilite"@fr ;
+    sh:targetClass fe:FlammabilityLevel ;
+    sh:property [ sh:path fe:ValetteScore ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "Le score de Valette doit etre un entier positif."@fr ] .
+
+fe:NaturalSpaceFireExposureShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Exposition incendie espace naturel"@fr ;
+    sh:targetClass fe:NaturalSpaceFireExposure ;
+    sh:property [ sh:path fe:globalIgnitionProbability ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:maxCount 1 ; sh:message "La probabilite globale d'ignition doit etre entre 0 et 1."@fr ] ;
+    sh:property [ sh:path fe:firePropagationVelocity ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "La vitesse de propagation doit etre numerique et positive."@fr ] ;
+    sh:property [ sh:path fe:structuralFireBarrierEffect ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:maxCount 1 ; sh:message "L'effet barriere doit etre normalise entre 0 et 1."@fr ] ;
+    sh:property [ sh:path fe:globalEvacuationUrgency ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "L'urgence globale d'evacuation doit etre numerique et positive."@fr ] .

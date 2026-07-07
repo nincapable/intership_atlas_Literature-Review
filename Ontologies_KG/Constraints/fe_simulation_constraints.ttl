@@ -1,0 +1,62 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+fe:SimulationProfileShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Profil SMA"@fr ;
+    sh:targetClass fe:SimulationProfile ;
+    sh:property [ sh:path fe:profileIdentifier ; sh:datatype xsd:string ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^[A-Za-z0-9_-]+$" ; sh:message "Un profil SMA doit avoir un identifiant stable compatible avec les noms de fichiers generes."@fr ] ;
+    sh:property [ sh:path fe:hasRootClass ; sh:nodeKind sh:IRI ; sh:maxCount 1 ; sh:message "La classe racine d'un profil doit etre une IRI de classe."@fr ] ;
+    sh:property [ sh:path fe:requiresClass ; sh:nodeKind sh:IRI ; sh:minCount 1 ; sh:message "Un profil SMA doit declarer au moins une classe lue."@fr ] ;
+    sh:property [ sh:path fe:requiresProperty ; sh:nodeKind sh:IRI ; sh:minCount 1 ; sh:message "Un profil SMA doit declarer au moins une propriete lue."@fr ] ;
+    sh:property [ sh:path fe:optionalProperty ; sh:nodeKind sh:IRI ; sh:message "Les proprietes optionnelles doivent etre des IRI."@fr ] ;
+    sh:property [ sh:path fe:producesClass ; sh:nodeKind sh:IRI ; sh:message "Les classes produites doivent etre des IRI."@fr ] ;
+    sh:property [ sh:path fe:producesProperty ; sh:nodeKind sh:IRI ; sh:message "Les proprietes produites doivent etre des IRI."@fr ] ;
+    sh:property [ sh:path fe:maxDepth ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "La profondeur d'expansion doit etre un entier positif."@fr ] ;
+    sh:property [ sh:path fe:expandProperty ; sh:nodeKind sh:IRI ; sh:message "Les proprietes d'expansion doivent etre des IRI."@fr ] ;
+    sh:property [ sh:path fe:expandClass ; sh:nodeKind sh:IRI ; sh:message "Les classes d'expansion doivent etre des IRI."@fr ] .
+
+fe:SimulationRunShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Execution SMA"@fr ;
+    sh:targetClass fe:SimulationRun ;
+    sh:property [ sh:path fe:usesScenario ; sh:class fe:SimulationScenario ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "Une execution de simulation doit pointer vers exactement un scenario."@fr ] ;
+    sh:property [ sh:path fe:consumesInput ; sh:class fe:SimulationInput ; sh:minCount 1 ; sh:message "Une execution de simulation doit consommer au moins une entree."@fr ] ;
+    sh:property [ sh:path fe:producesOutput ; sh:class fe:SimulationOutput ; sh:minCount 1 ; sh:message "Une execution de simulation doit produire au moins une sortie."@fr ] ;
+    sh:property [ sh:path fe:hasSimulationAgent ; sh:class fe:SimulationAgent ; sh:message "Les agents associes a une execution doivent etre des fe:SimulationAgent."@fr ] ;
+    sh:property [ sh:path fe:hasInitialState ; sh:class fe:InitialState ; sh:message "Les etats initiaux d'une execution doivent etre des fe:InitialState."@fr ] ;
+    sh:property [ sh:path fe:hasStateSnapshot ; sh:class fe:StateSnapshot ; sh:message "Les instantanes d'une execution doivent etre des fe:StateSnapshot."@fr ] .
+
+fe:SimulationInputShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Entree SMA"@fr ;
+    sh:targetClass fe:SimulationInput ;
+    sh:property [ sh:path fe:describesEntity ; sh:class crm:E70_Thing ; sh:minCount 1 ; sh:message "Une entree SMA doit decrire au moins une entite du graphe."@fr ] ;
+    sh:property [ sh:path fe:hasInitialState ; sh:class fe:InitialState ; sh:message "L'etat initial d'une entree SMA doit etre un fe:InitialState."@fr ] ;
+    sh:property [ sh:path fe:hasStateSnapshot ; sh:class fe:StateSnapshot ; sh:message "Les instantanes d'une entree SMA doivent etre des fe:StateSnapshot."@fr ] .
+
+fe:SimulationOutputShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Sortie SMA"@fr ;
+    sh:targetClass fe:SimulationOutput ;
+    sh:property [ sh:path fe:hasFinalState ; sh:class fe:FinalState ; sh:minCount 1 ; sh:message "Une sortie SMA doit contenir au moins un etat final."@fr ] ;
+    sh:property [ sh:path fe:producedByRun ; sh:class fe:SimulationRun ; sh:maxCount 1 ; sh:message "Une sortie SMA doit etre liee a au plus une execution productrice."@fr ] ;
+    sh:property [ sh:path fe:describesEntity ; sh:class crm:E70_Thing ; sh:message "Les entites decrites par une sortie doivent etre des crm:E70_Thing."@fr ] ;
+    sh:property [ sh:path fe:updatesEntity ; sh:class crm:E70_Thing ; sh:message "Les entites mises a jour par une sortie doivent etre des crm:E70_Thing."@fr ] ;
+    sh:property [ sh:path fe:producesAssessment ; sh:class crm:E13_Attribute_Assignment ; sh:message "Les evaluations produites doivent etre des affectations CRM."@fr ] .
+
+fe:StateSnapshotShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Instantane d'etat SMA"@fr ;
+    sh:targetClass fe:StateSnapshot ;
+    sh:property [ sh:path fe:stateOfEntity ; sh:class crm:E70_Thing ; sh:minCount 1 ; sh:message "Un instantane d'etat doit porter sur au moins une entite."@fr ] ;
+    sh:property [ sh:path fe:updatesEntity ; sh:class crm:E70_Thing ; sh:message "Les entites mises a jour par un instantane doivent etre des crm:E70_Thing."@fr ] ;
+    sh:property [ sh:path fe:hasSimulationStep ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "L'etape de simulation doit etre un entier positif unique."@fr ] ;
+    sh:property [ sh:path fe:hasSimulationTime ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "Le temps de simulation doit etre numerique et positif."@fr ] ;
+    sh:property [ sh:path fe:producedByRun ; sh:class fe:SimulationRun ; sh:maxCount 1 ; sh:message "Un instantane de sortie doit etre rattache a au plus une execution."@fr ] .
+
+fe:SimulationAgentShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Agent SMA"@fr ;
+    sh:targetClass fe:SimulationAgent ;
+    sh:property [ sh:path fe:observesEntity ; sh:class crm:E70_Thing ; sh:message "Un agent SMA ne peut observer que des crm:E70_Thing."@fr ] ;
+    sh:property [ sh:path fe:updatesEntity ; sh:class crm:E70_Thing ; sh:message "Un agent SMA ne peut mettre a jour que des crm:E70_Thing."@fr ] ;
+    sh:property [ sh:path fe:usesInputEntity ; sh:class crm:E70_Thing ; sh:message "Les entites utilisees par un agent doivent etre des crm:E70_Thing."@fr ] ;
+    sh:property [ sh:path fe:producesAssessment ; sh:class crm:E13_Attribute_Assignment ; sh:message "Les evaluations produites par un agent doivent etre des affectations CRM."@fr ] .

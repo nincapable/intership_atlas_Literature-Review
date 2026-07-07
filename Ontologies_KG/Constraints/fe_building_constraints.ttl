@@ -1,157 +1,142 @@
-@prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix fe: <http://example.org/fire_and_evacuation#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-# 1. Validation du bâtiment : Identification et dimensions de base
 fe:BuildingShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Batiment"@fr ;
     sh:targetClass fe:Building ;
-    sh:property [
-        sh:path fe:hasFloorArea ;
-        sh:datatype xsd:decimal ;
-        sh:minCount 1 ;
-        sh:message "Un bâtiment doit avoir une surface de plancher définie."@fr
-    ] ;
-    sh:property [
-        sh:path fe:hasNumberOfFloors ;
-        sh:datatype xsd:integer ;
-        sh:minCount 1 ;
-        sh:message "Le nombre d'étages est requis pour les calculs de propagation."@fr
-    ] ;
     sh:property [
         sh:path fe:hasArchitectureStyle ;
         sh:class fe:ArchitectureStyle ;
         sh:maxCount 1 ;
-        sh:message "Un bâtiment doit avoir un style architectural défini."@fr
+        sh:message "Le style architectural doit pointer vers fe:ArchitectureStyle."@fr
     ] ;
     sh:property [
-        sh:path crm:P43_has_dimension ;
-        sh:class crm:E54_Dimension ;
-        sh:count 1 ;
-        sh:message "Un bâtiment doit avoir au moins des dimensions définies."@fr
-    ].
-
-# 2. Validation de l'exposition Incendie : Paramètres physiques critiques
-fe:BuildingFireExposureShape a sh:NodeShape ;
-    sh:targetClass fe:BuildingFireExposure ;
-    sh:property [
-        sh:path fe:structuralFragility ;
-        sh:datatype xsd:decimal ;
+        sh:path fe:hasFloorArea ;
+        sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ;
+        sh:minInclusive 0 ;
         sh:maxCount 1 ;
-        sh:minInclusive 0.0 ;
-        sh:maxInclusive 1.0 ;
-        sh:message "La fragilité structurelle doit être une valeur normalisée entre 0 et 1."@fr
+        sh:message "La surface au sol doit etre une valeur numerique positive."@fr
     ] ;
     sh:property [
-        sh:path fe:buildingCombustibility ;
-        sh:datatype xsd:decimal ;
+        sh:path fe:hasNumberOfFloors ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
         sh:maxCount 1 ;
-        sh:minInclusive 0.0 ;
-        sh:maxInclusive 1.0 ;
-        sh:message "La combustibilité est obligatoire pour le calcul de risque incendie."@fr
+        sh:message "Le nombre d'etages doit etre un entier positif."@fr
     ] ;
     sh:property [
-        sh:path fe:buildingInflammability ;
-        sh:datatype xsd:decimal ;
-        sh:maxCount 1 ;
-        sh:minInclusive 0.0 ;
-        sh:maxInclusive 1.0 ;
-        sh:message "L'inflammabilité est obligatoire pour le calcul de risque incendie."@fr
+        sh:path fe:hasMaterialComposition ;
+        sh:class fe:MaterialComposition ;
+        sh:message "La composition materielle doit pointer vers fe:MaterialComposition."@fr
     ] ;
     sh:property [
-        sh:path fe:thermalInertiaScore ;
-        sh:datatype xsd:decimal ;
+        sh:path fe:hasFireExposure ;
+        sh:class fe:BuildingFireExposure ;
         sh:maxCount 1 ;
-        sh:minInclusive 0.0 ;
-        sh:maxInclusive 1.0 ;
-        sh:message "L'inflammabilité est obligatoire pour le calcul de risque incendie."@fr
+        sh:message "L'exposition incendie du batiment doit pointer vers fe:BuildingFireExposure."@fr
     ] ;
     sh:property [
-        sh:path fe:thermalInertiaScore ;
-        sh:datatype xsd:decimal ;
+        sh:path fe:hasFloodExposure ;
+        sh:class fe:BuildingFloodExposure ;
         sh:maxCount 1 ;
-        sh:minInclusive 0.0 ;
-        sh:maxInclusive 1.0 ;
-        sh:message "Le score d'inertie thermique est requis pour la simulation incendie."@fr
+        sh:message "L'exposition inondation du batiment doit pointer vers fe:BuildingFloodExposure."@fr
     ] ;
     sh:property [
-        sh:path fe:confinementScore ;
-        sh:datatype xsd:decimal ;
+        sh:path fe:hasProtectionPriority ;
+        sh:class fe:PriorityLevel ;
         sh:maxCount 1 ;
-        sh:minInclusive 0.0 ;
-        sh:maxInclusive 1.0 ;
-        sh:message "Le score de confinement est nécessaire pour la modélisation de propagation du feu."@fr
-    ] ;
-    sh:property [
-        sh:path fe:confinementScore ;
-        sh:datatype xsd:decimal ;
-        sh:maxCount 1 ;
-        sh:minInclusive 0.0 ;
-        sh:maxInclusive 1.0 ;
-        sh:message "Le score de confinement est nécessaire pour la modélisation de propagation du feu."@fr
-    ] ;
-    sh:property [
-        sh:path fe:smokePropensity ;
-        sh:datatype xsd:decimal ;
-        sh:maxCount 1 ;
-        sh:minInclusive 0.0 ;
-        sh:maxInclusive 1.0 ;
-        sh:message "La propension à la fumée est obligatoire pour l'évaluation du risque incendie."@fr
+        sh:message "La priorite de protection doit pointer vers fe:PriorityLevel."@fr
     ] .
 
-# 3. Validation de l'exposition Inondation
-fe:BuildingFloodExposureShape a sh:NodeShape ;
-    sh:targetClass fe:BuildingFloodExposure ;
-    sh:property [
-        sh:path fe:waterSubmersionResistance ;
-        sh:datatype xsd:decimal ;
-        sh:minInclusive 0.0 ;
-        sh:maxInclusive 1.0 ;
-        sh:message "La résistance à la submersion est nécessaire pour simuler le risque inondation."@fr
-    ] ;
-    sh:property [
-        sh:path fe:criticalEquipmentFloor ;
-        sh:datatype xsd:integer ;
-        sh:message "L'étage des équipements critiques doit être un entier."@fr
-    ] ;
-    sh:property [
-        sh:path fe:dryingTimeHours ;
-        sh:datatype xsd:integer ;
-        sh:minInclusive 0 ;
-        sh:message "Le temps de séchage structurel doit être un entier positif."@fr
-    ] ;
-    sh:property [
-        sh:path fe:hydrostaticPressureLoad ;
-        sh:datatype xsd:decimal ;
-        sh:maxCount 1 ;
-        sh:minInclusive 0.0 ;
-        sh:message "La charge hydrostatique doit être une valeur positive."@fr
-    ].
-
-# 4. Cohérence de la Composition
 fe:MaterialCompositionShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Composition materielle"@fr ;
+    sh:targetClass fe:MaterialComposition ;
+    sh:property [
+        sh:path fe:hasConstituent ;
+        sh:class fe:MaterialConstituent ;
+        sh:minCount 1 ;
+        sh:message "Une composition materielle doit contenir au moins un constituant."@fr
+    ] ;
+    sh:sparql [
+        sh:message "La somme des pourcentages des constituants doit etre egale a 100."@fr ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this fe:hasConstituent ?constituent .
+                ?constituent fe:materialPercentage ?percentage .
+            }
+            GROUP BY $this
+            HAVING (ABS(SUM(xsd:decimal(?percentage)) - 100) > 0.001)
+        """
+    ] .
+
+fe:MaterialConstituentShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Constituant materiel"@fr ;
     sh:targetClass fe:MaterialConstituent ;
     sh:property [
+        sh:path fe:hasMaterial ;
+        sh:class fe:MaterialInstance ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Un constituant materiel doit pointer vers exactement un fe:MaterialInstance."@fr
+    ] ;
+    sh:property [
         sh:path fe:materialPercentage ;
-        sh:datatype xsd:decimal ;
+        sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ;
         sh:minInclusive 0 ;
         sh:maxInclusive 100 ;
-        sh:message "Le pourcentage de matériau doit être compris entre 0 et 100."@fr
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Le pourcentage d'un constituant doit etre numerique et compris entre 0 et 100."@fr
+    ] .
+
+fe:ArchitectureStyleShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Style architectural"@fr ;
+    sh:targetClass fe:ArchitectureStyle ;
+    sh:property [
+        sh:path fe:defaultStructuralFragility ;
+        sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ;
+        sh:minInclusive 0 ;
+        sh:maxCount 1 ;
+        sh:message "La fragilite structurelle par defaut doit etre numerique et positive."@fr
     ] ;
     sh:property [
-        sh:path fe:hasMaterial ;
-        sh:datatype fe:MaterialInstance;
-        sh:message "Matériaux du constituant"@fr
-    ] ;
-    sh:property [
-    sh:path fe:hasConstituent ;
-    sh:sparql [
-        sh:message "La somme des pourcentages des matériaux doit être égale à 100."@fr ;
-        sh:select """
-            SELECT $this WHERE {
-                $this fe:hasConstituent ?c .
-                ?c fe:materialPercentage ?p .
-            } GROUP BY $this HAVING (SUM(?p) != 100)
-        """
-    ]
-].
+        sh:path fe:hasDefaultVulnerabilityProfile ;
+        sh:class fe:DefaultArchitecturalVulnerability ;
+        sh:message "Le profil de vulnerabilite par defaut doit pointer vers fe:DefaultArchitecturalVulnerability."@fr
+    ] .
+
+fe:DefaultFireArchitecturalVulnerabilityShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Vulnerabilite architecturale incendie par defaut"@fr ;
+    sh:targetClass fe:DefaultFireArchitecturalVulnerability ;
+    sh:property [ sh:path fe:defaultFireStructuralFragility ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:defaultFireExpansionFactor ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:defaultThermalInertiaScore ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] .
+
+fe:DefaultFloodArchitecturalVulnerabilityShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Vulnerabilite architecturale inondation par defaut"@fr ;
+    sh:targetClass fe:DefaultFloodArchitecturalVulnerability ;
+    sh:property [ sh:path fe:defaultWaterSubmersionResistance ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:defaulHydrostaticPressureLoad ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] .
+
+fe:BuildingFireExposureShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Exposition incendie batiment"@fr ;
+    sh:targetClass fe:BuildingFireExposure ;
+    sh:property [ sh:path fe:buildingCombustibility ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:buildingInflammability ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:thermalInertiaScore ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:structuralFragility ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:confinementScore ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:smokePropensity ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:fireExpansionFactor ; sh:class fe:vector3 ; sh:maxCount 1 ] .
+
+fe:BuildingFloodExposureShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Exposition inondation batiment"@fr ;
+    sh:targetClass fe:BuildingFloodExposure ;
+    sh:property [ sh:path fe:waterSubmersionResistance ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hydrostaticPressureLoad ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:criticalEquipmentFloor ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:dryingTimeHours ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxCount 1 ] .

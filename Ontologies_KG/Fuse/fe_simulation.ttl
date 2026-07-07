@@ -204,6 +204,24 @@ fe:producesProperty a owl:ObjectProperty ;
     rdfs:domain fe:SimulationProfile ;
     rdfs:range rdf:Property .
 
+fe:expandProperty a owl:ObjectProperty ;
+    rdfs:label "propriete a suivre en expansion"@fr ;
+    rdfs:domain fe:SimulationProfile ;
+    rdfs:range rdf:Property ;
+    rdfs:comment "Propriete RDF que le generateur peut suivre pour construire une extraction profonde du sous-graphe d'initialisation."@fr .
+
+fe:expandClass a owl:ObjectProperty ;
+    rdfs:label "classe a inclure en expansion"@fr ;
+    rdfs:domain fe:SimulationProfile ;
+    rdfs:range owl:Class ;
+    rdfs:comment "Classe RDF que le generateur peut inclure explicitement dans une extraction profonde."@fr .
+
+fe:maxDepth a owl:DatatypeProperty ;
+    rdfs:label "profondeur maximale d'expansion"@fr ;
+    rdfs:domain fe:SimulationProfile ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Nombre maximal de niveaux de liens suivis lors d'une extraction profonde."@fr .
+
 fe:hasExtractionQuery a owl:ObjectProperty ;
     rdfs:label "a pour requete d'extraction"@fr ;
     rdfs:domain fe:SimulationProfile ;

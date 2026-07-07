@@ -1,0 +1,23 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+fe:Vector3Shape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Vecteur 3D"@fr ;
+    sh:targetClass fe:vector3 ;
+    sh:property [ sh:path fe:hasXCoordinate ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "Un vecteur 3D doit avoir une coordonnee x numerique unique."@fr ] ;
+    sh:property [ sh:path fe:hasYCoordinate ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "Un vecteur 3D doit avoir une coordonnee y numerique unique."@fr ] ;
+    sh:property [ sh:path fe:hasZCoordinate ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "Un vecteur 3D doit avoir une coordonnee z numerique unique."@fr ] .
+
+fe:PriorityLevelShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Niveau de priorite"@fr ;
+    sh:targetClass fe:PriorityLevel ;
+    sh:property [
+        sh:path fe:priorityScore ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:maxCount 1 ;
+        sh:message "Le score de priorite doit etre un entier positif."@fr
+    ] .

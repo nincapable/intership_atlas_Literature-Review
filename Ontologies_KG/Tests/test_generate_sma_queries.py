@@ -9,6 +9,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from rdflib import Graph
+
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = ROOT / 'Scripts'
 if str(SCRIPT_DIR) not in sys.path:
@@ -34,6 +36,16 @@ import_spec.loader.exec_module(importer)
 
 
 class GenerateSMAQueriesTest(unittest.TestCase):
+    def test_all_shacl_constraints_parse_with_rdflib(self) -> None:
+        constraint_files = sorted((ROOT / 'Constraints').glob('*.ttl'))
+        self.assertGreater(len(constraint_files), 0)
+
+        for path in constraint_files:
+            with self.subTest(path=path.name):
+                graph = Graph()
+                graph.parse(path, format='turtle')
+                self.assertGreater(len(graph), 0)
+
     def test_load_existing_profile_with_rdflib(self) -> None:
         profile = generator.load_profile(ROOT / 'Profiles' / 'evacuation_sma_profile.ttl')
 

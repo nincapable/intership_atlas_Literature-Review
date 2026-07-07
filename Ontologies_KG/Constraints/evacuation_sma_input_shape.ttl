@@ -1,38 +1,90 @@
-@prefix fe:   <http://example.org/fire_and_evacuation#> .
-@prefix sh:   <http://www.w3.org/ns/shacl#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix fe:  <http://example.org/fire_and_evacuation#> .
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 fe:EvacuationSMAZoneInputShape a sh:NodeShape ;
-    rdfs:label "Contraintes d'entree SMA evacuation - Zone"@fr ;
+    rdfs:label "Contraintes d'initialisation SMA evacuation - Zone"@fr ;
     sh:targetClass fe:Zone ;
     sh:property [
         sh:path fe:hasPopulation ;
-        sh:minCount 1 ;
         sh:class fe:Population ;
-        sh:message "Une zone chargee pour le SMA d'evacuation doit indiquer sa population presente."@fr
+        sh:minCount 1 ;
+        sh:message "Une zone chargee par le SMA d'evacuation doit avoir au moins une population."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hasMaximumOccupancy ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:maxCount 1 ;
+        sh:message "La capacite maximale d'une zone d'evacuation doit etre un entier positif."@fr
+    ] ;
+    sh:property [
+        sh:path fe:containsBuilding ;
+        sh:class fe:Building ;
+        sh:message "Les batiments charges pour l'evacuation doivent etre des fe:Building."@fr
+    ] ;
+    sh:property [
+        sh:path fe:containsNaturalSpace ;
+        sh:class fe:NaturalSpace ;
+        sh:message "Les espaces naturels charges pour l'evacuation doivent etre des fe:NaturalSpace."@fr
+    ] ;
+    sh:property [
+        sh:path fe:containsArtefact ;
+        sh:class fe:Artefact ;
+        sh:message "Les artefacts charges pour l'evacuation doivent etre des fe:Artefact."@fr
     ] .
 
 fe:EvacuationSMAAxisInputShape a sh:NodeShape ;
-    rdfs:label "Contraintes d'entree SMA evacuation - Axe"@fr ;
+    rdfs:label "Contraintes d'initialisation SMA evacuation - Axe"@fr ;
     sh:targetClass fe:Axis ;
     sh:property [
         sh:path fe:maxFlowCapacity ;
+        sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ;
+        sh:minInclusive 0 ;
         sh:minCount 1 ;
-        sh:datatype xsd:decimal ;
-        sh:message "Un axe d'evacuation doit fournir une capacite de flux maximale."@fr
+        sh:maxCount 1 ;
+        sh:message "Un axe d'evacuation doit avoir une capacite de flux positive."@fr
     ] ;
     sh:property [
         sh:path fe:hasWidth ;
+        sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ;
+        sh:minInclusive 0 ;
         sh:minCount 1 ;
-        sh:datatype xsd:decimal ;
-        sh:message "Un axe d'evacuation doit fournir une largeur utile."@fr
+        sh:maxCount 1 ;
+        sh:message "Un axe d'evacuation doit avoir une largeur utile positive."@fr
     ] ;
     sh:property [
         sh:path fe:hasLength ;
+        sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ;
+        sh:minInclusive 0 ;
         sh:minCount 1 ;
-        sh:datatype xsd:decimal ;
-        sh:message "Un axe d'evacuation doit fournir une longueur."@fr
+        sh:maxCount 1 ;
+        sh:message "Un axe d'evacuation doit avoir une longueur positive."@fr
+    ] ;
+    sh:property [
+        sh:path fe:isConnectedTo ;
+        sh:class crm:E25_Man_Made_Feature ;
+        sh:message "Les connexions du graphe d'evacuation doivent pointer vers des entites construites."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hasBlockingState ;
+        sh:class crm:E3_Condition_State ;
+        sh:maxCount 1 ;
+        sh:message "L'etat de blocage d'un axe doit etre un etat de condition CRM."@fr
+    ] .
+
+fe:EvacuationSMAPopulationInputShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'initialisation SMA evacuation - Population"@fr ;
+    sh:targetClass fe:Population ;
+    sh:property [
+        sh:path fe:hasEstimatedCount ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Une population chargee par le SMA doit avoir un effectif estime positif."@fr
     ] .
 
 fe:EvacuationSMAOutputShape a sh:NodeShape ;
@@ -40,7 +92,13 @@ fe:EvacuationSMAOutputShape a sh:NodeShape ;
     sh:targetClass fe:SimulationOutput ;
     sh:property [
         sh:path fe:hasFinalState ;
-        sh:minCount 1 ;
         sh:class fe:FinalState ;
-        sh:message "Une sortie de simulation doit pointer vers au moins un etat final."@fr
+        sh:minCount 1 ;
+        sh:message "Une sortie de simulation d'evacuation doit contenir au moins un etat final."@fr
+    ] ;
+    sh:property [
+        sh:path fe:producedByRun ;
+        sh:class fe:SimulationRun ;
+        sh:maxCount 1 ;
+        sh:message "Une sortie de simulation doit etre rattachee a au plus une execution."@fr
     ] .

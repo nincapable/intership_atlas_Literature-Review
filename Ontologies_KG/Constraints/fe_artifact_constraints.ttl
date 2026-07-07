@@ -1,21 +1,81 @@
-@prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix fe: <http://example.org/fire_and_evacuation#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 fe:ArtefactShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Artefact"@fr ;
     sh:targetClass fe:Artefact ;
     sh:property [
-        sh:path fe:hasPriorityLevel ;
-        sh:minCount 1 ;
-        sh:message "Chaque artefact doit avoir un niveau de priorité défini pour la sauvegarde."@fr
+        sh:path fe:hasArtefactType ;
+        sh:class fe:ArtifactType ;
+        sh:maxCount 1 ;
+        sh:message "Le type d'artefact doit pointer vers une instance de fe:ArtifactType."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hasArtefactSubType ;
+        sh:class fe:ArtifactSubType ;
+        sh:maxCount 1 ;
+        sh:message "Le sous-type d'artefact doit pointer vers une instance de fe:ArtifactSubType."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hasArtifactsMobilityType ;
+        sh:class fe:ArtifactsMobilityType ;
+        sh:maxCount 1 ;
+        sh:message "Le type de mobilité d'un artefact doit être un fe:ArtifactsMobilityType."@fr
     ] ;
     sh:property [
         sh:path fe:hasArtifactsFragilityType ;
-        sh:minCount 1 ;
-        sh:message "La classification de fragilité est obligatoire."@fr
+        sh:class fe:ArtifactsFragilityType ;
+        sh:maxCount 1 ;
+        sh:message "Le type de fragilité d'un artefact doit être un fe:ArtifactsFragilityType."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hasProtectionPriority ;
+        sh:class fe:PriorityLevel ;
+        sh:maxCount 1 ;
+        sh:message "La priorité de protection d'un artefact doit être un fe:PriorityLevel."@fr
     ] ;
     sh:property [
         sh:path fe:hasArtifactFireExposure ;
-        sh:minCount 1 ;
-        sh:message "L'exposition au feu doit être renseignée pour l'analyse de risque."@fr
+        sh:class fe:ArtifactsFireExposure ;
+        sh:maxCount 1 ;
+        sh:message "L'exposition incendie d'un artefact doit pointer vers fe:ArtifactsFireExposure."@fr
+    ] ;
+    sh:property [
+        sh:path fe:hasArtifactFloodExposure ;
+        sh:class fe:ArtifactsFloodExposure ;
+        sh:maxCount 1 ;
+        sh:message "L'exposition inondation d'un artefact doit pointer vers fe:ArtifactsFloodExposure."@fr
+    ] .
+
+fe:ArtifactsFireExposureShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Exposition incendie artefact"@fr ;
+    sh:targetClass fe:ArtifactsFireExposure ;
+    sh:property [
+        sh:path fe:thermalToleranceLimit ;
+        sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ;
+        sh:minInclusive 0 ;
+        sh:maxCount 1 ;
+        sh:message "La limite de tolérance thermique doit être numérique et positive."@fr
+    ] ;
+    sh:property [
+        sh:path fe:smokeSensitivityIndex ;
+        sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 1 ;
+        sh:maxCount 1 ;
+        sh:message "L'indice de sensibilité aux fumées doit être normalisé entre 0 et 1."@fr
+    ] .
+
+fe:ArtifactsFloodExposureShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Exposition inondation artefact"@fr ;
+    sh:targetClass fe:ArtifactsFloodExposure ;
+    sh:property [
+        sh:path fe:humiditySensitivityIndex ;
+        sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 1 ;
+        sh:maxCount 1 ;
+        sh:message "L'indice de sensibilité à l'humidité doit être normalisé entre 0 et 1."@fr
     ] .

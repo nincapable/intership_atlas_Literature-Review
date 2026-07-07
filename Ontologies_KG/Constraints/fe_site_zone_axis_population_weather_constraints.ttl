@@ -1,0 +1,134 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+fe:HeritageSiteShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Site patrimonial"@fr ;
+    sh:targetClass fe:HeritageSite ;
+    sh:property [ sh:path fe:hasZone ; sh:class fe:Zone ; sh:minCount 1 ; sh:message "Un site patrimonial doit contenir au moins une zone."@fr ] ;
+    sh:property [ sh:path fe:hasWeatherCondition ; sh:class fe:WeatherCondition ; sh:message "Les conditions meteo d'un site doivent etre des fe:WeatherCondition."@fr ] ;
+    sh:property [ sh:path fe:hasClimate ; sh:class fe:Climate ; sh:message "Le climat de reference doit etre un fe:Climate."@fr ] ;
+    sh:property [ sh:path fe:hasProtectionStatus ; sh:class fe:ProtectionLevel ; sh:maxCount 1 ; sh:message "Le statut de protection d'un site doit etre un fe:ProtectionLevel."@fr ] ;
+    sh:property [ sh:path fe:hasAttendancePlan ; sh:class fe:AttendancePlan ; sh:maxCount 1 ; sh:message "Le plan de frequentation doit etre un fe:AttendancePlan."@fr ] .
+
+fe:AttendancePlanShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Plan de frequentation"@fr ;
+    sh:targetClass fe:AttendancePlan ;
+    sh:property [ sh:path fe:hasMaximumCapacity ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "La capacite maximale doit etre un entier positif."@fr ] ;
+    sh:property [ sh:path fe:hasAverageDailyFlow ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "Le flux moyen quotidien doit etre un entier positif."@fr ] ;
+    sh:property [ sh:path fe:hasTimeProfile ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:message "Le profil temporel doit etre une chaine de caracteres."@fr ] .
+
+fe:ZoneShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Zone"@fr ;
+    sh:targetClass fe:Zone ;
+    sh:property [ sh:path fe:isZoneOf ; sh:class fe:HeritageSite ; sh:message "Une zone rattachee a un site doit pointer vers fe:HeritageSite."@fr ] ;
+    sh:property [ sh:path fe:hasPopulation ; sh:class fe:Population ; sh:message "La population d'une zone doit etre une fe:Population."@fr ] ;
+    sh:property [ sh:path fe:hasMaximumOccupancy ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "La capacite maximale d'une zone doit etre un entier positif."@fr ] ;
+    sh:property [ sh:path fe:containsBuilding ; sh:class fe:Building ; sh:message "Les batiments contenus dans une zone doivent etre des fe:Building."@fr ] ;
+    sh:property [ sh:path fe:containsNaturalSpace ; sh:class fe:NaturalSpace ; sh:message "Les espaces naturels contenus dans une zone doivent etre des fe:NaturalSpace."@fr ] ;
+    sh:property [ sh:path fe:containsArtefact ; sh:class fe:Artefact ; sh:message "Les artefacts contenus dans une zone doivent etre des fe:Artefact."@fr ] ;
+    sh:property [ sh:path fe:hasTopographicContext ; sh:class fe:TopographicDataset ; sh:message "Le contexte topographique doit etre un fe:TopographicDataset."@fr ] ;
+    sh:property [ sh:path fe:hasUrgencyProfile ; sh:class fe:UrgencyAssessment ; sh:maxCount 1 ; sh:message "Le profil d'urgence d'une zone doit etre un fe:UrgencyAssessment."@fr ] ;
+    sh:property [ sh:path fe:hasZonePriority ; sh:class fe:PriorityLevel ; sh:maxCount 1 ; sh:message "La priorite d'une zone doit etre un fe:PriorityLevel."@fr ] ;
+    sh:property [ sh:path fe:hasZoneUsage ; sh:class fe:ZoneUsageType ; sh:maxCount 1 ; sh:message "L'usage d'une zone doit etre un fe:ZoneUsageType."@fr ] ;
+    sh:property [ sh:path fe:hasCommunicationNode ; sh:class fe:CommunicationType ; sh:message "Les noeuds de communication doivent etre des fe:CommunicationType."@fr ] .
+
+fe:TopographicDatasetShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Donnees topographiques"@fr ;
+    sh:targetClass fe:TopographicDataset ;
+    sh:property [ sh:path fe:hasAcquisitionDate ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; sh:message "La date d'acquisition doit etre un xsd:dateTime."@fr ] ;
+    sh:property [ sh:path fe:hasResolution ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:message "La resolution doit etre une chaine de caracteres."@fr ] ;
+    sh:property [ sh:path fe:hasAcquisitionMethod ; sh:class fe:AcquisitionMethod ; sh:maxCount 1 ; sh:message "La methode d'acquisition doit etre une fe:AcquisitionMethod."@fr ] .
+
+fe:LidarTileShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Tuile LiDAR"@fr ;
+    sh:targetClass fe:LidarTile ;
+    sh:property [ sh:path fe:hasTileIndex ; sh:datatype xsd:string ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "Une tuile LiDAR doit avoir un index unique."@fr ] ;
+    sh:property [ sh:path fe:hasSourceFile ; sh:datatype xsd:anyURI ; sh:maxCount 1 ; sh:message "Le fichier source doit etre une URI."@fr ] ;
+    sh:property [ sh:path fe:hasBoundingBox ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:message "L'emprise spatiale doit etre une chaine WKT."@fr ] ;
+    sh:property [ sh:path fe:hasAverageSlope ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasMaxElevation ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasMinElevation ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:adjacentTo ; sh:class fe:LidarTile ] ;
+    sh:property [ sh:path fe:connectsTo ; sh:class fe:LidarTile ] ;
+    sh:property [ sh:path fe:isVerticallyStackedWith ; sh:class fe:LidarTile ] ;
+    sh:property [ sh:path fe:hasOverlapWith ; sh:class fe:LidarTile ] .
+
+fe:AxisShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Axe"@fr ;
+    sh:targetClass fe:Axis ;
+    sh:property [ sh:path fe:hasAxisType ; sh:class fe:AxisType ; sh:maxCount 1 ; sh:message "Le type d'axe doit etre un fe:AxisType."@fr ] ;
+    sh:property [ sh:path fe:hasAccessibilityLevel ; sh:class fe:AccessibilityLevel ; sh:maxCount 1 ; sh:message "Le niveau d'accessibilite doit etre un fe:AccessibilityLevel."@fr ] ;
+    sh:property [ sh:path fe:hasRescueAccessibilityLevel ; sh:class fe:RescueAccessibilityLevel ; sh:maxCount 1 ; sh:message "L'accessibilite secours doit etre un fe:RescueAccessibilityLevel."@fr ] ;
+    sh:property [ sh:path fe:hasBlockingState ; sh:class crm:E3_Condition_State ; sh:maxCount 1 ; sh:message "L'etat de blocage doit etre un crm:E3_Condition_State."@fr ] ;
+    sh:property [ sh:path fe:hasWidth ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "La largeur d'un axe doit etre numerique et positive."@fr ] ;
+    sh:property [ sh:path fe:hasLength ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "La longueur d'un axe doit etre numerique et positive."@fr ] ;
+    sh:property [ sh:path fe:hasSlope ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:maxCount 1 ; sh:message "La pente d'un axe doit etre numerique."@fr ] ;
+    sh:property [ sh:path fe:maxFlowCapacity ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "La capacite de flux doit etre numerique et positive."@fr ] ;
+    sh:property [ sh:path fe:isOnLevel ; sh:datatype xsd:integer ; sh:maxCount 1 ; sh:message "Le niveau d'un axe doit etre un entier."@fr ] ;
+    sh:property [ sh:path fe:isConnectedTo ; sh:class crm:E25_Man_Made_Feature ; sh:message "Les connexions topologiques doivent pointer vers crm:E25_Man_Made_Feature."@fr ] ;
+    sh:property [ sh:path fe:isReachableFrom ; sh:class crm:E25_Man_Made_Feature ; sh:message "Les relations d'atteignabilite doivent pointer vers crm:E25_Man_Made_Feature."@fr ] ;
+    sh:property [ sh:path fe:hasVulnerability ; sh:class fe:AxisVulnerability ; sh:message "Les vulnerabilites d'axe doivent etre des fe:AxisVulnerability."@fr ] .
+
+fe:AxisVulnerabilityShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Vulnerabilite d'axe"@fr ;
+    sh:targetClass fe:AxisVulnerability ;
+    sh:property [ sh:path fe:triggeredBy ; sh:class fe:HazardType ; sh:maxCount 1 ; sh:message "L'alea declencheur doit etre un fe:HazardType."@fr ] ;
+    sh:property [ sh:path fe:causedBy ; sh:class crm:E70_Thing ; sh:message "La cause structurelle doit etre une entite CRM."@fr ] ;
+    sh:property [ sh:path fe:blockingNature ; sh:class fe:BlockingType ; sh:maxCount 1 ; sh:message "La nature du blocage doit etre un fe:BlockingType."@fr ] ;
+    sh:property [ sh:path fe:blockingProbability ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:maxCount 1 ; sh:message "La probabilite de blocage doit etre normalisee entre 0 et 1."@fr ] ;
+    sh:property [ sh:path fe:estimatedClearanceTime ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "Le temps de degagement estime doit etre un entier positif."@fr ] .
+
+fe:PopulationShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Population"@fr ;
+    sh:targetClass fe:Population ;
+    sh:property [ sh:path fe:hasEstimatedCount ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "L'effectif estime doit etre un entier positif."@fr ] ;
+    sh:property [ sh:path fe:hasPartition ; sh:class fe:PopulationPartition ; sh:message "Les partitions de population doivent etre des fe:PopulationPartition."@fr ] ;
+    sh:property [ sh:path fe:hasPopulationAtRisk ; sh:class fe:hazardExposure ; sh:message "La population a risque doit pointer vers une exposition a un alea."@fr ] .
+
+fe:PopulationPartitionShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Partition de population"@fr ;
+    sh:targetClass fe:PopulationPartition ;
+    sh:property [ sh:path fe:proportionValue ; sh:or ( [ sh:datatype xsd:float ] [ sh:datatype xsd:decimal ] [ sh:datatype xsd:double ] [ sh:datatype xsd:integer ] ) ; sh:minInclusive 0 ; sh:maxInclusive 1 ; sh:maxCount 1 ; sh:message "La proportion d'une partition doit etre comprise entre 0 et 1."@fr ] ;
+    sh:property [ sh:path fe:hasRiskPerception ; sh:class fe:populationPartitionRiskPerceptionLevel ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasAwareness ; sh:class fe:populationPartitionAwarenessLevel ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasTraining ; sh:class fe:populationPartitionTrainingLevel ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasEducation ; sh:class fe:populationPartitionEducationLevel ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasMobilityClass ; sh:class fe:populationPartitionMobilityClass ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasFunctionnalGroup ; sh:class fe:populationPartitionFunctionalGroup ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasStatus ; sh:class fe:populationPartitionStatus ; sh:maxCount 1 ] .
+
+fe:PopulationPartitionMobilityClassShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Classe de mobilite"@fr ;
+    sh:targetClass fe:populationPartitionMobilityClass ;
+    sh:property [ sh:path fe:populationPartitionVelocity ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "La vitesse moyenne doit etre numerique et positive."@fr ] .
+
+fe:ClimateShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Climat"@fr ;
+    sh:targetClass fe:Climate ;
+    sh:property [ sh:path fe:hasClimateType ; sh:class fe:ClimateClassification ; sh:maxCount 1 ; sh:message "Le type climatique doit etre une fe:ClimateClassification."@fr ] ;
+    sh:property [ sh:path fe:hasAvgHumidity ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 100 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasAvgWindDirection ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 360 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasAvgWindSpeed ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasAvgPrecipitation ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasAvgSunshineDuration ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] .
+
+fe:WeatherConditionShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Etat meteo"@fr ;
+    sh:targetClass fe:WeatherCondition ;
+    sh:property [ sh:path fe:hasTimestamp ; sh:datatype xsd:dateTime ; sh:maxCount 1 ; sh:message "L'horodatage meteo doit etre un xsd:dateTime."@fr ] ;
+    sh:property [ sh:path fe:hasTemperature ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasWindSpeed ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasWindDirection ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 360 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasPrecipitation ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasHumidity ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxInclusive 100 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasSunshine ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:minInclusive 0 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path fe:hasMeasurement ; sh:class fe:WeatherDimension ; sh:message "Les mesures meteo complexes doivent etre des fe:WeatherDimension."@fr ] ;
+    sh:property [ sh:path fe:hasOtherDimension ; sh:class fe:WeatherDimension ; sh:message "Les dimensions meteo additionnelles doivent etre des fe:WeatherDimension."@fr ] .
+
+fe:WeatherDimensionShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Dimension meteo"@fr ;
+    sh:targetClass fe:WeatherDimension ;
+    sh:property [ sh:path fe:hasValue ; sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] [ sh:datatype xsd:double ] ) ; sh:maxCount 1 ; sh:message "La valeur d'une dimension meteo doit etre numerique."@fr ] .

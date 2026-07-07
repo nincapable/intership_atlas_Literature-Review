@@ -1,0 +1,66 @@
+@prefix fe:   <http://example.org/fire_and_evacuation#> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+fe:HazardEventShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Evenement d'alea"@fr ;
+    sh:targetClass fe:HazardEvent ;
+    sh:property [ sh:path fe:hasHazardType ; sh:class fe:HazardType ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "Un evenement d'alea doit avoir exactement un type d'alea."@fr ] ;
+    sh:property [ sh:path fe:hasHazardIntensityLevel ; sh:class fe:hazardIntensityLevel ; sh:maxCount 1 ; sh:message "Le niveau d'intensite d'alea doit etre un fe:hazardIntensityLevel."@fr ] ;
+    sh:property [ sh:path fe:hasHazardSeverityLevel ; sh:class fe:hazardSeverityLevel ; sh:maxCount 1 ; sh:message "Le niveau de gravite d'alea doit etre un fe:hazardSeverityLevel."@fr ] ;
+    sh:property [ sh:path fe:hasIntensityLevel ; sh:class fe:IntensityLevel ; sh:maxCount 1 ; sh:message "Le niveau d'intensite alternatif doit etre un fe:IntensityLevel."@fr ] ;
+    sh:property [ sh:path fe:hasSeverityLevel ; sh:class fe:SeverityLevel ; sh:maxCount 1 ; sh:message "Le niveau de severite alternatif doit etre un fe:SeverityLevel."@fr ] ;
+    sh:property [ sh:path fe:hasMeteorologicalObservation ; sh:class fe:WeatherCondition ; sh:message "L'observation meteo d'un alea doit pointer vers une observation meteo instanciee."@fr ] ;
+    sh:property [ sh:path fe:hasImpact ; sh:class fe:ImpactAssessment ; sh:message "L'impact d'un alea doit pointer vers un fe:ImpactAssessment."@fr ] ;
+    sh:property [ sh:path fe:hasImpactAssessment ; sh:class fe:ImpactAssessment ; sh:message "Le bilan d'impact d'un alea doit pointer vers un fe:ImpactAssessment."@fr ] ;
+    sh:property [ sh:path fe:hasIntensityDocumentation ; sh:class crm:E31_Document ; sh:message "La documentation d'intensite doit etre un document CRM."@fr ] .
+
+fe:ImpactAssessmentShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Bilan d'impact"@fr ;
+    sh:targetClass fe:ImpactAssessment ;
+    sh:property [ sh:path fe:hasAssessmentItem ; sh:class fe:AssessmentItem ; sh:message "Les elements d'un bilan d'impact doivent etre des fe:AssessmentItem."@fr ] ;
+    sh:property [ sh:path fe:hasHumanToll ; sh:class fe:HumanToll ; sh:maxCount 1 ; sh:message "Le bilan humain doit etre un fe:HumanToll."@fr ] ;
+    sh:property [ sh:path fe:producedByRun ; sh:class fe:SimulationRun ; sh:maxCount 1 ; sh:message "Un bilan produit par simulation doit pointer vers au plus une execution."@fr ] .
+
+fe:AssessmentItemShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Element de bilan"@fr ;
+    sh:targetClass fe:AssessmentItem ;
+    sh:property [ sh:path fe:hasDamageLevel ; sh:class fe:ImpactSeverityLevel ; sh:maxCount 1 ; sh:message "Le niveau de dommage doit etre un fe:ImpactSeverityLevel."@fr ] ;
+    sh:property [ sh:path fe:isDamageTo ; sh:class crm:E70_Thing ; sh:minCount 1 ; sh:message "Un element de bilan doit designer au moins une entite impactee."@fr ] .
+
+fe:HumanTollShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Bilan humain"@fr ;
+    sh:targetClass fe:HumanToll ;
+    sh:property [ sh:path fe:hasTriageCount ; sh:class fe:TriageCount ; sh:message "Les comptages de triage doivent etre des fe:TriageCount."@fr ] ;
+    sh:property [ sh:path fe:hasVictim ; sh:class fe:Victim ; sh:message "Les victimes identifiees doivent etre des fe:Victim."@fr ] .
+
+fe:TriageCountShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Comptage triage"@fr ;
+    sh:targetClass fe:TriageCount ;
+    sh:property [ sh:path fe:quantity ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "Un comptage de triage doit avoir une quantite entiere positive unique."@fr ] .
+
+fe:ReactionToFireShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Reaction au feu"@fr ;
+    sh:targetClass fe:ReactionToFire ;
+    sh:property [ sh:path fe:hasReactionClass ; sh:class fe:ReactionToFireClass ; sh:maxCount 1 ; sh:message "La classe de reaction au feu doit etre une fe:ReactionToFireClass."@fr ] ;
+    sh:property [ sh:path fe:hasSmokeProductionClass ; sh:class fe:SmokeProductionClass ; sh:maxCount 1 ; sh:message "La classe de production de fumee doit etre une fe:SmokeProductionClass."@fr ] ;
+    sh:property [ sh:path fe:hasFlamingDropletClass ; sh:class fe:FlamingDropletsClass ; sh:maxCount 1 ; sh:message "La classe de gouttelettes enflammees doit etre une fe:FlamingDropletsClass."@fr ] .
+
+fe:ReactionToFireClassShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Classe reaction au feu"@fr ;
+    sh:targetClass fe:ReactionToFireClass ;
+    sh:property [ sh:path fe:materialFlammabilityScore ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "Le score d'inflammabilite materiau doit etre un entier positif."@fr ] .
+
+fe:FireResistanceRatingShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Resistance au feu"@fr ;
+    sh:targetClass fe:FireResistanceRating ;
+    sh:property [ sh:path fe:resistanceComponents ; sh:class fe:FireResistanceComponent ; sh:message "Les composants de resistance doivent etre des fe:FireResistanceComponent."@fr ] ;
+    sh:property [ sh:path fe:resistanceDuration ; sh:datatype xsd:integer ; sh:minInclusive 0 ; sh:maxCount 1 ; sh:message "La duree de resistance doit etre un entier positif."@fr ] .
+
+fe:SafetyProcedureShape a sh:NodeShape ;
+    rdfs:label "Contraintes d'insertion - Procedure de securite"@fr ;
+    sh:targetClass crm:E29_Design_or_Procedure ;
+    sh:property [ sh:path fe:hasEvacuationPlan ; sh:class crm:E31_Document ; sh:message "Un plan d'evacuation doit etre un document CRM."@fr ] ;
+    sh:property [ sh:path fe:hasInterventionPlan ; sh:class crm:E31_Document ; sh:message "Un plan d'intervention doit etre un document CRM."@fr ] .
