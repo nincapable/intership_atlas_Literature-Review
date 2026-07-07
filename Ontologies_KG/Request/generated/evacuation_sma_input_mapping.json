@@ -45,13 +45,18 @@
     "fe:maxFlowCapacity",
     "fe:hasWidth",
     "fe:hasLength",
+    "fe:hasEstimatedCount",
+    "fe:hasHazardType",
     "fe:hasHazardExposure"
   ],
   "optional_properties": [
     "fe:containsBuilding",
     "fe:containsNaturalSpace",
     "fe:containsArtefact",
+    "fe:hasMaximumOccupancy",
     "fe:hasWeatherCondition",
+    "fe:hasHazardIntensityLevel",
+    "fe:hasHazardSeverityLevel",
     "fe:hasBlockingState",
     "fe:hasAccessibilityLevel",
     "fe:hasRescueAccessibilityLevel",

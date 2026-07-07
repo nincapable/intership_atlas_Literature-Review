@@ -1,0 +1,56 @@
+@prefix fe:  <http://example.org/fire_and_evacuation#> .
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+fe:Zone_A a fe:Zone ;
+    fe:hasPopulation fe:Population_A ;
+    fe:hasMaximumOccupancy 350 ;
+    fe:containsBuilding fe:Building_A ;
+    fe:containsArtefact fe:Artefact_A ;
+    fe:hasHazardExposure fe:FireExposure_Zone_A .
+
+fe:Population_A a fe:Population ;
+    fe:hasEstimatedCount 180 .
+
+fe:Axis_Entrance a fe:Axis, crm:E25_Man_Made_Feature ;
+    fe:isConnectedTo fe:Axis_Corridor ;
+    fe:maxFlowCapacity "120.0"^^xsd:decimal ;
+    fe:hasWidth "2.40"^^xsd:decimal ;
+    fe:hasLength "8.50"^^xsd:decimal ;
+    fe:hasAccessibilityLevel fe:Accessibility_PMR ;
+    fe:hasRescueAccessibilityLevel fe:RescueAccess_Good ;
+    fe:hasBlockingState fe:AxisState_Open .
+
+fe:Axis_Corridor a fe:Axis, crm:E25_Man_Made_Feature ;
+    fe:isConnectedTo fe:Axis_Exit ;
+    fe:maxFlowCapacity "95.0"^^xsd:decimal ;
+    fe:hasWidth "1.80"^^xsd:decimal ;
+    fe:hasLength "22.0"^^xsd:decimal ;
+    fe:hasAccessibilityLevel fe:Accessibility_Partial ;
+    fe:hasRescueAccessibilityLevel fe:RescueAccess_Limited ;
+    fe:hasBlockingState fe:AxisState_Open .
+
+fe:Axis_Exit a fe:Axis, crm:E25_Man_Made_Feature ;
+    fe:maxFlowCapacity "150.0"^^xsd:decimal ;
+    fe:hasWidth "3.00"^^xsd:decimal ;
+    fe:hasLength "5.0"^^xsd:decimal ;
+    fe:hasAccessibilityLevel fe:Accessibility_PMR ;
+    fe:hasRescueAccessibilityLevel fe:RescueAccess_Good ;
+    fe:hasBlockingState fe:AxisState_Open .
+
+fe:HazardEvent_Fire_001 a fe:HazardEvent ;
+    fe:hasHazardType fe:FireHazard ;
+    fe:hasHazardIntensityLevel fe:Intensity_High ;
+    fe:hasHazardSeverityLevel fe:Severity_Major .
+
+fe:Building_A a fe:Building .
+fe:Artefact_A a fe:Artefact .
+fe:FireExposure_Zone_A a fe:hazardExposure .
+fe:Accessibility_PMR a fe:AccessibilityLevel .
+fe:Accessibility_Partial a fe:AccessibilityLevel .
+fe:RescueAccess_Good a fe:RescueAccessibilityLevel .
+fe:RescueAccess_Limited a fe:RescueAccessibilityLevel .
+fe:AxisState_Open a crm:E3_Condition_State .
+fe:FireHazard a fe:HazardType .
+fe:Intensity_High a fe:hazardIntensityLevel .
+fe:Severity_Major a fe:hazardSeverityLevel .
