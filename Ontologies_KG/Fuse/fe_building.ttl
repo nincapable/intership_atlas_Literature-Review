@@ -21,6 +21,10 @@ fe:MaterialInstance a owl:Class ;
     rdfs:label "Classe des Matériaux"@fr ;
     rdfs:subClassOf crm:E57_Material .
 
+fe:BuildingUsage a owl:Class ; 
+    rdfs:label "Classe des Usages du Bâtiment"@fr ;
+    rdfs:subClassOf crm:E7_Activity . #verifier si E7_Activity est le bon choix pour les usages du bâtiment
+
 fe:ArchitectureStyle a owl:Class ; 
     rdfs:label "Classe des Styles Architecturaux"@fr ;
     rdfs:subClassOf fe:TechnicalDimension .
