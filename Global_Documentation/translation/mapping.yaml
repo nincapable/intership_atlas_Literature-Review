@@ -1,0 +1,8 @@
+source_language: fr
+
+documents:
+  - source: etat_de_l_art_atlas.fr.md
+    translations:
+      en: etat_de_l_art_atlas.en.md
+      es: etat_de_l_art_atlas.es.md
+      de: etat_de_l_art_atlas.de.md

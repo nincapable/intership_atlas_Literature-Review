@@ -6,7 +6,11 @@ Ce dépôt rassemble les travaux réalisés autour du projet **ATLAS** : revue d
 
 ```text
 .
-├── Global/                         # Rapport et états de l'art multilingues
+├── Global_Documentation/           # Documentation consolidée du projet
+│   ├── literature_review/          # État de l'art et traductions
+│   ├── project/                    # Documents de cadrage du projet
+│   ├── technical_guides/           # Guides ontologie et SMA
+│   └── translation/                # Outil et configuration de traduction
 ├── Material_for_Litterature_review/ # Corpus documentaire ARCH, C2IMPRESS et CIDOC CRM
 ├── Ontologies_KG/                  # Livrable technique principal
 │   ├── Ontologie_OWL/              # Modules RDF/OWL du domaine
@@ -15,11 +19,8 @@ Ce dépôt rassemble les travaux réalisés autour du projet **ATLAS** : revue d
 │   ├── Profiles/                   # Profils déclaratifs des SMA
 │   ├── Request/                    # Modèles et requêtes SPARQL générées
 │   ├── Scripts/                    # Génération et conversion RDF/CSV/SPARQL
-│   ├── Tests/                      # Tests automatisés
-│   └── Docs/                       # Documentation scientifique et pratique
-├── Reunions/                       # Préparations et comptes rendus
-├── translate.py                    # Traduction des états de l'art
-└── mapping_file_names.yaml         # Noms des traductions produites
+│   └── Tests/                      # Tests automatisés
+└── Reunions/                       # Préparations et comptes rendus
 ```
 
 Le point d'entrée conceptuel de l'ontologie est [`Ontologies_KG/Ontologie_OWL/fe_core.ttl`](Ontologies_KG/Ontologie_OWL/fe_core.ttl). Les modules couvrent notamment les sites patrimoniaux, bâtiments, axes, populations, aléas, impacts, météo, victimes, espaces naturels et simulations.
@@ -104,24 +105,24 @@ python Ontologies_KG/Scripts/import_sma_results_csv.py \
   --out Ontologies_KG/Request/generated/evacuation_sma_results_insert.sparql
 ```
 
-La documentation détaillée du flux, des colonnes CSV et de la création de nouveaux profils se trouve dans [`Ontologies_KG/Docs/SMA_Query_Generator.md`](Ontologies_KG/Docs/SMA_Query_Generator.md).
+La documentation détaillée du flux, des colonnes CSV et de la création de nouveaux profils se trouve dans [`Global_Documentation/technical_guides/sma_query_generator.md`](Global_Documentation/technical_guides/sma_query_generator.md).
 
 ## Documentation
 
-- [État de l'art](Ontologies_KG/Docs/Etat_de_l_Art/Etat_de_art_pour_projet_ATLAS%20.md)
-- [Guide utilisateur SMA](Ontologies_KG/Docs/Guide_et_Documentation_Pratique/Guide_Utilisateurs_SMA.md)
-- [Guide de spécialisation pour les chercheurs](Ontologies_KG/Docs/Guide_et_Documentation_Pratique/Guide_Specialisation_Chercheurs.md)
-- [Documentation de reprise de l'ontologie](Ontologies_KG/Docs/Guide_et_Documentation_Pratique/Documentation_Repreneur_Ontologie.md)
+- [État de l'art — français](Global_Documentation/literature_review/etat_de_l_art_atlas.fr.md)
+- [Guide utilisateur SMA](Global_Documentation/technical_guides/guide_utilisateur_sma.md)
+- [Guide de spécialisation pour les chercheurs](Global_Documentation/technical_guides/guide_specialisation_chercheurs.md)
+- [Documentation de reprise de l'ontologie](Global_Documentation/technical_guides/documentation_reprise_ontologie.md)
 
 ## Traduction des documents
 
-`translate.py` traduit le document français déclaré dans `mapping_file_names.yaml` vers l'anglais, l'espagnol et l'allemand à l'aide d'Argos Translate. Les modèles de langue manquants sont téléchargés au premier lancement :
+Le script `Global_Documentation/translation/translate.py` traduit les documents déclarés dans `mapping.yaml` vers l'anglais, l'espagnol et l'allemand à l'aide d'Argos Translate. Il trouve sa configuration et le dossier documentaire indépendamment du répertoire depuis lequel il est lancé. Les modèles de langue manquants sont téléchargés au premier lancement :
 
 ```bash
-python translate.py
+python Global_Documentation/translation/translate.py
 ```
 
-Cette commande nécessite donc un accès réseau lors de l'installation initiale des modèles.
+Les options `--mapping`, `--documents-dir` et `--force` permettent de personnaliser le traitement. La commande nécessite un accès réseau lors de l'installation initiale des modèles.
 
 ## État et limites
 
