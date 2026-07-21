@@ -6,18 +6,18 @@ Cette ontologie sert a representer l'interconnexion entre les domaines du risque
 
 Le depot est organise autour de quatre familles de fichiers :
 
-- `Fuse/` : modules OWL/RDFS principaux de l'ontologie.
+- `Ontologie_OWL/` : modules OWL/RDFS principaux de l'ontologie.
 - `Thesaurus/` : vocabulaires SKOS qui portent les listes de valeurs et taxonomies.
 - `Constraints/` : contraintes SHACL utilisees pour verifier les donnees.
 - `Profiles/`, `Request/`, `Scripts/` : couche d'interoperabilite SMA, generation de requetes, exports CSV et imports de resultats.
 
-Le point d'entree logique est `Fuse/fe_core.ttl`. Il declare les abstractions communes et importe les modules metier, le module simulation et les thesaurus.
+Le point d'entree logique est `Ontologie_OWL/fe_core.ttl`. Il declare les abstractions communes et importe les modules metier, le module simulation et les thesaurus.
 
 ## Architecture des modules
 
 ### Module noyau
 
-`Fuse/fe_core.ttl` joue le role de racine. Il centralise :
+`Ontologie_OWL/fe_core.ttl` joue le role de racine. Il centralise :
 
 - les imports `owl:imports` vers les autres modules ;
 - les grandes abstractions quantitatives heritees de `crm:E54_Dimension` ;
@@ -28,7 +28,7 @@ Les modules ne doivent pas redefinir ces racines si elles existent deja dans le 
 
 ### Modules metier
 
-Les modules `Fuse/fe_*.ttl` decrivent les classes et proprietes structurelles du domaine :
+Les modules `Ontologie_OWL/fe_*.ttl` decrivent les classes et proprietes structurelles du domaine :
 
 - `fe_site.ttl` : sites, lieux patrimoniaux et relations de localisation.
 - `fe_zone.ttl` : zones fonctionnelles, contenance, capacites et liens vers batiments, populations, espaces naturels, artefacts.
@@ -61,7 +61,7 @@ Cette logique evite de creer une ontologie isolee : les classes `fe:` specialise
 
 ## Interaction entre modules et thesaurus
 
-Les modules `Fuse/` definissent la structure : classes, proprietes, domaines, ranges et relations. Les fichiers de thesaurus definissent les valeurs controlees : concepts SKOS, hierarchies de concepts, libelles, correspondances et taxonomies.
+Les modules `Ontologie_OWL/` definissent la structure : classes, proprietes, domaines, ranges et relations. Les fichiers de thesaurus definissent les valeurs controlees : concepts SKOS, hierarchies de concepts, libelles, correspondances et taxonomies.
 
 Exemple de separation :
 
@@ -239,7 +239,7 @@ fe:BuildingFireResistanceUpdate a fe:OutputUpdateMapping ;
     fe:targetClass fe:BuildingFireExposure .
 ```
 
-Cela implique d'ajouter dans `Fuse/fe_simulation.ttl` les classes et proprietes de configuration necessaires :
+Cela implique d'ajouter dans `Ontologie_OWL/fe_simulation.ttl` les classes et proprietes de configuration necessaires :
 
 ```ttl
 fe:OutputUpdateMapping a owl:Class .
@@ -346,7 +346,7 @@ Le choix depend de la strategie de versioning retenue. Tant que les branches par
 
 Si le SMA calcule une resistance au feu pour `fe:Building_001`, la procedure cible devrait etre :
 
-1. Ajouter la propriete dans `Fuse/fe_building.ttl`, par exemple sur `fe:BuildingFireExposure` si elle concerne l'exposition au feu.
+1. Ajouter la propriete dans `Ontologie_OWL/fe_building.ttl`, par exemple sur `fe:BuildingFireExposure` si elle concerne l'exposition au feu.
 2. Ajouter cette propriete dans `fe:producesProperty` du profil SMA.
 3. Ajouter un mapping de sortie indiquant que cette propriete met a jour `fe:BuildingFireExposure` via `fe:hasFireExposure`.
 4. Faire produire au SMA une ligne CSV avec `update_policy=update_related_resource`.
@@ -366,7 +366,7 @@ Ainsi, on garde les deux informations : la valeur simulee comme resultat histori
 
 ## Cycle de maintenance recommande
 
-1. Modifier d'abord le module `Fuse/` concerne.
+1. Modifier d'abord le module `Ontologie_OWL/` concerne.
 2. Ajouter ou corriger les valeurs de classification dans le thesaurus correspondant.
 3. Ajuster les contraintes SHACL si la modification concerne des donnees requises.
 4. Mettre a jour ou creer un profil SMA dans `Profiles/` si le simulateur consomme ou produit de nouvelles donnees.

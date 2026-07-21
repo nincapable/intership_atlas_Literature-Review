@@ -1,0 +1,7 @@
+# RDF, OWL and SHACL tooling
+rdflib>=7.0,<8
+pyshacl>=0.30,<1
+
+# Translation utility (translate.py)
+argostranslate>=1.9,<2
+PyYAML>=6.0,<7

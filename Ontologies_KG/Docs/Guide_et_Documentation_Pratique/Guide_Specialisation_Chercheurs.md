@@ -8,7 +8,7 @@ La regle generale est simple : modifier la structure dans les modules OWL, modif
 
 ## Portee des modules
 
-`Fuse/fe_core.ttl` est le noyau. Il contient les abstractions partagees et importe les autres modules. Il ne doit pas devenir un fichier fourre-tout.
+`Ontologie_OWL/fe_core.ttl` est le noyau. Il contient les abstractions partagees et importe les autres modules. Il ne doit pas devenir un fichier fourre-tout.
 
 Les modules thematiques ont chacun une responsabilite :
 
@@ -109,7 +109,7 @@ Avant d'editer, choisir le module responsable. Si la modification concerne une p
 
 ### 2. Ajouter la structure OWL si necessaire
 
-Ajouter la classe ou la propriete dans le module `Fuse/` pertinent.
+Ajouter la classe ou la propriete dans le module `Ontologie_OWL/` pertinent.
 
 Pour une classe :
 
@@ -190,7 +190,7 @@ Pourquoi : les exemples servent de tests humains et facilitent la reprise.
 
 ## Pourquoi faire les modifications a ces endroits
 
-- Modifier `Fuse/` quand le modele du monde change.
+- Modifier `Ontologie_OWL/` quand le modele du monde change.
 - Modifier `Thesaurus/` quand une liste de valeurs change.
 - Modifier `Constraints/` quand une exigence de validite change.
 - Modifier `Profiles/` quand le contrat avec un SMA change.

@@ -1,2 +1,32 @@
+# Environnements Python
+.venv/
 venv/
+env/
+
+# Caches et artefacts Python
 __pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Fichiers locaux et temporaires
+.env
+.env.*
+!.env.example
+*.log
+*.tmp
+*.bak
+*~
+
+# Éditeurs et système d'exploitation
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini

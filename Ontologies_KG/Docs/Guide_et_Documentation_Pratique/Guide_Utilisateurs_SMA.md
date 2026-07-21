@@ -271,7 +271,7 @@ Cette etape n'est pas encore automatisee dans les scripts actuels. Elle doit etr
 
 Exemple : le SMA simule une resistance au feu pour un batiment.
 
-1. Verifier que la propriete existe dans l'ontologie, par exemple dans `Fuse/fe_building.ttl`.
+1. Verifier que la propriete existe dans l'ontologie, par exemple dans `Ontologie_OWL/fe_building.ttl`.
 2. Verifier ou la valeur doit vivre : directement sur `fe:Building` si elle decrit le batiment lui-meme, ou sur `fe:BuildingFireExposure` si elle decrit l'exposition ou la resistance au feu.
 3. Garder le resultat historise dans `fe:FinalState`.
 4. Produire ensuite une requete de mise a jour separee, de type `DELETE/INSERT`, pour remplacer ou ajouter la valeur courante.
@@ -293,8 +293,8 @@ Pourquoi : cela evite de confondre une hypothese calculee par un run avec une do
 
 ## Ou modifier quoi
 
-- Le SMA a besoin d'une nouvelle donnee en entree : modifier `Profiles/evacuation_sma_profile.ttl`, puis verifier que la classe/propriete existe dans `Fuse/`.
-- Le SMA produit une nouvelle mesure : ajouter la propriete dans le module `Fuse/` approprie, puis dans `fe:producesProperty`.
+- Le SMA a besoin d'une nouvelle donnee en entree : modifier `Profiles/evacuation_sma_profile.ttl`, puis verifier que la classe/propriete existe dans `Ontologie_OWL/`.
+- Le SMA produit une nouvelle mesure : ajouter la propriete dans le module `Ontologie_OWL/` approprie, puis dans `fe:producesProperty`.
 - Le SMA produit une mesure qui doit devenir une valeur courante : prevoir une politique de mise a jour (`snapshot_only`, `update_entity`, `update_related_resource`) et une requete `DELETE/INSERT` separee.
 - Une valeur doit appartenir a une liste controlee : l'ajouter dans le thesaurus correspondant.
 - Une donnee devient obligatoire pour la simulation : ajouter ou modifier une contrainte dans `Constraints/`.

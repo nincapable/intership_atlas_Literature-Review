@@ -1,6 +1,6 @@
 # Générateur de requêtes SPARQL pour l'initialisation et le déchargement SMA
 
-Ce document décrit le prototype ajouté pour connecter l'ontologie `Fuse/` à des systèmes multi-agents (SMA). L'objectif n'est pas de faire charger toute l'ontologie à chaque simulateur, mais de permettre à chaque SMA de déclarer un profil d'entrée/sortie, puis de générer automatiquement les requêtes SPARQL correspondant à ce profil.
+Ce document décrit le prototype ajouté pour connecter l'ontologie `Ontologie_OWL/` à des systèmes multi-agents (SMA). L'objectif n'est pas de faire charger toute l'ontologie à chaque simulateur, mais de permettre à chaque SMA de déclarer un profil d'entrée/sortie, puis de générer automatiquement les requêtes SPARQL correspondant à ce profil.
 
 ## Vue d'ensemble
 
@@ -21,7 +21,7 @@ Profil SMA RDF
 Les fichiers principaux sont :
 
 ```text
-Fuse/fe_simulation.ttl
+Ontologie_OWL/fe_simulation.ttl
 Profiles/evacuation_sma_profile.ttl
 Scripts/generate_sma_queries.py
 Request/Templates/sma_init_construct_template.sparql
@@ -40,7 +40,7 @@ Constraints/evacuation_sma_input_shape.ttl
 
 ## Rôle de `fe_simulation.ttl`
 
-Le module `Fuse/fe_simulation.ttl` définit deux familles de concepts.
+Le module `Ontologie_OWL/fe_simulation.ttl` définit deux familles de concepts.
 
 La première famille décrit le cycle d'exécution d'une simulation :
 
