@@ -25,6 +25,23 @@ Ce dépôt rassemble les travaux réalisés autour du projet **ATLAS** : revue d
 
 Le point d'entrée conceptuel de l'ontologie est [`Ontologies_KG/Ontologie_OWL/fe_core.ttl`](Ontologies_KG/Ontologie_OWL/fe_core.ttl). Les modules couvrent notamment les sites patrimoniaux, bâtiments, axes, populations, aléas, impacts, météo, victimes, espaces naturels et simulations.
 
+## Cloner le dépôt
+
+Le dépôt étant privé, chaque collaborateur doit d'abord être ajouté dans les paramètres GitHub du projet. Le clonage par SSH est recommandé :
+
+```bash
+git clone git@github.com:nincapable/intership_atlas_Literature-Review.git
+cd intership_atlas_Literature-Review
+```
+
+Le clonage HTTPS est également possible avec un compte GitHub autorisé et un jeton personnel :
+
+```bash
+git clone https://github.com/nincapable/intership_atlas_Literature-Review.git
+```
+
+Le dépôt n'utilise ni sous-module ni Git LFS : un `git clone` standard récupère donc l'intégralité du projet et de son corpus documentaire.
+
 ## Prérequis et installation
 
 - Python 3.10 ou supérieur ;
