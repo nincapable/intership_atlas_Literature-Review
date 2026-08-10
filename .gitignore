@@ -23,6 +23,7 @@ dist/
 *.tmp
 *.bak
 *~
+*.synctex.gz
 
 # Éditeurs et système d'exploitation
 .idea/
