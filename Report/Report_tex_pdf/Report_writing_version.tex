@@ -1,0 +1,1100 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{lmodern}
+\geometry{hmargin=2.5cm,vmargin=2.5cm}
+
+% --- Réglages de mise en page ---
+\raggedbottom
+\widowpenalty=10000
+\clubpenalty=10000
+\displaywidowpenalty=10000
+\setlength{\emergencystretch}{2em}
+
+% --- Pour les blocs de code sémantiques ---
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit}
+
+% Configuration des couleurs pour le Turtle / SPARQL
+\definecolor{olivegreen}{rgb}{0,0.6,0}
+\definecolor{navyblue}{rgb}{0,0,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{lightgray}{gray}{0.95}
+
+\lstdefinelanguage{Turtle}{
+    keywords={@prefix,a,owl:Class,owl:ObjectProperty,owl:DatatypeProperty,rdfs:subClassOf,rdfs:domain,rdfs:range,rdfs:label,rdfs:comment,skos:Concept,owl:Ontology,owl:imports},
+    keywordstyle=\color{navyblue}\bfseries,
+    ndkeywords={fe:,crm:,xsd:,rdfs:,owl:,skos:},
+    ndkeywordstyle=\color{mauve}\bfseries,
+    identifierstyle=\color{black},
+    sensitive=false,
+    comment=[l]{\#},
+    commentstyle=\color{olivegreen}\italicshape,
+    stringstyle=\color{orange},
+    morestring=[b]"
+}
+
+\lstdefinelanguage{SPARQL}{
+    keywords={PREFIX,SELECT,CONSTRUCT,WHERE,VALUES,OPTIONAL,FILTER,
+        INSERT,DATA,GRAPH,BIND,AS,DISTINCT,ORDER,BY,LIMIT},
+    keywordstyle=\color{navyblue}\bfseries,
+    sensitive=false,
+    comment=[l]{\#},
+    commentstyle=\color{olivegreen}\italicshape,
+    stringstyle=\color{orange},
+    morestring=[b]"
+}
+
+\lstset{
+    backgroundcolor=\color{lightgray},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false
+}
+\renewcommand{\lstlistlistingname}{Liste des extraits de code}
+
+% --- Pour les encadrés stylés du Fil Rouge ---
+\usepackage{tcolorbox}
+\newtcolorbox{filrouge}{
+    colframe=red!75!black,
+    title=\textbf{Fil Rouge : Chronique du Fort de la Bastille},
+    arc=4mm
+}
+
+% --- Styles communs des schémas ---
+\tikzset{
+    schemaBox/.style={
+        draw,
+        rounded corners=2mm,
+        align=center,
+        minimum height=9mm,
+        text width=3.1cm,
+        fill=blue!6
+    },
+    schemaSmall/.style={
+        draw,
+        rounded corners=1.5mm,
+        align=center,
+        minimum height=8mm,
+        text width=2.5cm,
+        fill=gray!8
+    },
+    schemaArrow/.style={
+        -{Latex[length=2.5mm]},
+        thick
+    },
+    schemaDashed/.style={
+        -{Latex[length=2.5mm]},
+        thick,
+        dashed
+    }
+}
+
+\title{Conception d'une ontologie modulaire pour la gestion de crise et la simulation d'évacuation de sites patrimoniaux\\[0.4em]
+\large Rapport de stage de Master 2 -- Projet ATLAS}
+\author{Hugo Poirot}
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+\clearpage
+
+\section*{Remerciements}
+\addcontentsline{toc}{section}{Remerciements}
+
+Je tiens tout d'abord à remercier chaleureusement mes deux encadrantes de stage, la Professeure Julie Dugdale et la Professeure Danielle Ziébelin, pour la confiance qu'elles m'ont accordée et pour la qualité de leur accompagnement tout au long de ce travail.
+
+Je remercie tout particulièrement Julie Dugdale, professeure des universités en informatique à l'Université Grenoble Alpes, chercheuse au Laboratoire d'Informatique de Grenoble et responsable de l'équipe SocSIM-K (\textit{Social Simulation and Knowledge}). Ses conseils, sa disponibilité et sa connaissance des problématiques liées à la simulation sociale et à la gestion de crise ont été essentiels pour replacer mes travaux dans leur contexte scientifique. Je lui suis également très reconnaissant pour ses encouragements et son soutien dans la construction de mon projet de poursuite en doctorat.
+
+J'adresse également mes sincères remerciements à Danielle Ziébelin, professeure des universités en informatique à l'Université Grenoble Alpes, chercheuse au Laboratoire d'Informatique de Grenoble et co-responsable du Master Informatique. Son expertise en représentation des connaissances, en ontologies et en Web sémantique a constitué une ressource précieuse pour la conception et la structuration du modèle présenté dans ce rapport. Sa disponibilité, la précision de ses retours et ses encouragements dans ma recherche d'une thèse ont largement contribué à faire de ce stage une expérience déterminante pour la suite de mon parcours.
+
+Je souhaite ensuite remercier Flavien Loup-Hadamard, doctorant au sein de l'équipe SocSIM-K, dont les travaux de thèse constituent le principal cas d'usage auquel mon travail devait contribuer. Il a consacré du temps à me guider dans mes recherches, à répondre à mes questions et à m'expliquer les enjeux scientifiques et opérationnels de ses travaux sur la simulation des risques et de l'évacuation. Ces échanges m'ont permis de mieux comprendre les besoins auxquels l'ontologie devait répondre et d'ancrer mes choix de modélisation dans un usage concret.
+
+Je remercie enfin l'ensemble des membres de l'équipe pour leur accueil, leur disponibilité et la qualité des échanges proposés au cours du stage. Les discussions scientifiques, les conseils techniques et les différents accompagnements dont j'ai pu bénéficier ont créé un environnement de travail à la fois stimulant et bienveillant. Ils ont contribué à enrichir mes compétences, à préciser mes intérêts de recherche et à conforter mon souhait de poursuivre dans le domaine de l'architecture et de la représentation des connaissances.
+
+\clearpage
+
+\section*{Résumé}
+\addcontentsline{toc}{section}{Résumé}
+
+Ce stage s'inscrit dans le projet ATLAS et dans les travaux de l'équipe SocSIM-K du Laboratoire d'Informatique de Grenoble. Son objectif est de fournir une représentation formelle et interopérable des connaissances nécessaires à l'étude des risques affectant les sites patrimoniaux, en particulier les incendies et l'évacuation des populations. Le travail réalisé prend la forme d'une ontologie RDF/OWL modulaire alignée avec le CIDOC-CRM, complétée par des vocabulaires contrôlés SKOS, des contraintes SHACL et un prototype d'échange de données avec un système multi-agent. Un profil déclaratif d'évacuation permet de sélectionner les classes et propriétés nécessaires à la simulation, de générer des requêtes SPARQL, d'exporter les données vers un format tabulaire, puis de réintégrer les résultats simulés dans un graphe historisé. Cette architecture distingue le modèle métier, les référentiels, les exigences de qualité et les contrats propres aux simulateurs. Le livrable constitue ainsi un prototype de recherche reproductible et extensible, dont l'intégration à un cas d'usage réel représente la prochaine étape.
+
+\textbf{Mots-clés :} ontologie, graphe de connaissances, RDF, OWL, SKOS, SHACL, CIDOC-CRM, système multi-agent, évacuation, patrimoine, incendie.
+
+\clearpage
+
+\renewcommand{\contentsname}{Table des Matières} % Force le titre en français si nécessaire
+\tableofcontents
+\clearpage
+
+% --- Liste des figures ---
+\listoffigures
+\addcontentsline{toc}{section}{Liste des Figures}
+\clearpage
+
+\lstlistoflistings
+\addcontentsline{toc}{section}{Liste des extraits de code}
+\clearpage
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+Face à l'intensification des crises environnementales liées au dérèglement climatique, la préservation des sites du patrimoine culturel et naturel constitue un défi sociétal et scientifique majeur. La vulnérabilité de ces espaces, souvent composites, exige le déploiement de stratégies d'anticipation et de gestion de crise d'une grande précision. C'est dans cette dynamique que s'inscrit le projet de recherche ANR ATLAS (2025--2028), dont l'ambition est de concevoir un système d'aide à la décision basé sur la simulation multi-agent pour modéliser la propagation de risques (tels que les incendies) et optimiser les trajectoires d'évacuation au sein de sites patrimoniaux complexes (Thèse en cours de Flavien Loup-Hadamard).
+
+Le succès d'une telle simulation repose fondamentalement sur la qualité de la représentation des connaissances. En effet, un espace patrimonial n'est pas une simple entité géométrique : il s'agit d'un système socio-écologique complexe où s'articulent des infrastructures physiques (axes de circulation, bâtiments), des écosystèmes vivants (faune et flore) et des dynamiques humaines (visiteurs, gestionnaires). Les approches de modélisation classiques par bases de données relationnelles ne parviennent pas à capturer la richesse sémantique, l'interopérabilité des concepts métiers et la flexibilité nécessaires pour faire face à des données hautement hétérogènes, au profit d'une précision extrême mais adressée à des corps spécifiques.
+
+L'enjeu scientifique de ce travail réside donc dans l'utilisation de l'ingénierie des connaissances comme pont conceptuel entre les sciences du patrimoine, l'écologie et l'informatique de simulation. La problématique centrale peut se formuler ainsi : \textit{Comment formaliser un modèle sémantique unifié et modulaire capable non seulement de structurer ces dimensions hétérogènes, mais aussi de porter une logique d'inférence autonome pour quantifier dynamiquement la vulnérabilité du système ?}
+
+Ce document présente les contributions théoriques et applicatives réalisées au cours d'un stage de recherche de six mois au sein de l'équipe SocSIM-K du Laboratoire d'Informatique de Grenoble (LIG). Nos travaux ont porté sur la conception, le développement et l'alignement d'une ontologie de haut niveau (\textit{\color{red}(REVOIR L'APPELLATION)}) articulée à des thésaurus métiers via le standard SKOS. Au-delà de la simple classification, l'approche développée propose un mécanisme de calcul d'indices de risques (patrimoniaux, structurels et écologiques) déporté directement au cœur de la base de connaissances sémantique, affranchissant ainsi le simulateur d'une logique impérative lourde.
+
+Pour exposer cette démarche, ce rapport est structuré en cinq parties. Après avoir détaillé le cadre institutionnel et les verrous scientifiques du projet (Partie 1), nous passerons rapidement par un état de l'art des projets et modèles existant comme l'initiative ARCH (Partie 2). La Partie 3 sera consacrée à l'architecture modulaire de l'ontologie développée, en illustrant son respect des standards de la Web Sémantique. Nous détaillerons ensuite dans la Partie 4 le moteur d'inférence sémantique et la traduction des règles de calcul en requêtes déclaratives. Enfin, la Partie 5 ouvrira sur les perspectives d'évolution de ce modèle vers la modélisation de la dynamique évolutive des connaissances culturelles.
+
+Afin de faciliter l'appréhension des verrous scientifiques et des choix de modélisation abstraits, la rigueur de la démonstration académique s'appuiera, tout au long de ce document, sur un fil conducteur narratif et empirique. Nous suivrons ainsi la conceptualisation sémantique d'un site réel et complexe : le fort de la Bastille à Grenoble. Ce site de référence présente l'avantage de concentrer un ensemble relativement large des dimensions hétérogènes à modéliser au sein de ce projet. Par sa topographie accidentée issue du massif de la Chartreuse (contraintes d'axes de circulation et de pentes), la richesse de son bâti fortifié classé (enveloppes architecturales anciennes), la vulnérabilité de ses espaces forestiers périurbains (biodiversité et biomasse sensible), et la forte fluctuation de sa population (visiteurs civils et personnels de maintenance), la Bastille constitue un laboratoire d'évaluation idéal pour valider la robustesse de notre ontologie.
+\clearpage
+\section{Projet Atlas et Motivations}
+
+\subsection{ANR Atlas, préserver le patrimoine face au changement climatique}
+
+Comme mentionné précédemment, l'intensification de la crise environnementale globale affecte de plus en plus sévèrement les sites patrimoniaux à travers le monde. Les variations climatiques extrêmes altèrent drastiquement leurs conditions de conservation physique, tout en mettant directement en danger les populations, qu'il s'agisse des flux touristiques ou des communautés habitantes. 
+
+Officiellement démarré le \textbf{1er janvier 2024} pour une durée totale de 36 mois (se clôturant le 31 décembre 2026), le projet \textbf{ATLAS} est une collaboration transnationale et interdisciplinaire d'envergure européenne. Financé globalement à hauteur de 845~K€ par le fond international Belmont (\textit{Belmont Forum}), le projet mobilise trois agences de financement nationales : l'ANR pour la France, l'AEI pour l'Espagne et le MUR pour l'Italie. 
+
+Le consortium scientifique est structuré autour de trois universités pivots : l'\textit{Universidad Pablo de Olavide} (UPO, Espagne) qui assure la coordination globale, la \textit{Ca’ Foscari University of Venice} (UNIVE, Italie), et l'\textit{Université Grenoble Alpes} (UGA, France). Afin de valider concrètement les outils numériques et les modèles méthodologiques développés, le projet ATLAS déploie ses recherches et ses cas d'étude au sein de \textbf{cinq villes historiques européennes} présentant des configurations géoclimatiques et des typologies de vulnérabilités hétérogènes :
+\begin{itemize}
+    \item \textbf{Séville} et \textbf{Antequera} (Espagne) pour les scénarios et climats méditerranéens ;
+    \item \textbf{Valence} (Espagne) pour les dynamiques côtières et patrimoniales ;
+    \item \textbf{Trévise} (Italie) pour l'étude des plaines et des infrastructures vertes continentales ;
+    \item \textbf{Grenoble} (France) pour les vulnérabilités propres aux environnements de montagne.
+\end{itemize}
+
+L'ambition centrale du projet est d'étudier la relation symbiotique entre le patrimoine culturel immobile (\textit{Immovable Cultural Heritage}) et le développement des infrastructures vertes urbaines (\textit{Green Infrastructure}). Si ces dernières s'avèrent indispensables pour atténuer les îlots de chaleur urbains et réguler le microclimat, leur coexistence avec des bâtiments historiques soulève des verrous complexes (problèmes d'humidité, prolifération de biopatine, risques d'incendie accrus) que le projet ATLAS ambitionne de comprendre par le prisme des technologies numériques.
+
+\subsection{L'Équipe de Recherche SocSIM-K}
+
+L'équipe de recherche \textbf{SocSIM-K} est sous la direction de la Professeure Julie Dugdale, au Laboratoire d'Informatique de Grenoble (LIG). Le positionnement scientifique de l'équipe se situe à la convergence de l'Intelligence Artificielle Distribuée (IAD), des sciences cognitives et des sciences humaines et sociales. L'objectif fondamental de SocSIM-K est de décrypter, de formaliser et de construire des modèles computationnels du comportement humain au sein d'environnements réels hautement complexes, afin d'en simuler les dynamiques émergentes, d'en expliciter les causes et d'améliorer les réponses opérationnelles en cas de crises majeures.
+
+\subsubsection{Ancrage paradigmatique : La Simulation Sociale Multi-Agents}
+
+Les travaux de l'équipe s'inscrivent pleinement dans le champ de la simulation sociale à base d'agents. Ce domaine scientifique se consacre à l'étude des phénomènes sociaux à travers le prisme de modèles informatiques multi-agents où chaque individu, groupe ou composante institutionnelle est représenté sous la forme d'un agent autonome, hétérogène et intelligent. 
+
+La philosophie de recherche de SocSIM-K repose sur un ancrage pluridisciplinaire fort : la conceptualisation des comportements et des interactions ne s'appuie pas sur des hypothèses purement mathématiques abstraites, mais s'alimente directement aux théories des sciences sociales ainsi qu'à des données empiriques de terrain. En plaçant ces agents artificiels et leurs processus décisionnels au sein de populations simulées, l'équipe cherche notamment à observer comment la somme d'actions individuelles micro-dynamiques engendre, par un mécanisme d'émergence, des structures et des motifs macro. 
+
+Ce recours à la simulation numérique s'avère indispensable pour explorer des scénarios prospectifs complexes qu'il serait matériellement impossible, trop coûteux, dangereux ou éthiquement inenvisageable d'expérimenter dans le monde réel, tels que des mouvements de foule en situation d'alerte, la gestion des évacuations face à des feux de forêt ou des crues soudaines.
+
+\subsubsection{Axes thématiques et verrous scientifiques transversaux}
+
+L'activité scientifique de l'équipe s'articule autour de mots-clés cardinaux : la modélisation comportementale et cognitive, les systèmes multi-agents, les jeux sérieux (\textit{serious games}) ainsi que l'ingénierie des connaissances, le Web Sémantique et le \textit{Linked Data}. C'est précisément à l'intersection de la modélisation cognitive et des technologies du Web Sémantique que se situent nos contributions de stage, visant à structurer formellement les connaissances liées aux bâtiments historiques et à leur environnement.
+
+Pour mener à bien ses missions, SocSIM-K fait face à plusieurs verrous scientifiques et défis de recherche majeurs :
+\begin{itemize}
+    \item \textbf{La modélisation des facteurs endogènes :} Comment traduire formellement et injecter dans l'architecture des agents des variables immatérielles mais prépondérantes telles que les liens sociaux, la perception du risque, les émotions ou les biais cognitifs ?
+    \item \textbf{La fidélité cognitive :} Comment développer des modèles computationnels du comportement qui soient de véritables représentations analogues aux processus décisionnels humains face à un danger immédiat ?
+    \item \textbf{La collecte et la validation :} Par quels protocoles méthodologiques collecter les données empiriques initiales, et comment valider scientifiquement la robustesse des simulateurs par rapport au monde réel (notamment via des exercices de crise ou des données historiques) ?
+    \item \textbf{Le passage à l'échelle :} Comment surmonter le coût computationnel élevé des simulations massives et garantir une cohérence sémantique et mathématique stricte lors de simulations multi-échelles ?
+\end{itemize}
+
+\subsubsection{Domaines d'application et convergence vers le projet ATLAS}
+
+L'expertise de l'équipe SocSIM-K se déploie sur des terrains applicatifs variés et critiques pour la société contemporaine, incluant la mobilité piétonne en milieu urbain, l'impact des facteurs environnementaux sur les villes, l'analyse des trajectoires de populations, la gestion des crises et des urgences, ainsi que la préservation et la valorisation du patrimoine culturel.
+
+La contribution de l'équipe SocSIM-K au projet ATLAS s'appuie sur un solide ancrage historique dans le domaine de la modélisation des crises, structuré par plusieurs projets de recherche nationaux et internationaux de premier plan. L'équipe a notamment développé une expertise pionnière à travers des travaux majeurs sur la simulation d'urgences de grande ampleur, à l'instar de la modélisation des comportements de la population face à des crises sanitaires, sismiques ou environnementales aiguës. On peut notamment citer les contributions issues du projet \textit{ANR CHOUCAS} (dédié à l'aide à la décision pour la recherche de victimes en montagne) ou encore la participation active au projet européen \textit{C2IMPRESS}, axé sur la compréhension co-créative des risques multi-aléas (crues soudaines, feux de forêt). 
+
+Le projet ATLAS ne constitue donc pas une rupture, mais le prolongement naturel de cet héritage scientifique, appliqué cette fois-ci aux contraintes spécifiques et hautement hétérogènes du patrimoine culturel et naturel face aux aléas induits par le changement climatique (inondations, incendies). 
+
+En pratique, l'expertise de l'équipe en matière de modélisation du facteur humain, couplée aux besoins de formalisation des infrastructures physiques complexes propres aux sites patrimoniaux, constitue le terreau scientifique sur lequel reposent l'implémentation du simulateur sous la plateforme \textbf{GAMA} et le développement de notre modèle sémantique unifié. Ce dernier permet de lier la vulnérabilité des structures physiques aux règles comportementales des agents en cas d'évacuation d'urgence.
+
+\subsection{Simulateur d'Évacuation Incendie : Enjeux, Spécificités et Exigences}
+\label{subsec:simulateur_evacuation_incendie}
+
+La mise en œuvre opérationnelle des objectifs du projet ANR ATLAS repose entre autre sur le développement d'un simulateur d'évacuation incendie à base d'agents. Un tel système peut être défini comme un environnement computationnel permettant de modéliser de manière concurrente la cinétique d'un sinistre (propagation des flammes, élévation de la température, opacification de l'air par les fumées) et la dynamique de flux de populations cherchant à fuir la zone de danger. L'objectif est de prédire les trajectoires de déplacement, d'identifier les points de congestion (goulots d'étranglement) et de quantifier les temps d'évacuation globaux afin de tester, \textit{in silico}, différentes stratégies de gestion de crise.
+
+\subsubsection{Pourquoi recourir à la simulation dans ce cadre spécifique ?}
+
+Si la simulation d'évacuation est un domaine déjà éprouvé pour le bâtiment tertiaire classique (soumis à des normes de construction standardisées), son application à un site socio-écologique et patrimonial complexe comme le fort de la Bastille introduit des verrous scientifiques et pratiques qui rendent les approches traditionnelles obsolètes, et la simulation virtuelle indispensable :
+
+\begin{enumerate}
+    \item \textbf{L'impossibilité éthique et matérielle de l'expérimentation réelle :} On ne peut évidemment pas déclencher un incendie réel dans un massif forestier protégé ou au sein d'un bâti fortifié classé pour observer les réactions de la foule. De même, organiser des exercices d'évacuation grandeur nature à l'échelle du site complet est extrêmement complexe, coûteux, et insuffisant pour reproduire les facteurs de stress, de visibilité réduite ou de panique qui altèrent le comportement humain lors d'un véritable péril.
+    \item \textbf{L'hétérogénéité et l'asymétrie spatiale :} Contrairement à un immeuble de bureaux aux couloirs rectilignes et balisés, le fort de la Bastille présente une topographie accidentée, des escaliers abrupts, des casemates souterraines confinées et des sentiers de randonnée forestiers escarpés. Les axes d'évacuation sont intrinsèquement dépendants de la géométrie des lieux et des conditions environnementales (une pente à 30 \% modifie radicalement la vitesse de marche, et un sentier peut être instantanément coupé par un feu de biomasse).
+    \item \textbf{La volatilité de la population :} La Bastille accueille une population civile aux profils hautement hétérogènes (touristes étrangers, randonneurs sportifs, enfants, personnes à mobilité réduite empruntant le téléphérique). Leurs connaissances de la topographie du site sont asymétriques, et leurs réactions face au danger ne peuvent être modélisées par des lois de flux hydrauliques simples ; elles nécessitent un moteur décisionnel capable de refléter cette diversité.
+\end{enumerate}
+
+\subsubsection{Les qualités attendues du simulateur ATLAS}
+
+Pour répondre aux exigences scientifiques du projet et s'interconnecter efficacement avec l'ingénierie des connaissances, le simulateur développé (en appui sur la plateforme GAMA) doit cocher quatre qualités fondamentales :
+
+\begin{itemize}
+    \item \textbf{Fidélité comportementale (Cognitive Accuracy) :} Le simulateur ne doit pas traiter les humains comme des particules physiques passives. Les agents doivent être dotés d'une rationalité limitée (modèle BDI), capables de percevoir leur environnement de manière imparfaite, de communiquer entre eux, de ressentir le stress et de modifier leurs intentions de fuite de façon dynamique lorsque leur itinéraire initial est obstrué.
+    \item \textbf{Couplage multi-physique synchrone :} Le moteur de simulation doit faire interagir en temps réel la physique de l'incendie (vitesse linéaire de propagation du front de feu, dispersion des gaz toxiques) et la cinétique humaine. Le danger doit modifier l'espace de circulation des agents (fermeture d'arcs du réseau topologique, réduction de la vitesse de marche due à l'asphyxie), et l'action des agents (comme l'ouverture ou la fermeture de portes fortifiées) doit pouvoir influencer la propagation.
+    \item \textbf{Flexibilité scénariologique (Scalabilité) :} L'architecture doit permettre aux gestionnaires du site de configurer et de rejouer instantanément une infinité de scénarios : faire varier la saisonnalité (flux touristique estival maximal vs. maintenance hivernale), déplacer le point de départ du feu, ou tester l'impact de nouvelles signalisations d'urgence.
+    \item \textbf{Porosité sémantique (Intégration ontologique) :} C'est la qualité la plus critique dans le cadre de nos travaux. Le simulateur ne doit pas fonctionner comme une boîte noire isolée. Il doit être capable de traduire ses variables d'état physiques et agents en concepts sémantiques compréhensibles par notre ontologie, et inversement, d'interroger notre base de connaissances (via des requêtes déclaratives) pour adapter dynamiquement le comportement des agents en fonction des règles métiers du patrimoine et de la gestion des risques.
+\end{itemize}
+
+\clearpage
+\section{Etat de l'Art}
+La modélisation sémantique d'un système socio-écologique complexe et soumis à des aléas extrêmes, tel que le fort de la Bastille, impose de s'appuyer sur des standards d'interopérabilité éprouvés et d'analyser les initiatives internationales combinant patrimoine et gestion des risques. Cette section dresse un panorama critique des ontologies et modèles de référence, des plateformes de gestion des données culturelles, ainsi que des projets européens majeurs, afin de poser les jalons techniques nécessaires au projet ANR ATLAS.
+\subsection{Le Modèle de Référence Conceptuel CIDOC-CRM : Fondements et Limites}
+\label{subsec:cidoc_crm_approfondi}
+
+Le \textit{Conceptual Reference Model} (CRM) du CIDOC, formalisé par la norme internationale ISO 21127:2014, représente l'aboutissement de plusieurs décennies de recherche en ingénierie des connaissances. L'ambition première de cette ontologie de haut niveau est de fournir un cadre conceptuel unifié, extensible et formel pour favoriser l'intégration, la médiation et l'interopérabilité sémantique de données hétérogènes provenant entre autres de musées, d'archives et de bibliothèques. 
+
+\subsubsection{Une philosophie événementielle (Event-Centric Ontology)}
+
+La rupture paradigmatique majeure introduite par le CIDOC-CRM par rapport aux architectures de bases de données traditionnelles (qu'elles soient relationnelles ou orientées objet) réside dans son approche purement événementielle. Dans les modèles classiques, le monde est représenté de manière statique à travers des entités rigides possédant des attributs directs (par exemple, un bâtiment historique lié directement à un style ou à une date de construction). Cette approche échoue à capturer la nature transitoire et historique des connaissances patrimoniales.
+
+Le CIDOC-CRM postule au contraire que les entités matérielles (\textit{crm:E18\_Physical\_Thing}), les acteurs (\texttt{crm:E39\_Actor}) et les concepts abstraits (\texttt{crm:E28\_Conceptual\_Object}) n'interagissent pas de manière directe, mais se rencontrent au sein d'événements (\texttt{crm:E5\_Event}) ou d'activités (\texttt{crm:E7\_Activity}) localisés dans l'espace et le temps. C'est l'événement qui lie les entités et porte la sémantique de leur relation. Cette modélisation offre une flexibilité indispensable pour documenter les cycles de vie complexes des objets culturels (création, modification, destruction, changement de propriété).
+
+\subsubsection{Classes fondamentales et mécanismes d'extension}
+
+L'ossature sémantique du CIDOC-CRM repose sur un réseau de classes et de propriétés hautement spécialisées. Parmi les primitives indispensables à la modélisation des structures physiques d'un site patrimonial, on distingue :
+\begin{itemize}
+    \item \textit{crm:E24\_Physical\_Human-Made\_Thing} : Cette classe englobe toutes les créations matérielles issues de l'activité humaine. Elle sert de racine pour identifier les éléments architecturaux.
+    \item \textit{crm:E25\_Human-Made\_Feature} : Sous-classe de la précédente, elle désigne les caractéristiques physiques nettes qui ne sont pas des objets isolés mais qui sont intégrées ou greffées sur d'autres objets physiques (telles que des fortifications, des casemates, des portes ou des axes de circulation).
+    \item \textit{crm:E52\_Time-Span} et \textit{crm:E53\_Place} : Ces classes permettent de contextualiser géographiquement et chronologiquement les événements, assurant une traçabilité spatio-temporelle rigoureuse.
+\end{itemize}
+
+L'un des verrous de l'interopérabilité sémantique est résolu par l'utilisation de la classe \textit{crm:E55\_Type}. Plutôt que de multiplier les classes rigides au sein de l'ontologie pour spécifier chaque métier, le CIDOC-CRM délègue la taxonomie fine à des vocabulaires contrôlés et des thésaurus externes via la propriété \textit{crm:P2\_has\_type}. C'est ce mécanisme qui permet d'associer un concept SKOS (\textit{Structured Thesaurus}) à une instance de classe OWL, ouvrant la voie à des architectures modulaires.
+
+Face à la nécessité de spécialiser ce modèle général, la communauté scientifique a développé des extensions standardisées. On note ainsi le \textit{CRMsci} (\textit{Scientific Observation Model}) pour formaliser les mesures et observations scientifiques, ou encore le \textit{CRMarchaeo} dédié aux fouilles. Plus récemment, des initiatives ont émergé pour coupler le CIDOC-CRM à des modèles de données géospatiaux comme \textit{GeoSPARQL}, permettant d'injecter des propriétés topologiques (\texttt{ogc:geoFlnt}, \texttt{ogc:sfWithin}) au sein du graphe culturel.
+
+\subsubsection{Limites structurelles face aux enjeux du projet ATLAS}
+
+Bien que le CIDOC-CRM s'impose comme un standard incontournable pour la gestion et l'inventaire du patrimoine, l'analyse critique de sa structure révèle des limites fondamentales lorsqu'il s'agit d'exploiter ses connaissances dans un simulateur de crise dynamique comme SocSIM-K :
+
+\begin{enumerate}
+    \item \textbf{Une nature exclusivement descriptive et rétrospective :} Le CIDOC-CRM a été conçu pour documenter l'existant, archiver le passé et consolider des connaissances stables. Il excelle dans la description de l'état de conservation ou de la provenance historique d'une structure, mais s'avère incapable de représenter des états physiques transitoires, des flux de variables ou des phénomènes dynamiques en temps réel.
+    \item \textbf{Absence de primitives physiques et mathématiques quantifiables :} La simulation d'un aléa (comme un incendie) requiert la manipulation de grandeurs physiques explicites (conductivité thermique, charge calorifique, taux de siccité de la végétation, vitesse linéaire de propagation). Le CIDOC-CRM ne dispose d'aucune propriété native pour structurer des équations mathématiques ou des coefficients multiplicatifs. Les relations thermophysiques et sémantiques entre un matériau composite et son comportement face au feu n'y trouvent aucun écho standardisé.
+    \item \textbf{Inaptitude à modéliser le risque multiplicatif et les interdépendances : } Dans le cadre d'un système socio-écologique complexe, les vulnérabilités s'influencent mutuellement. Par exemple, la dégradation d'un espace végétal forestier modifie la vulnérabilité d'un bâtiment adjacent, qui en s'effondrant, modifie la praticabilité d'un axe de fuite. Le CIDOC-CRM ne permet pas de formaliser ces chaines de causalité complexes et ces boucles de rétroaction de manière native.
+\end{enumerate}
+
+\begin{filrouge}
+\textbf{Application conceptuelle au site de la Bastille} \\
+En appliquant le standard CIDOC-CRM strict aux fortifications de la Bastille, le système permet de déclarer que la casemate d'accueil est une instance de \texttt{crm:E25\_Human-Made\_Feature}, typée en \texttt{crm:E55\_Type} comme \textit{"Architecture militaire défensive"}. On peut lier historiquement ce bâti aux travaux de fortification du Général Haxo via un événement de construction \texttt{crm:E12\_Production}. 
+
+Toutefois, face à un incendie majeur se propageant depuis les flancs de la Chartreuse, le modèle standard est aveugle. Il est impossible d'y exprimer sémantiquement que les poutres de soutien de cette casemate ont vieilli, qu'elles possèdent un indice de combustibilité spécifique, ou que l'effondrement de sa toiture générera une source d'obstruction (\texttt{fe:BlockingSource}) bloquant l'unique sentier escarpé disponible pour les visiteurs. C'est ce déficit de dynamicité physique qui justifie l'extension et l'hybridation du modèle menées dans le cadre d'ATLAS.
+\end{filrouge}
+\subsection{Le Projet Européen ARCH : Cadre de Résilience et Limites de Transposition}
+\label{subsec:arch_project_approfondi}
+
+Le projet européen ARCH (\textit{Advancing Resilience of Historic Areas against Climate-induced and other Hazards}, 2019--2022) constitue l'une des tentatives de standardisation transdisciplinaire les plus ambitieuses pour l'évaluation et l'amélioration de la résilience des zones historiques face aux menaces climatiques et anthropiques. L'apport fondamental d'ARCH ne réside pas uniquement dans la centralisation de données techniques, mais dans la formalisation d'un cadre méthodologique systémique, appréhendant le patrimoine non comme un objet isolé, mais comme un système socio-écologique complexe et interdépendant.
+
+\subsubsection{L'architecture technologique et le dispositif HArIS}
+
+Au cœur du projet ARCH se trouve le déploiement d'un écosystème d'outils interconnectés, conçu pour soutenir les gestionnaires de sites à toutes les étapes du cycle de gestion des risques (analyse \textit{a priori}, suivi en temps réel et remédiation \textit{a posteriori}). Le pilier central de cette architecture est le \textit{HArIS} (\textit{Historic Areas Information System}), un système d'information patrimonial enrichi. 
+
+Le rôle de HArIS est de dépasser la simple dimension documentaire des inventaires classiques pour stocker, structurer et spatialiser des indicateurs multidimensionnels. Techniquement, ARCH segmente son analyse autour de quatre catégories d'indicateurs de vulnérabilité :
+\begin{itemize}
+    \item \textbf{La vulnérabilité physique et structurelle :} Propriétés intrinsèques des matériaux du bâti (sensibilité à l'humidité, résistance mécanique, vieillissement des enveloppes).
+    \item \textbf{La vulnérabilité environnementale :} Exposition du site aux aléas (fréquence des pics de chaleur, proximité de zones combustibles, pression anthropique).
+    \item \textbf{La vulnérabilité socio-économique :} Capacité d'adaptation des populations locales, accessibilité des secours, valeur d'usage et attractivité touristique.
+    \item \textbf{La vulnérabilité institutionnelle :} Existence de plans de sauvegarde, réactivité des gestionnaires, niveau de formation des équipes de maintenance.
+\end{itemize}
+
+En parallèle de HArIS, ARCH intègre le \textit{RMI} (\textit{Resilience Maturity Indicator}), un outil d'auto-évaluation permettant de quantifier le niveau de maturité d'une municipalité face aux crises, ainsi qu'une plateforme d'aide à la décision pour concevoir des stratégies d'adaptation à long terme.
+
+\subsubsection{Verrous scientifiques et limites face aux exigences d'ATLAS}
+
+Si la robustesse conceptuelle du projet ARCH est indiscutable à l'échelle macroscopique (gestion urbaine ou territoriale), sa transposition directe à une problématique opérationnelle de gestion de crise dynamique minute par minute (telle que visée par le projet ANR ATLAS) se heurte à des verrous scientifiques majeurs :
+
+\begin{enumerate}
+    \item \textbf{Une granularité macroscopique et l'omission des dynamiques socio-écologiques :} Bien que le système HArIS du projet ARCH s'avère particulièrement robuste pour structurer et documenter la vulnérabilité intrinsèque du bâti et des infrastructures lourdes, il souffre d'un déséquilibre sémantique majeur. Il ne propose qu'une formalisation très superficielle du milieu naturel environnant (la biomasse végétale, l'état hydrique des sols, la biodiversité) et des facteurs comportementaux humains (dynamiques de foule, phénomènes de panique, profils de mobilité).
+    \item \textbf{L'absence d'un moteur de simulation physique et comportemental couplé :} ARCH qualifie le risque (ex. : \textit{"Zone A exposée à un risque d'incendie élevé"}) mais n'intègre aucune boucle de rétroaction avec des modèles de propagation physique (thermodynamique, mécanique des fluides) ni avec des modèles agent-basés décrivant les comportements d'évacuation humaine. Le système constate la vulnérabilité mais ne permet pas d'anticiper les trajectoires de fuite en espace confiné ou accidenté.
+    \item \textbf{Le cloisonnement sémantique des indicateurs : } Bien que ARCH rassemble des données pluridisciplinaires, ces dernières restent silotées au sein du modèle de données. Il n'existe pas d'échelle sémantique commune permettant de faire interagir une règle écologique (comme la nidification d'une espèce protégée) avec une contrainte d'infrastructure civile (la largeur d'un chemin d'évacuation) pour arbitrer automatiquement et par inférence des priorités d'intervention en temps réel.
+\end{enumerate}
+\begin{filrouge}
+\textbf{Application de la méthodologie ARCH à la Bastille} \\
+Sous le prisme du projet ARCH, le site de la Bastille ferait l'objet d'une modélisation qualitative poussée au sein du système HArIS. Le fort recevrait des indicateurs de vulnérabilité institutionnelle (existence du plan de sécurité de la métropole grenobloise) et socio-économique (flux massifs de touristes via le téléphérique). Le bâti fortifié se verrait attribuer un score de vulnérabilité physique figé, déterminé par l'historique de ses dégradations.
+
+Néanmoins, si un feu de forêt d'une violence extrême venait à se déclarer sur les contreforts de la Chartreuse, la plateforme ARCH atteindrait immédiatement ses limites opérationnelles. Elle est incapable de calculer l'indice d'ignition de la biomasse entourant la casemate, de simuler l'asphyxie progressive des sentiers de randonnée par les fumées, ou de prédire comment la panique d'un groupe scolaire bloqué au sommet modifierait l'accessibilité des zones de secours. ARCH fournit une boussole stratégique pour l'adaptation à long terme, mais laisse le gestionnaire sans outil tactique face à l'immédiateté du péril ; c'est précisément ce saut conceptuel, du macro-statique au micro-dynamique, que porte le projet ATLAS en y couplant un simulateur.
+\end{filrouge}
+
+\subsection{La Plateforme de Gestion Patrimoniale Arches : Architecture Graphe et Limites d'Inférence}
+\label{subsec:arches_platform_approfondi}
+
+Développée conjointement par le \textit{Getty Conservation Institute} (GCI) et le \textit{World Monuments Fund} (WMF), \textit{Arches} est une plateforme logicielle d'inventaire et de gestion du patrimoine culturel, distribuée sous licence open-source. Contrairement aux Systèmes d'Information Géographique (SIG) traditionnels ou aux progiciels de gestion de contenu déconnectés des standards académiques, Arches a été nativement conçue pour implémenter les technologies du Web Sémantique et le modèle de référence conceptuel CIDOC-CRM. Elle représente l'un des outils de gestion de données culturelles les plus avancés au niveau international.
+
+\subsubsection{Piliers technologiques et modélisation par graphes d'entités}
+
+L'originalité technique d'Arches repose sur sa capacité à masquer la complexité intrinsèque des langages de description sémantique (comme OWL ou RDF) derrière des interfaces d'administration et de saisie intuitives, adaptées aux experts du patrimoine. Son architecture s'appuie sur plusieurs couches fondamentales :
+
+\begin{itemize}
+    \item \textbf{Les Modèles de Ressources (Resource Models) :} Dans Arches, chaque typologie d'entité patrimoniale (un monument, un artefact, un acteur, un groupe) est modélisée sous la forme d'un graphe orienté d'entités logiques. Ces graphes traduisent directement les chemins de propriétés du CIDOC-CRM. Par exemple, pour décrire un bâtiment, la plateforme génère un canevas sémantique liant une racine \texttt{crm:E24} à ses sous-composants via des relations normalisées, guidant ainsi l'utilisateur lors de la saisie des données.
+    \item \textbf{L'infrastructure de stockage hybride :} En arrière-plan, Arches couple la robustesse relationnelle et géospatiale de \textit{PostgreSQL/PostGIS} pour la gestion des géométries complexes, à la flexibilité et la puissance d'indexation textuelle de \textit{Elasticsearch}. Les ressources sémantiques y sont stockées sous forme de documents JSON-LD, permettant des requêtes polyglottes combinant des filtres topologiques et des recherches sémantiques plein texte.
+    \item \textbf{La gestion terminologique via SKOS :} Arches intègre un gestionnaire de concepts (\textit{Concept Manager}) qui permet d'importer et d'articuler des thésaurus métiers multilingues au standard SKOS. Chaque nœud descriptif d'un graphe de ressource peut ainsi être restreint à des valeurs contrôlées, garantissant une parfaite homogénéité des données de catalogage.
+\end{itemize}
+
+\subsubsection{Limites conceptuelles face au paradigme de la simulation active}
+
+Malgré l'élégance de son architecture sémantique et son efficacité éprouvée pour l'inventaire national ou régional, Arches présente des verrous conceptuels rédhibitoires lorsqu'il s'agit de s'insérer comme moteur de connaissances au sein d'un écosystème de simulation d'urgence tel que le projet ATLAS :
+
+\begin{enumerate}
+    \item \textbf{Une finalité d'archivage descriptive et statique :} Arches est conçu pour documenter la mémoire, suivre l'état de conservation physique macroscopique à long terme et gérer les statuts juridiques ou administratifs des biens culturels. Son modèle de données est optimisé pour des transactions d'écriture humaines et des consultations asynchrones. Il n'est absolument pas calibré pour ingérer des flux de données volatils.
+    \item \textbf{L'absence de raisonneur sémantique et de moteur de règles actif :} Bien qu'Arches utilise le formalisme des graphes en interne, la plateforme se comporte comme une base de données orientée documents. Elle ne déploie aucun raisonneur sémantique actif en tâche de fond (tel qu'un moteur d'inférence en chaînage avant ou un outil de traitement des logiques de description). Arches est capable de stocker le fait qu'une structure possède un attribut donné, mais elle ne peut pas déduire de façon autonome de nouveaux triplets logiques (par exemple, recalculer un indice de péril structurel à partir de la dégradation thermique d'un voisin) sans recourir à des développements applicatifs tiers lourds et extérieurs au graphe.
+    \item \textbf{L'étanchéité des graphes de ressources :} Dans Arches, les modèles de ressources ont tendance à fonctionner de manière autocentrée. Faire interagir dynamiquement le graphe d'une espèce végétale protégée avec le graphe d'un bâtiment fortifié sous la forme d'une règle d'impact environnemental nécessite des requêtes transversales complexes, là où une ontologie noyau unifiée permet une porosité sémantique native et fluide.
+\end{enumerate}
+
+\begin{filrouge}
+\textbf{Application de la plateforme Arches au site de la Bastille} \\
+En déployant Arches pour le fort de la Bastille, les conservateurs obtiendraient un outil d'une précision remarquable pour cataloguer le site au repos. Chaque casemate et chaque élément d'artillerie historique posséderait sa fiche sémantique JSON-LD alignée sur le CIDOC-CRM, tandis que les thésaurus SKOS spécifieraient rigoureusement les essences d'arbres peuplant les falaises de la Chartreuse.
+
+Cependant, si l'on souhaite utiliser cette base de connaissances comme un outil opérationnel d'aide à la décision en cas d'urgence, la plateforme Arches s'avère inadaptée. Elle n'est structurellement pas conçue pour recevoir, stocker et traiter des résultats de simulation dynamiques (tels que la progression d'un front d'incendie calculé par un moteur physique ou les flux d'évacuation d'agents civils). De ce fait, Arches est incapable de mettre en corrélation directe les critères de sensibilité aux aléas de sa base avec des données environnementales volatiles subies en temps réel. La plateforme sait décrire la Bastille de manière statique, mais elle ne peut pas servir de tableau de bord décisionnel interconnecté lors d'une crise. C'est précisément pour lever ce verrou d'intégration et permettre cette convergence entre inventaire sémantique et données de simulation que nous développons notre propre architecture modulaire en Partie 3.
+\end{filrouge}
+\subsection{Modélisation sociale BDI}
+
+Le champ de la simulation des risques ne saurait se restreindre aux seules variables structurelles et grandeurs physiques. Les travaux de l'équipe SocSIM-K en fournissent une illustration probante, plaçant le comportement humain en situation de crise au cœur de ses axes majeurs de recherche. Dès lors, l'appréhension des outils contemporains dédiés à la représentation du facteur humain s'avère indispensable. Cette nécessité justifie l'étude du modèle \emph{Beliefs-Desires-Intentions} (BDI), qui s'impose aujourd'hui comme le standard de référence dans le domaine de la simulation sociale multi-agents.
+
+\subsubsection{Architecture et formalisme}
+
+L'architecture du modèle BDI présente une apparente simplicité, sa robustesse reposant principalement sur un système d'inférence dynamique à chaînage circulaire. Cette structure computationnelle se décompose en trois couches conceptuelles :
+
+\begin{itemize}
+    \item[\textbf{Beliefs (Croyances) :}] Cet ensemble représente l'état informationnel de l'agent, c'est-à-dire sa perception de son environnement. Ces croyances intègrent des règles d'inférence permettant, par chaînage avant, de générer de nouvelles croyances. Le terme de « croyance » est ici privilégié à celui de « connaissances », dans la mesure où ces informations peuvent être erronées ou obsolètes. Ce premier niveau fait office de filtre sur les données observables en leur assignant une pondération spécifique.
+    
+    \item[\textbf{Desires (Désirs) :}] Ils caractérisent l'état motivationnel de l'agent en définissant les objectifs ou les situations qu'il souhaite accomplir ou provoquer. Il convient de distinguer les désirs des objectifs opérationnels, ces derniers correspondant aux désirs "pour lesquels l'agent s'engage dans une poursuite active". Cet ensemble intervient de manière prépondérante lors des phases d'inférence et de délibération.
+    
+    \item[\textbf{Intentions (Intentions) :}] Elles incarnent l'état délibératif de l'agent et peuvent être définies comme des désirs opérationnalisés auxquels sont associés des plans d'action. Un plan consiste en une séquence d'actions que l'agent est susceptible d'exécuter pour concrétiser ses intentions. En raison de leur structure potentiellement imbriquée, ces plans sont initialement conçus de manière partielle. Leur complétion progressive au fil de l'exécution confère au modèle toute sa pertinence : les plans demeurent continuellement influencés par les croyances et les désirs, tout en rétroagissant sur ces derniers à mesure de leur réalisation.
+\end{itemize}
+\subsubsection{Dynamique opérationnelle : Événements et boucle d'inférence}
+
+La mise en mouvement de cette architecture cognitive repose sur une boucle d'exécution logicielle, dictée par le traitement d'écosystèmes d'**événements** et de mécanismes d'**inférence**. Les événements agissent comme les catalyseurs fondamentaux de la dynamique de l'agent. Ils se structurent en deux catégories :
+
+\begin{enumerate}
+    \item \textbf{Les événements externes :} Générés par l'environnement physique de la simulation, ils sont perçus par l'agent via ses capteurs. Ces événements déclenchent une mise à jour immédiate de la base de croyances (\textit{Belief Revision Function}) et peuvent forcer l'agent à modifier un plan en cours devenu obsolète ou dangereux.
+    \item \textbf{Les événements internes :} Générés de manière autonome par l'agent lui-même au cours de son cycle de délibération, ils matérialisent des changements d'états psychologiques. L'apparition d'une nouvelle croyance peut par exemple générer en interne l'apparition d'un nouveau sous-objectif, ou l'échec d'une action au sein d'un plan peut déclencher un événement interne de repli pour forcer l'évaluation d'un plan alternatif.
+\end{enumerate}
+
+Le cœur computationnel de l'agent BDI réside dans sa capacité à orchestrer ces flux d'événements à travers sa boucle d'inférence. À chaque itération, le moteur de raisonnement confronte les événements reçus aux croyances existantes pour faire émerger de nouvelles options (génération de désirs). Le processus de délibération sélectionne ensuite les meilleures options, qui deviennent des intentions, puis un mécanisme de planification associe à ces intentions les plans d'action appropriés extraits de la bibliothèque de plans de l'agent. 
+
+Cette architecture assure un équilibre critique entre \textit{proactivité} (l'agent poursuit ses objectifs de manière persistante via ses intentions) et \textit{réactivité} (les événements externes lui permettent de s'adapter instantanément aux ruptures de son environnement).
+\subsubsection{Connexion au Projet ATLAS : Justification et Synergie Sémantique}
+
+L'intégration du modèle BDI au cœur du projet ANR ATLAS ne relève pas d'un simple choix technique opportuniste, mais répond directement à un verrou scientifique majeur du projet : la nécessité de simuler des comportements d'évacuation humains qui soient à la fois réalistes, hétérogènes et dynamiques face à un péril soudain. Les approches de simulation classiques (modèles particulaires ou automates cellulaires) traitent souvent les individus comme des entités physiques homogènes soumises à des forces d'attraction ou de répulsion mécaniques. Or, dans un espace composite et accidenté comme le fort de la Bastille, la décision de fuite est intrinsèquement liée à la perception cognitive, aux connaissances et aux biais psychologiques de chaque individu.
+
+Le modèle BDI s'impose comme le paradigme idéal pour le projet ATLAS pour trois raisons fondamentales :
+
+\begin{enumerate}
+    \item \textbf{La gestion d'une rationalité limitée et asymétrique :} Lors d'un incendie sur les flancs de la Chartreuse, un touriste découvrant le fort pour la première fois n'aura pas la même perception de l'espace, ni les mêmes réflexes, qu'un agent de maintenance du téléphérique. Le formalisme BDI permet d'instancier des profils d'agents différenciés. Leurs bases de \textit{Croyances} initiales seront asymétriques, ce qui conditionnera la pertinence de leurs \textit{Intentions} et la réussite de leurs trajectoires d'évacuation.
+    \item \textbf{Le couplage direct avec l'ontologie :} C'est ici que se situe le point d'articulation majeur de nos travaux. Traditionnellement, les croyances d'un agent BDI sont codées de manière impérative au sein du simulateur. L'objectif de nos travaux au sein du projet est de proposer une approche où **la base de Croyances des agents est directement alimentée et sémantiquement structurée par notre ontologie de haut niveau**. L'environnement physique du fort, les thésaurus SKOS caractérisant les types de danger, et les règles d'inférence développées en Partie 4 deviennent la grille de lecture conceptuelle de l'agent. Le graphe de connaissances s'insère ainsi comme le support formel de la perception de l'agent.
+    \item \textbf{La dynamicité face aux boucles de rétroaction :} Un simulateur de crise se doit de modéliser l'imprévu. Le cycle de raisonnement BDI excelle dans la gestion des ruptures. Lorsqu'une règle sémantique déduite par notre moteur d'inférence qualifie un chemin comme "impraticable", cette information est poussée comme un événement externe dans la boucle du raisonneur de l'agent. L'impact est immédiat : l'agent réévalue ses options, avorte son plan d'action en cours et en reconstruit un nouveau, reproduisant ainsi les mécanismes de réadaptation et de panique humaine en temps réel.
+\end{enumerate}
+
+En somme, le modèle BDI fournit le moteur décisionnel humain, en connectant ce paradigme au projet ATLAS, il se dote d'un cadre capable de simuler non seulement la propagation physique d'un aléas, mais aussi la propagation psychologique et comportementale de la crise au sein de la population du site.
+\begin{filrouge}
+\textbf{Application du modèle BDI au site de la Bastille} \\
+Appliqué aux flux de visiteurs circulant sur le site de la Bastille, le modèle BDI permet de simuler des comportements d'évacuation réalistes et non mécaniques. Imaginons un visiteur situé au niveau des terrasses supérieures de la Bastille lorsque le feu se déclare. 
+
+Son état initial inclut la \textbf{croyance} que l'unique moyen de descente rapide est le téléphérique. L'apparition d'un \textbf{événement externe} majeur, l'arrêt technique du téléphérique dû aux fumées, met à jour ses croyances. Cette rupture génère un \textbf{événement interne} d'urgence qui modifie ses \textbf{désirs} (la priorité absolue devient la fuite à pied) et reconfigure ses \textbf{intentions} : descendre par les escaliers du versant Est. L'agent extrait alors de sa mémoire un plan d'action topologique. 
+
+Si, au cours de sa descente, un nouvel événement externe lui indique que le sentier choisi est saturé par une foule en panique, sa boucle d'inférence réévaluera ses croyances en temps réel, abandonnera l'intention courante, et bifurquera de manière autonome vers un plan alternatif (remonter se confiner dans les casemates fortifiées). C'est ce couplage entre la flexibilité cognitive du modèle BDI pour les humains et la richesse de l'ontologie pour les structures physiques qui caractérise l'apport du projet ATLAS.
+\end{filrouge}
+
+\subsection{La Plateforme de Simulation GAMA : Environnement Agent et Intégration Sémantique}
+\label{subsec:plateforme_gama}
+
+La formalisation théorique des comportements humains via le modèle BDI ne peut se concrétiser sans un support d'exécution computationnel capable de gérer la complexité spatiale et l'asynchronisme des agents. Dans le cadre des travaux de recherche menés au sein de l'équipe SocSIM-K pour le projet ANR ATLAS, et en appui direct aux développements de la thèse de Flavien Loup-Hadamard, le choix technologique s'est porté sur la plateforme \textit{GAMA} (\textit{GIS Agent-based Modeling Architecture}). Cet environnement de modélisation et de simulation open-source s'impose comme un standard académique pour la manipulation de systèmes multi-agents complexes à grande échelle, notamment en raison de ses capacités natives de couplage entre dynamiques spatiales et architectures cognitives.
+
+\subsubsection{Prise en charge native des données géospatiales et du formalisme BDI}
+
+L'atout prépondérant de GAMA réside dans son aptitude à unifier deux dimensions souvent cloisonnées dans les simulateurs traditionnels : l'analyse spatiale avancée (SIG) et la modélisation cognitive des agents. 
+
+D'une part, GAMA intègre une couche géospatiale vectorielle et raster de haut niveau. Contrairement à des plateformes comme NetLogo, où l'espace est discrétisé en une grille de cellules rigides (\textit{patches}), GAMA permet aux agents d'évoluer dans un environnement topologique continu, directement importé de fichiers de formes (\textit{Shapefiles} SIG) ou de données OpenStreetMap. Les géométries complexes (polygones de bâtiments, lignes d'axes de circulation) deviennent des agents à part entière ou des contraintes spatiales strictes régissant les déplacements.
+
+D'autre part, GAMA embarque nativement depuis ses récentes versions une implémentation complète de l'architecture BDI via son langage dédié, le GAML (\textit{GAma Modeling Language}). Cette intégration logicielle permet au modélisateur de déclarer explicitement les prédicats de croyances, de désirs et d'intentions des agents, ainsi que des structures de plans réflexifs ou de fonctions de révision de croyances, sans avoir à manipuler de lourdes bibliothèques tierces en Java.
+
+\subsubsection{Le verrou de la dynamicité : Événements et couplage sémantique}
+
+Au cœur du simulateur, le cycle d'exécution de GAMA orchestre la dynamicité du système à travers une gestion fine des événements. À chaque pas de temps (\textit{simulation step}), la plateforme met à jour l'environnement physique, par exemple, la progression spatio-temporelle d'un front d'incendie simulé par des équations de propagation, et propage ces modifications sous forme de stimuli aux agents. GAMA gère ainsi de manière native :
+\begin{itemize}
+    \item \textbf{La perception active et passive :} Les agents inspectent leur voisinage géospatial selon un cône de vision ou un rayon de perception défini, transformant les attributs physiques de l'espace en événements externes qui viennent alimenter leur boucle BDI.
+    \item \textbf{La génération d'événements internes :} L'échec d'un déplacement ou la complétion d'un objectif spatial génère instantanément des signaux internes au sein du moteur GAML, forçant l'agent à recalculer un itinéraire ou à modifier ses priorités motivationnelles.
+\end{itemize}
+
+Cependant, le verrou scientifique réside dans la nature de ces connaissances. Si GAMA excelle pour exécuter la logique comportementale minute par minute, sa structure interne reste optimisée pour des structures de données impératives. C'est là que l'alignement avec notre ontologie prend tout son sens : l'enjeu est de dépasser les simples variables locales de GAMA pour indexer les croyances des agents sur les concepts standardisés de notre graphe sémantique, permettant un raisonnement déporté et interopérable.
+
+\begin{filrouge}
+\textbf{Application de la plateforme GAMA au site de la Bastille} \\
+Dans la simulation ATLAS développée par F. Loup-Hadamard, le fort de la Bastille est instancié dans GAMA à partir des données altimétriques et vectorielles réelles du relief grenoblois. Les sentiers escarpés de la Chartreuse et les escaliers des casemates sont convertis en un réseau topologique de graphes de circulation où les pentes physiques influencent directement la vitesse de déplacement des agents.
+
+Lorsqu'un incendie virtuel est initialisé sur le versant, GAMA calcule la propagation du danger. Si un agent "Visiteur", doté d'une architecture BDI sous GAML, se trouve sur le sentier de la prairie de Guy Pape, sa fonction de perception capte l'événement externe "présence de fumée" sur l'arc de réseau qu'il s'apprêtait à emprunter. Le moteur BDI de GAMA suspend immédiatement le plan de marche en cours. 
+
+Grâce à l'interconnexion sémantique que nous proposons, l'agent qualifie cette perception non pas comme une simple variable booléenne isolée, mais comme une instance de perturbation liée aux concepts de vulnérabilité de notre ontologie, lui permettant de déduire, via le moteur d'inférence, que l'axe est devenu impraticable et qu'il doit initier une trajectoire de repli vers la gare supérieure du téléphérique.
+\end{filrouge}
+\subsection{Conclusion : Synthèse des Besoins Techniques et Verrous du Projet ATLAS}
+\label{subsec:conclusion_besoins_techniques}
+
+L’analyse critique croisée des standards du Web Sémantique et des plateformes internationales de gestion patrimoniale met en évidence un fossé technologique majeur. D’un côté, le CIDOC-CRM et la plateforme Arches offrent un cadre sémantique descriptif d’une précision remarquable pour cataloguer le patrimoine de manière statique et rétrospective. De l’autre, des initiatives systémiques comme le projet ARCH formalisent des indicateurs macroscopiques de résilience, mais échouent à les interconnecter de façon fine et dynamique avec l’environnement naturel et les flux humains.
+
+Le projet ANR ATLAS s'inscrit précisément à la convergence de ces approches pour lever ces verrous. Pour transformer un inventaire passif en un véritable système d'aide à la décision (SAD) multicritères et multi-aléas, quatre besoins techniques impératifs guident nos travaux :
+
+\begin{enumerate}
+    \item \textbf{L'unification sémantique par une Ontologie Noyau Modulaire :} Il est indispensable de dépasser le cloisonnement des données en concevant une extension du CIDOC-CRM capable de faire dialoguer, au sein d'un même graphe, des ontologies de domaines radicalement hétérogènes. Les infrastructures physiques (bâtiments, axes de circulation), l'écosystème naturel (biomasse végétale, faune) et la population doivent partager un métamodèle sémantique commun.
+    \item \textbf{La standardisation et la comparabilité des indicateurs de vulnérabilité :} Afin de guider efficacement les arbitrages lors d'une crise, des risques de natures totalement différentes (le péril d'effondrement d'une maçonnerie historique, le risque d'ignition d'un sous-bois et le seuil de panique d'une foule) doivent être traduits et normalisés sur une échelle de vulnérabilité sémantique commune et comparable.
+    \item \textbf{L'exploitation d'une logique déclarative et d'un moteur d'inférence déporté :} Pour garantir l'évolutivité et l'interoperabilité du système, le calcul des indicateurs de vulnérabilité complexes ne doit pas être codé en dur dans des scripts impératifs extérieurs (cloisonnement applicatif). Cette logique métier doit être portée de manière déclarative par la base de connaissances elle-même, à travers un moteur de règles d'inférence et des requêtes constructives permettant au graphe de déduire de nouveaux triplets de vulnérabilité.
+    \item \textbf{L'interconnexion asynchrone avec le Simulateur Multi-Agent :} L'architecture doit être pensée pour servir de passerelle d'intégration. Sans chercher à simuler elle-même les dynamiques physiques ou comportementales, l'ontologie doit être capable de recevoir, corréler et structurer les résultats issus du simulateur d'évacuation développé par l'équipe \textit{SocSIM-K} et des modèles de propagation d'incendie, agissant ainsi comme le cœur sémantique décisionnel du système global.
+\end{enumerate}
+
+\begin{filrouge}
+\textbf{De l'état de l'art à l'architecture active pour la Bastille} \\
+En synthèse, l'état de l'art nous montre que face à un incendie menaçant le site de la Bastille, les outils existants restent déarmés : le CIDOC-CRM décrira l'histoire de la casemate, ARCH donnera une note de risque globale à la métropole, et Arches affichera une fiche technique figée des fortifications. Aucun n'est capable de corréler le fait que la sécheresse de la forêt de la Chartreuse (donnée environnementale) augmente la vulnérabilité thermique des poutres de la casemate, et que l'effondrement de celle-ci (résultat de simulation physique) obstruera l'unique chemin praticable par le groupe scolaire en cours d'évacuation (résultat de simulation comportementale).
+
+C'est pour combler ce déficit d'interconnexion et de corrélation qu'a été pensée l'architecture de notre ontologie. Les besoins techniques ainsi identifiés tracent la feuille de route des sections suivantes de ce rapport : la formalisation de notre structure modulaire unifiée (Partie 3), suivie de l'implémentation de sa logique d'inférence et de ses mécanismes de requêtage pour l'aide à la décision (Partie 4).
+\end{filrouge}
+\clearpage
+
+\section{Ontologie Fe}
+Dans cette partie, nous présenterons les intérêts conceptuels et opérationnels de la constitution d'une ontologie de représentation des sites patrimoniaux et des risques qui les menacent. En l'occurence nous commenrons par une approche générale du concept d'ontologie et de ses spécificité techniques. Nous détaillerons ensuite les choix technologiques effectués ainsi que les raisons de ces derniers. Une fois les bases techniques exposées nous terminerons cette partie par une présentation un plus détaillée de la forme actuelle de l'ontologie, notamment pour mettre en falloir sa finesse sans perte de versatilité.
+
+\subsection{Objectifs et utilité de la modélisation ontologique}
+
+En informatique, la représentation formelle des connaissances constitue un défi fondamental. Bien que le modèle relationnel demeure le standard dominant grâce à sa maturité et à son efficacité transactionnelle, il s'avère structurellement limité dès lors que le domaine d'étude gagne en complexité. Dans le cadre de nos travaux, bien que des bases de données relationnelles préexistantes — à l'instar de la base ARCH — assurent la persistance des données primaires, elles peinent à capturer la richesse des interconnexions sémantiques entre les facteurs anthropiques et environnementaux influençant notre objet d'étude.
+
+Pour pallier ces limites, le passage d'une modélisation centrée sur le stockage (SGBD) à une modélisation centrée sur la connaissance (ontologie) devient indispensable. Contrairement aux modèles orientés graphe standards, l'ontologie ne se limite pas à cartographier des entités et leurs relations ; elle instaure une couche d'abstraction supérieure reposant sur des langages de représentation formelle (tels qu'OWL ou RDF). Cette structure s'articule autour de trois piliers :
+\begin{enumerate}
+    \item \textbf{La taxonomie et la sémantique :} Définition rigoureuse des classes, des hiérarchies d'héritage et des propriétés (rôles) entre les objets.
+    \item \textbf{Le contrôle de cohérence :} Application de contraintes logiques (cardinalité, domaines et plages de valeurs) garantissant l'intégrité du modèle.
+    \item \textbf{L'inférence conceptuelle :} Utilisation d'axiomes de chaînage qui permettent aux raisonneurs automatiques de déduire des relations implicites, favorisant ainsi l'émergence de connaissances nouvelles sans alourdir la structure physique du graphe.
+\end{enumerate}
+
+Au regard des exigences du projet ATLAS, le modèle relationnel, par sa nature rigide et son typage statique, apparaît insuffisant pour appréhender la transversalité des sites patrimoniaux et la dynamique de leur conservation. Par ailleurs, l'enjeu de l'interopérabilité au sein de l'ensemble des travaux de recherche du projet impose une architecture capable de transcender les silos de données. L'adoption d'une approche ontologique résout plusieurs blocages structurels :
+
+\begin{itemize}
+    \item \textbf{Interopérabilité et alignement sémantique :} L'ontologie permet de découpler la sémantique des concepts de leur étiquetage linguistique. Grâce à l'alignement sur des standards tels que le CIDOC-CRM, il devient possible d'interconnecter des jeux de données hétérogènes, résolvant ainsi la fracture linguistique inhérente aux collaborations internationales.
+    \item \textbf{Flexibilité et extensibilité évolutive :} Contrairement à la rigidité des schémas relationnels, où chaque modification nécessite une restructuration complexe des tables (et des jointures associées), le modèle ontologique autorise une extension incrémentale. L'ajout de nouveaux concepts ou propriétés s'effectue par simple enrichissement du graphe, sans altérer la cohérence des données existantes.
+    \item \textbf{Puissance analytique et raisonnement :} L'intégration de raisonneurs permet non seulement l'exploration visuelle du graphe, mais surtout l'exécution de requêtes sémantiques complexes. Cette capacité à naviguer dynamiquement dans le graphe transforme l'outil en un véritable moteur de découverte scientifique, capable de révéler des corrélations invisibles pour une requête SQL classique.
+    \item \textbf{Granularité adaptative :} Via des mécanismes de modularisation et l'usage de vocabulaires contrôlés, le modèle autorise une "spécialisation locale". Chaque partenaire peut conserver une granularité métier spécifique, tout en garantissant une interopérabilité descendante avec le référentiel global du projet, assurant ainsi la pérennité et la cohérence de l'architecture sur le long terme.
+\end{itemize}
+
+\subsection{Le modèle des triplets RDF : la brique élémentaire du savoir}
+
+Dans l'écosystème du Web Sémantique, la représentation des connaissances repose sur un paradigme fondamental : la décomposition de toute information en unités atomiques appelées \textit{triplets RDF} (Resource Description Framework). Contrairement aux modèles de données traditionnels, qui enferment les attributs dans des tables rigides, le modèle RDF propose une structure relationnelle décentralisée basée sur la triade : \textbf{Sujet – Prédicat – Objet}.
+
+\subsubsection{Anatomie du triplet}
+Chaque fait au sein de notre ontologie est articulé selon ce schéma logique :
+\begin{itemize}
+    \item \textbf{Le Sujet :} Il représente l'entité source, le nœud principal du graphe. Dans le cadre de notre projet, il s'agit par exemple d'une instance spécifique de "Bâtiment".
+    \item \textbf{Le Prédicat :} Il définit la nature de la relation ou la propriété qui unit le sujet à l'objet. Ce prédicat agit comme un arc orienté reliant les deux entités.
+    \item \textbf{L'Objet :} Il constitue la cible de la relation. L'objet peut être soit une autre entité (ex: une "Zone Géographique"), soit une valeur littérale (ex: une donnée typée comme un entier ou une chaîne de caractères).
+\end{itemize}
+
+Ce modèle impose une rupture conceptuelle majeure : la donnée n'est plus une propriété statique encapsulée dans un objet (à la manière de la programmation orientée objet classique), mais une relation dynamique. Par exemple, la hauteur d'un monument n'est pas un attribut interne, mais le résultat d'un triplet reliant le bâtiment à une valeur décimale via une propriété spécifique de mesure. Cette approche permet de traiter uniformément les métadonnées et les relations topologiques. La figure~\ref{fig:rdf-triplet} illustre cette décomposition élémentaire.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[node distance=3cm]
+        \node[schemaBox,fill=blue!10] (subject) {\textbf{Sujet}\\[0.2em]\texttt{fe:Casemate}};
+        \node[schemaBox,fill=orange!12,right=of subject] (object) {\textbf{Objet}\\[0.2em]\texttt{fe:Zone\_Bastille}};
+        \draw[schemaArrow] (subject) -- node[above,align=center] {\textbf{Prédicat}\\\texttt{fe:isLocatedIn}} (object);
+    \end{tikzpicture}
+    \caption{Représentation d'une information sous la forme d'un triplet RDF}
+    \label{fig:rdf-triplet}
+\end{figure}
+
+
+\subsubsection{La puissance de la taxonomie et de l'héritage}
+Au-delà de la simple assertion de faits, l'ontologie tire sa puissance de la modélisation des classes et de la hiérarchie. Les entités sont classées au sein d'une taxonomie permettant une mécanique d'héritage performante. Lorsqu'une classe est définie comme sous-classe d'une autre (ex: "Bâtiment" hérite de "Objet Matériel"), elle bénéficie automatiquement de l'ensemble des propriétés et contraintes logiques rattachées à son ancêtre.
+
+Cette architecture offre deux avantages décisifs pour la pérennité du projet :
+\begin{enumerate}
+    \item \textbf{Élimination de la redondance :} Il est inutile de redéfinir, pour chaque type d'entité, les propriétés universelles telles que la date de création ou la localisation spatiale. En héritant de classes génériques, nos objets conservent une structure cohérente et légère.
+    \item \textbf{Interopérabilité accrue :} Cette structuration permet à tout utilisateur ou système tiers de requêter des données complexes sans connaissance préalable de la structure interne spécifique. Si un intervenant recherche la date de création de tout élément matériel, les raisonneurs automatiques incluront naturellement les bâtiments dans le résultat, assurant une parfaite transversalité des données.
+\end{enumerate}
+
+Enfin, bien que les standards comme le CIDOC-CRM proposent un vocabulaire étendu, l'ontologie conserve une flexibilité totale. Il est possible de définir de nouvelles propriétés spécialisées pour répondre aux besoins émergents du terrain. Cette extensibilité permet d'affiner la représentation sans jamais compromettre la compatibilité avec les standards internationaux, garantissant ainsi que le projet ATLAS reste ouvert aux évolutions futures de la recherche.
+\subsubsection{La sémantique des propriétés : au-delà de la simple relation}
+
+Dans une ontologie, les propriétés ne sont pas de simples vecteurs d'information ; elles sont des entités de premier ordre dotées de comportements logiques complexes. Contrairement aux bases de données relationnelles où la relation est une simple contrainte de jointure, le modèle RDF/OWL confère aux prédicats une sémantique formelle qui dicte comment les informations doivent être interprétées par les moteurs de raisonnement.
+
+\paragraph{Typologie et comportement logique}
+La définition d'une propriété s'accompagne d'un typage qui enrichit la capacité d'inférence du système :
+
+\begin{itemize}
+    \item \textbf{Propriétés Transitives :} Elles permettent la propagation de la relation à travers une chaîne d'objets. Si une propriété $P$ est transitive, alors la relation $A \xrightarrow{P} B$ et $B \xrightarrow{P} C$ implique nécessairement $A \xrightarrow{P} C$. Cela est crucial pour modéliser des hiérarchies géographiques : si le \textit{Site A} est situé dans la \textit{Zone B}, et que la \textit{Zone B} est située dans la \textit{Région C}, alors le système déduit automatiquement que le \textit{Site A} est situé dans la \textit{Région C}.
+    
+    \item \textbf{Propriétés Symétriques :} Une propriété est dite symétrique si, dès lors qu'elle lie un sujet $S$ à un objet $O$, elle lie réciproquement $O$ à $S$. Par exemple, la propriété \textit{estAdjacentÀ} est intrinsèquement symétrique. Cette caractéristique permet de réduire drastiquement la redondance des données : une seule assertion suffit à définir le lien dans les deux sens pour le moteur de raisonnement.
+
+    \item \textbf{Propriétés Inverses :} Ce mécanisme permet de définir des relations de réciprocité entre deux prédicats distincts. Par exemple, si nous définissons \textit{aPourArchitecte} comme l'inverse de \textit{aConçu}, le système devient capable de déduire l'ensemble des bâtiments conçus par un architecte donné à partir de la simple liste des architectes associés aux bâtiments. Cette dualité offre une flexibilité de requête exceptionnelle.
+\end{itemize}
+
+
+
+\paragraph{Domaines et plages de valeurs (Domain and Range)}
+Pour garantir la cohérence sémantique, chaque propriété est contrainte par son \textbf{domaine} (le type de sujet qu'elle accepte) et sa \textbf{plage de valeurs} (le type d'objet qu'elle peut relier). 
+
+Cette configuration agit comme un filtre de validation en temps réel :
+\begin{enumerate}
+    \item \textbf{Le Domaine} définit l'ensemble des classes pour lesquelles la propriété est valide. Si une propriété \textit{aPourHauteur} possède pour domaine la classe \textit{Bâtiment}, tenter d'appliquer cette propriété à une classe \textit{Personne} déclenchera une alerte de cohérence.
+    \item \textbf{La Plage de valeurs (Range)} restreint le type de la cible. Par exemple, une propriété \textit{localiséDans} aura pour plage la classe \textit{ZoneGéographique}. 
+\end{enumerate}
+
+Cette rigueur logique est ce qui permet aux ontologies de dépasser le cadre du simple stockage pour devenir des outils de \textit{vérification sémantique}. Le système devient capable de détecter des incohérences qui resteraient invisibles dans un schéma relationnel classique, car il ne se contente pas de stocker la donnée, il "comprend" la validité du fait exprimé selon les axiomes définis. Cette couche de connaissance implicite, générée par la nature même des propriétés, transforme chaque base de données en un graphe capable d'auto-validation et d'enrichissement automatique.
+\subsection{Vocabulaire Skos}
+
+La conception de l'ontologie a rapidement fait apparaître une distinction nécessaire entre la structure stable du domaine et les valeurs utilisées pour classifier les entités. Une classe OWL représente une catégorie d'objets possédant une structure, des propriétés et éventuellement des contraintes propres. À l'inverse, une valeur telle qu'un type d'axe, une catégorie de population, une espèce végétale ou un niveau d'accessibilité appartient davantage à un référentiel susceptible d'évoluer avec les usages et les partenaires du projet. Ces valeurs ont donc été organisées sous la forme de vocabulaires contrôlés au moyen du standard SKOS (\textit{Simple Knowledge Organization System}).
+
+SKOS permet de définir des concepts, de les rassembler dans des schémas de concepts et de leur associer des libellés préférentiels, des synonymes, des notes documentaires ou des relations hiérarchiques. Cette organisation répond directement au caractère international et pluridisciplinaire d'ATLAS. Un même concept peut disposer de plusieurs représentations linguistiques sans que son identifiant ni sa signification informatique ne changent. Le code d'un simulateur, une requête SPARQL et un utilisateur francophone ou anglophone peuvent ainsi se référer à une ressource commune.
+
+Dans le livrable, les thésaurus sont séparés par domaine : aléas, artefacts, axes, bâtiments, facteurs cognitifs, espaces naturels, espèces, sites patrimoniaux, impacts, populations, sécurité, victimes, météo et zones. Cette séparation reproduit la modularité de l'ontologie OWL et évite de concentrer toutes les valeurs dans un référentiel monolithique. Chaque concept SKOS est relié à une classe de classification définie par l'ontologie. L'ontologie conserve donc le sens de la relation, tandis que le thésaurus fournit les valeurs autorisées et leur organisation terminologique.
+
+La règle de modélisation retenue est la suivante : une notion devient une classe OWL lorsqu'elle doit porter ses propres propriétés, participer à des relations structurantes, être ciblée par une contrainte ou jouer un rôle autonome dans la simulation. Elle devient un concept SKOS lorsqu'elle constitue principalement une valeur de classification. Ainsi, un axe de circulation est une classe puisqu'il possède une longueur, une largeur, une capacité et des connexions. En revanche, \textit{sentier}, \textit{couloir} ou \textit{escalier} sont des concepts susceptibles de typer un axe.
+
+\begin{lstlisting}[language=Turtle,caption={Exemple de concept contrôlé dans un thésaurus SKOS}]
+fe:Fire a skos:Concept, fe:HazardType ;
+    skos:prefLabel "Incendie"@fr ;
+    skos:prefLabel "Fire"@en ;
+    skos:inScheme fe:HazardTaxonomy .
+\end{lstlisting}
+
+Cette séparation présente enfin un intérêt important pour la maintenance. L'ajout d'une nouvelle espèce, d'un nouveau matériau ou d'un nouveau type d'aléa ne nécessite pas systématiquement une modification de la structure OWL. Les spécialistes peuvent enrichir les vocabulaires sans remettre en cause les classes et propriétés déjà utilisées par les autres modules. Egalement, cette organisation permet de réutiliser les thésaurus dans d'autres projets, même si la structure de l'ontologie change. Les concepts SKOS sont ainsi plus facilement partageables et interopérables que les classes OWL. Dans le même temps, cela garantit le maintien de l'historisation des version de simulation, puisque les concepts SKOS peuvent être alignés sur des versions spécifiques de l'ontologie OWL.
+
+\subsection{Schema Selectionné}
+
+L'architecture sélectionnée repose sur quatre couches complémentaires. La première est le modèle RDF/OWL, qui décrit les entités du domaine et leurs relations. La deuxième regroupe les thésaurus SKOS, qui portent les valeurs contrôlées. La troisième utilise SHACL pour exprimer les contraintes de qualité applicables aux données, assurant le maintient de la cohérence de ces dernières. La quatrième est constituée de profils déclaratifs décrivant les besoins propres à un système multi-agent. Cette séparation évite de confondre la connaissance du domaine, la terminologie, la validation et les exigences d'une application particulière.
+
+Le point d'entrée de l'ontologie est le module \texttt{fe\_core.ttl}. Il contient les abstractions partagées et importe les modules thématiques. Les responsabilités sont distribuées entre les sites, les zones, les bâtiments, les axes, les populations, les facteurs cognitifs, les aléas et la sécurité, les impacts, la météo, les espaces naturels, les artefacts, les victimes et la simulation. Lorsqu'un concept concerne plusieurs domaines, il est placé dans le module portant son entité principale puis relié aux autres par des propriétés. Cette organisation limite les duplications et permet une évolution incrémentale du modèle.
+
+Les classes spécifiques au projet sont alignées, lorsque cela est pertinent, avec les catégories du CIDOC-CRM. Les objets et entités physiques sont rapprochés de classes telles que \texttt{crm:E18\_Physical\_Thing}, \texttt{crm:E25\_Man\_Made\_Feature} ou \texttt{crm:E70\_Thing}. Les matériaux sont rattachés à \texttt{crm:E57\_Material}, les types à \texttt{crm:E55\_Type}, les dimensions à \texttt{crm:E54\_Dimension}, les états à \texttt{crm:E3\_Condition\_State} et les activités de simulation à \texttt{crm:E7\_Activity}. L'ontologie FE ne remplace donc pas le modèle patrimonial de référence : elle le spécialise pour représenter les connaissances propres aux aléas, aux évacuations et aux simulations.
+
+Les contraintes SHACL occupent une place distincte dans ce schéma. Le monde ouvert de RDF autorise naturellement des graphes incomplets : l'absence d'une propriété ne signifie pas que celle-ci est fausse. Or un simulateur ne peut pas fonctionner si une donnée indispensable, telle que la longueur d'un axe ou l'effectif d'une population, manque à son entrée. SHACL permet d'exprimer ces obligations sans les transformer en vérités universelles de l'ontologie. Le dépôt contient ainsi des contraintes générales par domaine et une forme spécialisée pour les entrées du SMA d'évacuation. La figure~\ref{fig:semantic-architecture} synthétise la répartition des responsabilités entre les quatre couches.
+
+\begin{lstlisting}[language=Turtle,caption={Principe d'import des modules depuis le noyau FE}]
+fe:CoreOntology a owl:Ontology ;
+    owl:imports
+        fe:SiteOntology,
+        fe:ZoneOntology,
+        fe:BuildingOntology,
+        fe:AxisOntology,
+        fe:PopulationOntology,
+        fe:HazardAndSafetyOntology,
+        fe:SimulationOntology .
+\end{lstlisting}
+
+\begin{figure}[htbp]
+    \centering
+    \resizebox{0.96\textwidth}{!}{
+    \begin{tikzpicture}[node distance=1.1cm and 1.2cm]
+        \node[schemaBox,fill=blue!12,text width=3.5cm] (owl) {\textbf{RDF / OWL}\\Structure du domaine\\Classes et propriétés};
+        \node[schemaBox,fill=green!12,text width=3.5cm,right=of owl] (skos) {\textbf{SKOS}\\Vocabulaires contrôlés\\Libellés et taxonomies};
+        \node[schemaBox,fill=orange!15,text width=3.5cm,right=of skos] (shacl) {\textbf{SHACL}\\Contraintes contextuelles\\Qualité des données};
+        \node[schemaBox,fill=red!10,text width=3.5cm,right=of shacl] (profile) {\textbf{Profils SMA}\\Classes consommées\\Entrées et sorties};
+
+        \draw[schemaArrow] (owl) -- (skos);
+        \draw[schemaArrow] (skos) -- (shacl);
+        \draw[schemaArrow] (shacl) -- (profile);
+
+        \node[schemaSmall,below=1.25cm of owl] (crm) {CIDOC-CRM\\modèle de référence};
+        \node[schemaSmall,below=1.25cm of skos] (modules) {Modules FE\\spécialisation ATLAS};
+        \node[schemaSmall,below=1.25cm of shacl] (data) {Graphes de données\\et jeux d'exemple};
+        \node[schemaSmall,below=1.25cm of profile] (sma) {Systèmes\\multi-agents};
+
+        \draw[schemaArrow] (crm) -- (owl);
+        \draw[schemaArrow] (modules) -- (owl);
+        \draw[schemaArrow] (data) -- (shacl);
+        \draw[schemaArrow] (profile) -- (sma);
+    \end{tikzpicture}}
+    \caption{Séparation des responsabilités dans l'architecture sémantique}
+    \label{fig:semantic-architecture}
+\end{figure}
+
+\begin{filrouge}
+\textbf{Organisation sémantique de la Bastille} \\
+Le fort, les casemates, les zones forestières, les sentiers et les groupes de visiteurs sont décrits par les modules OWL correspondant à leur nature. Le type d'un sentier ou d'une végétation provient d'un thésaurus SKOS. Avant une simulation, SHACL vérifie que les axes concernés possèdent les dimensions et capacités nécessaires et que chaque zone d'évacuation est reliée à une population. Le cas de la Bastille n'impose donc pas sa structure au modèle global : il constitue une instanciation particulière d'une architecture réutilisable sur d'autres sites.
+\end{filrouge}
+
+\clearpage
+\section{Inférence et Simulation}
+\subsection{Motivation du calcul des données}
+
+Une ontologie n'a pas seulement pour fonction d'archiver des informations. La formalisation des relations, des hiérarchies et des types permet de produire des connaissances implicites et de préparer des données cohérentes pour des traitements externes. Dans le cadre d'ATLAS, cette capacité est particulièrement utile car la décision d'évacuation dépend de variables réparties entre plusieurs domaines : état des axes, localisation des populations, intensité d'un danger, conditions météorologiques, accessibilité des zones et présence d'éléments vulnérables.
+
+Le calcul ne doit toutefois pas être attribué indistinctement à l'ontologie. OWL peut produire des inférences logiques, SPARQL peut sélectionner ou construire de nouveaux triplets, et SHACL peut contrôler une conformité. La propagation physique des aléas et le comportement collectif relèvent, quant à eux, des modèles de simulation. L'architecture retenue organise donc une coopération : le graphe rassemble et qualifie les connaissances, puis le SMA calcule une évolution temporelle à partir d'un sous-ensemble validé.
+
+Cette répartition limite le couplage entre le modèle de connaissance et le code du simulateur. Les concepts nécessaires ne sont pas inscrits directement dans un script sous la forme d'une liste définitive. Ils sont déclarés dans un profil RDF. Une modification du contrat d'entrée peut ainsi être réalisée en faisant évoluer le profil, puis en régénérant les requêtes et les fichiers de correspondance.
+
+Trois familles de traitements doivent plus précisément être distinguées. La première relève de l'inférence ontologique : si un sentier est déclaré comme une sous-classe d'axe et qu'un axe est un élément de circulation, un raisonneur peut restituer le sentier lorsqu'une requête porte sur l'ensemble des éléments de circulation. La deuxième famille relève du calcul déclaratif : une requête SPARQL peut agréger des mesures, sélectionner les ressources exposées à un danger ou construire une vue du graphe adaptée à une application. La troisième famille relève de la simulation : elle fait évoluer les agents et leur environnement selon un pas de temps et produit des états qui n'étaient pas contenus dans le graphe initial. Cette séparation évite de présenter comme une déduction logique ce qui dépend en réalité d'un modèle numérique et de ses hypothèses.
+
+Elle répond également au principe du monde ouvert propre à RDF et OWL. Une donnée absente du graphe n'est pas considérée comme fausse. Cette propriété est utile pour agréger progressivement des connaissances patrimoniales, mais elle devient problématique au moment d'exécuter un modèle exigeant des valeurs complètes. SHACL joue alors le rôle de frontière : il ne ferme pas l'ensemble du graphe, mais vérifie qu'un sous-ensemble déterminé respecte le contrat minimal du SMA. L'inférence enrichit donc la connaissance disponible, tandis que la validation détermine si cette connaissance est exploitable dans un contexte opérationnel précis.
+
+Le calcul d'un indicateur doit enfin rester accompagné de sa provenance. Un temps d'évacuation, une estimation d'impact ou un nouvel état d'accessibilité n'a de sens qu'en relation avec un scénario, un jeu d'entrée, une version du modèle et une exécution donnée. L'architecture de simulation contient pour cette raison des classes représentant le scénario, le profil, l'entrée, le run, la sortie et les instantanés d'état. Cette réification augmente le nombre de triplets, mais elle rend les résultats explicables et comparables.
+
+\subsection{Preparation des inputs des simulateurs}
+
+Le profil fourni dans le dépôt concerne l'initialisation d'un SMA d'évacuation. Il prend la classe \texttt{fe:RootClass} comme racine et déclare les catégories d'entités nécessaires : fe:requiresClass. Il distingue ensuite les propriétés obligatoires des informations facultatives : fe:requiresProperty. Enfin il note que les classes et propriétés facultatives pouvant enrichir le scénario sans tous être exigés par le profil minimal.
+
+\begin{lstlisting}[language=Turtle,caption={Extrait du contrat déclaratif du SMA d'évacuation}]
+fe:EvacuationSMAProfile a fe:SimulationProfile ;
+    fe:profileIdentifier "evacuation_sma" ;
+    fe:hasRootClass fe:Zone ;
+    fe:requiresClass
+        fe:Zone, fe:Axis,
+        fe:Population, fe:HazardEvent ;
+    fe:requiresProperty
+        fe:hasPopulation,
+        fe:isConnectedTo,
+        fe:maxFlowCapacity,
+        fe:hasEstimatedCount ;
+    fe:optionalProperty
+        fe:containsBuilding,
+        fe:hasWeatherCondition,
+        fe:hasBlockingState .
+\end{lstlisting}
+
+À partir de cette déclaration, le script \texttt{generate\_sma\_queries.py} produit deux formes complémentaires de requêtes. La requête \texttt{CONSTRUCT} extrait un sous-graphe qui conserve les relations RDF entre les ressources. La requête \texttt{SELECT} prépare une représentation tabulaire plus facile à transmettre à un simulateur. Des fichiers JSON décrivent la correspondance entre propriétés sémantiques et colonnes d'échange.
+
+Le script \texttt{export\_sma\_input\_csv.py} applique ensuite ce contrat à un graphe de données. Les types RDF des valeurs sont conservés dans le mapping afin de distinguer, par exemple, une ressource d'une chaîne de caractères ou d'une valeur numérique. Avant le lancement du SMA, le fichier produit peut être contrôlé indirectement par la validation du graphe source avec \texttt{evacuation\_sma\_input\_shape.ttl}. Cette étape vérifie notamment qu'une zone est liée à une population, qu'un axe possède les informations nécessaires à un calcul de flux et que les valeurs quantitatives respectent les contraintes attendues.
+
+Le flux de préparation, représenté dans la figure~\ref{fig:sma-input-pipeline}, distingue la génération, l'extraction, la validation et la conversion tabulaire :
+
+Le profil ne constitue pas seulement une liste de champs. Il distingue les classes requises, les propriétés indispensables, les propriétés facultatives et les connaissances attendues en sortie. Les propriétés requises expriment le seuil en dessous duquel la simulation ne peut pas être initialisée de manière fiable. Les propriétés optionnelles enrichissent l'environnement sans bloquer une expérimentation lorsque les données ne sont pas encore disponibles. Cette distinction est importante pour un projet de recherche : exiger trop d'informations rendrait le profil inutilisable sur les premiers jeux de données, tandis qu'un contrat trop permissif déplacerait les erreurs au cœur du simulateur.
+
+La requête \texttt{CONSTRUCT} conserve la structure du graphe et convient à un moteur capable de manipuler RDF. Elle permet notamment de garder les identifiants, les types et les relations intermédiaires. La requête \texttt{SELECT} répond à un besoin différent : projeter le graphe sur une table dont les colonnes peuvent être lues par des outils scientifiques plus classiques. Ces deux sorties sont générées depuis le même profil afin de réduire les divergences. Le mapping JSON documente la manière dont une colonne tabulaire retrouve sa propriété RDF et son type.
+
+\begin{lstlisting}[language=SPARQL,caption={Structure simplifiée de la requête d'extraction générée}]
+CONSTRUCT {
+    ?entity a ?class .
+    ?entity ?property ?value .
+}
+WHERE {
+    VALUES ?class {
+        fe:Zone fe:Axis fe:Population fe:HazardEvent
+    }
+    VALUES ?property {
+        fe:hasPopulation fe:isConnectedTo
+        fe:maxFlowCapacity fe:hasEstimatedCount
+    }
+    ?entity a ?class .
+    OPTIONAL { ?entity ?property ?value . }
+}
+\end{lstlisting}
+
+La préparation suit quatre contrôles successifs. Le premier vérifie la syntaxe Turtle des modules, du profil et des données. Le deuxième contrôle la structure du profil : la classe racine et les propriétés demandées doivent être identifiables. Le troisième exécute les shapes SHACL sur le jeu destiné au SMA. Le quatrième inspecte l'export obtenu, notamment la stabilité des identifiants et la conservation des types. Une erreur détectée à l'une de ces étapes doit interrompre le lancement plutôt que produire silencieusement un scénario incomplet.
+
+\begin{lstlisting}[language=Turtle,caption={Exemple de contrainte SHACL appliquée aux axes}]
+fe:EvacuationAxisShape a sh:NodeShape ;
+    sh:targetClass fe:Axis ;
+    sh:property [
+        sh:path fe:hasLength ;
+        sh:minCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0
+    ] ;
+    sh:property [
+        sh:path fe:maxFlowCapacity ;
+        sh:minCount 1 ;
+        sh:minInclusive 0
+    ] .
+\end{lstlisting}
+
+Les identifiants RDF jouent ici un rôle central. Une zone ou un axe ne doit pas recevoir un identifiant temporaire différent à chaque conversion. Le maintien d'URI stables garantit que la sortie du SMA pourra être rattachée à l'entité ayant fourni l'entrée. Le CSV est ainsi considéré comme une représentation d'échange du graphe, et non comme une nouvelle source autonome dépourvue de sémantique.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[node distance=1.05cm and 1.3cm]
+        \node[schemaBox,fill=blue!10] (profile) {\textbf{1. Profil RDF}\\Contrat déclaratif};
+        \node[schemaBox,fill=blue!10,right=of profile] (queries) {\textbf{2. Génération}\\SPARQL et mappings};
+        \node[schemaBox,fill=orange!12,right=of queries] (kg) {\textbf{3. Extraction}\\Sous-graphe RDF};
+
+        \node[schemaBox,fill=orange!12,below=1.25cm of kg] (validation) {\textbf{4. Validation}\\Contraintes SHACL};
+        \node[schemaBox,fill=green!12,left=of validation] (csv) {\textbf{5. Export}\\CSV RDF typé};
+        \node[schemaBox,fill=red!10,left=of csv] (simulation) {\textbf{6. Simulation}\\SMA d'évacuation};
+        \node[schemaSmall,fill=red!6,below=0.9cm of validation] (errors) {Rapport d'erreurs\\et correction des données};
+
+        \draw[schemaArrow] (profile) -- (queries);
+        \draw[schemaArrow] (queries) -- (kg);
+        \draw[schemaArrow] (kg) -- (validation);
+        \draw[schemaArrow] (validation) -- (csv);
+        \draw[schemaArrow] (csv) -- (simulation);
+        \draw[schemaDashed] (validation) -- (errors);
+    \end{tikzpicture}
+    \caption{Préparation et validation des données d'entrée du SMA}
+    \label{fig:sma-input-pipeline}
+\end{figure}
+
+\begin{filrouge}
+\textbf{Préparation d'une évacuation de la Bastille} \\
+Pour instancier un scénario, le graphe doit relier chaque secteur du site aux groupes qui l'occupent et aux axes qui permettent de le quitter. La longueur, la largeur et la capacité de ces axes sont contrôlées avant la simulation. Une information manquante sur un escalier ou un sentier est ainsi détectée avant que le SMA ne calcule des trajectoires à partir d'un réseau incomplet.
+\end{filrouge}
+
+\subsection{Communicabilité des resultats et Aide à la Décision}
+
+La communication ne s'arrête pas au lancement de la simulation. Les résultats doivent revenir dans le graphe sans perdre leur contexte de production. Le format CSV actuellement utilisé contient au minimum les identifiants de l'exécution, du scénario, du jeu d'entrée et du jeu de sortie, l'entité concernée, l'étape et le temps de simulation, ainsi que la propriété produite, sa valeur et son type RDF.
+
+Le script \texttt{import\_sma\_results\_csv.py} transforme ces lignes en une requête \texttt{SPARQL INSERT}. Les valeurs sont structurées autour d'une exécution de simulation, d'une sortie et d'un état final. Elles sont insérées dans un graphe nommé consacré aux résultats. Cette séparation évite de confondre une donnée observée avec une valeur calculée dans un scénario particulier et permet de comparer plusieurs exécutions.
+
+\begin{lstlisting}[language=SPARQL,caption={Insertion historisée d'un résultat de simulation}]
+INSERT DATA {
+  GRAPH <http://example.org/simulation/results> {
+    fe:Run_001 a fe:SimulationRun ;
+        fe:usesScenario fe:Scenario_001 ;
+        fe:producesOutput fe:Output_001 .
+
+    fe:Output_001 a fe:SimulationOutput ;
+        fe:hasFinalState fe:State_Zone_A .
+
+    fe:State_Zone_A a fe:FinalState ;
+        fe:stateOfEntity fe:Zone_A ;
+        fe:hasSimulationTime 600.0 ;
+        fe:hasEvacuationTime 540.0 .
+  }
+}
+\end{lstlisting}
+
+Le résultat simulé n'est donc pas automatiquement publié comme nouvel état courant de l'entité métier. Une valeur de résistance au feu ou d'accessibilité calculée reste liée à son exécution tant qu'elle n'a pas été validée. La publication dans le graphe de référence nécessite une opération distincte, éventuellement sous la forme d'un \texttt{DELETE/INSERT}, et une politique de mise à jour explicite. Cette précaution est indispensable pour qu'un outil d'aide à la décision reste capable d'expliquer l'origine d'une information.
+
+La chaîne complète forme ainsi une boucle dont la figure~\ref{fig:simulation-provenance} met en évidence les liens de provenance :
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[node distance=1.15cm and 1.15cm]
+        \node[schemaBox,fill=blue!10] (source) {\textbf{Graphe source}\\État de référence};
+        \node[schemaBox,fill=orange!12,right=of source] (input) {\textbf{SimulationInput}\\Sous-graphe validé};
+        \node[schemaBox,fill=red!10,right=of input] (run) {\textbf{SimulationRun}\\Scénario, profil, version};
+
+        \node[schemaBox,fill=green!12,below=1.25cm of run] (output) {\textbf{SimulationOutput}\\Résultats historisés};
+        \node[schemaBox,fill=green!12,left=of output] (state) {\textbf{FinalState}\\Entité, temps, valeur};
+        \node[schemaBox,fill=violet!10,left=of state] (decision) {\textbf{Analyse}\\Comparaison et décision};
+        \node[schemaBox,fill=yellow!12,below=0.95cm of input] (policy) {\textbf{Publication contrôlée}\\Aucune modification automatique\\du graphe source};
+
+        \draw[schemaArrow] (source) -- (input);
+        \draw[schemaArrow] (input) -- (run);
+        \draw[schemaArrow] (run) -- (output);
+        \draw[schemaArrow] (output) -- (state);
+        \draw[schemaArrow] (state) -- (decision);
+        \draw[schemaDashed] (decision) -- (policy);
+        \draw[schemaDashed] (policy) -- (source);
+    \end{tikzpicture}
+    \caption{Traçabilité d'une exécution et séparation entre données sources et résultats simulés}
+    \label{fig:simulation-provenance}
+\end{figure}
+
+Le dépôt fournit des exemples générés et une suite de tests automatisés. Ces tests vérifient le chargement des fichiers Turtle et SHACL, la lecture du profil, la génération stable des requêtes et mappings, la conservation des types RDF lors de l'export et la création d'insertions SPARQL typées. Ils valident la chaîne technique, mais ne remplacent pas une évaluation scientifique du modèle de comportement ni une expérimentation en conditions réelles.
+
+La structure du CSV de résultats matérialise cette exigence de traçabilité. Les colonnes \texttt{run\_id}, \texttt{scenario\_id}, \texttt{input\_id} et \texttt{output\_id} décrivent le contexte expérimental. Les colonnes \texttt{entity}, \texttt{step} et \texttt{time} indiquent la ressource et le moment concernés. Enfin, \texttt{property}, \texttt{value} et \texttt{value\_type} permettent de reconstruire un triplet RDF correctement typé. Une valeur décimale, un booléen et une URI ne sont donc pas réimportés comme des chaînes indistinctes.
+
+Le graphe de résultats peut ensuite être interrogé selon plusieurs points de vue utiles à la décision. Une première requête compare le temps d'évacuation d'une même zone entre différents scénarios. Une deuxième identifie les axes dont l'état final est bloqué ou dont la capacité provoque un goulot d'étranglement. Une troisième croise les entités exposées, leur priorité de protection et les états produits par la simulation. L'ontologie ne décide pas à la place du gestionnaire ; elle organise les résultats pour que les hypothèses et conséquences d'une recommandation puissent être retracées.
+
+Ce mécanisme possède toutefois une limite volontaire : le script d'import produit une couche d'instantanés, mais n'applique pas automatiquement les valeurs simulées aux ressources de référence. Une telle mise à jour exigerait de savoir si la valeur représente une hypothèse, une prédiction à un instant donné ou une nouvelle connaissance validée. La documentation propose donc de distinguer une conservation en instantané, une mise à jour de l'entité et une mise à jour d'une ressource associée. Cette politique devra être implantée avant toute utilisation opérationnelle.
+
+\begin{filrouge}
+\textbf{Retour des résultats sur le cas de la Bastille} \\
+Si une simulation indique qu'un escalier devient impraticable à la sixième minute, le graphe ne remplace pas définitivement l'accessibilité de cet escalier. Il enregistre que, dans un scénario et un run déterminés, un état simulé associe cet axe à un blocage à cet instant. Le gestionnaire peut alors comparer ce run avec une variante dans laquelle le départ de feu, la fréquentation ou l'ouverture d'une issue diffère, sans altérer la description de référence du site.
+\end{filrouge}
+
+\clearpage
+\section{Future du Projet}
+\subsection{Validation pas l'usage en condition réelles}
+
+La première perspective est l'instanciation du modèle sur un site pilote avec des données réelles. Dans le cas de la Bastille, cette étape nécessite de produire ou d'importer la géométrie des zones, la topologie des axes, leurs dimensions et capacités, la localisation des bâtiments et espaces naturels, ainsi que des estimations de population correspondant à différents régimes de fréquentation. Les correspondances entre données de terrain et concepts ontologiques devront être contrôlées avec les spécialistes du patrimoine, de l'environnement et de la simulation.
+
+La validation devra porter sur plusieurs niveaux. La validation syntaxique garantit le chargement des graphes. SHACL contrôle la complétude attendue par le cas d'usage. Des requêtes de compétence devront vérifier que le graphe répond aux questions pour lesquelles il a été conçu. Enfin, les résultats du SMA devront être comparés à des scénarios experts, des exercices ou des observations disponibles. La conformité sémantique ne garantit en effet ni la qualité d'une mesure ni la validité d'un modèle de comportement.
+
+Un protocole de validation progressif peut être envisagé. Une première phase consisterait à réunir un jeu de données statique limité à quelques zones, axes et populations, puis à faire relire chaque instanciation par les experts du terrain. Une deuxième phase introduirait plusieurs états de danger et vérifierait la capacité du profil à produire des entrées complètes. Une troisième phase comparerait les sorties de plusieurs scénarios contrôlés. Enfin, une expérimentation à l'échelle du site évaluerait les performances, la lisibilité des résultats et l'utilité réelle des requêtes d'aide à la décision.
+
+Les critères d'évaluation devraient combiner des mesures techniques et des mesures d'usage. Le taux de données conformes, le nombre d'erreurs détectées avant simulation, la reproductibilité des exports et le temps de génération évaluent la chaîne informatique. La capacité des experts à retrouver une information, à comprendre l'origine d'un résultat et à spécialiser le vocabulaire évalue la pertinence du modèle. Du côté du SMA, la sensibilité des résultats aux données d'entrée et la comparaison avec des scénarios de référence permettront d'identifier les paramètres qui exigent la meilleure qualité.
+
+Cette validation devra également examiner les cas négatifs. Une zone sans population, un axe déconnecté, une capacité négative, un type inconnu ou un résultat sans identifiant de run doivent produire un échec compréhensible. La robustesse d'une chaîne d'aide à la décision dépend autant de sa capacité à refuser une donnée ambiguë que de sa capacité à traiter un cas nominal.
+
+\subsection{Extension vers des outils de vérification}
+
+L'une des ambitions associées à cette ontologie est de permettre, à terme, la création d'un outil de vérification des données et des résultats de simulation. Dans le domaine de la simulation sociale, l'un des problèmes majeurs reste en effet la validation des prédictions produites. Les comportements collectifs sont difficiles à reproduire expérimentalement et les tests en conditions réelles, notamment lorsqu'ils concernent l'évacuation d'un site patrimonial exposé à un incendie, peuvent être coûteux, difficiles à organiser ou éthiquement impossibles à réaliser à grande échelle.
+
+L'ontologie développée dans ce projet apporte une première réponse à cette difficulté grâce à l'importance accordée à la traçabilité. Chaque simulation peut être reliée à son scénario, à ses données d'entrée, aux paramètres utilisés, aux entités concernées et aux résultats produits. La conservation de ces informations dans des graphes nommés permet de préserver le contexte de chaque exécution sans le confondre avec les données de référence. Il devient alors possible de comparer un résultat obtenu avec un résultat attendu, avec une autre exécution du même modèle ou avec les données issues d'une expérience préalablement validée.
+
+À partir de cette base, un outil de vérification pourrait rechercher dans le graphe les sites ou scénarios les plus proches du cas étudié. Cette proximité ne serait pas uniquement géographique. Elle pourrait prendre en compte la configuration du site, la topologie et la capacité des axes, la densité et la composition de la population, la nature de l'aléa, les conditions météorologiques, la présence de bâtiments ou d'espaces naturels et les paramètres du modèle multi-agent. Le système identifierait ainsi des simulations dont les conditions d'entrée sont suffisamment comparables pour constituer des cas de référence pertinents.
+
+Les résultats d'une nouvelle simulation pourraient ensuite être confrontés à ceux obtenus sur ces cas comparables, en privilégiant les scénarios pour lesquels des observations, des exercices d'évacuation ou des validations expérimentales sont disponibles. L'objectif ne serait pas de démontrer automatiquement qu'une prédiction est vraie, mais d'évaluer sa plausibilité. Un écart important avec plusieurs cas proches pourrait signaler une erreur dans les données d'entrée, une mauvaise configuration du scénario, une incohérence dans le modèle de comportement ou, au contraire, un phénomène particulier nécessitant une analyse scientifique. La figure~\ref{fig:simulation-verification} présente le principe général de cette comparaison.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[node distance=0.8cm and 1.05cm]
+        \node[schemaBox,fill=blue!10] (new) {\textbf{Simulation à vérifier}\\Site, paramètres, résultats};
+        \node[schemaBox,fill=gray!12,right=of new] (search) {\textbf{Recherche sémantique}\\Critères de similarité};
+
+        \node[schemaSmall,fill=green!12,above right=0.4cm and 1.05cm of search] (case1) {Cas validé A\\topologie proche};
+        \node[schemaSmall,fill=green!12,right=1.05cm of search] (case2) {Cas validé B\\population proche};
+        \node[schemaSmall,fill=green!12,below right=0.4cm and 1.05cm of search] (case3) {Cas validé C\\aléa proche};
+
+        \node[schemaBox,fill=orange!15,right=1.15cm of case2] (compare) {\textbf{Comparaison}\\Écarts et plausibilité};
+        \node[schemaBox,fill=red!10,below=1.1cm of compare] (review) {\textbf{Analyse experte}\\Validation ou révision};
+        \node[schemaSmall,fill=violet!10,below=0.8cm of review] (corpus) {Nouveau cas documenté\\dans le corpus};
+
+        \draw[schemaArrow] (new) -- (search);
+        \draw[schemaArrow] (search) -- (case1);
+        \draw[schemaArrow] (search) -- (case2);
+        \draw[schemaArrow] (search) -- (case3);
+        \draw[schemaArrow] (case1) -- (compare);
+        \draw[schemaArrow] (case2) -- (compare);
+        \draw[schemaArrow] (case3) -- (compare);
+        \draw[schemaArrow] (compare) -- (review);
+        \draw[schemaDashed] (review) -- (corpus);
+    \end{tikzpicture}
+    \caption{Principe de vérification d'une simulation par comparaison avec des cas validés}
+    \label{fig:simulation-verification}
+\end{figure}
+
+Cette vérification pourrait s'appuyer sur des indicateurs de similarité et des seuils définis avec les spécialistes du domaine. Les comparaisons devraient rester explicables : l'outil devrait indiquer les simulations sélectionnées, les paramètres considérés comme comparables, les différences observées et les critères ayant conduit à produire une alerte. La conservation des entrées et des sorties dans le graphe est essentielle à cette explicabilité, car elle permet de remonter de l'écart détecté jusqu'aux hypothèses qui ont produit le résultat.
+
+Une telle extension transformerait progressivement l'ontologie en support de capitalisation expérimentale. Chaque simulation validée enrichirait un ensemble de cas de référence réutilisables pour l'étude de nouveaux sites. Plus le graphe contiendrait de scénarios documentés et validés, plus l'outil serait capable de proposer des comparaisons pertinentes. Cette approche ne remplacerait ni l'expertise humaine ni la validation empirique, mais elle fournirait un moyen de contrôler la cohérence des prédictions et de détecter plus tôt d'éventuelles erreurs dans les modèles de simulation.
+
+\subsection{Intégration à des bases telles que ARCH}
+
+L'intégration avec des plateformes patrimoniales comme ARCH ou Arches représente une perspective naturelle, mais elle ne peut pas se réduire à une importation de tables. Elle nécessite des règles d'alignement entre les identifiants, les géométries, les catégories d'actifs, les mesures environnementales et les notions du modèle FE. Le CIDOC-CRM fournit un premier niveau d'interopérabilité, tandis que les correspondances spécifiques devront être documentées et testées.
+
+ARCH pourrait notamment fournir des informations détaillées sur les constructions, matériaux, états de conservation et séries de mesures. L'ontologie ATLAS apporterait en retour une représentation adaptée aux axes d'évacuation, aux groupes de population, aux états opérationnels et à la provenance des simulations. L'objectif n'est donc pas de remplacer HArIS ou THIS, mais d'établir un pivot sémantique permettant à leurs données d'alimenter un scénario multi-agent.
+
+Une interface de services autour d'un triplestore pourrait à terme automatiser ce flux. Le simulateur demanderait un jeu d'entrée correspondant à un profil, recevrait uniquement des données validées, puis déposerait ses résultats dans un graphe nommé. Cette architecture préserverait la distinction essentielle entre référentiel patrimonial, observation, hypothèse de scénario et valeur simulée.
+
+L'intégration suppose la définition de correspondances explicites. Une construction HArIS devra être rapprochée d'une classe de bâtiment ou d'élément patrimonial ; une mesure de THIS devra conserver sa variable, son unité, sa date et sa provenance ; une géométrie devra être associée à la bonne zone sans confondre localisation administrative et emprise opérationnelle. Ces mappings pourront être matérialisés par des requêtes \texttt{CONSTRUCT}, des tables de correspondance et, lorsqu'une équivalence forte est justifiée, des axiomes d'alignement.
+
+La synchronisation devra aussi être gouvernée. Les plateformes externes resteront probablement autorités pour certaines données patrimoniales ou environnementales, alors que le graphe ATLAS sera autorité pour les profils et résultats de simulation. Définir la source responsable de chaque information évitera les boucles de mise à jour et les conflits. Les transformations devront conserver l'identifiant source et la date d'import afin qu'une donnée puisse être vérifiée ou rafraîchie.
+
+Cette perspective conduit à une architecture en services plutôt qu'à une base unique absorbant toutes les autres. HArIS, THIS, les capteurs, le triplestore et GAMA peuvent conserver leurs responsabilités propres. L'ontologie devient alors la couche d'interopérabilité qui exprime les correspondances, contrôle le contrat d'échange et documente la provenance.
+
+\clearpage
+\section{Conclusion}
+\subsection{Evaluation des travaux réalisés}
+
+Le stage a abouti à un livrable qui dépasse la seule rédaction d'un vocabulaire. L'ontologie modulaire couvre les principales dimensions nécessaires à la description d'un site patrimonial soumis à une crise : organisation spatiale, bâti, circulation, populations, environnement naturel, météo, aléas, impacts, victimes et simulation. Son alignement avec le CIDOC-CRM maintient un lien avec les standards patrimoniaux, tandis que les thésaurus SKOS isolent les valeurs contrôlées de la structure métier.
+
+Les contraintes SHACL et le profil d'évacuation traduisent les besoins du SMA en un contrat inspectable. Les scripts de génération, d'export et d'import rendent le flux reproductible et les tests protègent ses principales propriétés techniques. La séparation des résultats de simulation dans un graphe historisé constitue enfin une contribution importante pour la traçabilité.
+
+Ces résultats doivent néanmoins être évalués comme ceux d'un prototype de recherche. La résolution complète des imports OWL, la génération automatique des shapes depuis les profils, l'intégration directe à un triplestore et à GAMA ainsi que la publication contrôlée des valeurs courantes ne sont pas encore entièrement automatisées. Le dépôt démontre l'architecture et le mécanisme d'échange ; il ne constitue pas encore un système d'aide à la décision déployé.
+
+L'évaluation peut être menée au regard des objectifs initiaux. L'unification sémantique est amorcée par le noyau et les modules thématiques. L'interopérabilité patrimoniale est prise en charge par les alignements avec le CIDOC-CRM et par l'emploi de standards du Web sémantique. La spécialisation des valeurs est rendue possible par SKOS. Le contrôle des entrées est matérialisé par SHACL. Enfin, le couplage avec la simulation est démontré de bout en bout sur des exemples reproductibles. Le résultat répond donc aux objectifs d'architecture et de prototypage.
+
+L'objectif d'un calcul autonome de vulnérabilité n'est en revanche que partiellement atteint. Le dépôt fournit les concepts d'impact, d'urgence, d'état et de simulation ainsi que les mécanismes nécessaires pour extraire et réintégrer des valeurs, mais il ne contient pas encore un catalogue complet de règles scientifiques validées calculant tous les indices évoqués dans l'introduction. Cette distinction est importante : l'infrastructure sémantique est disponible, tandis que les modèles de calcul devront être élaborés et validés avec les spécialistes concernés.
+
+La qualité principale du livrable est sa séparation des responsabilités. Elle autorise l'évolution d'un thésaurus sans modifier le schéma, l'ajout d'une contrainte sans transformer un axiome OWL et la création d'un nouveau profil sans réécrire toute la chaîne. Sa contrepartie est une architecture comportant plusieurs artefacts à maintenir de manière cohérente. Les futurs outils de vérification devront précisément réduire ce coût de maintenance.
+
+\subsection{Estimation des apprentissages effectués}
+
+Ce travail a permis d'approfondir les principes de l'ingénierie des connaissances et de mesurer la différence entre la conception d'un schéma de données et celle d'une ontologie. La modélisation RDF/OWL impose de raisonner sur l'identité, la portée des relations, l'héritage et les conséquences logiques d'un axiome. L'utilisation de SKOS et SHACL a également montré qu'un seul langage ne suffit pas : représenter une connaissance, organiser un référentiel et vérifier une exigence sont trois fonctions distinctes.
+
+Le développement de la chaîne SMA a apporté une expérience complémentaire en matière d'interopérabilité. La difficulté principale n'est pas seulement de convertir RDF en CSV, mais de conserver le sens, le type et la provenance lors du passage entre deux paradigmes de données. La rédaction des profils et des mappings a conduit à formaliser les hypothèses que les interfaces classiques laissent souvent implicites.
+
+Enfin, le caractère interdisciplinaire du projet a renforcé l'importance de la documentation et des exemples. Une ontologie n'est durable que si ses choix peuvent être repris, discutés et spécialisés par d'autres chercheurs. Les guides, les tests et la séparation des modules font donc partie intégrante du résultat scientifique et technique.
+
+La démarche a également conduit à adopter une posture critique face aux standards. Réutiliser le CIDOC-CRM ne signifie pas forcer chaque notion opérationnelle dans une classe existante ; il faut distinguer les alignements sémantiquement solides des rapprochements seulement commodes. De même, multiplier les classes ne produit pas nécessairement un modèle plus précis. La précision utile résulte d'un compromis entre expressivité, compréhension par les partenaires et données réellement disponibles.
+
+Sur le plan logiciel, la génération des artefacts à partir d'un profil a montré l'intérêt d'une conception déclarative. Les tests automatisés ont obligé à stabiliser les noms de fichiers, les types de valeurs et le comportement des conversions. La documentation de reprise a enfin demandé de rendre explicites des décisions auparavant contenues seulement dans les fichiers Turtle ou dans les scripts.
+
+Ces apprentissages sont transférables au-delà d'ATLAS : conception d'un modèle partagé, transformation entre graphe et table, validation contextuelle, gestion de provenance et collaboration entre spécialistes de domaines différents.
+
+\subsection{Et après ?}
+
+Au-delà des contributions apportées au projet ATLAS, ce stage a joué un rôle déterminant dans la définition de mon projet professionnel. Il m'a permis de confirmer mon intérêt pour l'ingénierie et l'architecture des connaissances, mais également pour les questions plus fondamentales liées à la représentation formelle, à la logique et aux mécanismes d'inférence. La conception de l'ontologie, son alignement avec des standards existants et la formalisation des échanges avec les simulateurs m'ont montré que ces domaines se situent précisément à l'intersection de mes intérêts pour l'informatique, la modélisation et la recherche.
+
+Je souhaite désormais poursuivre ce parcours par la recherche d'un doctorat portant sur les architectures de connaissances ou sur la formalisation de systèmes logiques. Un tel projet me permettrait d'approfondir les questions rencontrées durant le stage : comment représenter des connaissances hétérogènes sans perdre leur contexte, comment vérifier la cohérence d'un modèle, comment articuler raisonnement symbolique et données empiriques, ou encore comment rendre explicables les résultats produits par un système complexe. Le doctorat représente ainsi pour moi la possibilité de prolonger le travail engagé dans un cadre scientifique plus approfondi et de contribuer au développement de méthodes nouvelles.
+
+Cette orientation vers la recherche n'exclut pas une insertion professionnelle directe dans le domaine de l'architecture des connaissances. Les compétences acquises au cours du stage sont applicables à de nombreux secteurs confrontés à des volumes croissants de données hétérogènes : conception d'ontologies, graphes de connaissances, alignement de référentiels, validation sémantique, traçabilité et interopérabilité. Je recherche donc également des postes permettant de mobiliser ces compétences au sein de projets industriels ou institutionnels.
+
+Le secteur de l'informatique médicale constitue notamment une perspective qui m'intéresse particulièrement. Les systèmes de santé doivent structurer et mettre en relation des données provenant de sources multiples : dossiers patients, terminologies médicales, résultats biologiques, imagerie, pharmacopée, physique des protéines, biotechnologies, protocoles de soin et données issues de la recherche. L'interopérabilité, la qualité des données et la capacité à expliquer leur provenance y représentent des enjeux majeurs. Les architectures de connaissances peuvent contribuer à harmoniser ces informations, à contrôler leur cohérence et à faciliter leur utilisation par les professionnels comme par les outils d'aide à la décision.
+
+Ce stage m'a donc apporté plus qu'une expérience technique ponctuelle. Il m'a permis d'identifier un domaine dans lequel il est possible de construire la suite de mon parcours, que celle-ci prenne la forme d'un doctorat ou d'un poste spécialisé en ingénierie des connaissances. Dans les deux cas, l'industrie comme la recherche démontrent un besoin croissant, concevoir des systèmes capables de transformer des données complexes et dispersées en connaissances structurées, vérifiables et réellement utilisables.
+
+\clearpage
+\appendix
+
+\part*{Annexes}
+\addcontentsline{toc}{part}{Annexes}
+\clearpage
+
+\section{Organisation du livrable ontologique}
+
+Cette annexe présente les principaux répertoires du livrable et leur rôle. Elle constitue un point d'entrée rapide pour toute personne amenée à reprendre ou à étendre le projet.
+
+\begin{description}
+    \item[\texttt{Ontologies\_KG/Ontologie\_OWL/}] contient la structure du modèle métier. Le fichier \texttt{fe\_core.ttl} constitue le point d'entrée et importe les modules thématiques.
+    \item[\texttt{Ontologies\_KG/Thesaurus/}] contient les vocabulaires contrôlés SKOS utilisés pour classifier les entités sans multiplier les classes OWL.
+    \item[\texttt{Ontologies\_KG/Constraints/}] regroupe les contraintes SHACL générales et celles propres aux cas d'usage de simulation.
+    \item[\texttt{Ontologies\_KG/Profiles/}] décrit les contrats déclaratifs des systèmes multi-agents, notamment le profil d'évacuation.
+    \item[\texttt{Ontologies\_KG/Request/Templates/}] contient les modèles génériques de requêtes SPARQL.
+    \item[\texttt{Ontologies\_KG/Request/generated/}] rassemble les requêtes, mappings et exemples reproductibles générés à partir des profils.
+    \item[\texttt{Ontologies\_KG/Scripts/}] contient les programmes de génération, d'export des entrées et d'import des résultats.
+    \item[\texttt{Ontologies\_KG/Tests/}] contient les tests automatisés de la chaîne technique.
+\end{description}
+
+Les modules OWL sont répartis selon les responsabilités suivantes :
+
+\begin{itemize}
+    \item \texttt{fe\_site.ttl} et \texttt{fe\_zone.ttl} : organisation spatiale des sites et zones d'étude ;
+    \item \texttt{fe\_building.ttl}, \texttt{fe\_axis.ttl} et \texttt{fe\_artefacts.ttl} : environnement construit, circulation et objets patrimoniaux ;
+    \item \texttt{fe\_population.ttl}, \texttt{fe\_cognitive\_factor.ttl} et \texttt{fe\_victim.ttl} : populations, comportements et conséquences humaines ;
+    \item \texttt{fe\_weather.ttl}, \texttt{fe\_natural\_space.ttl}, \texttt{fe\_hazard\_and\_safety.ttl} et \texttt{fe\_hazard\_and\_impact.ttl} : environnement, aléas, sécurité et impacts ;
+    \item \texttt{fe\_simulation.ttl} : scénarios, profils, exécutions, entrées, sorties et états simulés.
+\end{itemize}
+
+\clearpage
+\section{Profil d'initialisation du SMA d'évacuation}
+
+Le profil \texttt{evacuation\_sma\_profile.ttl} formalise le sous-ensemble de l'ontologie nécessaire à l'initialisation du simulateur d'évacuation. L'extrait suivant en présente la structure essentielle :
+
+\begin{lstlisting}[language=Turtle,caption={Structure simplifiée du profil SMA}]
+fe:EvacuationSMAProfile a fe:SimulationProfile ;
+    fe:profileIdentifier "evacuation_sma" ;
+    fe:hasRootClass fe:Zone ;
+    fe:requiresClass
+        fe:Zone,
+        fe:Axis,
+        fe:Population,
+        fe:HazardEvent ;
+    fe:requiresProperty
+        fe:hasPopulation,
+        fe:isConnectedTo,
+        fe:maxFlowCapacity,
+        fe:hasWidth,
+        fe:hasLength,
+        fe:hasEstimatedCount,
+        fe:hasHazardType,
+        fe:hasHazardExposure ;
+    fe:optionalProperty
+        fe:containsBuilding,
+        fe:containsNaturalSpace,
+        fe:hasWeatherCondition,
+        fe:hasBlockingState ;
+    fe:producesClass
+        fe:SimulationOutput,
+        fe:FinalState,
+        fe:StateSnapshot .
+\end{lstlisting}
+
+Les prédicats du profil possèdent des fonctions distinctes :
+
+\begin{description}
+    \item[\texttt{fe:hasRootClass}] définit le point d'entrée conceptuel de l'extraction.
+    \item[\texttt{fe:requiresClass}] désigne les catégories d'entités que le SMA doit pouvoir recevoir.
+    \item[\texttt{fe:requiresProperty}] déclare les informations indispensables au calcul.
+    \item[\texttt{fe:optionalProperty}] déclare les informations capables d'enrichir le scénario sans bloquer son initialisation.
+    \item[\texttt{fe:producesClass}] et \texttt{fe:producesProperty} documentent la nature des résultats attendus.
+\end{description}
+
+Le générateur extrait les propriétés requises et facultatives de manière souple. Leur caractère obligatoire est contrôlé séparément par SHACL. Cette distinction permet de conserver un graphe RDF ouvert tout en imposant un contrat plus strict au moment de la simulation.
+
+\clearpage
+\section{Chaîne de génération et d'échange}
+
+Les commandes suivantes sont exécutées depuis la racine du dépôt. Elles supposent l'installation préalable des dépendances déclarées dans \texttt{requirements.txt}.
+
+\subsection{Installation et tests}
+
+\begin{lstlisting}
+python -m pip install -r requirements.txt
+
+python -m unittest discover \
+  -s Ontologies_KG/Tests -v
+\end{lstlisting}
+
+\subsection{Génération des requêtes et mappings}
+
+\begin{lstlisting}
+python Ontologies_KG/Scripts/generate_sma_queries.py \
+  Ontologies_KG/Profiles/evacuation_sma_profile.ttl \
+  --out-dir Ontologies_KG/Request/generated \
+  --template-dir Ontologies_KG/Request/Templates
+\end{lstlisting}
+
+Cette commande produit notamment les requêtes d'initialisation \texttt{CONSTRUCT} et \texttt{SELECT}, le modèle d'insertion des résultats et les fichiers JSON décrivant les correspondances.
+
+\subsection{Export des données d'entrée}
+
+\begin{lstlisting}
+python Ontologies_KG/Scripts/export_sma_input_csv.py \
+  --profile Ontologies_KG/Profiles/evacuation_sma_profile.ttl \
+  --data chemin/vers/kg.ttl \
+  --out exports/evacuation_sma_input.csv
+\end{lstlisting}
+
+Le CSV d'entrée respecte la structure suivante :
+
+\begin{lstlisting}
+entity,class,property,value,value_type,value_lang
+fe:Axis_12,fe:Axis,fe:maxFlowCapacity,150,xsd:integer,
+fe:Axis_12,fe:Axis,fe:hasWidth,3.5,xsd:double,
+\end{lstlisting}
+
+\subsection{Validation SHACL}
+
+\begin{lstlisting}
+pyshacl \
+  -s Ontologies_KG/Constraints/evacuation_sma_input_shape.ttl \
+  -d Ontologies_KG/Request/generated/evacuation_sma_sample_data.ttl \
+  -f human
+\end{lstlisting}
+
+La mention \texttt{Conforms: True} indique que le graphe satisfait les contraintes minimales du profil. En cas d'échec, le rapport désigne la ressource concernée, la propriété manquante ou incorrecte et le message associé à la contrainte.
+
+\subsection{Import des résultats}
+
+\begin{lstlisting}
+python Ontologies_KG/Scripts/import_sma_results_csv.py \
+  --profile Ontologies_KG/Profiles/evacuation_sma_profile.ttl \
+  --csv exports/evacuation_sma_results.csv \
+  --out Ontologies_KG/Request/generated/results_insert.sparql
+\end{lstlisting}
+
+Le fichier SPARQL obtenu insère les résultats dans un graphe nommé distinct du graphe source. Cette opération conserve l'historique du run sans remplacer automatiquement l'état courant des entités métier.
+
+\clearpage
+\section{Contrat des résultats de simulation}
+
+Le CSV de résultats doit contenir au minimum les colonnes suivantes :
+
+\begin{lstlisting}
+run_id,scenario_id,input_id,output_id,entity,step,time,
+property,value,value_type
+\end{lstlisting}
+
+\begin{description}
+    \item[\texttt{run\_id}] identifie l'exécution concrète du simulateur.
+    \item[\texttt{scenario\_id}] identifie l'hypothèse ou la configuration étudiée.
+    \item[\texttt{input\_id}] désigne le jeu de données ayant servi à l'initialisation.
+    \item[\texttt{output\_id}] identifie le lot de résultats produit.
+    \item[\texttt{entity}] conserve l'identifiant de la ressource métier concernée.
+    \item[\texttt{step} et \texttt{time}] situent la valeur dans le temps simulé.
+    \item[\texttt{property}] indique le prédicat RDF associé au résultat.
+    \item[\texttt{value}] contient la valeur produite par le SMA.
+    \item[\texttt{value\_type}] précise s'il s'agit d'une URI ou d'un littéral typé.
+\end{description}
+
+Exemple de résultats :
+
+\begin{lstlisting}
+run_id,scenario_id,input_id,output_id,entity,step,time,
+property,value,value_type
+SimulationRun_001,Scenario_001,Input_evacuation_sma,
+Output_001,Zone_A,120,600.0,fe:hasFinalStatus,
+evacuated,xsd:string
+SimulationRun_001,Scenario_001,Input_evacuation_sma,
+Output_001,Zone_A,120,600.0,fe:hasEvacuationTime,
+540.0,xsd:double
+\end{lstlisting}
+
+L'import crée des instances de \texttt{fe:SimulationRun}, \texttt{fe:SimulationOutput} et \texttt{fe:FinalState}. Les liens de provenance permettent de retrouver le scénario et le jeu d'entrée ayant produit chaque valeur. Une mise à jour directe de l'entité source doit rester une opération séparée et explicitement validée.
+
+\clearpage
+\section{Checklist de spécialisation}
+
+Lorsqu'un chercheur souhaite étendre le livrable, la procédure recommandée est la suivante :
+
+\begin{enumerate}
+    \item identifier le module OWL responsable de la notion ;
+    \item vérifier si la notion doit être une classe structurée ou un concept SKOS ;
+    \item réutiliser une classe du CIDOC-CRM lorsqu'un alignement sémantique pertinent existe ;
+    \item définir les classes et propriétés avec un libellé, un commentaire, un domaine et une plage adaptés ;
+    \item ajouter les valeurs contrôlées dans le thésaurus correspondant ;
+    \item compléter les contraintes SHACL si la donnée devient obligatoire ;
+    \item mettre à jour le profil SMA si la propriété est consommée ou produite par le simulateur ;
+    \item régénérer les requêtes, mappings et exemples ;
+    \item exécuter les tests automatisés et valider les données d'exemple ;
+    \item documenter le besoin ayant motivé la modification.
+\end{enumerate}
+
+Cette procédure maintient la séparation entre structure du domaine, terminologie, qualité des données et contrat applicatif. Elle réduit également le risque qu'une exigence propre à un simulateur particulier soit imposée à l'ensemble de l'ontologie.
+
+\end{document}
