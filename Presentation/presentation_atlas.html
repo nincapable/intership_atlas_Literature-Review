@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ontologie modulaire et simulation — Projet ATLAS</title>
+  <style>
+    :root {
+      --ink: #e7e9ec;
+      --muted: #9aa2ad;
+      --paper: #15181d;
+      --white: #1d2127;
+      --navy: #f0f1f3;
+      --teal: #6ec8bf;
+      --mint: #202b2b;
+      --gold: #be9128;
+      --coral: #d05044;
+      --line: #343a43;
+      --shadow: 0 20px 60px rgba(0, 0, 0, .35);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      background: #0d0f12;
+      font-family: Inter, "Aptos", "Segoe UI", Arial, sans-serif;
+    }
+
+    body { display: grid; place-items: center; }
+
+    .deck {
+      position: relative;
+      width: min(100vw, calc(100vh * 16 / 9));
+      height: min(100vh, calc(100vw * 9 / 16));
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      padding: 5.3% 6.3% 5.5%;
+      background: var(--paper);
+    }
+
+    .slide.active { display: flex; flex-direction: column; }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--teal);
+    }
+
+    .eyebrow {
+      margin: 0 0 .8rem;
+      color: var(--teal);
+      font-size: clamp(.72rem, 1.05vw, 1.05rem);
+      font-weight: 750;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 { margin: 0; color: var(--navy); font-family: Georgia, "Times New Roman", serif; }
+    h1 { max-width: 13ch; font-size: clamp(2.5rem, 5.1vw, 5.1rem); line-height: 1.02; }
+    h2 { font-size: clamp(2rem, 3.3vw, 3.5rem); line-height: 1.08; }
+    h3 { font-size: clamp(1.05rem, 1.45vw, 1.45rem); line-height: 1.15; }
+
+    p, li {
+      font-size: clamp(.88rem, 1.33vw, 1.34rem);
+      line-height: 1.42;
+    }
+
+    .lead {
+      max-width: 54ch;
+      margin: 1.3rem 0 0;
+      color: #c4c9cf;
+      font-size: clamp(1.05rem, 1.65vw, 1.7rem);
+      line-height: 1.38;
+    }
+
+    .subtitle { margin-top: 1.1rem; color: var(--muted); font-size: clamp(1rem, 1.45vw, 1.5rem); }
+    .author { margin-top: auto; color: var(--muted); font-size: clamp(.8rem, 1.1vw, 1.1rem); }
+    .accent { color: var(--teal); }
+    .coral { color: var(--coral); }
+    .small { font-size: clamp(.65rem, .9vw, .92rem); color: var(--muted); }
+
+    .grid-2, .grid-3, .grid-4 {
+      display: grid;
+      gap: clamp(.8rem, 1.4vw, 1.4rem);
+      margin-top: clamp(1.2rem, 2vw, 2rem);
+      align-items: stretch;
+    }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    .card {
+      padding: clamp(.9rem, 1.5vw, 1.55rem);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #1b1f24;
+    }
+    .card p { margin: .55rem 0 0; color: #b4bac2; }
+    .card .index { color: var(--gold); font-weight: 800; font-size: 1rem; }
+    .card.emphasis, .card.ok { border-color: #3c9b83; background: #173d35; }
+    .card.warn { border-color: #bd9133; background: #443616; }
+    .card.run { border-color: #b86672; background: #43262c; }
+
+    .quote {
+      margin: auto 3% auto 4%;
+      padding-left: 3.2%;
+      border-left: 6px solid var(--gold);
+      color: var(--navy);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.5rem, 2.7vw, 2.8rem);
+      line-height: 1.27;
+    }
+
+    ul.clean { margin: 1.2rem 0 0; padding: 0; list-style: none; }
+    ul.clean li { position: relative; margin: .68rem 0; padding-left: 1.5rem; }
+    ul.clean li::before { content: ""; position: absolute; left: 0; top: .58em; width: .58rem; height: .58rem; border-radius: 50%; background: var(--teal); }
+
+    .flow {
+      display: flex;
+      gap: clamp(.45rem, .8vw, .8rem);
+      align-items: stretch;
+      margin: auto 0;
+    }
+    .flow .node {
+      position: relative;
+      flex: 1;
+      display: grid;
+      place-items: center;
+      min-height: 7.3rem;
+      padding: .8rem;
+      border: 1.5px solid #66809a;
+      border-radius: 7px;
+      background: #202b37;
+      text-align: center;
+      font-size: clamp(.72rem, 1.06vw, 1.08rem);
+      line-height: 1.25;
+    }
+    .flow .node:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: calc(-.8rem - 1px);
+      top: 50%;
+      z-index: 2;
+      transform: translate(50%, -50%);
+      color: var(--teal);
+      font-size: 1.6rem;
+      font-weight: 800;
+    }
+    .flow .node strong { display: block; margin-bottom: .35rem; color: var(--navy); }
+    .flow .node.ok {
+      border-color: #3c9b83;
+      background: #173d35;
+    }
+    .flow .node.warn {
+      border-color: #bd9133;
+      background: #443616;
+    }
+    .flow .node.run {
+      border-color: #b86672;
+      background: #43262c;
+    }
+
+    .layers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .55rem;
+      width: 84%;
+      margin: 1.4rem auto 0;
+    }
+    .layer {
+      display: grid;
+      grid-template-columns: 11rem 1fr;
+      gap: 1rem;
+      align-items: center;
+      padding: .76rem 1.15rem;
+      border-radius: 6px;
+      background: #1b1f24;
+      border-left: 7px solid var(--teal);
+      font-size: clamp(.75rem, 1.05vw, 1.08rem);
+    }
+    .layer strong { color: var(--navy); }
+    .layer:nth-child(2) { border-left-color: var(--gold); }
+    .layer:nth-child(3) { border-left-color: var(--coral); }
+    .layer:nth-child(4) { border-left-color: #7765a8; }
+
+    pre {
+      margin: 1.2rem 0 0;
+      padding: 1.1rem 1.25rem;
+      overflow: hidden;
+      border: 1px solid #343a43;
+      border-radius: 7px;
+      background: #101318;
+      color: #edf4f4;
+      font: clamp(.65rem, .92vw, .94rem)/1.45 "Cascadia Code", Consolas, monospace;
+      white-space: pre-wrap;
+    }
+    .kw { color: #8fd3c7; }
+    .iri { color: #f4c56b; }
+    .lit { color: #eda69d; }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+    .comparison .versus { color: var(--gold); font-size: 2rem; font-weight: 800; }
+
+    .metric {
+      display: flex;
+      align-items: baseline;
+      gap: .7rem;
+      margin-top: .8rem;
+    }
+    .metric strong { color: var(--teal); font: 700 clamp(2rem, 4vw, 4.1rem)/1 Georgia, serif; }
+
+    .takeaway {
+      margin-top: auto;
+      padding: .75rem 1rem;
+      border-left: 4px solid var(--gold);
+      color: #b8bec6;
+      background: #1b1f24;
+      font-size: clamp(.72rem, 1vw, 1rem);
+    }
+
+    .footer {
+      position: absolute;
+      left: 6.3%;
+      right: 6.3%;
+      bottom: 2.3%;
+      display: flex;
+      justify-content: space-between;
+      color: #777f89;
+      font-size: clamp(.58rem, .75vw, .75rem);
+    }
+
+    .progress {
+      position: absolute;
+      z-index: 20;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 5px;
+      background: #252a31;
+    }
+    .progress > div { width: 0; height: 100%; background: var(--teal); transition: width .2s ease; }
+
+    .controls {
+      position: absolute;
+      z-index: 30;
+      right: 1rem;
+      top: 1rem;
+      display: flex;
+      gap: .45rem;
+      opacity: .16;
+      transition: opacity .2s;
+    }
+    .deck:hover .controls { opacity: .9; }
+    button { border: 1px solid #3c434d; border-radius: 6px; padding: .4rem .65rem; color: #cdd1d6; background: #1d2127; cursor: pointer; }
+
+    .notes-panel {
+      position: absolute;
+      z-index: 40;
+      left: 3%;
+      right: 3%;
+      bottom: 4%;
+      display: none;
+      max-height: 35%;
+      overflow: auto;
+      padding: 1rem 1.2rem;
+      border: 1px solid #3c434d;
+      border-radius: 7px;
+      color: #d1d5da;
+      background: #1b1f24;
+      box-shadow: var(--shadow);
+      font-size: clamp(.68rem, .9vw, .9rem);
+      line-height: 1.45;
+    }
+    .notes-panel.visible { display: block; }
+    .notes { display: none; }
+
+    @media print {
+      html, body { overflow: visible; background: white; }
+      .deck { width: 100%; height: auto; box-shadow: none; overflow: visible; }
+      .slide { position: relative; display: flex !important; width: 100%; height: 100vh; break-after: page; }
+      .controls, .progress, .notes-panel { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-label="Présentation du stage ATLAS">
+    <section class="slide active" data-duration="0:40">
+      <p class="eyebrow">Stage de Master 2 · Projet ATLAS</p>
+      <h1>Structurer les connaissances pour <span class="accent">simuler la crise</span></h1>
+      <p class="subtitle">Conception d’une ontologie modulaire pour les sites patrimoniaux et l’évacuation</p>
+      <p class="author">Hugo Poirot · Laboratoire d’Informatique de Grenoble · SocSIM-K · 2026</p>
+      <aside class="notes">Présenter en une phrase le stage : construire le pont sémantique entre les données patrimoniales et un simulateur multi-agent. Annoncer que la présentation se concentre sur le problème, la solution et ce qu’elle permet réellement aujourd’hui.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:00">
+      <p class="eyebrow">01 · Contexte</p>
+      <h2>Un site patrimonial est un système, pas un inventaire</h2>
+      <div class="grid-4">
+        <article class="card"><span class="index">A</span><h3>Bâti</h3><p>Matériaux, état, valeur culturelle, résistance.</p></article>
+        <article class="card"><span class="index">B</span><h3>Milieu naturel</h3><p>Végétation, biomasse, météo, topographie.</p></article>
+        <article class="card"><span class="index">C</span><h3>Population</h3><p>Effectifs, mobilité, perception et comportement.</p></article>
+        <article class="card"><span class="index">D</span><h3>Crise</h3><p>Aléa évolutif, accessibilité, impacts et décisions.</p></article>
+      </div>
+      <div class="takeaway">Le défi n’est pas seulement de stocker ces données, mais de préserver leur sens lorsqu’elles circulent entre disciplines et outils.</div>
+      <aside class="notes">Insister sur l’hétérogénéité. Le même site est décrit différemment par un historien, un écologue, un gestionnaire et un simulateur. Le problème est donc autant sémantique que technique.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:20">
+      <p class="eyebrow">Problématique</p>
+      <div class="quote">Comment construire un modèle sémantique <span class="accent">unifié et modulaire</span>, capable d’alimenter une simulation et d’en conserver les résultats sans perdre leur contexte&nbsp;?</div>
+      <aside class="notes">Décomposer oralement la question : unifié pour interconnecter les domaines ; modulaire pour évoluer ; exploitable par la simulation ; traçable pour distinguer observation, hypothèse et résultat calculé.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:20">
+      <p class="eyebrow">Pertinence de l’ontologie</p>
+      <h2>Pourquoi ne pas utiliser seulement une base de données&nbsp;?</h2>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Schéma applicatif</h3>
+          <ul class="clean">
+            <li>structure conçue pour un outil précis ;</li>
+            <li>sens porté en partie par le code ;</li>
+            <li>intégration par correspondances ad hoc.</li>
+          </ul>
+        </article>
+        <article class="card emphasis">
+          <h3>Ontologie partagée</h3>
+          <ul class="clean">
+            <li>concepts et relations explicités ;</li>
+            <li>identifiants réutilisables entre sources ;</li>
+            <li>alignements, inférences et contrôles déclaratifs.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="takeaway">L’ontologie ne remplace pas les bases ni le simulateur : elle rend explicite le contrat de sens qui les relie.</div>
+      <aside class="notes">Éviter l’opposition caricaturale. Une base relationnelle reste adaptée au stockage et aux performances. L’ontologie devient pertinente lorsque plusieurs disciplines, formats et logiciels doivent partager une interprétation durable des mêmes entités.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:20">
+      <p class="eyebrow">Enjeux de modélisation</p>
+      <h2>Représenter le domaine sans figer ses usages</h2>
+      <div class="grid-3">
+        <article class="card"><span class="index">01</span><h3>Identité</h3><p>Reconnaître une même entité à travers plusieurs jeux de données et niveaux de description.</p></article>
+        <article class="card"><span class="index">02</span><h3>Temps</h3><p>Distinguer une propriété durable, un état daté, une observation et un résultat simulé.</p></article>
+        <article class="card"><span class="index">03</span><h3>Granularité</h3><p>Relier site, zone, bâtiment et composant sans imposer un niveau unique à tous les métiers.</p></article>
+      </div>
+      <div class="grid-3">
+        <article class="card"><span class="index">04</span><h3>Ouverture</h3><p>Accepter l’incomplétude du graphe tout en exigeant les données nécessaires à un usage.</p></article>
+        <article class="card"><span class="index">05</span><h3>Provenance</h3><p>Conserver l’auteur, la source et le contexte de chaque assertion importante.</p></article>
+        <article class="card emphasis"><span class="index">06</span><h3>Évolutivité</h3><p>Ajouter un domaine ou un simulateur sans reconstruire tout le modèle.</p></article>
+      </div>
+      <aside class="notes">Cette diapositive donne les vrais critères de qualité du modèle. Le défi n’est pas de créer beaucoup de classes, mais de choisir ce qui reste stable, ce qui dépend d’un contexte et ce qui doit pouvoir évoluer indépendamment.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:15">
+      <p class="eyebrow">État de l’art · Synthèse</p>
+      <h2>Des briques solides, mais aucun assemblage directement adapté</h2>
+      <div class="grid-3">
+        <article class="card"><h3>CIDOC CRM</h3><p>Référence patrimoniale robuste et événementielle.</p><p class="small">Limite : peu de concepts opérationnels pour l’évacuation.</p></article>
+        <article class="card"><h3>ARCH / Arches</h3><p>Inventaire, risque, géographie et gestion patrimoniale.</p><p class="small">Limite : données surtout descriptives ou macroscopiques.</p></article>
+        <article class="card"><h3>GAMA / BDI</h3><p>Dynamique spatiale et comportements d’agents.</p><p class="small">Limite : sémantique souvent locale au modèle.</p></article>
+      </div>
+      <div class="takeaway">Contribution recherchée : un pivot entre description patrimoniale, contrôle des données et simulation dynamique.</div>
+      <aside class="notes">Ne pas refaire tout l’état de l’art. Une phrase par famille. Conclure que le stage ne remplace pas ces outils : il organise leur articulation.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:40">
+      <p class="eyebrow">Contribution principale</p>
+      <h2>Une architecture en quatre couches</h2>
+      <div class="layers">
+        <div class="layer"><strong>RDF / OWL</strong><span>Structure stable du domaine : classes, propriétés, alignements CIDOC CRM.</span></div>
+        <div class="layer"><strong>SKOS</strong><span>Valeurs contrôlées : types d’aléas, d’axes, de populations, d’espèces.</span></div>
+        <div class="layer"><strong>SHACL</strong><span>Contraintes contextuelles : ce qui doit être présent avant une simulation.</span></div>
+        <div class="layer"><strong>Profils SMA</strong><span>Contrats déclaratifs propres à chaque simulateur.</span></div>
+      </div>
+      <aside class="notes">C’est la diapositive centrale. Expliquer pourquoi la séparation compte : OWL ne doit pas devenir un formulaire fermé ; SKOS évolue avec les métiers ; SHACL exprime des obligations de cas d’usage ; le profil évite de coder en dur les besoins du simulateur.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:15">
+      <p class="eyebrow">Modularité</p>
+      <h2>Un noyau partagé, des domaines spécialisés</h2>
+      <div class="grid-4">
+        <article class="card"><h3>Espace</h3><p>Site · Zone · Axe · Bâtiment</p></article>
+        <article class="card"><h3>Humain</h3><p>Population · Cognition · Victime</p></article>
+        <article class="card"><h3>Environnement</h3><p>Météo · Espace naturel · Espèce</p></article>
+        <article class="card"><h3>Crise</h3><p>Aléa · Impact · Sécurité · Simulation</p></article>
+      </div>
+      <pre><span class="kw">fe:Building</span> a owl:Class ;
+  rdfs:subClassOf <span class="iri">crm:E25_Man_Made_Feature</span> .
+
+<span class="kw">fe:hasLength</span> a owl:DatatypeProperty ;
+  rdfs:domain fe:Axis ; rdfs:range xsd:decimal .</pre>
+      <aside class="notes">Montrer le rôle du noyau fe_core et des imports. L’alignement CIDOC CRM maintient l’interopérabilité, tandis que les propriétés FE portent les besoins incendie–évacuation.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:15">
+      <p class="eyebrow">Choix de modélisation</p>
+      <h2>Classe OWL ou concept SKOS&nbsp;?</h2>
+      <div class="comparison">
+        <article class="card emphasis"><h3>Classe OWL</h3><p>La notion possède des propriétés, des relations ou un rôle autonome.</p><pre><span class="kw">fe:Axis</span> a owl:Class .</pre></article>
+        <div class="versus">≠</div>
+        <article class="card"><h3>Concept SKOS</h3><p>La notion est une valeur de classification contrôlée et multilingue.</p><pre><span class="kw">fe:Stairway</span> a skos:Concept ;
+  skos:prefLabel <span class="lit">"Escalier"@fr</span> .</pre></article>
+      </div>
+      <div class="takeaway">Cette distinction permet d’enrichir les vocabulaires sans déstabiliser la structure du modèle.</div>
+      <aside class="notes">Donner l’exemple : Axis est une classe car il possède longueur, largeur et connexions ; Stairway est un concept servant à typer un axe. C’est un choix de maintenance autant que de logique.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:30">
+      <p class="eyebrow">Validation</p>
+      <h2>OWL décrit ; SHACL vérifie</h2>
+      <div class="grid-2">
+        <div>
+          <p class="lead">Un graphe RDF peut être incomplet. Un simulateur, lui, a besoin d’un minimum explicite.</p>
+          <ul class="clean">
+            <li>une zone doit référencer une population ;</li>
+            <li>un axe doit posséder une longueur ;</li>
+            <li>une capacité de flux ne peut pas être négative.</li>
+          </ul>
+        </div>
+        <pre><span class="kw">fe:AxisShape</span> a sh:NodeShape ;
+  sh:targetClass fe:Axis ;
+  sh:property [
+    sh:path fe:hasLength ;
+    sh:minCount <span class="lit">1</span> ;
+    sh:minExclusive <span class="lit">0</span>
+  ] .</pre>
+      </div>
+      <aside class="notes">Corriger une idée fréquente : domain/range ne sont pas des validations de formulaire. Ils infèrent des types. SHACL porte les contraintes fermées nécessaires au cas d’usage.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:30">
+      <p class="eyebrow">Couplage avec le simulateur</p>
+      <h2>Du profil RDF à l’exécution</h2>
+      <div class="flow">
+        <div class="node"><span><strong>Profil</strong>Classes et propriétés requises</span></div>
+        <div class="node"><span><strong>SPARQL</strong>CONSTRUCT + SELECT</span></div>
+        <div class="node warn"><span><strong>SHACL</strong>Contrôle préalable</span></div>
+        <div class="node ok"><span><strong>CSV typé</strong>Interface simple</span></div>
+        <div class="node run"><span><strong>SMA</strong>Simulation d’évacuation</span></div>
+      </div>
+      <div class="takeaway">Le profil est un contrat lisible et versionnable, pas une liste de colonnes cachée dans le code.</div>
+      <aside class="notes">Décrire le flux de gauche à droite. Mentionner les scripts : generate_sma_queries, export_sma_input_csv. Le CSV reste une vue d’échange ; les URI stables relient les sorties aux entités du graphe.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:20">
+      <p class="eyebrow">Traçabilité</p>
+      <h2>Un résultat simulé n’est pas un fait observé</h2>
+      <div class="flow">
+        <div class="node"><span><strong>Graphe source</strong>État de référence</span></div>
+        <div class="node warn"><span><strong>SimulationInput</strong>Sous-graphe validé</span></div>
+        <div class="node run"><span><strong>SimulationRun</strong>Scénario + version</span></div>
+        <div class="node ok"><span><strong>FinalState</strong>Entité + temps + valeur</span></div>
+      </div>
+      <ul class="clean">
+        <li>les sorties sont insérées dans un graphe nommé distinct ;</li>
+        <li>la publication comme « état courant » exige une décision explicite.</li>
+      </ul>
+      <aside class="notes">C’est un apport important. Expliquer pourquoi on ne remplace pas automatiquement hasAccessibility sur un axe : la valeur dépend d’un scénario et d’un instant. La provenance rend les comparaisons possibles.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:15">
+      <p class="eyebrow">Perspective scientifique</p>
+      <h2>Vers une vérification par cas comparables</h2>
+      <div class="flow">
+        <div class="node run"><span><strong>Nouveau run</strong>Résultat à évaluer</span></div>
+        <div class="node"><span><strong>Recherche sémantique</strong>Topologie, population, aléa</span></div>
+        <div class="node ok"><span><strong>Cas validés</strong>Exercices ou observations</span></div>
+        <div class="node warn"><span><strong>Comparaison</strong>Écarts et plausibilité</span></div>
+      </div>
+      <p class="lead">L’objectif n’est pas de « prouver » la prédiction, mais de détecter des résultats atypiques et d’expliquer pourquoi.</p>
+      <aside class="notes">Relier à la difficulté de valider une simulation sociale sans incendie réel à grande échelle. Le graphe capitalise les runs validés et leurs paramètres. La similarité doit être explicable et supervisée par les experts.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:10">
+      <p class="eyebrow">Résultats</p>
+      <h2>Ce que le stage livre concrètement</h2>
+      <div class="grid-3">
+        <article class="card ok"><h3>Modèle</h3><p>13 modules OWL, thésaurus SKOS et alignements CIDOC CRM.</p></article>
+        <article class="card warn"><h3>Qualité</h3><p>Contraintes SHACL générales et spécialisées pour l’évacuation.</p></article>
+        <article class="card run"><h3>Interopérabilité</h3><p>Profil SMA, génération SPARQL, export CSV et réimport des résultats.</p></article>
+      </div>
+      <ul class="clean">
+        <li>exemples reproductibles et mappings JSON ;</li>
+        <li>tests automatisés sur le parsing, les types RDF et les requêtes générées ;</li>
+        <li>documentation de reprise et de spécialisation.</li>
+      </ul>
+      <aside class="notes">Rester factuel. Ne pas présenter comme terminé ce qui ne l’est pas. Les nombres ne sont pas une métrique scientifique ; ils montrent seulement l’étendue du livrable.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:10">
+      <p class="eyebrow">Discussion</p>
+      <h2>Un prototype solide, pas encore un système opérationnel</h2>
+      <div class="grid-2">
+        <article class="card emphasis"><h3>Forces</h3><ul class="clean"><li>responsabilités clairement séparées ;</li><li>contrat SMA déclaratif ;</li><li>provenance des résultats ;</li><li>extension progressive possible.</li></ul></article>
+        <article class="card"><h3>Limites actuelles</h3><ul class="clean"><li>pas encore de terrain complet instancié ;</li><li>connexion directe à GAMA à finaliser ;</li><li>règles scientifiques d’indicateurs à valider ;</li><li>gouvernance des versions à formaliser.</li></ul></article>
+      </div>
+      <aside class="notes">Cette diapositive montre la posture critique. L’infrastructure est là, mais la validation scientifique dépend des données réelles, des experts et de l’usage avec le simulateur.</aside>
+    </section>
+
+    <section class="slide" data-duration="1:00">
+      <p class="eyebrow">Conclusion</p>
+      <h2>Faire du graphe un <span class="accent">médiateur</span>, pas un silo supplémentaire</h2>
+      <div class="grid-3">
+        <article class="card"><h3>Comprendre</h3><p>Unifier des connaissances hétérogènes.</p></article>
+        <article class="card"><h3>Vérifier</h3><p>Contrôler les données avant simulation.</p></article>
+        <article class="card"><h3>Expliquer</h3><p>Relier chaque résultat à son contexte.</p></article>
+      </div>
+      <p class="lead">Prochaine étape : confronter l’architecture à des jeux de données complets et à l’usage des chercheurs.</p>
+      <p class="author">Merci pour votre attention · Questions</p>
+      <aside class="notes">Conclusion en trois verbes. Terminer sur la validation par l’usage. Si nécessaire, ouvrir vers le projet personnel : poursuivre sur les architectures de connaissances et la formalisation logique.</aside>
+    </section>
+
+    <div class="controls">
+      <button id="prev" aria-label="Diapositive précédente">←</button>
+      <button id="next" aria-label="Diapositive suivante">→</button>
+      <button id="notes-toggle" aria-label="Afficher les notes">Notes</button>
+      <button id="fullscreen" aria-label="Plein écran">⛶</button>
+    </div>
+    <div class="notes-panel" aria-live="polite"></div>
+    <div class="footer"><span id="timing"></span><span id="counter"></span></div>
+    <div class="progress"><div></div></div>
+  </main>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const progress = document.querySelector('.progress > div');
+    const counter = document.querySelector('#counter');
+    const timing = document.querySelector('#timing');
+    const notesPanel = document.querySelector('.notes-panel');
+    let index = 0;
+
+    const seconds = value => {
+      const [m, s] = value.split(':').map(Number);
+      return m * 60 + s;
+    };
+
+    const total = slides.reduce((sum, slide) => sum + seconds(slide.dataset.duration), 0);
+    const format = value => `${Math.floor(value / 60)}:${String(value % 60).padStart(2, '0')}`;
+
+    function render(nextIndex) {
+      index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+      progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+      counter.textContent = `${index + 1} / ${slides.length}`;
+      const elapsed = slides.slice(0, index).reduce((sum, slide) => sum + seconds(slide.dataset.duration), 0);
+      timing.textContent = `${slides[index].dataset.duration} · cumul ${format(elapsed)} / ${format(total)}`;
+      notesPanel.innerHTML = slides[index].querySelector('.notes')?.innerHTML || '';
+      history.replaceState(null, '', `#${index + 1}`);
+    }
+
+    document.querySelector('#prev').addEventListener('click', () => render(index - 1));
+    document.querySelector('#next').addEventListener('click', () => render(index + 1));
+    document.querySelector('#notes-toggle').addEventListener('click', () => notesPanel.classList.toggle('visible'));
+    document.querySelector('#fullscreen').addEventListener('click', () => document.documentElement.requestFullscreen?.());
+
+    document.addEventListener('keydown', event => {
+      if (['ArrowRight', 'PageDown', ' '].includes(event.key)) render(index + 1);
+      if (['ArrowLeft', 'PageUp'].includes(event.key)) render(index - 1);
+      if (event.key.toLowerCase() === 'n') notesPanel.classList.toggle('visible');
+      if (event.key.toLowerCase() === 'f') document.documentElement.requestFullscreen?.();
+      if (event.key === 'Home') render(0);
+      if (event.key === 'End') render(slides.length - 1);
+    });
+
+    const requested = Number(location.hash.slice(1));
+    render(Number.isFinite(requested) && requested > 0 ? requested - 1 : 0);
+  </script>
+</body>
+</html>
